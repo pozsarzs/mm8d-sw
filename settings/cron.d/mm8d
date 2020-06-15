@@ -1,0 +1,7 @@
+# /etc/cron.d/mm8d: crontab entries for MM8D
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+0 1 * * *			root	mm8d-updatestartpage >/dev/null 2>&1
+0 2 * * *			root	mm8d-maintainlog >/dev/null 2>&1
