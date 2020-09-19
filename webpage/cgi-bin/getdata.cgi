@@ -28,7 +28,8 @@ if ($ENV{'REQUEST_METHOD'} eq "GET")
   $buffer = $ENV{'QUERY_STRING'};
 }
 
-$buffer = 'channel=1&uid=0&value=1';
+# test data
+# $buffer = 'channel=1&uid=00000000&value=2';
 
 # split input data
 @pairs = split(/&/, $buffer);
@@ -45,8 +46,7 @@ $value = $FORM{value};
 
 # load configuration
 #$conffile = "/etc/mm8d/mm8d.ini";
-#$conffile = "/usr/local/etc/mm8d/mm8d.ini";
-$conffile = "./mm8d.ini";
+$conffile = "/usr/local/etc/mm8d/mm8d.ini";
 open CONF, "< $conffile" or die "ERROR: Cannot open ",$conffile," configuration file!";
 while (<CONF>)
 {
@@ -132,7 +132,7 @@ if ( $uid eq $usr_uid )
   }
   if ( $value eq '2' )
   {
-    open DATA, "< $datafile" or die "Cannot open log file!";
+    open DATA, "< $datafile" or die "ERROR: Cannot open ",$datafile," log file!";
     while (<DATA>)
     {
       chop;
@@ -145,25 +145,19 @@ if ( $uid eq $usr_uid )
       }
       my(@datarow) = split("\"\"",$row);
       my($datarownum) = $#datarow;
-      print $nam_ch[$channel];
-      print "$columns[0]\n";
-      print "$columns[1]\n";
-      print "$columns[2]\n";
-      print "$columns[3]\n";
-      print "$columns[4]\n";
-      print "$columns[5]\n";
-      print "$columns[6]\n";
-      print "$columns[7]\n";
+      print $nam_ch[$channel] . "\n";
+      my @b = (0..7);
+      for (@b)
+      {
+        print "$columns[$_]\n";
+      }
       if ( $channel > 0 )
       {
-        print "$columns[8]\n";
-        print "$columns[9]\n";
-        print "$columns[10]\n";
-        print "$columns[11]\n";
-        print "$columns[12]\n";
-        print "$columns[13]\n";
-        print "$columns[14]\n";
-        print "$columns[15]\n";
+        my @b = (8..15);
+        for (@b)
+        {
+          print "$columns[$_]\n";
+        }
       }
       last;
     }
