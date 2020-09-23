@@ -15,13 +15,13 @@
 
 # Exit codes:
 #   0: normal exit
-#   1: configuration file is missing
+#   1: cannot open configuration file
 
 #CFGFILE="/etc/mm8d/mm8d.ini"
 CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
 if [ ! -f $CFGFILE ]
 then
-  echo "ERROR: Cannot open configuration file!"
+  echo "ERROR #1: Cannot open $CFGFILE configuration file!"
 exit 1
 fi
 
