@@ -3,7 +3,7 @@
 # | MM8D v0.1 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
 # | getpage.cgi                                                                |
-# | CGI program                                                                |
+# | Get data in html format                                                    |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it

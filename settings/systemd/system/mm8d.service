@@ -1,5 +1,5 @@
 [Unit]
-Description=MM8D controlling software
+Description=MM8D operating software
 
 [Service]
 ExecStart=/usr/local/bin/mm8d.py

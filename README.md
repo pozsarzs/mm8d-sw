@@ -10,7 +10,7 @@ GitHub: <https://github.com/pozsarzs/mm8drpi-sw>
  - architecture:       armhf
  - operation system:   Raspbian OS
  - version:            v0.1
- - language:           en (cs, de, fr, hr, hu, pl, ro, ru, sk, sl, sr, uk)
+ - language:           en (hu)
  - licence:            EUPL v1.1
  - user interface:     CUI via SSH and serial console, and webpage
 
