@@ -1,6 +1,6 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring system         |
+# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
 # | mm8d-startdaemon                                                           |
 # | Edit configuration file                                                    |
