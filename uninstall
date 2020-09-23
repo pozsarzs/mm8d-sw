@@ -12,3 +12,66 @@
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.
+
+erase()
+{
+  sudo rm --force $1 2> /dev/null
+  echo "  $1"
+}
+
+erasedir()
+{
+  sudo rmdir $1 2> /dev/null
+  echo "  $1"
+}
+
+# constants
+SWN1="MM8D"
+SWN2="mm8d"
+SWV=`cat documents/VERSION`
+INSTDIR="local"
+
+# uninstaller
+clear
+echo "--------------------------------------------------------------------------------"
+echo "$SWN1 $SWV uninstaller script"
+echo "Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>"
+echo "--------------------------------------------------------------------------------"
+sleep 1
+echo "Uninstalling..."
+echo "- stopping daemon:"
+sudo /etc/init.d/$SWN2.sh stop
+sudo systemctl disable $SWN2.service
+echo "- removing files:"
+erase "/etc/init.d/$SWN2.sh"
+erase "/etc/rc0.d/K01$SWN2.sh"
+erase "/etc/rc2.d/S01$SWN2.sh"
+erase "/etc/rc3.d/S01$SWN2.sh"
+erase "/etc/rc4.d/S01$SWN2.sh"
+erase "/etc/rc5.d/S01$SWN2.sh"
+erase "/etc/rc6.d/K01$SWN2.sh"
+erase "/etc/systemd/system/$SWN2.service"
+sudo systemctl daemon-reload
+echo "- removing from cron:"
+erase "/etc/cron.d/$SWN2"
+sudo /etc/init.d/cron restart
+echo "- removing files:"
+erase "/usr/$INSTDIR/bin/$SWN2*"
+erase "/usr/$INSTDIR/share/doc/$SWN2/*"
+erase "/usr/$INSTDIR/share/locale/*/$SWN2.msg"
+erase "/usr/$INSTDIR/share/man/man1/$SWN2*"
+erase "/usr/$INSTDIR/share/$SWN2/*"
+erase "/usr/lib/cgi-bin/getdata.cgi"
+erase "/usr/lib/cgi-bin/getpage.cgi"
+erase "/var/$INSTDIR/lib/$SWN2/*"
+erase "/var/$INSTDIR/lock/$SWN2*"
+erase "/var/$INSTDIR/log/$SWN2*"
+erase "/var/www/html/*.css"
+erase "/var/www/html/*.html"
+erase "/var/www/html/pics/*"
+echo "- removing directories:"
+erasedir "/usr/$INSTDIR/share/doc/$SWN2/"
+erasedir "/usr/$INSTDIR/share/$SWN2/"
+erasedir "/var/$INSTDIR/lib/$SWN2/"
+sudo mv "/etc/motd.orig" "/etc/motd"
+echo "Done."

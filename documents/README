@@ -1,0 +1,61 @@
+MM8D/RPI - Growing house controlling and remote monitoring device
+-----------------------------------------------------------------
+
+1. About software
+~~~~~~~~~~~~~~~~~
+  It is an internal software for MM8D Raspberry Pi based controlling and
+monitoring device. You can view actual status with a browser application
+and administrate it with SSH client.
+
+Requirements:
+
+  Hardware: Raspberry Pi 3 Model B
+  Software: Raspbian Lite operation system,
+            Apache webserver,
+            Perl,
+            Python3.
+
+2. How to get installer package for my OS?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+a. Visit homepage (see later) to download installer packages:
+
+  Raspbian OS: mm8d-sw-0.1-armhf.tar.gz
+
+               mm8d-eec_0.1-1_armhf.deb
+               mm8d-prepare_0.1-1_all.deb
+               mm8d-sw_0.1-1_armhf.deb
+               mm8d-web_0.1-1_all.deb
+
+b. Download from Github
+
+  $ git clone https://github.com/pozsarzs/mm8drpi-sw.git
+
+c. Download from Debian repository
+
+  set reporitory:
+  $ sudo echo "deb http://www.szerafingomba.hu/deb/ ./" >> /etc/apt/sources.list
+  $ sudo wget -q -O - http://www.szerafingomba.hu/deb/KEY.gpg | apt-key add -
+  $ sudo apt-get update
+
+  install:
+  $ sudo apt-get install mm8d-prepare
+  $ mm8d-prepare
+  $ sudo apt-get install mm8d-sw mm8d-eec mm8d-web
+
+3. Contact
+~~~~~~~~~~
+   Homepage:             <http://www.szerafingomba.hu/softwares/>
+   Author:               Pozsar Zsolt
+   Tax ID:               60407850-1-36
+   Registration num.:    20703695
+
+   E-mail:               <pozsar.zsolt@szerafingomba.hu>
+   Phone:                +36 56/470-272
+   Mobile:               +36 30/249-5030
+   Postal address:       Pozsar Zsolt
+                         Kurazsi Fo ut 1.
+                         HU-5430 Tiszafoldvar
+                         Hungary
+
+--------------------------------------------------------------------------------
+ MM8D * Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>

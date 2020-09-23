@@ -12,3 +12,36 @@
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.
+
+# constants
+SWN1="MM8D"
+SWN2="mm8d"
+SWV=`cat documents/VERSION`
+
+clear
+echo "--------------------------------------------------------------------------------"
+echo "$SWN1 $SWV prepare OS"
+echo "Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>"
+echo "--------------------------------------------------------------------------------"
+echo "Installing required components..."
+sudo apt-get install apache2 \
+                     build-essential \
+                     git \
+                     gnuplot \
+                     libfreetype6-dev \
+                     libjpeg-dev \
+                     libswitch-perl \
+                     python3-daemon \
+                     python3-dev \
+                     python3-openssl \
+                     python3-pip \
+                     python3-requests \
+                     python3-rpi.gpio \
+                     python-configparser \
+                     wget
+echo -e "\nSetting Apache2..."
+sudo ln --force --symbolic /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/
+sudo ln --force --symbolic /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/
+sudo ln --force --symbolic /etc/apache2/conf-available/serve-cgi-bin.conf /etc/apache2/conf-enabled/
+sudo /etc/init.d/apache2 restart
+echo -e "\nDone."
