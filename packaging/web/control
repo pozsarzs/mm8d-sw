@@ -1,0 +1,11 @@
+Package: mm8d-web
+Version: 0.1
+Section: misc
+Priority: extra
+Architecture: all
+Installed-Size: 0 kB
+Maintainer: Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
+Depends: mm8d-sw, apache2, gnuplot, wget, libswitch-perl
+Description: Web interface
+ This is a part of operating program of MM8D growing house controlling
+ and remote monitoring device.

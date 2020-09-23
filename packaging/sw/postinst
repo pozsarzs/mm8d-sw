@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ]; then
+  if [ -d /usr/doc -a ! -e /usr/doc/mm8d-sw -a -d /usr/share/doc/mm8d-sw ]; then
+    ln -sf /usr/share/doc/mm8d-sw /usr/doc/mm8d-sw
+  fi
+fi
+mkdir --parents /var/lib/mm8d/
+invoke-rc.d mm8d.sh stop
+ln -sf /etc/init.d/mm8d.sh /etc/rc0.d/K01mm8d.sh
+ln -sf /etc/init.d/mm8d.sh /etc/rc2.d/S01mm8d.sh
+ln -sf /etc/init.d/mm8d.sh /etc/rc3.d/S01mm8d.sh
+ln -sf /etc/init.d/mm8d.sh /etc/rc4.d/S01mm8d.sh
+ln -sf /etc/init.d/mm8d.sh /etc/rc5.d/S01mm8d.sh
+ln -sf /etc/init.d/mm8d.sh /etc/rc6.d/K01mm8d.sh
+systemctl daemon-reload
+systemctl enable mm8d.service
+systemctl daemon-reload
+invoke-rc.d mm8d.sh start
+invoke-rc.d cron restart

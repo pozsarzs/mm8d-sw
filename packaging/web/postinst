@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ]; then
+  if [ -d /usr/doc -a ! -e /usr/doc/mm8d-web -a -d /usr/share/doc/mm8d-web ]; then
+    ln -sf /usr/share/doc/mm8d-web /usr/doc/mm8d-web
+  fi
+fi
+sudo chown root:www-data /var/www/html/pics
+sudo chmod 775 /var/www/html/pics
+ln --force --symbolic /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/
+ln --force --symbolic /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/
+ln --force --symbolic /etc/apache2/conf-available/serve-cgi-bin.conf /etc/apache2/conf-enabled/
+invoke-rc.d apache2 restart
+mm8d-updatestartpage
