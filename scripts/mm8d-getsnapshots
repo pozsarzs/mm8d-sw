@@ -1,0 +1,95 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.1 * Growing house controlling and remote monitoring system         |
+# | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | mm8d-getsnapshots                                                          |
+# | Get snapshot from IP cameras                                               |
+# +----------------------------------------------------------------------------+
+#
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.1 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+# Exit codes:
+#   0: normal exit
+#   1: specified value is not number
+#   2: wrong channel number
+#   3: cannot open configuration file
+
+checkparameter()
+{
+  if [[ ! $1 =~ ^[0-9]+$ ]]; then 
+    echo "ERROR #1: Specified value is not number!"
+    exit 1
+  fi
+  if [ $1 -ge "1" ]
+  then
+    if [ $1 -le "16" ]
+    then
+      if [ $1 -lt "10" ]
+      then
+        CHANNEL="0"$1
+      else
+        CHANNEL=$1
+      fi
+    else
+      echo "ERROR #2: Wrong channel number!"
+      echo "Valid values: 1..16"
+      exit 2
+    fi
+  fi
+}
+
+loadconfiguration()
+{
+  #CFGFILE="/etc/mm8d/mm8d.ini"
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+  if [ ! -f $CFGFILE ]
+  then
+    echo "ERROR #3: Cannot open $CFGFILE configuration file!"
+    exit 3
+  fi
+  CAM_CH01=`cat $CFGFILE | grep cam_ch01= | sed 's/cam_ch01=//'`
+  CAM_CH02=`cat $CFGFILE | grep cam_ch02= | sed 's/cam_ch02=//'`
+  CAM_CH03=`cat $CFGFILE | grep cam_ch03= | sed 's/cam_ch03=//'`
+  CAM_CH04=`cat $CFGFILE | grep cam_ch04= | sed 's/cam_ch04=//'`
+  CAM_CH05=`cat $CFGFILE | grep cam_ch05= | sed 's/cam_ch05=//'`
+  CAM_CH06=`cat $CFGFILE | grep cam_ch06= | sed 's/cam_ch06=//'`
+  CAM_CH07=`cat $CFGFILE | grep cam_ch07= | sed 's/cam_ch07=//'`
+  CAM_CH08=`cat $CFGFILE | grep cam_ch08= | sed 's/cam_ch08=//'`
+  CAM_CH99=`cat $CFGFILE | grep cam_ch09= | sed 's/cam_ch09=//'`
+  CAM_CH10=`cat $CFGFILE | grep cam_ch10= | sed 's/cam_ch10=//'`
+  CAM_CH11=`cat $CFGFILE | grep cam_ch11= | sed 's/cam_ch11=//'`
+  CAM_CH12=`cat $CFGFILE | grep cam_ch12= | sed 's/cam_ch12=//'`
+  CAM_CH13=`cat $CFGFILE | grep cam_ch13= | sed 's/cam_ch13=//'`
+  CAM_CH14=`cat $CFGFILE | grep cam_ch14= | sed 's/cam_ch14=//'`
+  CAM_CH15=`cat $CFGFILE | grep cam_ch15= | sed 's/cam_ch15=//'`
+  CAM_CH16=`cat $CFGFILE | grep cam_ch16= | sed 's/cam_ch16=//'`
+  DIR_HTM=`cat $CFGFILE | grep dir_htm= | sed 's/dir_htm=//'`
+}
+
+getsnapshots()
+{
+  NAME=CAM_CH$CHANNEL
+  URL=${!NAME}
+  ANTSPIC="$DIR_HTM/pics/ants.jpg"
+  JPGPIC="$DIR_HTM/pics/camera-ch$CHANNEL.jpg"
+  if [ -z $URL ]
+  then
+    cp "$ANTSPIC" "$JPGPIC"
+  else
+    wget "$URL" -O "$JPGPIC"
+    if [ ! $? -eq "0" ]
+    then
+      cp "$ANTSPIC" "$JPGPIC"
+    fi
+  fi
+}
+
+checkparameter $1
+loadconfiguration
+getsnapshots
+exit 0
