@@ -61,11 +61,7 @@ maintainlogfile()
 
 # main function
 loadconfiguration
-for i in {1..9}
-do
-  maintainlogfile "0$i"
-done
-for i in {10..16}
+for i in {01..16}
 do
   maintainlogfile "$i"
 done
