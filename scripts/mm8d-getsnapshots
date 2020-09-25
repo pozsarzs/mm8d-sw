@@ -76,7 +76,7 @@ getsnapshots()
   NAME=CAM_CH$CHANNEL
   URL=${!NAME}
   ANTSPIC="$DIR_HTM/pics/ants.jpg"
-  JPGPIC="$DIR_HTM/pics/camera-ch$CHANNEL.jpg"
+  JPGPIC="$DIR_HTM/snapshots/camera-ch$CHANNEL.jpg"
   if [ -z $URL ]
   then
     cp "$ANTSPIC" "$JPGPIC"

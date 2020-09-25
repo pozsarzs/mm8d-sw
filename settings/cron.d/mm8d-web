@@ -1,0 +1,22 @@
+# /etc/cron.d/mm8d-web: crontab entries for MM8D
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+3,33 * * * *			root	mm8d-getsnapshot 1 > /dev/null 2>&1
+4,34 * * * *			root	mm8d-getsnapshot 2 > /dev/null 2>&1
+5,35 * * * *			root	mm8d-getsnapshot 3 > /dev/null 2>&1
+6,36 * * * *			root	mm8d-getsnapshot 4 > /dev/null 2>&1
+7,37 * * * *			root	mm8d-getsnapshot 5 > /dev/null 2>&1
+8,38 * * * *			root	mm8d-getsnapshot 6 > /dev/null 2>&1
+9,39 * * * *			root	mm8d-getsnapshot 7 > /dev/null 2>&1
+10,40 * * * *			root	mm8d-getsnapshot 8 > /dev/null 2>&1
+11,41 * * * *			root	mm8d-getsnapshot 9 > /dev/null 2>&1
+12,42 * * * *			root	mm8d-getsnapshot 10 > /dev/null 2>&1
+13,43 * * * *			root	mm8d-getsnapshot 11 > /dev/null 2>&1
+14,44 * * * *			root	mm8d-getsnapshot 12 > /dev/null 2>&1
+15,45 * * * *			root	mm8d-getsnapshot 13 > /dev/null 2>&1
+16,46 * * * *			root	mm8d-getsnapshot 14 > /dev/null 2>&1
+17,47 * * * *			root	mm8d-getsnapshot 15 > /dev/null 2>&1
+18,48 * * * *			root	mm8d-getsnapshot 16 > /dev/null 2>&1
+0 1 * * *			root	mm8d-updatestartpage > /dev/null 2>&1
