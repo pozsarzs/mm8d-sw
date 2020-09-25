@@ -40,7 +40,9 @@ SUBDIRS="/usr/$INSTDIR/bin \
          /var/$INSTDIR/log \
          /var/www/ \
          /var/www/html \
-         /var/www/html/pics"
+         /var/www/html/pics \"
+         /var/www/html/snapshots \"
+         /var/www/html/diagrams"
 README="/usr/$INSTDIR/share/doc/$SWN2/README"
 
 # installer
@@ -78,11 +80,9 @@ for X in $LANGUAGES; do
     echo "  /usr/$INSTDIR/share/locale/$X"
   fi;
 done
-sudo chown root:www-data /var/www/html/pics
+sudo chown -R root:www-data /var/www/html
 sudo chmod 775 /var/www/html/pics
 sudo chmod 777 /var/$INSTDIR/lib/$SWN2
-sudo chmod 2777 /usr/$INSTDIR/etc/$SWN2
-sudo chmod 664 /usr/$INSTDIR/etc/$SWN2/envir.ini
 echo "- copying files:"
 copy "LICENCE" "/usr/$INSTDIR/share/doc/$SWN2/COPYING"
 copy "documents/*" "/usr/$INSTDIR/share/doc/$SWN2/"
