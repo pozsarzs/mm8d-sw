@@ -1,4 +1,4 @@
-#!/bin/bash$
+#!/bin/bash
 # +----------------------------------------------------------------------------+
 # | MM8D v0.1 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
@@ -19,7 +19,7 @@
 #   2: wrong channel number
 #   3: cannot open configuration file
 
-read -p "Channel (1-16): " channel
+read -p "Channel (1-16): " CHANNEL
 if [[ ! "$CHANNEL" =~ ^[0-9]+$ ]]; then 
   echo "ERROR #1: Specified value is not number!"
   exit 1
@@ -38,7 +38,7 @@ then
     if [ ! -f $CFGFILE ]
     then
       echo "ERROR #3: Cannot open $CFGFILE configuration file!"
-      exit 1
+      exit 3
     fi
     sudo mm8d-editenvirconf.bin $CFGFILE
     if [ $? -eq 0 ]
