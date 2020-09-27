@@ -1,6 +1,6 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring system         |
+# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
 # | mm8d-getsnapshots                                                          |
 # | Get snapshot from IP cameras                                               |
@@ -15,15 +15,15 @@
 
 # Exit codes:
 #   0: normal exit
-#   1: specified value is not number
-#   2: wrong channel number
-#   3: cannot open configuration file
+#   1: cannot open configuration file
+#   2: specified value is not number
+#   3: wrong channel number
 
 checkparameter()
 {
   if [[ ! $1 =~ ^[0-9]+$ ]]; then 
-    echo "ERROR #1: Specified value is not number!"
-    exit 1
+    echo "ERROR #2: Specified value is not number!"
+    exit 2
   fi
   if [ $1 -ge "1" ]
   then
@@ -35,11 +35,11 @@ checkparameter()
       else
         CHANNEL=$1
       fi
-    else
-      echo "ERROR #2: Wrong channel number!"
-      echo "Valid values: 1..16"
-      exit 2
     fi
+  else
+    echo "ERROR #3: Wrong channel number!"
+    echo "Valid values: 1..16"
+    exit 3
   fi
 }
 
@@ -49,8 +49,8 @@ loadconfiguration()
   CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
   if [ ! -f $CFGFILE ]
   then
-    echo "ERROR #3: Cannot open $CFGFILE configuration file!"
-    exit 3
+    echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+    exit 1
   fi
   CAM_CH01=`cat $CFGFILE | grep cam_ch01= | sed 's/cam_ch01=//'`
   CAM_CH02=`cat $CFGFILE | grep cam_ch02= | sed 's/cam_ch02=//'`
@@ -89,6 +89,16 @@ getsnapshots()
   fi
 }
 
+usage()
+{
+  echo -e "\nUsage: $0 channel\n"
+  exit 0
+}
+
+if [ $# -eq 0 ]
+then
+  usage
+fi
 checkparameter $1
 loadconfiguration
 getsnapshots

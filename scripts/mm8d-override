@@ -1,0 +1,142 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
+# | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | mm8d-override                                                              |
+# | Override output status                                                     |
+# +----------------------------------------------------------------------------+
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.1 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+# Exit codes:
+#   0: normal exit
+#   1: cannot open configuration file
+#   2: specified value is not number
+#   3: wrong channel number
+#   6: wrong output name
+#   7: wrong output state
+#   8: cannot write output file
+
+loadconfiguration()
+{
+  #CFGFILE="/etc/mm8d/mm8d.ini"
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+  if [ ! -f $CFGFILE ]
+    then
+      echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+      exit 1
+  fi
+  DIR_VAR=`cat $CFGFILE | grep dir_var= | sed 's/dir_var=//'`
+}
+
+checkparameter()
+{
+  if [[ ! $1 =~ ^[0-9]+$ ]]; then 
+    echo "ERROR #2: Specified value is not number!"
+    exit 2
+  fi
+  if [ $1 -ge "1" ]
+  then
+    if [ $1 -le "16" ]
+    then
+      if [ $1 -lt "10" ]
+      then
+        CHANNEL="0"$1
+      else
+        CHANNEL=$1
+      fi
+    fi
+  else
+    echo "ERROR #3: Wrong channel number!"
+    echo "Valid values: 1..16"
+    exit 3
+  fi
+}
+
+writetofile()
+{
+  case $2 in
+    "light") OF="out1";;
+    "ventilator") OF="out2";;
+    "heater") OF="out3";;
+    *)\
+      echo "ERROR #6: Wrong output name!"; \
+      echo "Valid values: heater, light, ventilator"; \
+      exit 6;;
+  esac
+  if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
+  then
+    sudo mkdir --parents $DIR_VAR$CHANNEL 2>/dev/null
+    sudo echo -n $3 2>/dev/null 1> $DIR_VAR$CHANNEL"/"$OF
+    if [ $? = 0 ]
+    then
+      echo "Output '"$2"' of channel #"$CHANNEL" is set to $3."
+      exit 0
+    else
+      echo "ERROR #8 Cannot write "$DIR_VAR$CHANNEL"/"$OF" output file!"
+      exit 8
+    fi
+  fi
+  echo "ERROR #7: Wrong output state!"; \
+  echo "Valid values: neutral, on, off"
+  exit 7
+}
+
+getstatus()
+{
+  case $1 in
+    "light") IF="out1";;
+    "ventilator") IF="out2";;
+    "heater") IF="out3";;
+    *) usage; exit 2;;
+  esac
+  echo "Port '"$1"' status is:"
+  if [ ! -f $DIR_VAR$IF ]
+    then
+      echo "neutral"
+      exit 0
+  fi
+  cat $DIR_VAR$IF
+  echo ""
+  exit 0
+}
+
+usage()
+{
+  echo -e "\nUsage:"
+  echo    "       $0 -f|--full-screen"
+  echo    "       $0 channel"
+  echo -e "       $0 channel heater|light|ventilator neutral|on|off\n"
+}
+
+if [ $# -eq 0 ]
+then
+  usage
+fi
+loadconfiguration
+if [ $# -eq 3 ]
+then
+  checkparameter $1
+  writetofile $1 $2 $3
+  exit 0
+fi
+
+
+exit
+# eddig megvan
+
+
+if [ $# -eq 1 ];
+then
+  case $1 in
+    "-f") sudo mm8d-override.bin $DIR_VAR; exit 0;;
+    "--full-screen") sudo mm8d-override.bin $DIR_VAR; exit 0;;
+    *) getstatus $1; exit 0;;
+  esac
+fi
+usage
+exit 2

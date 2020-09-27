@@ -1,6 +1,6 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring system         |
+# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
 # | mm8d-viewlog                                                               |
 # | View log file                                                              |
@@ -15,10 +15,10 @@
 
 # Exit codes:
 #   0: normal exit
-#   1: specified value is not number
-#   2: wrong channel number
-#   3: cannot open configuration file
-#   4: cannot open log file
+#   1: cannot open configuration file
+#   2: specified value is not number
+#   3: wrong channel number
+#   5: cannot open log file
 
 loadconfiguration()
 {
@@ -26,8 +26,8 @@ loadconfiguration()
   CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
   if [ ! -f $CFGFILE ]
     then
-      echo "ERROR #3: Cannot open configuration file!"
-      exit 3
+      echo "ERROR #1: Cannot open configuration file!"
+      exit 1
   fi
   DIR_LOG=`cat $CFGFILE | grep dir_log= | sed 's/dir_log=//'`
 }
@@ -72,8 +72,8 @@ viewlogfile()
 # main function
 read -p "Channel (0-16): " CHANNEL
 if [[ ! "$CHANNEL" =~ ^[0-9]+$ ]]; then 
-  echo "ERROR #1: Specified value is not number!"
-  exit 1
+  echo "ERROR #2: Specified value is not number!"
+  exit 2
 fi
 loadconfiguration
 if [ $CHANNEL -ge "0" ]
@@ -89,14 +89,14 @@ then
     fi
     if [ ! -f $LOGFILE ]
     then
-      echo "ERROR #4: Cannot open $LOGFILE log file!"
-      exit 4
+      echo "ERROR #5: Cannot open $LOGFILE log file!"
+      exit 5
     fi
     viewlogfile
   else
-    echo "ERROR #2: Wrong channel number!"
-    echo "Valid values: 1..16"
-    exit 2
+    echo "ERROR #3: Wrong channel number!"
+    echo "Valid values: 0..16"
+    exit 3
   fi
 fi
 exit 0
