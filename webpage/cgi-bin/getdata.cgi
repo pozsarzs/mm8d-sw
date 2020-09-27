@@ -15,11 +15,11 @@
 
 # Exit codes:
 #   0: normal exit
-#   1: no parameter(s)
-#   2: cannot open configuration file
-#   3: bad channel value
-#   4: bad UID value
+#   1: cannot open configuration file
 #   5: cannot open log file
+#   9: no parameter(s)
+#  10: bad channel value
+#  11: bad UID value
 
 use lib 'cgi-bin';
 use Switch;
@@ -55,9 +55,9 @@ $uid = $FORM{uid};
 $value = $FORM{value};
 if (($channel eq '') || ($uid eq '') || ($value eq ''))
 {
-  print "ERROR #1\n";
+  print "ERROR #9\n";
   print "Usage: getdata.cgi&uid=...&channel=...&value=...\n";
-  exit 1;
+  exit 9;
 }
 
 # load configuration
@@ -108,9 +108,9 @@ if (-e $conffile)
   close CONF;
 } else
 {
-  print "ERROR #2\n";
+  print "ERROR #1\n";
   print "Cannot open ",$conffile," configuration file!\n";
-  exit 2;
+  exit 1;
 }
 
 # create output
@@ -128,9 +128,9 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 16 )
   }
 } else
 {
-  print "ERROR #3\n";
+  print "ERROR #10\n";
   print "Bad channel value!\n";
-  exit 3;
+  exit 10;
 }
 
 if ( $uid eq $usr_uid )
@@ -196,8 +196,8 @@ if ( $uid eq $usr_uid )
   }
 } else
 {
-  print "ERROR #4\n";
+  print "ERROR #11\n";
   print "Bad UID value!\n";
-  exit 4;
+  exit 11;
 }
 exit 0;
