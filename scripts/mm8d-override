@@ -118,9 +118,9 @@ getstatus()
 
 runfullscreenprogram()
 {
-  # csatorna bekérés ide
-
-  sudo mm8d-override.bin $DIR_VAR; exit 0
+  read -p "Channel (1-16): " CH
+  checkparameter $CH
+  sudo mm8d-override.bin $DIR_VAR$CHANNEL
 }
 
 usage()
@@ -129,6 +129,7 @@ usage()
   echo    "       $0 -f|--full-screen"
   echo    "       $0 channel"
   echo -e "       $0 channel heater|light|ventilator neutral|on|off\n"
+  exit 0
 }
 
 if [ $# -eq 0 ]
@@ -139,8 +140,8 @@ loadconfiguration
 if [ $# -eq 1 ];
 then
   case $1 in
-    "-f") runfullscreenprogram;;
-    "--full-screen") runfullscreenprogram;;
+    "-f") runfullscreenprogram; exit 0;;
+    "--full-screen") runfullscreenprogram; exit 0;;
     *) checkparameter $1; getstatus; exit 0;;
   esac
 fi
