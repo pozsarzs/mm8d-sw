@@ -49,6 +49,10 @@ checkparameter()
       else
         CHANNEL=$1
       fi
+    else
+      echo "ERROR #3: Wrong channel number!"
+      echo "Valid values: 1..16"
+      exit 3
     fi
   else
     echo "ERROR #3: Wrong channel number!"
@@ -88,21 +92,35 @@ writetofile()
 
 getstatus()
 {
-  case $1 in
-    "light") IF="out1";;
-    "ventilator") IF="out2";;
-    "heater") IF="out3";;
-    *) usage; exit 2;;
-  esac
-  echo "Port '"$1"' status is:"
-  if [ ! -f $DIR_VAR$IF ]
-    then
-      echo "neutral"
-      exit 0
+  if [ -f "$DIR_VAR$CHANNEL/out1" ]
+  then
+    LAMP=`cat "$DIR_VAR$CHANNEL/out1"`
+  else
+    LAMP="neutral"
   fi
-  cat $DIR_VAR$IF
-  echo ""
-  exit 0
+  if [ -f "$DIR_VAR$CHANNEL/out2" ]
+  then
+    VENT=`cat "$DIR_VAR$CHANNEL/out2"`
+  else
+    VENT="neutral"
+  fi
+  if [ -f "$DIR_VAR$CHANNEL/out3" ]
+  then
+    HEAT=`cat "$DIR_VAR$CHANNEL/out3"`
+  else
+    HEAT="neutral"
+  fi
+  echo "Output status of Channel #"$CHANNEL":"
+  echo -e "- light:\t$LAMP"
+  echo -e "- ventilator:\t$VENT"
+  echo -e "- heater:\t$HEAT"
+}
+
+runfullscreenprogram()
+{
+  # csatorna bekérés ide
+
+  sudo mm8d-override.bin $DIR_VAR; exit 0
 }
 
 usage()
@@ -118,25 +136,19 @@ then
   usage
 fi
 loadconfiguration
+if [ $# -eq 1 ];
+then
+  case $1 in
+    "-f") runfullscreenprogram;;
+    "--full-screen") runfullscreenprogram;;
+    *) checkparameter $1; getstatus; exit 0;;
+  esac
+fi
 if [ $# -eq 3 ]
 then
   checkparameter $1
   writetofile $1 $2 $3
   exit 0
 fi
-
-
-exit
-# eddig megvan
-
-
-if [ $# -eq 1 ];
-then
-  case $1 in
-    "-f") sudo mm8d-override.bin $DIR_VAR; exit 0;;
-    "--full-screen") sudo mm8d-override.bin $DIR_VAR; exit 0;;
-    *) getstatus $1; exit 0;;
-  esac
-fi
 usage
-exit 2
+exit 0

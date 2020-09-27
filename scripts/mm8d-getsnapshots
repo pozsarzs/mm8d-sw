@@ -35,6 +35,10 @@ checkparameter()
       else
         CHANNEL=$1
       fi
+    else
+      echo "ERROR #3: Wrong channel number!"
+      echo "Valid values: 1..16"
+      exit 3
     fi
   else
     echo "ERROR #3: Wrong channel number!"
