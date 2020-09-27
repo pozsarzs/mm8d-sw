@@ -27,8 +27,8 @@ var
   bottom: byte;
   outputs: array[1..4] of string;
 const
-  VERSION: string='v0.2';
-  PRGNAME: string='MM5D-Override';
+  VERSION: string='v0.1';
+  PRGNAME: string='MM8D-Override';
   MAXPOSY: byte=6;
   MINPOSX: byte=30;
   MINPOSY: byte=3;
@@ -131,24 +131,22 @@ begin
   if k='y' then setvalues:=true else setvalues:=false;
 end;
 
-function terminalsize: boolean;
-begin
-  if (screenwidth>=80) and (screenheight>=25)
-    then terminalsize:=true
-    else terminalsize:=false;
-  bottom:=screenheight;
-end;
-
 begin
   textcolor(lightgray); textbackground(black);
-  if paramcount=0 then
-    quit(1,false,'Usage:'+#10+'    '+paramstr(0)+' /path_of_out_files/');
+  if paramcount=0
+    then
+      quit(1,false,'Usage:'+#10+'    '+paramstr(0)+' /path_of_out_files/');
   if not terminalsize
-    then quit(2,false,'ERROR: Minimal terminal size is 80x25!');
+    then
+      quit(2,false,'ERROR: Minimal terminal size is 80x25!')
+    else
+      bottom:=screenheight;
   loadoutfiles(paramstr(1));
   if not setvalues
-    then quit(5,true,'Files are not saved.');
+    then
+      quit(5,true,'Files are not saved.');
   if not saveoutfiles(paramstr(1))
-    then quit(4,true,'ERROR: Cannot write files!');
+    then
+      quit(4,true,'ERROR: Cannot write files!');
   quit(0,true,'');
 end.

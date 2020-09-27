@@ -17,12 +17,20 @@ interface
 uses
   crt;
 
+function terminalsize: boolean;
 procedure background;
 procedure footer(ypos: byte; title: string);
 procedure header(title: string);
 procedure quit(halt_code: byte; clear: boolean; message: string);
 
 implementation
+
+function terminalsize: boolean;
+begin
+  if (screenwidth>=80) and (screenheight>=25)
+    then terminalsize:=true
+    else terminalsize:=false;
+end;
 
 procedure background;
 begin
