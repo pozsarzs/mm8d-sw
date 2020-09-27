@@ -6,7 +6,7 @@ dnl | Autoconf input file for unix-like systems                                |
 dnl +--------------------------------------------------------------------------+
 
 AC_INIT
-AC_CONFIG_AUX_DIR(config)
+AC_CONFIG_AUX_DIR(_config)
 AC_CANONICAL_SYSTEM
 
 AC_PATH_PROG(rm, rm, no)
