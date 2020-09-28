@@ -20,7 +20,7 @@ var
 const
   HEADER1='; +----------------------------------------------------------------------------+';
   HEADER2='; | MM8D v0.1 * Growing house controlling and remote monitoring device         |';
-  HEADER3='; | Copyright (C) 2019-2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |';
+  HEADER3='; | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |';
   HEADER4='; | envir-ch??.ini                                                             |';
   HEADER5='; | Growing environment characteristics                                        |';
   H: string='hyphae';
