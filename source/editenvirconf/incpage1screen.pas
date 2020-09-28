@@ -16,13 +16,14 @@ procedure page1screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Override output values');
+  header(PRGNAME+' '+VERSION+' * Page 1/8: Growing hyphae - humidifying');
   textcolor(white);
-  gotoxy(4,3); writeln('Output #1 - light:');
-  gotoxy(4,4); writeln('Output #2 - ventilator:');
-  gotoxy(4,5); writeln('Output #3 - heater:');
-  for b:=1 to 3 do
-  begin
-    gotoxy(30,2+b); writeln(outputs[b]);
-  end;
+  gotoxy(4,3); writeln('Minimal relative humidity:');
+  gotoxy(4,4); writeln('Lower warning level of humidity:');
+  gotoxy(4,5); writeln('Higher warning level of humidity:');
+  gotoxy(4,6); writeln('Maximal relative humidity:');
+  if hhummin>9 then gotoxy(45,3) else gotoxy(46,3); writeln(hhummin,' %');
+  if hhumon>9 then gotoxy(45,4) else gotoxy(46,4); writeln(hhumon,' %');
+  if hhumoff>9 then gotoxy(45,5) else gotoxy(46,5); writeln(hhumoff,' %');
+  if hhummax>9 then gotoxy(45,6) else gotoxy(46,6); writeln(hhummax,' %');
 end;

@@ -1,18 +1,20 @@
 Exit codes of executable files
 ------------------------------
 
-   0: normal exit
-   1: cannot open configuration file
-   2: specified value is not number
-   3: wrong channel number
-   4: cannot create backup file
-   5: cannot open log file
-   6: wrong output name
-   7: wrong output state
-   8: cannot write output file
-   9: no parameter(s)
-  10: bad channel value
-  11: bad UID value
+  0: normal exit
+  1: cannot open configuration file
+  2: specified value is not number
+  3: wrong channel number
+  4: cannot create backup file
+  5: cannot open log file
+  6: wrong output name
+  7: wrong output state
+  8: cannot write output file
+  9: no parameter(s) (only CGI program)
+ 10: bad channel value (only CGI program)
+ 11: bad UID value (only CGI program)
+ 12: Minimal terminal size is 80x25!
+ 13: cannot write configuration file
 
 --------------------------------------------------------------------------------
  MM8D * Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>

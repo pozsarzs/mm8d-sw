@@ -20,7 +20,7 @@ var
   s: string;
 
 begin
-  for b:=1 to 4 do
+  for b:=1 to 3 do
   try
     outputs[b]:=STATUS[2];
     assignfile(outf,directory+'out'+inttostr(b));

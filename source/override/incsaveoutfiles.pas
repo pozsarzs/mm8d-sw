@@ -20,7 +20,7 @@ var
 
 begin
   saveoutfiles:=true;
-  for b:=1 to 4 do
+  for b:=1 to 3 do
   try
     assignfile(outf,directory+'out'+inttostr(b));
     rewrite(outf);

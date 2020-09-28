@@ -14,10 +14,8 @@
 
 // Exit codes:
 //   0: normal exit, files are saved
-//   1: command line parameter is missing
-//   2: bad terminal size
-//   4: cannot write files
-//   5: normal exit, files are not saved
+//   8: cannot write output files
+//  12: wrong terminal size
 
 program ovrride;
 {$MODE OBJFPC}{$H+}
@@ -29,7 +27,7 @@ var
 const
   VERSION: string='v0.1';
   PRGNAME: string='MM8D-Override';
-  MAXPOSY: byte=6;
+  MAXPOSY: byte=5;
   MINPOSX: byte=30;
   MINPOSY: byte=3;
   STATUS: array[0..2] of string=('off','on','neutral');
@@ -73,11 +71,11 @@ begin
   textcolor(white);
   if (c=#13) and (length(s)>0) then
   begin
-        textbackground(blue);
-        gotoxy(MINPOSX,posy); write('       ');
-        gotoxy(MINPOSX,posy);
-        outputs[posy-2]:=s;
-        write(outputs[posy-2]);
+    textbackground(blue);
+    gotoxy(MINPOSX,posy); write('       ');
+    gotoxy(MINPOSX,posy);
+    outputs[posy-2]:=s;
+    write(outputs[posy-2]);
   end;
   footer(bottom-1,FOOTERS[1]);
   gotoxy(1,bottom); clreol;
@@ -102,15 +100,15 @@ begin
     case k of
        // previous item in block
        #72: begin
-             posy:=posy-1;
-             if posy<MINPOSY then posy:=MAXPOSY;
-             gotoxy(MINPOSX,posy);
+              posy:=posy-1;
+              if posy<MINPOSY then posy:=MAXPOSY;
+              gotoxy(MINPOSX,posy);
             end;
        // next item in block
        #80: begin
-             posy:=posy+1;
-             if posy>MAXPOSY then posy:=MINPOSY;
-             gotoxy(MINPOSX,posy);
+              posy:=posy+1;
+              if posy>MAXPOSY then posy:=MINPOSY;
+              gotoxy(MINPOSX,posy);
             end;
        // select and edit item
        #13: begin
@@ -121,32 +119,31 @@ begin
   // exit
   until k=#27;
   footer(bottom-1,FOOTERS[3]);
-  textcolor(lightgray);
-  gotoxy(1,bottom); write('Save output files? (y/n) ');
+  textcolor(lightgray); gotoxy(1,bottom); write('Save output files? (y/n) ');
   textcolor(white);
   repeat
     k:=lowercase(readkey);
     if k=#27 then goto back;
   until (k='y') or (k='n');
-  if k='y' then setvalues:=true else setvalues:=false;
+  if k='y'then setvalues:=true else setvalues:=false;
 end;
 
 begin
   textcolor(lightgray); textbackground(black);
   if paramcount=0
-    then
-      quit(1,false,'Usage:'+#10+'    '+paramstr(0)+' /path_of_out_files/');
+  then
+    quit(0,false,'Usage: '+paramstr(0)+' /path_of_out_files/');
   if not terminalsize
-    then
-      quit(2,false,'ERROR: Minimal terminal size is 80x25!')
-    else
-      bottom:=screenheight;
+  then
+    quit(12,false,'ERROR #12: Minimal terminal size is 80x25!')
+  else
+    bottom:=screenheight;
   loadoutfiles(paramstr(1));
   if not setvalues
-    then
-      quit(5,true,'Files are not saved.');
+  then
+    quit(0,true,'Warning: Files are not saved.');
   if not saveoutfiles(paramstr(1))
-    then
-      quit(4,true,'ERROR: Cannot write files!');
+  then
+    quit(8,true,'ERROR #8: Cannot write output files!');
   quit(0,true,'');
 end.
