@@ -1,0 +1,34 @@
+Default GPIO port pinout
+~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------------------------------------------------
+description         var.    name  pin  |  pin  name    var.          description
+--------------------------------------------------------------------------------
+                                     +---+
+                           +3.3V   1 |o o|  2  +5V
+Mains voltage sens. in0    GPIO2   3 |o o|  4  +5V
+Mains breaker #1    in1    GPIO3   5 |o o|  6  GND
+Mains breaker #2    in2    GPIO4   7 |o o|  8  TXD             Console connector
+                             GND   9 |o o| 10  RXD             Console connector
+Mains breaker #3    in3   GPIO17  11 |o o| 12  GPIO18  out0         Alarm siren
+Alarm               in4   GPIO27  13 |o o| 14  GND
+Restore alarm       in5   GPIO22  15 |o o| 16  GPIO23  out1            (unused)
+                           +3.3V  17 |o o| 18  GPIO24  out2            (unused)
+                            MOSI  19 |o o| 20  GND
+                            MISO  21 |o o| 22  GPIO25  out3            (unused)
+                            SCLK  23 |o o| 24  CE0
+                             GND  25 |o o| 26  CE1
+                           ID_SD  27 |o o| 28  ID_SC
+(unused)            in6    GPIO5  29 |o o| 30  GND
+(unused)            in7    GPIO6  31 |o o| 32  GPIO12  out4         Active light
+                          GPIO13  33 |o o| 34  GND
+                          GPIO19  35 |o o| 36  GPIO16  out5         Warning ligh
+                          GPIO26  37 |o o| 38  GPIO20  out6          Error light
+                             GND  39 |o o| 40  GPIO21  out7          Alarm light
+                                     +---+
+
+in0-7:  12V inputs with polarity protection and optocoupler
+out0-3: NC-NO relay contact output
+out4-7: NPN bipolar transistor collector output (for LEDs only)
+
+---------------------------------------------------------------------------------
+ MM8D * Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
