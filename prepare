@@ -47,7 +47,7 @@ else
   wget http://portio.inrim.it/portio-0.5.tar.gz
   tar -xzf portio-0.5.tar.gz
   cd portio-0.5
-  python3 setup.py install
+  sudo python3 setup.py install
 fi
 
 echo -e "\nSetting Apache2..."

@@ -1,0 +1,155 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
+# | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | mm8d-updatestartpage                                                       |
+# | update startpage                                                           |
+# +----------------------------------------------------------------------------+
+#
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.1 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+# Exit codes:
+#   0: normal exit
+#   1: cannot open configuration file
+
+loadconfiguration()
+{
+  #CFGFILE="/etc/mm8d/mm8d.ini"
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+  if [ ! -f $CFGFILE ]
+    then
+      echo "ERROR: Cannot open $CFGFILE configuration file!"
+      exit 1
+  fi
+  LNG=`cat $CFGFILE | grep lng= | sed 's/lng=//'`
+  DIR_HTM=`cat $CFGFILE | grep dir_htm= | sed 's/dir_htm=//'`
+  DIR_MSG=`cat $CFGFILE | grep dir_msg= | sed 's/dir_msg=//'`
+  DIR_SHR=`cat $CFGFILE | grep dir_shr= | sed 's/dir_shr=//'`
+  DIR_TMP=`cat $CFGFILE | grep dir_tmp= | sed 's/dir_tmp=//'`
+  NAM_CH00=`cat $CFGFILE | grep nam_ch00= | sed 's/nam_ch00=//'`
+  NAM_CH01=`cat $CFGFILE | grep nam_ch01= | sed 's/nam_ch01=//'`
+  NAM_CH02=`cat $CFGFILE | grep nam_ch02= | sed 's/nam_ch02=//'`
+  NAM_CH03=`cat $CFGFILE | grep nam_ch03= | sed 's/nam_ch03=//'`
+  NAM_CH04=`cat $CFGFILE | grep nam_ch04= | sed 's/nam_ch04=//'`
+  NAM_CH05=`cat $CFGFILE | grep nam_ch05= | sed 's/nam_ch05=//'`
+  NAM_CH06=`cat $CFGFILE | grep nam_ch06= | sed 's/nam_ch06=//'`
+  NAM_CH07=`cat $CFGFILE | grep nam_ch07= | sed 's/nam_ch07=//'`
+  NAM_CH08=`cat $CFGFILE | grep nam_ch08= | sed 's/nam_ch08=//'`
+  NAM_CH09=`cat $CFGFILE | grep nam_ch09= | sed 's/nam_ch09=//'`
+  NAM_CH10=`cat $CFGFILE | grep nam_ch10= | sed 's/nam_ch10=//'`
+  NAM_CH11=`cat $CFGFILE | grep nam_ch11= | sed 's/nam_ch11=//'`
+  NAM_CH12=`cat $CFGFILE | grep nam_ch12= | sed 's/nam_ch12=//'`
+  NAM_CH13=`cat $CFGFILE | grep nam_ch13= | sed 's/nam_ch13=//'`
+  NAM_CH14=`cat $CFGFILE | grep nam_ch14= | sed 's/nam_ch14=//'`
+  NAM_CH15=`cat $CFGFILE | grep nam_ch15= | sed 's/nam_ch15=//'`
+  NAM_CH16=`cat $CFGFILE | grep nam_ch16= | sed 's/nam_ch16=//'`
+  USR_DT1=`cat $CFGFILE | grep usr_dt1= | sed 's/usr_dt1=//'`
+  USR_DT2=`cat $CFGFILE | grep usr_dt2= | sed 's/usr_dt2=//'`
+  USR_DT3=`cat $CFGFILE | grep usr_dt3= | sed 's/usr_dt3=//'`
+  USR_NAM=`cat $CFGFILE | grep usr_nam= | sed 's/usr_nam=//'`
+}
+
+loadmessages()
+{
+  MSG01="MM8D"
+  MSG02="Site"
+  MSG03="User"
+  MSG04="Name"
+  MSG05="Address"
+  MSG06="Tents"
+  MSG07="Channels"
+
+  MSGFILE="$DIR_MSG/$LNG/mm8d.msg"
+  if [ -f "$MSGFILE" ]
+  then
+    MSG01=`cat $MSGFILE | grep msg01 | sed 's/msg01=//'`
+    MSG02=`cat $MSGFILE | grep msg02 | sed 's/msg02=//'`
+    MSG03=`cat $MSGFILE | grep msg03 | sed 's/msg03=//'`
+    MSG04=`cat $MSGFILE | grep msg04 | sed 's/msg04=//'`
+    MSG05=`cat $MSGFILE | grep msg05 | sed 's/msg05=//'`
+    MSG06=`cat $MSGFILE | grep msg06 | sed 's/msg06=//'`
+    MSG07=`cat $MSGFILE | grep msg07 | sed 's/msg07=//'`
+  fi
+}
+
+makehomepage()
+{
+  if [ -f "$DIR_SHR/header_$LNG.html" ]
+  then
+    cat $DIR_SHR/header_$LNG.html > $DIR_TMP/index.html
+  else
+    cat $DIR_SHR/header_en.html > $DIR_TMP/index.html
+  fi
+
+  cat >> $DIR_TMP/index.html << EOF
+    <table border=0 cellspacing=0 cellpadding=6 width="100%">
+      <tbody>
+        <tr>
+          <td colspan="2" class="header" align="center"><b class="title0">$MSG01</b></td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <br>
+    <b class="title1">$MSG02</b><br>
+    <br>
+    <table border="0" cellpadding="3" cellspacing="0">
+      <tbody>
+        <tr>
+          <td><b>$MSG03:</b></td><td>$USR_NAM</td>
+        </tr>
+        <tr>
+          <td><b>$MSG04:</b></td><td>$USR_DT1</td>
+        </tr>
+        <tr>
+          <td><b>$MSG05:</b></td><td>$USR_DT2</td>
+        </tr>
+        <tr>
+          <td><b>$MSG06:</b></td><td>$USR_DT3</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <hr>
+    <br>
+    <b class="title1">$MSG07</b><br>
+    <br>
+    <table border="0" cellpadding="3" cellspacing="0">
+      <tbody>
+EOF
+
+  for i in {00..16}
+  do
+    NAME=NAM_CH$i
+    echo "<tr><td><b>Channel #$i:</b></td>" \
+             "<td>${!NAME}</td>" \
+             "<td><a href=""cgi-bin/getpage.cgi?channel=$i"">details</a></td></tr>" >> $DIR_TMP/index.html
+  done
+
+  cat >> $DIR_TMP/index.html << EOF
+      </tbody>
+    </table>
+    <br>
+    <hr>
+    <br>
+EOF
+  if [ -f "$DIR_SHR/footer_$LNG.html" ]
+  then
+    cat $DIR_SHR/footer_$LNG.html >> $DIR_TMP/index.html
+  else
+    cat $DIR_SHR/footer_en.html >> $DIR_TMP/index.html
+  fi
+  sudo mv $DIR_TMP/index.html $DIR_HTM/index.html
+  rm --force $DIR_TMP/index.html
+}
+
+# Main function
+loadconfiguration
+loadmessages
+makehomepage
+exit 0
