@@ -126,7 +126,7 @@ EOF
   for i in {00..16}
   do
     NAME=NAM_CH$i
-    echo "<tr><td><b>Channel #$i:</b></td>" \
+    echo "        <tr><td><b>Channel #$i:</b></td>" \
              "<td>${!NAME}</td>" \
              "<td><a href=""cgi-bin/getpage.cgi?channel=$i"">details</a></td></tr>" >> $DIR_TMP/index.html
   done
