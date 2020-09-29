@@ -36,9 +36,20 @@ sudo apt-get install apache2 \
                      python3-openssl \
                      python3-pip \
                      python3-requests \
-                     python3-rpi.gpio \
                      python-configparser \
                      wget
+ARCH=`uname -m`
+if [ $ARCH = 'armhf' ]
+then
+  sudo apt-get install python3-rpi.gpio
+else
+  cd /tmp/
+  wget http://portio.inrim.it/portio-0.5.tar.gz
+  tar -xzf portio-0.5.tar.gz
+  cd portio-0.5
+  python setup.py install
+fi
+
 echo -e "\nSetting Apache2..."
 sudo ln --force --symbolic /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/
 sudo ln --force --symbolic /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/

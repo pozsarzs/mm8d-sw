@@ -1,0 +1,33 @@
+Installation instruction tar.gz package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Before install this program please install Debian GNU/Linux to HDD of
+PC (X Window System is not needed). Do not forget to set hostname and
+network.
+
+Installation
+~~~~~~~~~~~~
+  $ tar -xzf mm8d-sw-0.1-i386.tar.gz
+  $ cd mm8d-sw
+  $ ./prepare
+  $ ./install
+
+Set program
+~~~~~~~~~~~
+  $ mm8d-editmainconf
+
+Set environment characteristics
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  $ mm8d-editenvirconf 1
+  $ mm8d-editenvirconf 2
+           .
+           .
+           .
+  $ mm8d-editenvirconf 16
+
+Removing
+~~~~~~~~
+  $ cd mm8d-sw
+  $ ./uninstall
+
+--------------------------------------------------------------------------------
+ MM8D * Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
