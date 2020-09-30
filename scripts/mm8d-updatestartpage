@@ -79,10 +79,13 @@ loadmessages()
   MSG05="Address"
   MSG06="Tents"
   MSG07="Channels"
+  MSG08="Channel"
+  MSG09="details"
 
   MSGFILE="$DIR_MSG/$LNG/mm8d.msg"
   if [ -f "$MSGFILE" ]
   then
+echo   $MSGFILE
     MSG01=`cat $MSGFILE | grep msg01 | sed 's/msg01=//'`
     MSG02=`cat $MSGFILE | grep msg02 | sed 's/msg02=//'`
     MSG03=`cat $MSGFILE | grep msg03 | sed 's/msg03=//'`
@@ -90,6 +93,9 @@ loadmessages()
     MSG05=`cat $MSGFILE | grep msg05 | sed 's/msg05=//'`
     MSG06=`cat $MSGFILE | grep msg06 | sed 's/msg06=//'`
     MSG07=`cat $MSGFILE | grep msg07 | sed 's/msg07=//'`
+    MSG08=`cat $MSGFILE | grep msg08 | sed 's/msg08=//'`
+    MSG09=`cat $MSGFILE | grep msg09 | sed 's/msg09=//'`
+    echo $MSG01
   fi
 }
 
@@ -137,8 +143,8 @@ makehomepage()
     <table border="0" cellpadding="3" cellspacing="0" width="100%">
       <tbody>
         <tr>
-          <td><b>Channel #0:</b></td><td>$NAM_CH00</td>
-          <td align="right"><a href=\"cgi-bin/getpage.cgi?channel=$i\">details</a></td>
+          <td><b>$MSG08 #0:</b></td><td>$NAM_CH00</td>
+          <td align="right"><a href=\"cgi-bin/getpage.cgi?channel=$i\">$MSG09</a></td>
         </tr>
 EOF
   for i in {1..16}
@@ -152,11 +158,11 @@ EOF
     NAME=NAM_CH$ii
     ENAB=ENA_CH$ii
     echo "        <tr>"  >> $DIR_TMP/index.html
-    echo "          <td><b>Channel #$ii:</b></td><td>${!NAME}</td>"  >> $DIR_TMP/index.html
+    echo "          <td><b>$MSG08 #$ii:</b></td><td>${!NAME}</td>"  >> $DIR_TMP/index.html
     echo -n "          <td align=\"right\">" >> $DIR_TMP/index.html
     if [ ${!ENAB} = 1 ]
     then
-      echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\">details</a></td>" >> $DIR_TMP/index.html
+      echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\">$MSG09</a></td>" >> $DIR_TMP/index.html
     else
       echo "&nbsp;</td>" >> $DIR_TMP/index.html
     fi
