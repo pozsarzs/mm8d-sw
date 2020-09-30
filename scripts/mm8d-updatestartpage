@@ -31,6 +31,22 @@ loadconfiguration()
   DIR_MSG=`cat $CFGFILE | grep dir_msg= | sed 's/dir_msg=//'`
   DIR_SHR=`cat $CFGFILE | grep dir_shr= | sed 's/dir_shr=//'`
   DIR_TMP=`cat $CFGFILE | grep dir_tmp= | sed 's/dir_tmp=//'`
+  ENA_CH01=`cat $CFGFILE | grep ena_ch01= | sed 's/ena_ch01=//'`
+  ENA_CH02=`cat $CFGFILE | grep ena_ch02= | sed 's/ena_ch02=//'`
+  ENA_CH03=`cat $CFGFILE | grep ena_ch03= | sed 's/ena_ch03=//'`
+  ENA_CH04=`cat $CFGFILE | grep ena_ch04= | sed 's/ena_ch04=//'`
+  ENA_CH05=`cat $CFGFILE | grep ena_ch05= | sed 's/ena_ch05=//'`
+  ENA_CH06=`cat $CFGFILE | grep ena_ch06= | sed 's/ena_ch06=//'`
+  ENA_CH07=`cat $CFGFILE | grep ena_ch07= | sed 's/ena_ch07=//'`
+  ENA_CH08=`cat $CFGFILE | grep ena_ch08= | sed 's/ena_ch08=//'`
+  ENA_CH09=`cat $CFGFILE | grep ena_ch09= | sed 's/ena_ch09=//'`
+  ENA_CH10=`cat $CFGFILE | grep ena_ch10= | sed 's/ena_ch10=//'`
+  ENA_CH11=`cat $CFGFILE | grep ena_ch11= | sed 's/ena_ch11=//'`
+  ENA_CH12=`cat $CFGFILE | grep ena_ch12= | sed 's/ena_ch12=//'`
+  ENA_CH13=`cat $CFGFILE | grep ena_ch13= | sed 's/ena_ch13=//'`
+  ENA_CH14=`cat $CFGFILE | grep ena_ch14= | sed 's/ena_ch14=//'`
+  ENA_CH15=`cat $CFGFILE | grep ena_ch15= | sed 's/ena_ch15=//'`
+  ENA_CH16=`cat $CFGFILE | grep ena_ch16= | sed 's/ena_ch16=//'`
   NAM_CH00=`cat $CFGFILE | grep nam_ch00= | sed 's/nam_ch00=//'`
   NAM_CH01=`cat $CFGFILE | grep nam_ch01= | sed 's/nam_ch01=//'`
   NAM_CH02=`cat $CFGFILE | grep nam_ch02= | sed 's/nam_ch02=//'`
@@ -85,7 +101,6 @@ makehomepage()
   else
     cat $DIR_SHR/header_en.html > $DIR_TMP/index.html
   fi
-
   cat >> $DIR_TMP/index.html << EOF
     <table border=0 cellspacing=0 cellpadding=6 width="100%">
       <tbody>
@@ -98,7 +113,7 @@ makehomepage()
     <br>
     <b class="title1">$MSG02</b><br>
     <br>
-    <table border="0" cellpadding="3" cellspacing="0">
+    <table border="0" cellpadding="3" cellspacing="0" width="100%">
       <tbody>
         <tr>
           <td><b>$MSG03:</b></td><td>$USR_NAM</td>
@@ -119,16 +134,33 @@ makehomepage()
     <br>
     <b class="title1">$MSG07</b><br>
     <br>
-    <table border="0" cellpadding="3" cellspacing="0">
+    <table border="0" cellpadding="3" cellspacing="0" width="100%">
       <tbody>
+        <tr>
+          <td><b>Channel #0:</b></td><td>$NAM_CH00</td>
+          <td align="right"><a href=\"cgi-bin/getpage.cgi?channel=$i\">details</a></td>
+        </tr>
 EOF
-
-  for i in {00..16}
+  for i in {1..16}
   do
-    NAME=NAM_CH$i
-    echo "        <tr><td><b>Channel #$i:</b></td>" \
-             "<td>${!NAME}</td>" \
-             "<td><a href=""cgi-bin/getpage.cgi?channel=$i"">details</a></td></tr>" >> $DIR_TMP/index.html
+    if [ $i -lt "10" ]
+    then
+      ii=0$i
+    else
+      ii=$i
+    fi
+    NAME=NAM_CH$ii
+    ENAB=ENA_CH$ii
+    echo "        <tr>"  >> $DIR_TMP/index.html
+    echo "          <td><b>Channel #$ii:</b></td><td>${!NAME}</td>"  >> $DIR_TMP/index.html
+    echo -n "          <td align=\"right\">" >> $DIR_TMP/index.html
+    if [ ${!ENAB} = 1 ]
+    then
+      echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\">details</a></td>" >> $DIR_TMP/index.html
+    else
+      echo "&nbsp;</td>" >> $DIR_TMP/index.html
+    fi
+    echo "        </tr>" >> $DIR_TMP/index.html
   done
 
   cat >> $DIR_TMP/index.html << EOF
@@ -136,7 +168,6 @@ EOF
     </table>
     <br>
     <hr>
-    <br>
 EOF
   if [ -f "$DIR_SHR/footer_$LNG.html" ]
   then
