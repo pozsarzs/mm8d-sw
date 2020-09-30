@@ -40,8 +40,8 @@ SUBDIRS="/usr/$INSTDIR/bin \
          /var/$INSTDIR/log \
          /var/www/ \
          /var/www/html \
-         /var/www/html/pics \"
-         /var/www/html/snapshots \"
+         /var/www/html/pics \
+         /var/www/html/snapshots \
          /var/www/html/diagrams"
 README="/usr/$INSTDIR/share/doc/$SWN2/README"
 
@@ -59,11 +59,6 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE."
 echo "--------------------------------------------------------------------------------"
 sleep 3
-
-if ! [ -x "$(command -v apache2)" ]; then
-  echo 'ERROR: Run prepare script firstly!';
-  exit;
-fi
 
 echo -e "\nInstalling..."
 echo "- creating directories:"
@@ -117,7 +112,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable $SWN2.service
 sudo /etc/init.d/$SWN2.sh start
 echo "- set cron.d:"
-copy settings/cron.d/$SWN2 /etc/cron.d/
 sudo /etc/init.d/cron restart
 echo "- create default startpage:"
 /usr/$INSTDIR/bin/$SWN2-updatestartpage
