@@ -56,7 +56,7 @@ $value = $FORM{value};
 if (($channel eq '') || ($uid eq '') || ($value eq ''))
 {
   print "ERROR #9\n";
-  print "Usage: getdata.cgi&uid=...&channel=...&value=...\n";
+  print "Usage: getdata.cgi?uid=...&channel=...&value=...\n";
   exit 9;
 }
 
