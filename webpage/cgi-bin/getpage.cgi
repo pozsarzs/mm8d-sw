@@ -118,24 +118,27 @@ if (-e $conffile)
 # load messages
 $msg01 = "MM8D";
 $msg08 = "Channel";
-$msg04 = "Site";
-$msg05 = "House";
-$msg06 = "Names";
-$msg07 = "Input";
-#$msg08 = "Output";
-$msg09 = "Error light";
-$msg12 = "Date";
-$msg13 = "Time";
-$msg14 = "T";
-$msg15 = "RH";
-$msg16 = "In";
-$msg17 = "Out";
-$msg18 = "Err";
-$msg19 = "Refresh";
-$msg20 = "Latest status";
-$msg21 = "Log";
-$msg22 = "Camera";
-$msg23 = "If you want to see full log, please login to unit via SSH, and use <i>mm8d-viewlog</i> command.";
+$msg10 = "Names";
+$msg11 = "MM7D Temperature in &deg;C";
+$msg12 = "MM7D Relative humidity in %";
+$msg13 = "MM7D Relative gas concentrate in %";
+$msg14 = "MM7D Good values";
+$msg15 = "MM7D Out of optimal range";
+$msg16 = "MM7D Bad values";
+$msg17 = "MM6D Operation mode (hyphae/mushroom)";
+$msg18 = "MM6D Manual operation";
+$msg19 = "MM6D Opened overcurrent breaker";
+$msg20 = "MM6D Alarm event detected";
+$msg21 = "MM6D Output lamps ";
+$msg22 = "MM6D Output vents";
+$msg23 = "MM6D Output heaters";
+$msg24 = "Date";
+$msg25 = "Time";
+$msg26 = "Latest status";
+$msg27 = "Refresh";
+$msg28 = "Camera";
+$msg29 = "Log";
+$msg30 = "If you want to see full log, please login to device via SSH, and use <i>mm8d-viewlog</i> command.";
 
 $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
@@ -226,43 +229,36 @@ print "      </tbody>";
 print "    </table>";
 print "    <br>";
 # section names
-print "    <b class=\"title1\">$msg06</b><br>";
+print "    <b class=\"title1\">$msg10</b><br>";
 print "    <br>";
-print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
+print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 print "      <tbody>";
-print "        <tr>";
-print "          <td><b>$msg07 #1:</b></td><td>$nam_in1</td> <td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg08 #1:</b></td><td>$nam_out1</td><td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg09 #1:</b></td><td>$nam_err1</td>";
-print "        </tr>";
-print "        <tr>";
-print "          <td><b>$msg07 #2:</b></td><td>$nam_in2</td> <td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg08 #2:</b></td><td>$nam_out2</td><td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg09 #2:</b></td><td>$nam_err2</td>";
-print "        </tr>";
-print "        <tr>";
-print "          <td><b>$msg07 #3:</b></td><td>$nam_in3</td> <td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg08 #3:</b></td><td>$nam_out3</td><td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg09 #3:</b></td><td>$nam_err3</td>";
-print "        </tr>";
-print "        <tr>";
-print "          <td><b>$msg07 #4:</b></td><td>$nam_in4</td> <td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg08 #4:</b></td><td>$nam_out4</td><td>&nbsp;&nbsp;&nbsp;</td>";
-print "          <td><b>$msg09 #4:</b></td><td>$nam_err4</td>";
-print "        </tr>";
+print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg11</td></tr>";
+print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg12</td></tr>";
+print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg13</td></tr>";
+print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg14</td></tr>";
+print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg15</td></tr>";
+print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg16</td></tr>";
+print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg17</td></tr>";
+print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg18</td></tr>";
+print "        <tr><td align=\"right\"><b>9:</b></td><td>$msg19</td></tr>";
+print "        <tr><td align=\"right\"><b>10:</b></td><td>$msg20</td></tr>";
+print "        <tr><td align=\"right\"><b>11:</b></td><td>$msg21</td></tr>";
+print "        <tr><td align=\"right\"><b>12:</b></td><td>$msg22</td></tr>";
+print "        <tr><td align=\"right\"><b>13:</b></td><td>$msg23</td></tr>";
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
 # section latest status
-print "    <b class=\"title1\">$msg20</b><br>";
+print "    <b class=\"title1\">$msg26</b><br>";
 print "    <br>";
 print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 print "      <tbody>";
 print "        <tr>";
-print "          <th>$msg12</th><th>$msg13</th><th>$msg14</th><th>$msg15</th>";
-print "          <th>$msg16 #1</th><th>$msg16 #2</th><th>$msg16 #3</th><th>$msg16 #4</th>";
-print "          <th>$msg17 #1</th><th>$msg17 #2</th><th>$msg17 #3</th><th>$msg17 #4</th>";
-print "          <th>$msg18 #1</th><th>$msg18 #2</th><th>$msg18 #3</th><th>$msg18 #4</th>";
+print "          <th>$msg24</th><th>$msg25</th>";
+print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
+print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+print "          <th>11</th><th>12</th><th>13</th>";
 print "        </tr>";
 if (-e $logfile)
 {
@@ -282,21 +278,19 @@ if (-e $logfile)
     print "        <tr align=\"center\">";
     print "          <td>$columns[0]</td>";
     print "          <td>$columns[1]</td>";
-    print "          <td>$columns[2] &deg;C</td>";
-    print "          <td>$columns[3] %</td>";
-    if ($columns[4] eq 1) { $columns[4] = $green } else { $columns[4] = $dark };
-    if ($columns[5] eq 1) { $columns[5] = $green } else { $columns[5] = $dark };
-    if ($columns[6] eq 1) { $columns[6] = $green } else { $columns[6] = $dark };
-    if ($columns[7] eq 1) { $columns[7] = $green } else { $columns[7] = $dark };
-    if ($columns[8] eq 1) { $columns[8] = $yellow } else { $columns[8] = $dark };
-    if ($columns[9] eq 1) { $columns[9] = $yellow } else { $columns[9] = $dark };
-    if ($columns[10] eq 1) { $columns[10] = $yellow } else { $columns[10] = $dark };
-    if ($columns[11] eq 1) { $columns[11] = $yellow } else { $columns[11] = $dark };
-    if ($columns[12] eq 1) { $columns[12] = $red } else { $columns[12] = $dark };
-    if ($columns[13] eq 1) { $columns[13] = $red } else { $columns[13] = $dark };
-    if ($columns[14] eq 1) { $columns[14] = $red } else { $columns[14] = $dark };
-    if ($columns[15] eq 1) { $columns[15] = $red } else { $columns[15] = $dark };
+    print "          <td>$columns[2]</td>";
+    print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
+    if ($columns[5] eq 1) { $columns[5] = $green } else { $columns[5] = $dark };
+    if ($columns[6] eq 1) { $columns[6] = $yellow } else { $columns[6] = $dark };
+    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
+    if ($columns[8] eq 1) { $columns[8] = $green } else { $columns[8] = $dark };
+    if ($columns[9] eq 1) { $columns[9] = $yellow } else { $columns[9] = $dark };
+    if ($columns[10] eq 1) { $columns[10] = $red } else { $columns[10] = $dark };
+    if ($columns[11] eq 1) { $columns[11] = $red } else { $columns[11] = $dark };
+    if ($columns[12] eq 1) { $columns[12] = $green } else { $columns[12] = $dark };
+    if ($columns[13] eq 1) { $columns[13] = $green } else { $columns[13] = $dark };
+    if ($columns[14] eq 1) { $columns[14] = $green } else { $columns[14] = $dark };
     print "          <td>$columns[5]</td>";
     print "          <td>$columns[6]</td>";
     print "          <td>$columns[7]</td>";
@@ -307,7 +301,6 @@ if (-e $logfile)
     print "          <td>$columns[12]</td>";
     print "          <td>$columns[13]</td>";
     print "          <td>$columns[14]</td>";
-    print "          <td>$columns[15]</td>";
     print "        </tr>";
     last;
   }
@@ -324,15 +317,15 @@ print "    <br>";
 # refresh button
 print "    <form action=\"getpage.cgi\" method=\"get\">";
 print "      <center>";
-print "        <input value=\"$msg19\" type=\"submit\" width=\"100\" style=\"width:100px\">";
+print "        <input value=\"$msg27\" type=\"submit\" width=\"100\" style=\"width:100px\">";
 print "      </center>";
 print "    </form>";
 print "    <hr>";
 print "    <br>";
-# section cameras
+# section camera
 if ($cam_show eq 1)
 {
-  print "    <b class=\"title1\">$msg22</b><br>";
+  print "    <b class=\"title1\">$msg28</b><br>";
   print "    <br>";
   print "    <br>";
   print "    <table border=\"1\" cellpadding=\"20\" cellspacing=\"0\" width=\"100%\">";
@@ -347,7 +340,7 @@ if ($cam_show eq 1)
   print "    <br>";
 }
 # section log
-print "    <b class=\"title1\">$msg21</b><br>";
+print "    <b class=\"title1\">$msg29</b><br>";
 print "    <br>";
 print "    <br>";
 print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
@@ -426,7 +419,7 @@ if (-e $logfile)
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
-print "    $msg23";
+print "    $msg30";
 print "    <br>";
 # write footer
 open FOOTER, $footerfile;
