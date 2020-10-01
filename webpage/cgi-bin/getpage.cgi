@@ -24,11 +24,21 @@ use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
 
-# pictures
-$dark="<img src=\"/pics/dark.png\">";
-$green="<img src=\"/pics/green.png\">";
-$red="<img src=\"/pics/red.png\">";
-$yellow="<img src=\"/pics/yellow.png\">";
+$dark="<font color=\"gray\">&#9679;</font>";
+$green="<font color=\"green\">&#9679;</font>";
+$red="<font color=\"red\">&#9679;</font>";
+$yellow="<font color=\"yellow\">&#9679;</font>";
+
+sub writefooter
+{
+  open FOOTER, $footerfile;
+  while (<FOOTER>)
+  {
+    chomp;
+    print "$_";
+  }
+  close FOOTER;
+}
 
 # get data
 local ($buffer, @pairs, $pair, $name, $value, %FORM);
@@ -47,13 +57,13 @@ foreach $pair (@pairs)
 {
   ($name, $value) = split(/=/, $pair);
   $value =~ tr/+/ /;
-  $value =~ s/%(..)/pack("C", hex($1))/eg;
+  $value =~ s/%(..)/pack("C", hex(1))/eg;
   $FORM{$name} = $value;
 }
 $channel = $FORM{channel};
 if ($channel eq '')
 {
-  print "ERROR #9\n";
+  print "ERROR #9:\n";
   print "Usage: getpage.cgi?channel=...\n";
   exit 9;
 }
@@ -78,8 +88,6 @@ if (-e $conffile)
     my($datarownum) = $#datarow;
     switch ($columns[0])
     {
-      case "cam1_enable" { $cam1_enable = $columns[1]; }
-      case "cam2_enable" { $cam2_enable = $columns[1]; }
       case "cam_show" { $cam_show = $columns[1]; }
       case "dir_htm" { $dir_htm = $columns[1]; }
       case "dir_lck" { $dir_lck = $columns[1]; }
@@ -110,7 +118,7 @@ if (-e $conffile)
   close CONF;
 } else
 {
-  print "ERROR #1\n";
+  print "ERROR #1:\n";
   print "Cannot open ",$conffile," configuration file!\n";
   exit 1;
 }
@@ -139,6 +147,7 @@ $msg27 = "Refresh";
 $msg28 = "Camera";
 $msg29 = "Log";
 $msg30 = "If you want to see full log, please login to device via SSH, and use <i>mm8d-viewlog</i> command.";
+$msg31 = "Start page";
 
 $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
@@ -157,12 +166,9 @@ while(<MSG>)
   switch ($columns[0])
   {
     case "msg01" { $msg01 = $columns[1]; }
-    case "msg04" { $msg04 = $columns[1]; }
-    case "msg05" { $msg05 = $columns[1]; }
-    case "msg06" { $msg06 = $columns[1]; }
-    case "msg07" { $msg07 = $columns[1]; }
     case "msg08" { $msg08 = $columns[1]; }
-    case "msg09" { $msg09 = $columns[1]; }
+    case "msg10" { $msg10 = $columns[1]; }
+    case "msg11" { $msg11 = $columns[1]; }
     case "msg12" { $msg12 = $columns[1]; }
     case "msg13" { $msg13 = $columns[1]; }
     case "msg14" { $msg14 = $columns[1]; }
@@ -172,18 +178,26 @@ while(<MSG>)
     case "msg18" { $msg18 = $columns[1]; }
     case "msg19" { $msg19 = $columns[1]; }
     case "msg20" { $msg20 = $columns[1]; }
-    case "msg21" { $msg21 = $columns[1]; }
-    case "msg22" { $msg22 = $columns[1]; }
-    case "msg23" { $msg23 = $columns[1]; }
+    case "msg21" { $msg26 = $columns[1]; }
+    case "msg22" { $msg27 = $columns[1]; }
+    case "msg23" { $msg28 = $columns[1]; }
+    case "msg24" { $msg29 = $columns[1]; }
+    case "msg25" { $msg22 = $columns[1]; }
+    case "msg26" { $msg26 = $columns[1]; }
+    case "msg27" { $msg27 = $columns[1]; }
+    case "msg28" { $msg28 = $columns[1]; }
+    case "msg29" { $msg29 = $columns[1]; }
+    case "msg30" { $msg30 = $columns[1]; }
+    case "msg31" { $msg31 = $columns[1]; }
   }
 }
 close MSG;
 
-# create output
-$logfile = "$dir_log/mm8d-ch";
+# set filenames
 $footerfile = "$dir_shr/footer_$lang.html";
 $headerfile = "$dir_shr/header_$lang.html";
 $lockfile = "$dir_lck/mm8d.lock";
+$logfile = "$dir_log/mm8d-ch";
 if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 16 )
 {
   if ( $channel >=0  &&  $channel <= 9 )
@@ -201,9 +215,12 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 16 )
   exit 10;
 }
 $logfile = $logfile . $ch . ".log";
+
 # create diagram pictures
-#system("/usr/bin/mm8d-creatediagrams");
-#system("/usr/local/bin/mm8d-creatediagrams $channel");
+#system("/usr/bin/mm8d-creatediagrams $channel");
+system("/usr/local/bin/mm8d-creatediagrams $channel");
+
+# create output
 print "Content-type:text/html\r\n\r\n";
 open HEADER, $headerfile;
 while (<HEADER>)
@@ -212,12 +229,10 @@ while (<HEADER>)
   print "$_";
 }
 close HEADER;
-# check lockfile
 while (-e $lockfile)
 {
   sleep 1;
 }
-# write body
 print "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
 print "      <tbody>";
 print "        <tr>";
@@ -228,7 +243,6 @@ print "        </tr>";
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
-# section names
 print "    <b class=\"title1\">$msg10</b><br>";
 print "    <br>";
 print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
@@ -249,7 +263,6 @@ print "        <tr><td align=\"right\"><b>13:</b></td><td>$msg23</td></tr>";
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
-# section latest status
 print "    <b class=\"title1\">$msg26</b><br>";
 print "    <br>";
 print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
@@ -276,7 +289,8 @@ if (-e $logfile)
     my(@datarow) = split("\"\"",$row);
     my($datarownum) = $#datarow;
     print "        <tr align=\"center\">";
-    print "          <td>$columns[0]</td>";
+    $shortdate = substr($columns[0],5,5);
+    print "          <td>$shortdate</td>";
     print "          <td>$columns[1]</td>";
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
@@ -307,22 +321,29 @@ if (-e $logfile)
   close DATA;
 } else
 {
-  print "ERROR #5\n";
-  print "Cannot open ",$logfile," log file!\n";
+  print "      </tbody>";
+  print "    </table>";
+  print "    <br>";
+  print "    ERROR #5: Cannot open ",$logfile," log file!";
+  print "    <br>";
+  print "    <br>";
+  print "    <center>";
+  print "      <a href=/index.html><input value=\"$msg31\" type=\"submit\"></a>";
+  print "    </center>";
+  print "    <br>";
+  writefooter();
   exit 5;
 }
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
-# refresh button
-print "    <form action=\"getpage.cgi\" method=\"get\">";
-print "      <center>";
-print "        <input value=\"$msg27\" type=\"submit\" width=\"100\" style=\"width:100px\">";
-print "      </center>";
-print "    </form>";
+print "    <center>";
+print "      <a href=/index.html><input value=\"$msg31\" type=\"submit\"></a>";
+print "      <a href=/cgi-bin/getpage.cgi?channel=$channel><input value=\"$msg27\" type=\"submit\"></a>";
+print "    </center>";
+print "    <br>";
 print "    <hr>";
 print "    <br>";
-# section camera
 if ($cam_show eq 1)
 {
   print "    <b class=\"title1\">$msg28</b><br>";
@@ -339,7 +360,6 @@ if ($cam_show eq 1)
   print "    <hr>";
   print "    <br>";
 }
-# section log
 print "    <b class=\"title1\">$msg29</b><br>";
 print "    <br>";
 print "    <br>";
@@ -376,7 +396,8 @@ if (-e $logfile)
     my(@datarow) = split("\"\"",$row);
     my($datarownum) = $#datarow;
     print "        <tr align=\"center\">";
-    print "          <td>$columns[0]</td>";
+    $shortdate = substr($columns[0],5,5);
+    print "          <td>$shortdate</td>";
     print "          <td>$columns[1]</td>";
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
@@ -408,8 +429,12 @@ if (-e $logfile)
   close DATA;
 } else
 {
-  print "ERROR #5\n";
-  print "Cannot open ",$logfile," log file!\n";
+  print "      </tbody>";
+  print "    </table>";
+  print "    <br>";
+  print "ERROR #5: Cannot open ",$logfile," log file!";
+  print "    <br>";
+  writefooter();
   exit 5;
 }
 print "      </tbody>";
@@ -417,12 +442,5 @@ print "    </table>";
 print "    <br>";
 print "    $msg30";
 print "    <br>";
-# write footer
-open FOOTER, $footerfile;
-while (<FOOTER>)
-{
-  chomp;
-  print "$_";
-}
-close FOOTER;
+writefooter();
 exit 0;

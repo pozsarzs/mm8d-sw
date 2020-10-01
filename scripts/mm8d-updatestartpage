@@ -80,7 +80,7 @@ loadmessages()
   MSG06="Tents"
   MSG07="Channels"
   MSG08="Channel"
-  MSG09="details"
+  MSG09="Details"
 
   MSGFILE="$DIR_MSG/$LNG/mm8d.msg"
   if [ -f "$MSGFILE" ]
@@ -144,7 +144,7 @@ makehomepage()
       <tbody>
         <tr>
           <td><b>$MSG08 #00:</b></td><td>$NAM_CH00</td>
-          <td align="right"><a href=\"cgi-bin/getpage.cgi?channel=$i\">$MSG09</a></td>
+          <td align="right"><a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\">$MSG09</button></a></td>
         </tr>
 EOF
   for i in {1..16}
@@ -162,9 +162,9 @@ EOF
     echo -n "          <td align=\"right\">" >> $DIR_TMP/index.html
     if [ ${!ENAB} = 1 ]
     then
-      echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\">$MSG09</a></td>" >> $DIR_TMP/index.html
+      echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\">$MSG09</button></a></td>" >> $DIR_TMP/index.html
     else
-      echo "&nbsp;</td>" >> $DIR_TMP/index.html
+      echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\" disabled>$MSG09</button></a></td>" >> $DIR_TMP/index.html
     fi
     echo "        </tr>" >> $DIR_TMP/index.html
   done
