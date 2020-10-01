@@ -68,7 +68,7 @@ creatediagrams()
   LOGFILE=$DIR_LOG"mm8d-ch"$CHANNEL".log"
 
   EMPTYPIC=$DIR_HTM"pics/temperature-empty.png"
-  PNGFILE=$DIR_HTM"diagrams/temperature-$CHANNEL.png"
+  PNGFILE=$DIR_HTM"diagrams/temperature-ch$CHANNEL.png"
   head -n $WEB_LINES $LOGFILE > $TMPFILE 2> /dev/null
   gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
@@ -93,7 +93,7 @@ EOF
   fi
 
   EMPTYPIC="$DIR_HTM/pics/humidity-empty.png"
-  PNGFILE=$DIR_HTM"diagrams/humidity-$CHANNEL.png"
+  PNGFILE=$DIR_HTM"diagrams/humidity-ch$CHANNEL.png"
   gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
 set rmargin at screen 0.90
@@ -108,7 +108,7 @@ unset xtics
 set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
-set output "$DIR_HTM/diagrams/humidity-$CHANNEL.png"
+set output "$PNGFILE"
 plot "$TMPFILE" using 4:xticlabels(stringcolumn(2)) with lines title "RH [%]" linecolor rgb 'blue'
 EOF
   if [ $? -ne 0 ]
@@ -117,7 +117,7 @@ EOF
   fi
 
   EMPTYPIC=$DIR_HTM"pics/gasconcentrate-empty.png"
-  PNGFILE=$DIR_HTM"diagrams/gasconcentrate-$CHANNEL.png"
+  PNGFILE=$DIR_HTM"diagrams/gasconcentrate-ch$CHANNEL.png"
   gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
 set rmargin at screen 0.90
@@ -132,7 +132,7 @@ unset xtics
 set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
-set output "$DIR_HTM/diagrams/gasconcentrate-$CHANNEL.png"
+set output "$PNGFILE"
 plot "$TMPFILE" using 4:xticlabels(stringcolumn(2)) with lines title "Gas concentrate [%]" linecolor rgb 'green'
 EOF
   if [ $? -ne 0 ]
