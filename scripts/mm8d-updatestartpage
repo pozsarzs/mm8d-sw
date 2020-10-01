@@ -144,7 +144,7 @@ makehomepage()
       <tbody>
         <tr>
           <td><b>$MSG08 #00:</b></td><td>$NAM_CH00</td>
-          <td align="right"><a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\">$MSG09</button></a></td>
+          <td align="right"><a href="cgi-bin/getpage.cgi?channel=0"><button type=\"button\">$MSG09</button></a></td>
         </tr>
 EOF
   for i in {1..16}

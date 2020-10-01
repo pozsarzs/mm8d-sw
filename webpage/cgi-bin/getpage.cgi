@@ -29,7 +29,7 @@ $green="<font color=\"green\">&#9679;</font>";
 $red="<font color=\"red\">&#9679;</font>";
 $yellow="<font color=\"yellow\">&#9679;</font>";
 
-sub writefooter
+sub writefooter()
 {
   open FOOTER, $footerfile;
   while (<FOOTER>)
@@ -38,6 +38,64 @@ sub writefooter
     print "$_";
   }
   close FOOTER;
+}
+
+sub writetable()
+{
+  my(@columns)= split(",");
+  my($colnum)=$#columns;
+  $row = "";
+  foreach $colnum (@columns)
+  {
+    $row = $row . $colnum;
+  }
+  my(@datarow) = split("\"\"",$row);
+  my($datarownum) = $#datarow;
+  print "        <tr align=\"center\">";
+  $shortdate = substr($columns[0],5,5);
+  print "          <td>$shortdate</td>";
+  print "          <td>$columns[1]</td>";
+  if ($channel == 0)
+  {
+    if ($columns[2] eq 1) { $columns[2] = $red } else { $columns[2] = $dark };
+    if ($columns[3] eq 1) { $columns[3] = $red } else { $columns[3] = $dark };
+    if ($columns[4] eq 1) { $columns[4] = $red } else { $columns[4] = $dark };
+    if ($columns[5] eq 1) { $columns[5] = $red } else { $columns[5] = $dark };
+    if ($columns[6] eq 1) { $columns[6] = $red } else { $columns[6] = $dark };
+    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
+    print "          <td>$columns[2]</td>";
+    print "          <td>$columns[3]</td>";
+    print "          <td>$columns[4]</td>";
+    print "          <td>$columns[5]</td>";
+    print "          <td>$columns[6]</td>";
+    print "          <td>$columns[7]</td>";
+  } else
+  {
+    print "          <td>$columns[2]</td>";
+    print "          <td>$columns[3]</td>";
+    print "          <td>$columns[4]</td>";
+    if ($columns[5] eq 1) { $columns[5] = $green } else { $columns[5] = $dark };
+    if ($columns[6] eq 1) { $columns[6] = $yellow } else { $columns[6] = $dark };
+    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
+    if ($columns[8] eq 1) { $columns[8] = $green } else { $columns[8] = $dark };
+    if ($columns[9] eq 1) { $columns[9] = $yellow } else { $columns[9] = $dark };
+    if ($columns[10] eq 1) { $columns[10] = $red } else { $columns[10] = $dark };
+    if ($columns[11] eq 1) { $columns[11] = $red } else { $columns[11] = $dark };
+    if ($columns[12] eq 1) { $columns[12] = $green } else { $columns[12] = $dark };
+    if ($columns[13] eq 1) { $columns[13] = $green } else { $columns[13] = $dark };
+    if ($columns[14] eq 1) { $columns[14] = $green } else { $columns[14] = $dark };
+    print "          <td>$columns[5]</td>";
+    print "          <td>$columns[6]</td>";
+    print "          <td>$columns[7]</td>";
+    print "          <td>$columns[8]</td>";
+    print "          <td>$columns[9]</td>";
+    print "          <td>$columns[10]</td>";
+    print "          <td>$columns[11]</td>";
+    print "          <td>$columns[12]</td>";
+    print "          <td>$columns[13]</td>";
+    print "          <td>$columns[14]</td>";
+  }
+  print "        </tr>";
 }
 
 # get data
@@ -148,6 +206,10 @@ $msg28 = "Camera";
 $msg29 = "Log";
 $msg30 = "If you want to see full log, please login to device via SSH, and use <i>mm8d-viewlog</i> command.";
 $msg31 = "Start page";
+$msg32 = "No mains voltage";
+$msg33 = "Opened overcurrent breaker";
+$msg34 = "Alarm event detected";
+$msg35 = "The siren is working now";
 
 $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
@@ -178,17 +240,21 @@ while(<MSG>)
     case "msg18" { $msg18 = $columns[1]; }
     case "msg19" { $msg19 = $columns[1]; }
     case "msg20" { $msg20 = $columns[1]; }
-    case "msg21" { $msg26 = $columns[1]; }
-    case "msg22" { $msg27 = $columns[1]; }
-    case "msg23" { $msg28 = $columns[1]; }
-    case "msg24" { $msg29 = $columns[1]; }
-    case "msg25" { $msg22 = $columns[1]; }
+    case "msg21" { $msg21 = $columns[1]; }
+    case "msg22" { $msg22 = $columns[1]; }
+    case "msg23" { $msg23 = $columns[1]; }
+    case "msg24" { $msg24 = $columns[1]; }
+    case "msg25" { $msg25 = $columns[1]; }
     case "msg26" { $msg26 = $columns[1]; }
     case "msg27" { $msg27 = $columns[1]; }
     case "msg28" { $msg28 = $columns[1]; }
     case "msg29" { $msg29 = $columns[1]; }
     case "msg30" { $msg30 = $columns[1]; }
     case "msg31" { $msg31 = $columns[1]; }
+    case "msg32" { $msg32 = $columns[1]; }
+    case "msg33" { $msg33 = $columns[1]; }
+    case "msg34" { $msg34 = $columns[1]; }
+    case "msg35" { $msg35 = $columns[1]; }
   }
 }
 close MSG;
@@ -216,9 +282,12 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 16 )
 }
 $logfile = $logfile . $ch . ".log";
 
-# create diagram pictures
-#system("/usr/bin/mm8d-creatediagrams $channel");
-system("/usr/local/bin/mm8d-creatediagrams $channel");
+if (channel > 0)
+{
+  # create diagram pictures
+  #system("/usr/bin/mm8d-creatediagrams $channel");
+  system("/usr/local/bin/mm8d-creatediagrams $channel");
+}
 
 # create output
 print "Content-type:text/html\r\n\r\n";
@@ -247,19 +316,30 @@ print "    <b class=\"title1\">$msg10</b><br>";
 print "    <br>";
 print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 print "      <tbody>";
-print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg11</td></tr>";
-print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg12</td></tr>";
-print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg13</td></tr>";
-print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg14</td></tr>";
-print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg15</td></tr>";
-print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg16</td></tr>";
-print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg17</td></tr>";
-print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg18</td></tr>";
-print "        <tr><td align=\"right\"><b>9:</b></td><td>$msg19</td></tr>";
-print "        <tr><td align=\"right\"><b>10:</b></td><td>$msg20</td></tr>";
-print "        <tr><td align=\"right\"><b>11:</b></td><td>$msg21</td></tr>";
-print "        <tr><td align=\"right\"><b>12:</b></td><td>$msg22</td></tr>";
-print "        <tr><td align=\"right\"><b>13:</b></td><td>$msg23</td></tr>";
+if ($channel == 0)
+{
+  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg32</td></tr>";
+  print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg33 #1</td></tr>";
+  print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg33 #2</td></tr>";
+  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg33 #3</td></tr>";
+  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg34</td></tr>";
+  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg35</td></tr>";
+} else
+{
+  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg11</td></tr>";
+  print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg12</td></tr>";
+  print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg13</td></tr>";
+  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg14</td></tr>";
+  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg15</td></tr>";
+  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg16</td></tr>";
+  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg17</td></tr>";
+  print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg18</td></tr>";
+  print "        <tr><td align=\"right\"><b>9:</b></td><td>$msg19</td></tr>";
+  print "        <tr><td align=\"right\"><b>10:</b></td><td>$msg20</td></tr>";
+  print "        <tr><td align=\"right\"><b>11:</b></td><td>$msg21</td></tr>";
+  print "        <tr><td align=\"right\"><b>12:</b></td><td>$msg22</td></tr>";
+  print "        <tr><td align=\"right\"><b>13:</b></td><td>$msg23</td></tr>";
+}
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
@@ -269,9 +349,15 @@ print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\
 print "      <tbody>";
 print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
-print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
-print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
-print "          <th>11</th><th>12</th><th>13</th>";
+if ($channel == 0)
+{
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+} else
+{
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
+  print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+  print "          <th>11</th><th>12</th><th>13</th>";
+}
 print "        </tr>";
 if (-e $logfile)
 {
@@ -279,43 +365,7 @@ if (-e $logfile)
   while (<DATA>)
   {
     chop;
-    my(@columns)= split(",");
-    my($colnum)=$#columns;
-    $row = "";
-    foreach $colnum (@columns)
-    {
-      $row = $row . $colnum;
-    }
-    my(@datarow) = split("\"\"",$row);
-    my($datarownum) = $#datarow;
-    print "        <tr align=\"center\">";
-    $shortdate = substr($columns[0],5,5);
-    print "          <td>$shortdate</td>";
-    print "          <td>$columns[1]</td>";
-    print "          <td>$columns[2]</td>";
-    print "          <td>$columns[3]</td>";
-    print "          <td>$columns[4]</td>";
-    if ($columns[5] eq 1) { $columns[5] = $green } else { $columns[5] = $dark };
-    if ($columns[6] eq 1) { $columns[6] = $yellow } else { $columns[6] = $dark };
-    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
-    if ($columns[8] eq 1) { $columns[8] = $green } else { $columns[8] = $dark };
-    if ($columns[9] eq 1) { $columns[9] = $yellow } else { $columns[9] = $dark };
-    if ($columns[10] eq 1) { $columns[10] = $red } else { $columns[10] = $dark };
-    if ($columns[11] eq 1) { $columns[11] = $red } else { $columns[11] = $dark };
-    if ($columns[12] eq 1) { $columns[12] = $green } else { $columns[12] = $dark };
-    if ($columns[13] eq 1) { $columns[13] = $green } else { $columns[13] = $dark };
-    if ($columns[14] eq 1) { $columns[14] = $green } else { $columns[14] = $dark };
-    print "          <td>$columns[5]</td>";
-    print "          <td>$columns[6]</td>";
-    print "          <td>$columns[7]</td>";
-    print "          <td>$columns[8]</td>";
-    print "          <td>$columns[9]</td>";
-    print "          <td>$columns[10]</td>";
-    print "          <td>$columns[11]</td>";
-    print "          <td>$columns[12]</td>";
-    print "          <td>$columns[13]</td>";
-    print "          <td>$columns[14]</td>";
-    print "        </tr>";
+    writetable();
     last;
   }
   close DATA;
@@ -344,7 +394,7 @@ print "    </center>";
 print "    <br>";
 print "    <hr>";
 print "    <br>";
-if ($cam_show eq 1)
+if (($cam_show eq 1) and ($channel > 0))
 {
   print "    <b class=\"title1\">$msg28</b><br>";
   print "    <br>";
@@ -363,21 +413,30 @@ if ($cam_show eq 1)
 print "    <b class=\"title1\">$msg29</b><br>";
 print "    <br>";
 print "    <br>";
-print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
-print "      <tbody>";
-print "        <tr><td><img src=\"/diagrams/temperature-ch$ch.png\" width=\"100%\"></td></tr>";
-print "        <tr><td><img src=\"/diagrams/humidity-ch$ch.png\" width=\"100%\"></td></tr>";
-print "        <tr><td><img src=\"/diagrams/gasconcentrate-ch$ch.png\" width=\"100%\"></td></tr>";
-print "      </tbody>";
-print "    </table>";
-print "    <br>";
+if ($channel > 0)
+{
+  print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
+  print "      <tbody>";
+  print "        <tr><td><img src=\"/diagrams/temperature-ch$ch.png\" width=\"100%\"></td></tr>";
+  print "        <tr><td><img src=\"/diagrams/humidity-ch$ch.png\" width=\"100%\"></td></tr>";
+  print "        <tr><td><img src=\"/diagrams/gasconcentrate-ch$ch.png\" width=\"100%\"></td></tr>";
+  print "      </tbody>";
+  print "    </table>";
+  print "    <br>";
+}
 print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 print "      <tbody>";
 print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
-print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
-print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
-print "          <th>11</th><th>12</th><th>13</th>";
+if ($channel == 0)
+{
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+} else
+{
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
+  print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+  print "          <th>11</th><th>12</th><th>13</th>";
+}
 print "        </tr>";
 $line = 0;
 if (-e $logfile)
@@ -386,43 +445,7 @@ if (-e $logfile)
   while (<DATA>)
   {
     chop;
-    my(@columns) = split(",");
-    my($colnum) = $#columns;
-    $row = "";
-    foreach $colnum (@columns)
-    {
-      $row = $row . $colnum;
-    }
-    my(@datarow) = split("\"\"",$row);
-    my($datarownum) = $#datarow;
-    print "        <tr align=\"center\">";
-    $shortdate = substr($columns[0],5,5);
-    print "          <td>$shortdate</td>";
-    print "          <td>$columns[1]</td>";
-    print "          <td>$columns[2]</td>";
-    print "          <td>$columns[3]</td>";
-    print "          <td>$columns[4]</td>";
-    if ($columns[5] eq 1) { $columns[5] = $green } else { $columns[5] = $dark };
-    if ($columns[6] eq 1) { $columns[6] = $yellow } else { $columns[6] = $dark };
-    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
-    if ($columns[8] eq 1) { $columns[8] = $green } else { $columns[8] = $dark };
-    if ($columns[9] eq 1) { $columns[9] = $yellow } else { $columns[9] = $dark };
-    if ($columns[10] eq 1) { $columns[10] = $red } else { $columns[10] = $dark };
-    if ($columns[11] eq 1) { $columns[11] = $red } else { $columns[11] = $dark };
-    if ($columns[12] eq 1) { $columns[12] = $green } else { $columns[12] = $dark };
-    if ($columns[13] eq 1) { $columns[13] = $green } else { $columns[13] = $dark };
-    if ($columns[14] eq 1) { $columns[14] = $green } else { $columns[14] = $dark };
-    print "          <td>$columns[5]</td>";
-    print "          <td>$columns[6]</td>";
-    print "          <td>$columns[7]</td>";
-    print "          <td>$columns[8]</td>";
-    print "          <td>$columns[9]</td>";
-    print "          <td>$columns[10]</td>";
-    print "          <td>$columns[11]</td>";
-    print "          <td>$columns[12]</td>";
-    print "          <td>$columns[13]</td>";
-    print "          <td>$columns[14]</td>";
-    print "        </tr>";
+    writetable();
     $line = $line + 1;
     if ($line eq $web_lines) { last };
   }

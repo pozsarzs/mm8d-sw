@@ -35,3 +35,4 @@ msg27=Refresh
 msg28=Camera
 msg29=Log
 msg30=If you want to see full log, please login to device via SSH, and use <i>mm8d-viewlog</i> command.
+$msg31 = "Start page";
