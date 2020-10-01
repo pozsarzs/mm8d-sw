@@ -85,7 +85,6 @@ loadmessages()
   MSGFILE="$DIR_MSG/$LNG/mm8d.msg"
   if [ -f "$MSGFILE" ]
   then
-echo   $MSGFILE
     MSG01=`cat $MSGFILE | grep msg01 | sed 's/msg01=//'`
     MSG02=`cat $MSGFILE | grep msg02 | sed 's/msg02=//'`
     MSG03=`cat $MSGFILE | grep msg03 | sed 's/msg03=//'`
@@ -95,7 +94,6 @@ echo   $MSGFILE
     MSG07=`cat $MSGFILE | grep msg07 | sed 's/msg07=//'`
     MSG08=`cat $MSGFILE | grep msg08 | sed 's/msg08=//'`
     MSG09=`cat $MSGFILE | grep msg09 | sed 's/msg09=//'`
-    echo $MSG01
   fi
 }
 
