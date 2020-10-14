@@ -149,7 +149,7 @@ def lckfile(mode):
     writetodebuglog("w","Cannot create/remove"+lockfile+"!")
 
 # write data to log with timestamp
-def writelog(channel,temperature,humidity,gasconcentrate,inputs,outputs):
+def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
   logfile=dir_log+'mm8d_ch'addzero(channel)+'.log'
   dt=(strftime("%Y-%m-%d,%H:%M",gmtime()))
   lckfile(1)
@@ -162,12 +162,20 @@ def writelog(channel,temperature,humidity,gasconcentrate,inputs,outputs):
       first_line=f.readline()
       lines=f.readlines()
       f.seek(0)
-      f.write(dt+','+
+      if (channel==0):
+        s=dt+','+
+              statusdata[0]+','+statusdata[1]+','+statusdata[2]+','+
+              statusdata[3]+','+statusdata[4]+','+statusdata[5]+'\n'
+      else:
+        s=dt+','+
               str(temperature)+','+
               str(humidity)+','+
               str(gasconcentrate)+','+
-              inputs[0]+','+inputs[1]+','+inputs[2]+','+inputs[3]+','+
-              outputs[0]+','+outputs[1]+','+outputs[2]+','+outputs[3]+'\n')
+              statusdata[0]+','+statusdata[1]+','+statusdata[2]+','+
+              statusdata[3]+','+statusdata[4]+','+statusdata[5]+','+
+              statusdata[6]+','+statusdata[7]+','+statusdata[8]+','+
+              statusdata[9]+'\n'
+      f.write(s)
       f.write(first_line)
       f.writelines(lines)
       f.close()
