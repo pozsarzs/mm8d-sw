@@ -24,9 +24,10 @@ import time
 
 arch=platform.machine()
 if (arch.find("86") > -1):
+  hw=1
   import portio
 else:
-  import Adafruit_DHT
+  hw=0
   import RPi.GPIO as GPIO
 
 
