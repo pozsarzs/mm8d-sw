@@ -84,6 +84,8 @@ def writetodebuglog(level,text):
 # load configuration
 def loadconfiguration(conffile):
   global address
+  global adr_mm6dch
+  global adr_mm7dch
   global api_key
   global base_url
   global city_name
@@ -96,12 +98,19 @@ def loadconfiguration(conffile):
   global lpt_adr
   global prt_in
   global prt_out
+  global usr_uid
   try:
     with open(conffile) as f:
       mainconfig=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mainconfig))
     address=config.get('e-mail','api_key')
+    adr_mm6dch=[0 for x in range(16)]
+    for i in range(16):
+      adr_mm6dch[i]=int(config.get('MM6D','adr_mm6dch_'+addzero(i)))
+    adr_mm7dch=[0 for x in range(16)]
+    for i in range(16):
+      adr_mm7dch[i]=int(config.get('MM7D','adr_mm7dch_'+addzero(i)))
     api_key=config.get('openweathermap.org','api_key')
     base_url=config.get('openweathermap.org','base_url')
     city_name=config.get('openweathermap.org','city_name')
@@ -109,17 +118,18 @@ def loadconfiguration(conffile):
     dbg_log=config.get('log','dbg_log')
     dir_log=config.get('directories','dir_log')
     dir_var=config.get('directories','dir_var')
-    ena_ch=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]
+    ena_ch=[0 for x in range(16)]
     for i in range(16):
       ena_ch[i]=int(config.get('enable','ena_ch_'+addzero(i)))
     lockfile=config.get('directories','dir_lck')+'mm8d.lck'
     lpt_prt=config.get('LPTPort','lpt_adr')
-    prt_in=[0,0,0,0,0,0,0,0,]
+    prt_in=[0 for x in range(8)]
     for i in range(8):
       prt_in[i]=int(config.get('GPIOPorts','prt_in_'+addzero(i)))
-    prt_out=[0,0,0,0,0,0,0,0,]
+    prt_out=[0 for x in range(8)]
     for i in range(8):
       prt_out[i]=int(config.get('GPIOPorts','prt_out_'+addzero(i)))
+    usr_uid=config.get('user','usr_uid')
     writetodebuglog("i","Configuration is loaded.")
   except:
     writetodebuglog("e","Cannot open "+conffile+"!")
@@ -359,10 +369,96 @@ def getexttemp():
     writetodebuglog("w","Cannot get external temperature from internet.")
     return 18
 
+def MM6DGetInputData(channel)
+  return 0
 
+def MM6DSetOutputData(channel)
+  return 0
 
+def MM7DGetAnalogData(channel)
+  return 0
 
+def MM7DSetStatusLED(channel)
+  return 0
 
+def MM8DGetInputData(channel)
+  return 0
 
+def MM8DSetOutputData(channel)
+  return 0
 
+def AnalizeData()
+  return 0
+
+def MakeLogFiles()
+  return 0
+
+# main program
+#confdir="/etc/mm8d/"
+confdir="/usr/local/etc/mm8d/"
+loadconfiguration(confdir+"mm8d.ini")
+for x in range(16):
+  if (ena_ch[x]=="1"):
+    loadenvirchars(x,confdir+"envir-ch"+addzero(x)+".ini")
+initports()
+first=1
+exttemp=18
+prevtemperature=[0 for x in range(16)]
+prevhumidity=[0 for x in range(16)]
+prevgasconcentrate=[0 for x in range(16)]
+prevmm6dinputs=["" for x in range(16)]
+prevmm6doutputs=["" for x in range(16)]
+prevmm8dinputs=""
+prevmm8doutputs=""
+writetodebuglog("i","Starting program as daemon.")
+with daemon.DaemonContext() as context:
+  try:
+    time.sleep(1)
+    while True:
+      # get input data from MM6D controllers
+      writetodebuglog("i","Getting input data from MM6Ds.")
+      for x in range(16):
+        if (ena_ch[x]=="1"):
+          MM6DGetInputData(x)
+      writetodebuglog("i","Getting is done.")
+      blinkactled()
+      # get analog data from MM7D controllers
+      writetodebuglog("i","Getting analog values from MM7Ds.")
+      for x in range(16):
+        if (ena_ch[x]=="1"):
+          MM7DGetAnalogData(x)
+      writetodebuglog("i","Getting is done.")
+      blinkactled()
+      # get input data from MM8D controller
+      writetodebuglog("i","Getting input data from MM8D.")
+      MM8DGetInputData
+      writetodebuglog("i","Getting is done.")
+      blinkactled()
+      # analize data and make logfiles
+      AnalizeData()
+      MakeLogFiles()
+      # set output data to MM6D controllers
+      writetodebuglog("i","Setting output data to MM6Ds.")
+      for x in range(16):
+        if (ena_ch[x]=="1"):
+          MM6DSetOutputData(x)
+      writetodebuglog("i","Setting is done.")
+      blinkactled()
+      # get analog data from MM7D controllers
+      writetodebuglog("i","Setting status LEDs to MM7Ds.")
+      for x in range(16):
+        if (ena_ch[x]=="1"):
+          MM7DGetStatusLED(x)
+      writetodebuglog("i","Setting is done.")
+      blinkactled()
+      # set output data to MM8D controller
+      writetodebuglog("i","Setting output data to MM8D.")
+      MM8DGetInputData
+      writetodebuglog("i","Setting is done.")
+      blinkactled()
+      # wait 10s
+      writetodebuglog("i","Waiting 10 s.")
+      time.sleep(10)
+  except KeyboardInterrupt:
+    GPIO.cleanup
 exit(0)
