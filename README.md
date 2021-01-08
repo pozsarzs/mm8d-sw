@@ -1,9 +1,9 @@
 *WARNING! It is not yet useable, because it is under development. WARNING!*  
 
-**MM8D/RPI * Growing house controlling and remote monitoring device**  
-Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  
+**MM8D * Central controlling and remote monitoring device for growing house**  
+Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  
 Homepage: <http://www.szerafingomba.hu/softwares/>  
-GitHub: <https://github.com/pozsarzs/mm8drpi-sw>
+GitHub: <https://github.com/pozsarzs/mm8d-sw>
 
 **Software**
 
