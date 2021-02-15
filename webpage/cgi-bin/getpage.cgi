@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
 # | MM8D v0.1 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | getpage.cgi                                                                |
 # | Get data in html format                                                    |
 # +----------------------------------------------------------------------------+
@@ -107,7 +107,7 @@ if ($ENV{'REQUEST_METHOD'} eq "GET")
 }
 
 # test data
-#$buffer = 'channel=1';
+$buffer = 'channel=1';
 
 # split input data
 @pairs = split(/&/, $buffer);

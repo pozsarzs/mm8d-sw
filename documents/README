@@ -1,40 +1,50 @@
-MM8D/RPI - Growing house controlling and remote monitoring device
------------------------------------------------------------------
+MM8D - Growing house controlling and remote monitoring device
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. About software
-~~~~~~~~~~~~~~~~~
-  It is an internal software for MM8D Raspberry Pi based controlling and
-monitoring device. You can view actual status with a browser application
-and administrate it with SSH client. There is a version of software  for
-PC for i386 processor.
+-----------------
+  It is an internal software for MM8D controlling and monitoring device.
+You can view actual status with a browser application and administrate it
+with SSH client.
+  This software originally made to Raspberry Pi, but you can install on
+Debian GNU/Linux on PC, too.
 
 Requirements:
 
-  Hardware: Raspberry Pi 3 Model B or PC
-  Software: Raspbian OS Lite or Debian GNU/Linux operation system,
+  Hardware: Raspberry Pi 3 Model B.
+  Software: Raspbian OS Lite,
             Apache webserver,
+            GNUPlot,
             Perl,
             Python3.
 
+  Hardware: PC with a paralel port.
+  Software: Debian GNU/Linux operation system,
+            Apache webserver,
+            GNUPlot,
+            Perl,
+            Python3.
 
 2. How to get installer package for my OS?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------
 a. Visit homepage (see later) to download installer packages:
 
   Raspbian OS:      mm8d-sw-0.1-armhf.tar.gz
+
                     mm8d-eec_0.1-1_armhf.deb
                     mm8d-sw_0.1-1_armhf.deb
+                    mm8d-web_0.1-1_all.deb
 
   Debian GNU/Linux: mm8d-sw-0.1-i386.tar.gz
+
                     mm8d-eec_0.1-1_i386.deb
                     mm8d-sw_0.1-1_i386.deb
-
-  for both:         mm8d-web_0.1-1_all.deb
+                    mm8d-web_0.1-1_all.deb
 
 
 b. Download from Github
 
-  $ git clone https://github.com/pozsarzs/mm8drpi-sw.git
+  $ git clone https://github.com/pozsarzs/mm8d-sw.git
 
 c. Download from Debian repository
 
@@ -44,12 +54,10 @@ c. Download from Debian repository
   $ sudo apt-get update
 
   install:
-  $ sudo apt-get install mm8d-prepare
-  $ mm8d-prepare
   $ sudo apt-get install mm8d-sw mm8d-eec mm8d-web
 
 3. Contact
-~~~~~~~~~~
+----------
    Homepage:             <http://www.szerafingomba.hu/softwares/>
    Author:               Pozsar Zsolt
    Tax ID:               60407850-1-36
@@ -58,10 +66,10 @@ c. Download from Debian repository
    E-mail:               <pozsar.zsolt@szerafingomba.hu>
    Phone:                +36 56/470-272
    Mobile:               +36 30/249-5030
-   Postal address:       Pozsar Zsolt
-                         Kurazsi Fo ut 1.
-                         HU-5430 Tiszafoldvar
+   Postal address:       Pozsár Zsolt
+                         Kurázsi Fő út 1.
+                         HU-5430 Tiszaföldvár
                          Hungary
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
+ MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

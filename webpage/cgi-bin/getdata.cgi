@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
 # | MM8D v0.1 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | getdata.cgi                                                                |
 # | Get data in plain text format                                              |
 # +----------------------------------------------------------------------------+
@@ -25,7 +25,7 @@ use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
 
-$contname = 'MM8D/RPI';
+$contname = 'MM8D';
 $contversion = 'v0.1';
 
 print "Content-type:text/plain\r\n\r\n";
@@ -39,7 +39,7 @@ if ($ENV{'REQUEST_METHOD'} eq "GET")
 }
 
 # test data
-#buffer = 'channel=1&uid=00000000&value=2';
+buffer = 'channel=1&uid=00000000&value=2';
 
 # split input data
 @pairs = split(/&/, $buffer);

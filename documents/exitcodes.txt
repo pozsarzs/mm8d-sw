@@ -1,5 +1,5 @@
 Exit codes of executable files
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   0: normal exit
   1: cannot open configuration file
@@ -19,4 +19,4 @@ Exit codes of executable files
  15: cannot create log file
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
+ MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

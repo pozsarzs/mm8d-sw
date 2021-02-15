@@ -5,7 +5,7 @@ Priority: extra
 Architecture: i386
 Installed-Size: 0 kB
 Maintainer: Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
-Depends: lsb-base, build-essential, libfreetype6-dev, libjpeg-dev, python-configparser,  python3-daemon,  python3-dev, python3-openssl, python3-pip, python3-rpi.gpio
+Depends: lsb-base, build-essential, libfreetype6-dev, libjpeg-dev, python-configparser,  python3-daemon,  python3-dev, python3-openssl, python3-pip
 Description: Main program
  This is a part of operating program of MM8D growing house controlling
  and remote monitoring device.

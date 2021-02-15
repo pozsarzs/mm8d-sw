@@ -1,5 +1,6 @@
 Installation instruction tar.gz package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Before install this program please install Debian GNU/Linux to HDD of
 PC (X Window System is not needed). Do not forget to set hostname and
 network.
@@ -22,7 +23,7 @@ Set environment characteristics
            .
            .
            .
-  $ mm8d-editenvirconf 16
+  $ mm8d-editenvirconf 8
 
 Removing
 ~~~~~~~~
@@ -30,4 +31,4 @@ Removing
   $ ./uninstall
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
+ MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

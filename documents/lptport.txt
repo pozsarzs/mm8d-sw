@@ -1,0 +1,29 @@
+Connect MM8D to LPT port
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+-------------------------------------------------------
+ MM8D  function        name                  LPT name
+-------------------------------------------------------
+ J2/1  input           Mains sensor      --> 15  -ERROR
+ J2/2  input           Mains breaker #1  --> 13  SELECT
+ J2/3  input           Mains breaker #2  --> 12  PE
+ J2/4  input           Mains breaker #3  --> 10  -ACK
+ J3/1  power input     +5V
+ J3/2  power input     GND               --> 25  GND
+ J3/3  power input     GND
+ J3/4  power input     +3.3V
+ J4/1  relay contact   alarm output      -->  2  D0
+ J4/2  relay contact   unused            -->  3  D1
+ J4/3  relay contact   unused            -->  4  D2
+ J4/4  relay contact   unused            -->  5  D3
+ J5/1  open collector  Active light      -->  6  D4
+ J5/2  open collector  Warning light     -->  7  D5
+ J5/3  open collector  Error light       -->  8  D6
+ J5/4  open collector  unused            -->  9  D7
+
+J3/1-4: 12V inputs with polarity protection and optocoupler
+J4/1-4: NC-NO relay contact output
+J5/1-4: NPN bipolar transistor collector output (for LEDs only)
+
+--------------------------------------------------------------------------------
+ MM8D * Copyright (C) 2020-2021 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>

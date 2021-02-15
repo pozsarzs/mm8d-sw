@@ -1,7 +1,7 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
 # | MM8D v0.1 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | install                                                                    |
 # | Installer script                                                           |
 # +----------------------------------------------------------------------------+
@@ -20,6 +20,7 @@ copy()
 }
 
 # constans
+ARCH=`uname -m`
 SWN1="MM8D"
 SWN2="mm8d"
 SWV=`cat documents/VERSION`
@@ -49,7 +50,7 @@ README="/usr/$INSTDIR/share/doc/$SWN2/README"
 clear
 echo "--------------------------------------------------------------------------------"
 echo "$SWN1 $SWV installer script"
-echo "Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>"
+echo "Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>"
 echo "--------------------------------------------------------------------------------"
 echo "  This program is free software: you can redistribute it and/or modify it
 under the terms of the European Union Public License 1.1 version.
@@ -69,7 +70,7 @@ do
   echo "  $D"
 done
 for X in $LANGUAGES; do
-  if [ -e "messages/"$SWN2"_"$X".msg" ];
+  if [ -e "messages/"$SWN2"_"$X".msg" ]
   then
     sudo mkdir --parents /usr/$INSTDIR/share/locale/$X 2> /dev/null
     echo "  /usr/$INSTDIR/share/locale/$X"
@@ -83,12 +84,17 @@ copy "LICENCE" "/usr/$INSTDIR/share/doc/$SWN2/COPYING"
 copy "documents/*" "/usr/$INSTDIR/share/doc/$SWN2/"
 copy "manuals/*" "/usr/$INSTDIR/share/man/man1/"
 for X in $LANGUAGES; do
-  if [ -e "messages/"$SWN2"_"$X".msg" ];
+  if [ -e "messages/"$SWN2"_"$X".msg" ]
   then
     copy "messages/"$SWN2"_"$X".msg" "/usr/$INSTDIR/share/locale/$X/$SWN2.msg"
   fi;
 done
-copy "binary/*.bin" "/usr/$INSTDIR/bin/"
+if [ $ARCH = 'armhf' ]
+then
+  copy "binary/armhf/*.bin" "/usr/$INSTDIR/bin/"
+else
+  copy "binary/i386/*.bin" "/usr/$INSTDIR/bin/"
+fi
 copy "programs/*.py" "/usr/$INSTDIR/bin/"
 copy "scripts/*" "/usr/$INSTDIR/bin/"
 copy "settings/cron.d/*" "/etc/cron.d/"
@@ -99,7 +105,10 @@ copy "webpage/cgi-bin/*.cgi" "/usr/lib/cgi-bin/"
 copy "webpage/*.css" "/var/www/html/"
 copy "webpage/*.html" "/usr/$INSTDIR/share/$SWN2/"
 copy "webpage/pics/*" "/var/www/html/pics/"
-sudo cat /etc/motd | grep -qv $SWN1 && sudo mv /etc/motd /etc/motd.orig && sudo cp settings/motd /etc/
+if [ ! -e /etc/motd.orig ]
+then
+  sudo cat /etc/motd | grep -qv $SWN1 && sudo mv /etc/motd /etc/motd.orig && sudo cp settings/motd /etc/
+fi
 echo "- set init.d:"
 sudo /etc/init.d/$SWN2.sh stop
 sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc0.d/K01$SWN2.sh
