@@ -61,14 +61,10 @@ sub writetable()
     if ($columns[3] eq 1) { $columns[3] = $red } else { $columns[3] = $dark };
     if ($columns[4] eq 1) { $columns[4] = $red } else { $columns[4] = $dark };
     if ($columns[5] eq 1) { $columns[5] = $red } else { $columns[5] = $dark };
-    if ($columns[6] eq 1) { $columns[6] = $red } else { $columns[6] = $dark };
-    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
     print "          <td>$columns[5]</td>";
-    print "          <td>$columns[6]</td>";
-    print "          <td>$columns[7]</td>";
   } else
   {
     print "          <td>$columns[2]</td>";
@@ -77,13 +73,10 @@ sub writetable()
     if ($columns[5] eq 1) { $columns[5] = $green } else { $columns[5] = $dark };
     if ($columns[6] eq 1) { $columns[6] = $yellow } else { $columns[6] = $dark };
     if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
-    if ($columns[8] eq 1) { $columns[8] = $green } else { $columns[8] = $dark };
-    if ($columns[9] eq 1) { $columns[9] = $yellow } else { $columns[9] = $dark };
-    if ($columns[10] eq 1) { $columns[10] = $red } else { $columns[10] = $dark };
-    if ($columns[11] eq 1) { $columns[11] = $red } else { $columns[11] = $dark };
-    if ($columns[12] eq 1) { $columns[12] = $green } else { $columns[12] = $dark };
-    if ($columns[13] eq 1) { $columns[13] = $green } else { $columns[13] = $dark };
-    if ($columns[14] eq 1) { $columns[14] = $green } else { $columns[14] = $dark };
+    if ($columns[8] eq 1) { $columns[8] = $red } else { $columns[8] = $dark };
+    if ($columns[9] eq 1) { $columns[9] = $green } else { $columns[9] = $dark };
+    if ($columns[10] eq 1) { $columns[10] = $green } else { $columns[10] = $dark };
+    if ($columns[11] eq 1) { $columns[11] = $green } else { $columns[11] = $dark };
     print "          <td>$columns[5]</td>";
     print "          <td>$columns[6]</td>";
     print "          <td>$columns[7]</td>";
@@ -91,9 +84,6 @@ sub writetable()
     print "          <td>$columns[9]</td>";
     print "          <td>$columns[10]</td>";
     print "          <td>$columns[11]</td>";
-    print "          <td>$columns[12]</td>";
-    print "          <td>$columns[13]</td>";
-    print "          <td>$columns[14]</td>";
   }
   print "        </tr>";
 }
@@ -107,7 +97,7 @@ if ($ENV{'REQUEST_METHOD'} eq "GET")
 }
 
 # test data
-$buffer = 'channel=1';
+#$buffer = 'channel=1';
 
 # split input data
 @pairs = split(/&/, $buffer);
@@ -156,15 +146,7 @@ if (-e $conffile)
       case "usr_dt1" { $usr_dt1 = $columns[1]; }
       case "web_lines" { $web_lines = $columns[1]; }
     }
-    my @b = (0..9);
-    for (@b)
-    {
-      if ($columns[0] eq "nam_ch0" . $_)
-      {
-        $nam_ch[$_] = $columns[1];
-      }
-    }
-    my @b = (10..16);
+    my @b = (0..8);
     for (@b)
     {
       if ($columns[0] eq "nam_ch" . $_)
@@ -264,16 +246,9 @@ $footerfile = "$dir_shr/footer_$lang.html";
 $headerfile = "$dir_shr/header_$lang.html";
 $lockfile = "$dir_lck/mm8d.lock";
 $logfile = "$dir_log/mm8d-ch";
-if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 16 )
+if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 {
-  if ( $channel >=0  &&  $channel <= 9 )
-  {
-    $ch = "0" . $channel;
-  }
-  else
-  {
-    $ch = $channel;
-  }
+  $ch = $channel;
 } else
 {
   print "ERROR #10\n";
@@ -322,23 +297,18 @@ if ($channel == 0)
   print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg33 #1</td></tr>";
   print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg33 #2</td></tr>";
   print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg33 #3</td></tr>";
-  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg34</td></tr>";
-  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg35</td></tr>";
 } else
 {
   print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg11</td></tr>";
   print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg12</td></tr>";
   print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg13</td></tr>";
-  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg14</td></tr>";
-  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg15</td></tr>";
-  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg16</td></tr>";
-  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg17</td></tr>";
-  print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg18</td></tr>";
-  print "        <tr><td align=\"right\"><b>9:</b></td><td>$msg19</td></tr>";
-  print "        <tr><td align=\"right\"><b>10:</b></td><td>$msg20</td></tr>";
-  print "        <tr><td align=\"right\"><b>11:</b></td><td>$msg21</td></tr>";
-  print "        <tr><td align=\"right\"><b>12:</b></td><td>$msg22</td></tr>";
-  print "        <tr><td align=\"right\"><b>13:</b></td><td>$msg23</td></tr>";
+  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg17</td></tr>";
+  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg18</td></tr>";
+  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg19</td></tr>";
+  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg20</td></tr>";
+  print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg21</td></tr>";
+  print "        <tr><td align=\"right\"><b>9:</b></td><td>$msg22</td></tr>";
+  print "        <tr><td align=\"right\"><b>10:</b></td><td>$msg23</td></tr>";
 }
 print "      </tbody>";
 print "    </table>";
@@ -351,12 +321,11 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($channel == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th>";
 } else
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
   print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
-  print "          <th>11</th><th>12</th><th>13</th>";
 }
 print "        </tr>";
 if (-e $logfile)
@@ -430,12 +399,11 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($channel == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th>";
 } else
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
   print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
-  print "          <th>11</th><th>12</th><th>13</th>";
 }
 print "        </tr>";
 $line = 0;

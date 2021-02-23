@@ -31,23 +31,23 @@ loadconfiguration()
   DIR_MSG=`cat $CFGFILE | grep dir_msg= | sed 's/dir_msg=//'`
   DIR_SHR=`cat $CFGFILE | grep dir_shr= | sed 's/dir_shr=//'`
   DIR_TMP=`cat $CFGFILE | grep dir_tmp= | sed 's/dir_tmp=//'`
-  ENA_CH01=`cat $CFGFILE | grep ena_ch01= | sed 's/ena_ch01=//'`
-  ENA_CH02=`cat $CFGFILE | grep ena_ch02= | sed 's/ena_ch02=//'`
-  ENA_CH03=`cat $CFGFILE | grep ena_ch03= | sed 's/ena_ch03=//'`
-  ENA_CH04=`cat $CFGFILE | grep ena_ch04= | sed 's/ena_ch04=//'`
-  ENA_CH05=`cat $CFGFILE | grep ena_ch05= | sed 's/ena_ch05=//'`
-  ENA_CH06=`cat $CFGFILE | grep ena_ch06= | sed 's/ena_ch06=//'`
-  ENA_CH07=`cat $CFGFILE | grep ena_ch07= | sed 's/ena_ch07=//'`
-  ENA_CH08=`cat $CFGFILE | grep ena_ch08= | sed 's/ena_ch08=//'`
-  NAM_CH00=`cat $CFGFILE | grep nam_ch00= | sed 's/nam_ch00=//'`
-  NAM_CH01=`cat $CFGFILE | grep nam_ch01= | sed 's/nam_ch01=//'`
-  NAM_CH02=`cat $CFGFILE | grep nam_ch02= | sed 's/nam_ch02=//'`
-  NAM_CH03=`cat $CFGFILE | grep nam_ch03= | sed 's/nam_ch03=//'`
-  NAM_CH04=`cat $CFGFILE | grep nam_ch04= | sed 's/nam_ch04=//'`
-  NAM_CH05=`cat $CFGFILE | grep nam_ch05= | sed 's/nam_ch05=//'`
-  NAM_CH06=`cat $CFGFILE | grep nam_ch06= | sed 's/nam_ch06=//'`
-  NAM_CH07=`cat $CFGFILE | grep nam_ch07= | sed 's/nam_ch07=//'`
-  NAM_CH08=`cat $CFGFILE | grep nam_ch08= | sed 's/nam_ch08=//'`
+  ENA_CH1=`cat $CFGFILE | grep ena_ch1= | sed 's/ena_ch1=//'`
+  ENA_CH2=`cat $CFGFILE | grep ena_ch2= | sed 's/ena_ch2=//'`
+  ENA_CH3=`cat $CFGFILE | grep ena_ch3= | sed 's/ena_ch3=//'`
+  ENA_CH4=`cat $CFGFILE | grep ena_ch4= | sed 's/ena_ch4=//'`
+  ENA_CH5=`cat $CFGFILE | grep ena_ch5= | sed 's/ena_ch5=//'`
+  ENA_CH6=`cat $CFGFILE | grep ena_ch6= | sed 's/ena_ch6=//'`
+  ENA_CH7=`cat $CFGFILE | grep ena_ch7= | sed 's/ena_ch7=//'`
+  ENA_CH8=`cat $CFGFILE | grep ena_ch8= | sed 's/ena_ch8=//'`
+  NAM_CH0=`cat $CFGFILE | grep nam_ch0= | sed 's/nam_ch0=//'`
+  NAM_CH1=`cat $CFGFILE | grep nam_ch1= | sed 's/nam_ch1=//'`
+  NAM_CH2=`cat $CFGFILE | grep nam_ch2= | sed 's/nam_ch2=//'`
+  NAM_CH3=`cat $CFGFILE | grep nam_ch3= | sed 's/nam_ch3=//'`
+  NAM_CH4=`cat $CFGFILE | grep nam_ch4= | sed 's/nam_ch4=//'`
+  NAM_CH5=`cat $CFGFILE | grep nam_ch5= | sed 's/nam_ch5=//'`
+  NAM_CH6=`cat $CFGFILE | grep nam_ch6= | sed 's/nam_ch6=//'`
+  NAM_CH7=`cat $CFGFILE | grep nam_ch7= | sed 's/nam_ch7=//'`
+  NAM_CH8=`cat $CFGFILE | grep nam_ch8= | sed 's/nam_ch8=//'`
   USR_DT1=`cat $CFGFILE | grep usr_dt1= | sed 's/usr_dt1=//'`
   USR_DT2=`cat $CFGFILE | grep usr_dt2= | sed 's/usr_dt2=//'`
   USR_DT3=`cat $CFGFILE | grep usr_dt3= | sed 's/usr_dt3=//'`
@@ -125,18 +125,13 @@ makehomepage()
     <table border="0" cellpadding="3" cellspacing="0" width="100%">
       <tbody>
         <tr>
-          <td><b>$MSG08 #00:</b></td><td>$NAM_CH00</td>
+          <td><b>$MSG08 #0:</b></td><td>$NAM_CH0</td>
           <td align="right"><a href="cgi-bin/getpage.cgi?channel=0"><button type=\"button\">$MSG09</button></a></td>
         </tr>
 EOF
   for i in {1..8}
   do
-    if [ $i -lt "10" ]
-    then
-      ii=0$i
-    else
-      ii=$i
-    fi
+    ii=$i
     NAME=NAM_CH$ii
     ENAB=ENA_CH$ii
     echo "        <tr>"  >> $DIR_TMP/index.html

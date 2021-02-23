@@ -43,12 +43,7 @@ checkparameter()
   then
     if [ $1 -le "8" ]
     then
-      if [ $1 -lt "10" ]
-      then
-        CHANNEL="0"$1
-      else
-        CHANNEL=$1
-      fi
+      CHANNEL=$1
     else
       echo "ERROR #3: Wrong channel number!"
       echo "Valid values: 1..8"

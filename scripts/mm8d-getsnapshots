@@ -29,12 +29,7 @@ checkparameter()
   then
     if [ $1 -le "8" ]
     then
-      if [ $1 -lt "10" ]
-      then
-        CHANNEL="0"$1
-      else
-        CHANNEL=$1
-      fi
+      CHANNEL=$1
     else
       echo "ERROR #3: Wrong channel number!"
       echo "Valid values: 1..8"
@@ -56,14 +51,14 @@ loadconfiguration()
     echo "ERROR #1: Cannot open $CFGFILE configuration file!"
     exit 1
   fi
-  CAM_CH01=`cat $CFGFILE | grep cam_ch01= | sed 's/cam_ch01=//'`
-  CAM_CH02=`cat $CFGFILE | grep cam_ch02= | sed 's/cam_ch02=//'`
-  CAM_CH03=`cat $CFGFILE | grep cam_ch03= | sed 's/cam_ch03=//'`
-  CAM_CH04=`cat $CFGFILE | grep cam_ch04= | sed 's/cam_ch04=//'`
-  CAM_CH05=`cat $CFGFILE | grep cam_ch05= | sed 's/cam_ch05=//'`
-  CAM_CH06=`cat $CFGFILE | grep cam_ch06= | sed 's/cam_ch06=//'`
-  CAM_CH07=`cat $CFGFILE | grep cam_ch07= | sed 's/cam_ch07=//'`
-  CAM_CH08=`cat $CFGFILE | grep cam_ch08= | sed 's/cam_ch08=//'`
+  CAM_CH1=`cat $CFGFILE | grep cam_ch1= | sed 's/cam_ch1=//'`
+  CAM_CH2=`cat $CFGFILE | grep cam_ch2= | sed 's/cam_ch2=//'`
+  CAM_CH3=`cat $CFGFILE | grep cam_ch3= | sed 's/cam_ch3=//'`
+  CAM_CH4=`cat $CFGFILE | grep cam_ch4= | sed 's/cam_ch4=//'`
+  CAM_CH5=`cat $CFGFILE | grep cam_ch5= | sed 's/cam_ch5=//'`
+  CAM_CH6=`cat $CFGFILE | grep cam_ch6= | sed 's/cam_ch6=//'`
+  CAM_CH7=`cat $CFGFILE | grep cam_ch7= | sed 's/cam_ch7=//'`
+  CAM_CH8=`cat $CFGFILE | grep cam_ch8= | sed 's/cam_ch8=//'`
   DIR_HTM=`cat $CFGFILE | grep dir_htm= | sed 's/dir_htm=//'`
 }
 

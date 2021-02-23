@@ -116,7 +116,7 @@ if (-e $conffile)
 # create output
 $lockfile = $dir_lck . "mm8d.lock";
 $logfile = $dir_log . "mm8d-ch";
-if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 16 )
+if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 {
   if ( $channel >=0  &&  $channel <= 9 )
   {
