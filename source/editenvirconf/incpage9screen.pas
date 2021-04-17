@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incsaveoutfiles.pas                                                      | }
-{ | Save out files                                                           | }
+{ | incpage9screen.pas                                                       | }
+{ | Show screen content of page #9                                           | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -12,21 +12,13 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
-// save output files
-function saveoutfiles(directory: string): boolean;
+procedure page9screen;
 var
   b: byte;
-  outf: text;
-
 begin
-  saveoutfiles:=true;
-  for b:=1 to 3 do
-  try
-    assignfile(outf,directory+'out'+inttostr(b));
-    rewrite(outf);
-    writeln(outf,outputs[b]);
-    closefile(outf);
-  except
-    saveoutfiles:=false;
-  end;
+  header(PRGNAME+' '+VERSION+' * Page 9/9: Common parameters');
+  textcolor(white);
+  gotoxy(4,3); writeln('Relative unwanted gas concentrate:');
+  gotoxy(45,3);
+  if gasconmax>9 then gotoxy(45,3) else gotoxy(46,3); writeln(gasconmax,' %');
 end;

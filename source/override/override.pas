@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | override.pas                                                             | }
-{ | Full-screen program for override output states                           | }
+{ | Full-screen program for override output status                           | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it

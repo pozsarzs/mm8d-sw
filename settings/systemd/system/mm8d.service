@@ -3,6 +3,7 @@ Description=MM8D operating software
 
 [Service]
 ExecStart=/usr/local/bin/mm8d.py
+# ExecStart=/usr/bin/mm8d.py
 Restart=on-failure
 RestartSec=5s
 

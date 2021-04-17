@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage4screen.pas                                                       | }
 { | Show screen content of page #4                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,7 +16,7 @@ procedure page4screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 4/8: Growing hyphae - ventilating');
+  header(PRGNAME+' '+VERSION+' * Page 4/9: Growing hyphae - ventilating');
   textcolor(white);
   gotoxy(4,3); writeln('Ventilators switch-on minute:');
   gotoxy(4,4); writeln('Ventilators switch-off minute:');

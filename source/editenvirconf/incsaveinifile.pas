@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incsaveinifile.pas                                                       | }
 { | Save configuration to ini file                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -20,9 +20,10 @@ var
 const
   HEADER1='; +----------------------------------------------------------------------------+';
   HEADER2='; | MM8D v0.1 * Growing house controlling and remote monitoring device         |';
-  HEADER3='; | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |';
-  HEADER4='; | envir-ch??.ini                                                             |';
+  HEADER3='; | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |';
+  HEADER4='; | envir-ch?.ini                                                              |';
   HEADER5='; | Growing environment characteristics                                        |';
+  C: string='common';
   H: string='hyphae';
   M: string='mushroom';
 
@@ -37,6 +38,10 @@ begin
     writeln(iif,HEADER4);
     writeln(iif,HEADER5);
     writeln(iif,HEADER1);
+    writeln(iif,'');
+    writeln(iif,'['+C+']');
+    writeln(iif,'; common parameters');
+    writeln(iif,'gasconcentrate_max=',gasconmax);
     writeln(iif,'');
     writeln(iif,'['+H+']');
     writeln(iif,'; humidifier');

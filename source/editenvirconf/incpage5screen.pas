@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage5screen.pas                                                       | }
 { | Show screen content of page #5                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,7 +16,7 @@ procedure page5screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 5/8: Growing mushroom - humidifying');
+  header(PRGNAME+' '+VERSION+' * Page 5/9: Growing mushroom - humidifying');
   textcolor(white);
   gotoxy(4,3); writeln('Minimal relative humidity:');
   gotoxy(4,4); writeln('Lower warning level of humidity:');

@@ -75,14 +75,14 @@ writetofile()
   esac
   if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
   then
-    sudo mkdir --parents $DIR_VAR$CHANNEL 2>/dev/null
-    sudo echo -n $3 2>/dev/null 1> $DIR_VAR$CHANNEL"/"$OF
+    sudo mkdir --parents $DIR_VAR/$CHANNEL 2>/dev/null
+    sudo echo -n $3 2>/dev/null 1> $DIR_VAR/$CHANNEL"/"$OF
     if [ $? = 0 ]
     then
       echo "Output '"$2"' of channel #"$CHANNEL" is set to $3."
       exit 0
     else
-      echo "ERROR #8 Cannot write "$DIR_VAR$CHANNEL"/"$OF" output file!"
+      echo "ERROR #8 Cannot write "$DIR_VAR/$CHANNEL"/"$OF" output file!"
       exit 8
     fi
   fi
@@ -93,21 +93,21 @@ writetofile()
 
 getstatus()
 {
-  if [ -f "$DIR_VAR$CHANNEL/out1" ]
+  if [ -f "$DIR_VAR/$CHANNEL/out1" ]
   then
-    LAMP=`cat "$DIR_VAR$CHANNEL/out1"`
+    LAMP=`cat "$DIR_VAR/$CHANNEL/out1"`
   else
     LAMP="neutral"
   fi
   if [ -f "$DIR_VAR$CHANNEL/out2" ]
   then
-    VENT=`cat "$DIR_VAR$CHANNEL/out2"`
+    VENT=`cat "$DIR_VAR/$CHANNEL/out2"`
   else
     VENT="neutral"
   fi
   if [ -f "$DIR_VAR$CHANNEL/out3" ]
   then
-    HEAT=`cat "$DIR_VAR$CHANNEL/out3"`
+    HEAT=`cat "$DIR_VAR/$CHANNEL/out3"`
   else
     HEAT="neutral"
   fi
@@ -121,7 +121,7 @@ runfullscreenprogram()
 {
   read -p "Channel (1-8): " CH
   checkparameter $CH
-  sudo mm8d-override.bin $DIR_VAR$CHANNEL
+  sudo mm8d-override.bin $DIR_VAR/$CHANNEL
 }
 
 usage()

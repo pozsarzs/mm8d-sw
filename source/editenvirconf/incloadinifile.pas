@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incloadinifile.pas                                                       | }
 { | Load configuration from ini file                                         | }
 { +--------------------------------------------------------------------------+ }
@@ -18,6 +18,7 @@ var
   iif: TINIFile;
   b: byte;
 const
+  C: string='common';
   H: string='hyphae';
   M: string='mushroom';
 
@@ -25,6 +26,7 @@ begin
   iif:=TIniFile.Create(filename);
   loadinifile:=true;
   try
+    gasconmax:=strtoint(iif.ReadString(C,'gasconcentrate_max','0'));
     hhummax:=strtoint(iif.ReadString(H,'humidity_max','0'));
     hhummin:=strtoint(iif.ReadString(H,'humidity_min','0'));
     hhumoff:=strtoint(iif.ReadString(H,'humidifier_off','0'));

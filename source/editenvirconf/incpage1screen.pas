@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage1screen.pas                                                       | }
 { | Show screen content of page #1                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,7 +16,7 @@ procedure page1screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 1/8: Growing hyphae - humidifying');
+  header(PRGNAME+' '+VERSION+' * Page 1/9: Growing hyphae - humidifying');
   textcolor(white);
   gotoxy(4,3); writeln('Minimal relative humidity:');
   gotoxy(4,4); writeln('Lower warning level of humidity:');

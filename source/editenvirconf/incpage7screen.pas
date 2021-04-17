@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage7screen.pas                                                       | }
 { | Show screen content of page #7                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -14,12 +14,12 @@
 
 procedure page7screen;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 7/8: Growing mushroom - lighting');
+  header(PRGNAME+' '+VERSION+' * Page 7/9: Growing mushroom - lighting');
   textcolor(white);
-  gotoxy(4,3); writeln('Lights switch-on time #1:');
-  gotoxy(4,4); writeln('Lights switch-off time #1:');
-  gotoxy(4,5); writeln('Lights switch-on time #2:');
-  gotoxy(4,6); writeln('Lights switch-off time #2:');
+  gotoxy(4,3); writeln('Lamps switch-on time #1:');
+  gotoxy(4,4); writeln('Lamps switch-off time #1:');
+  gotoxy(4,5); writeln('Lamps switch-on time #2:');
+  gotoxy(4,6); writeln('Lamps switch-off time #2:');
   gotoxy(45,3); if mlightson1<10 then write(' '); write(mlightson1,'.00');
   gotoxy(45,4); if mlightsoff1<10 then write(' '); write(mlightsoff1,'.00');
   gotoxy(45,5); if mlightson2<10 then write(' '); write(mlightson2,'.00');

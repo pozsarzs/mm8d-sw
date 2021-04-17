@@ -24,6 +24,7 @@ uses
   INIFiles, SysUtils, character, crt, untcommon;
 var
   bottom: byte;
+  gasconmax: byte;
   hheaterdis, mheaterdis: array[0..23] of byte;
   hventdis, mventdis: array[0..23] of byte;
   hventdislowtemp, mventdislowtemp: array[0..23] of byte;
@@ -43,31 +44,34 @@ var
 const
   VERSION: string='v0.1';
   PRGNAME: string='MM8D-EditEnvirConf';
-  BLOCKS: array[1..8] of byte=(1,3,1,6,1,3,1,6);
-  MINPOSX: array[1..8,1..6] of byte=((46,0,0,0,0,0),
+  BLOCKS: array[1..9] of byte=(1,3,1,6,1,3,1,6,1);
+  MINPOSX: array[1..9,1..6] of byte=((46,0,0,0,0,0),
                                      (46,17,35,0,0,0),
                                      (46,0,0,0,0,0),
                                      (46,17,35,53,71,46),
                                      (46,0,0,0,0,0),
                                      (46,17,35,0,0,0),
                                      (46,0,0,0,0,0),
-                                     (46,17,35,53,71,46));
-  MINPOSY: array[1..8,1..6] of byte=((3,0,0,0,0,0),
+                                     (46,17,35,53,71,46),
+                                     (46,0,0,0,0,0));
+  MINPOSY: array[1..9,1..6] of byte=((3,0,0,0,0,0),
                                      (3,10,10,0,0,0),
                                      (3,0,0,0,0,0),
                                      (3,8,8,8,8,21),
                                      (3,0,0,0,0,0),
                                      (3,10,10,0,0,0),
                                      (3,0,0,0,0,0),
-                                     (3,8,8,8,8,21));
-  MAXPOSY: array[1..8,1..6] of byte=((6,0,0,0,0,0),
+                                     (3,8,8,8,8,21),
+                                     (3,0,0,0,0,0));
+  MAXPOSY: array[1..9,1..6] of byte=((6,0,0,0,0,0),
                                      (6,21,21,0,0,0),
                                      (6,0,0,0,0,0),
                                      (4,19,19,19,19,21),
                                      (6,0,0,0,0,0),
                                      (6,21,21,0,0,0),
                                      (6,0,0,0,0,0),
-                                     (4,19,19,19,19,21));
+                                     (4,19,19,19,19,21),
+                                     (3,0,0,0,0,0));
   FOOTERS: array[1..4] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                   '<Enter> accept  <Esc> cancel',
                                   '<+>/<-> sign change  <Enter> accept  <Esc> cancel',
@@ -81,6 +85,7 @@ const
 {$I incpage6screen.pas}
 {$I incpage7screen.pas}
 {$I incpage8screen.pas}
+{$I incpage9screen.pas}
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
@@ -96,6 +101,7 @@ begin
     6: page6screen;
     7: page7screen;
     8: page8screen;
+    9: page9screen;
   end;
   footer(bottom-1,FOOTERS[1]);
   textbackground(black);
@@ -368,6 +374,20 @@ begin
         mventlowtemp:=strtoint(s); write(mventlowtemp);
       end;
     end;
+    // -- page #9 --
+    if page=9 then
+    begin
+      // page #9 - block #1
+      if block=1 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block]-1,posy); write('  ');
+        gotoxy(MINPOSX[page,block]-length(s)+1,posy);
+        case posy of
+          3: begin gasconmax:=strtoint(s); write(gasconmax); end;
+        end;
+      end;
+    end;
   end;
   footer(bottom-1,FOOTERS[1]);
   gotoxy(1,bottom); clreol;
@@ -412,7 +432,7 @@ begin
       // next page
       #81: begin
              page:=page+1;
-             if page>8 then page:=8;
+             if page>9 then page:=9;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];
@@ -420,7 +440,7 @@ begin
            end;
       // last page
       #79: begin
-             page:=8;
+             page:=9;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];

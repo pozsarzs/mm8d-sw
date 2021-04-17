@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage1screen.pas                                                       | }
 { | Show screen content of page #1                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,9 +16,9 @@ procedure page1screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Override output values');
+  header(PRGNAME+' '+VERSION+' * Override output status');
   textcolor(white);
-  gotoxy(4,3); writeln('Output #1 - light:');
+  gotoxy(4,3); writeln('Output #1 - lamp:');
   gotoxy(4,4); writeln('Output #2 - ventilator:');
   gotoxy(4,5); writeln('Output #3 - heater:');
   for b:=1 to 3 do

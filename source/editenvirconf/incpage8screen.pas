@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
-{ | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>          | }
+{ | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage8screen.pas                                                       | }
 { | Show screen content of page #8                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,7 +16,7 @@ procedure page8screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 8/8: Growing mushroom - ventilating');
+  header(PRGNAME+' '+VERSION+' * Page 8/9: Growing mushroom - ventilating');
   textcolor(white);
   gotoxy(4,3); writeln('Ventilators switch-on minute:');
   gotoxy(4,4); writeln('Ventilators switch-off minute:');

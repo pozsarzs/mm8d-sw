@@ -17,6 +17,7 @@ Exit codes of executable files
  13: cannot write configuration file
  14: cannot open environment characteristics configuration file
  15: cannot create log file
+ 16: cannot create lock file
 
 --------------------------------------------------------------------------------
  MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
