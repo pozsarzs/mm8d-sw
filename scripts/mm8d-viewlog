@@ -20,14 +20,20 @@
 #   3: wrong channel number
 #   5: cannot open log file
 
+USRLOCALDIR="1"
+if [ $USRLOCALDIR -eq "1" ]
+then
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+else
+  CFGFILE="/etc/mm8d/mm8d.ini"
+fi
+
 loadconfiguration()
 {
-  #CFGFILE="/etc/mm8d/mm8d.ini"
-  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
   if [ ! -f $CFGFILE ]
-    then
-      echo "ERROR #1: Cannot open configuration file!"
-      exit 1
+  then
+    echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+    exit 1
   fi
   DIR_LOG=`cat $CFGFILE | grep dir_log= | sed 's/dir_log=//'`
 }
@@ -80,7 +86,7 @@ if [ $CHANNEL -ge "0" ]
 then
   if [ $CHANNEL -le "8" ]
   then
-    LOGFILE=$DIR_LOG"mm8d-ch"
+    LOGFILE=$DIR_LOG"/mm8d-ch"
     LOGFILE=$LOGFILE$CHANNEL".log"
     if [ ! -f $LOGFILE ]
     then

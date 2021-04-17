@@ -7,9 +7,13 @@
 # Short-Description:	MM8D operating software
 ### END INIT INFO
 
-#BINFILE=/usr/bin/mm8d.py
-BINFILE=/usr/local/bin/mm8d.py
-PIDFILE=/var/run/mm8d.pid
+USRLOCALDIR="1"
+if [ $USRLOCALDIR -eq "1" ]
+then
+  BINFILE=/usr/local/bin/mm8d.py
+else
+  BINFILE=/usr/bin/mm8d.py
+fi
 
 set -e
 test -x $BINFILE || exit 0

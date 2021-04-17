@@ -19,6 +19,15 @@
 #   2: specified value is not number
 #   3: wrong channel number
 
+USRLOCALDIR="1"
+if [ $USRLOCALDIR -eq "1" ]
+then
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+else
+  CFGFILE="/etc/mm8d/mm8d.ini"
+fi
+
+
 checkparameter()
 {
   if [[ ! $1 =~ ^[0-9]+$ ]]; then 
@@ -44,8 +53,6 @@ checkparameter()
 
 loadconfiguration()
 {
-  #CFGFILE="/etc/mm8d/mm8d.ini"
-  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
   if [ ! -f $CFGFILE ]
   then
     echo "ERROR #1: Cannot open $CFGFILE configuration file!"

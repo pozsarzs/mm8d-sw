@@ -1,7 +1,7 @@
 # /etc/cron.d/mm8d-web: crontab entries for MM8D
 
 SHELL=/bin/sh
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+PATH=/usr/local/bin:/usr/bin
 
 3,33 * * * *			root	mm8d-getsnapshot 1 > /dev/null 2>&1
 4,34 * * * *			root	mm8d-getsnapshot 2 > /dev/null 2>&1

@@ -19,6 +19,14 @@
 #   2: specified value is not number
 #   3: wrong channel number
 
+USRLOCALDIR="1"
+if [ $USRLOCALDIR -eq "1" ]
+then
+  CFGFILE="/usr/local/etc/mm8d/envir-ch"
+else
+  CFGFILE="/etc/mm8d/envir-ch"
+fi
+
 read -p "Channel (1-8): " CHANNEL
 if [[ ! "$CHANNEL" =~ ^[0-9]+$ ]]; then 
   echo "ERROR #2: Specified value is not number!"
@@ -28,7 +36,6 @@ if [ $CHANNEL -ge "1" ]
 then
   if [ $CHANNEL -le "8" ]
   then
-    CFGFILE="/usr/local/etc/mm8d/envir-ch"
     CFGFILE=$CFGFILE$CHANNEL".ini"
     if [ ! -f $CFGFILE ]
     then

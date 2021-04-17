@@ -1,0 +1,51 @@
+Content of log files
+~~~~~~~~~~~~~~~~~~~~
+
+  1. mm8d-ch0.log
+  ---------------
+
+  Example line: "2020-09-19,13:15,1,1,1,1"
+
+  Columns:
+    1:  date
+    2:  time
+    3:  mains voltage sensor                  0: good    1: bad
+    4:  mains voltage overcurrent breaker #1  0: closed  1: opened
+    5:  mains voltage overcurrent breaker #2  0: closed  1: opened
+    6:  mains voltage overcurrent breaker #3  0: closed  1: opened
+
+
+  2. mm8d-ch[1-9].log
+  -------------------
+
+  Example line: "2020-09-19,13:59,13,23,33,1,1,1,0,1,1,1"
+
+  Columns:
+    1:  date
+    2:  time
+    3:  temperature in °C
+    4:  relative humidity
+    5:  relative unwanted gas concentrate
+    6:  operation mode                        0: hyphae  1: mushroom
+    7:  manual mode                           0: auto    1: manual
+    8:  mains voltage overcurrent breakers    0: closed  1: opened
+    9:  status of alarm                       0: closed  1: opened
+   10:  status of lamp output                 0: off     1: on
+   11:  status of ventilator output           0: off     1: on
+   12:  status of heater output               0: off     1: on
+
+
+  3. debug-YYMMDD.log
+  -------------------
+
+  Example line: "2021-02-11 21:01:33  INFO Initializing I/O ports."
+
+  Columns:
+    1:  date
+    2:  time
+    3:  level of record: INFO | WARNING | ERROR
+    4:  content of record
+
+--------------------------------------------------------------------------------
+ MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+

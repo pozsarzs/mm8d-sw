@@ -21,10 +21,16 @@
 #   7: wrong output state
 #   8: cannot write output file
 
+USRLOCALDIR="1"
+if [ $USRLOCALDIR -eq "1" ]
+then
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+else
+  CFGFILE="/etc/mm8d/mm8d.ini"
+fi
+
 loadconfiguration()
 {
-  #CFGFILE="/etc/mm8d/mm8d.ini"
-  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
   if [ ! -f $CFGFILE ]
     then
       echo "ERROR #1: Cannot open $CFGFILE configuration file!"
@@ -59,12 +65,12 @@ checkparameter()
 writetofile()
 {
   case $2 in
-    "light") OF="out1";;
+    "lamp") OF="out1";;
     "ventilator") OF="out2";;
     "heater") OF="out3";;
     *)\
       echo "ERROR #6: Wrong output name!"; \
-      echo "Valid values: heater, light, ventilator"; \
+      echo "Valid values: heater, lamp, ventilator"; \
       exit 6;;
   esac
   if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
@@ -106,7 +112,7 @@ getstatus()
     HEAT="neutral"
   fi
   echo "Output status of Channel #"$CHANNEL":"
-  echo -e "- light:\t$LAMP"
+  echo -e "- lamp:\t\t$LAMP"
   echo -e "- ventilator:\t$VENT"
   echo -e "- heater:\t$HEAT"
 }
@@ -123,7 +129,7 @@ usage()
   echo -e "\nUsage:"
   echo    "       $0 -f|--full-screen"
   echo    "       $0 channel"
-  echo -e "       $0 channel heater|light|ventilator neutral|on|off\n"
+  echo -e "       $0 channel heater|lamp|ventilator neutral|on|off\n"
   exit 0
 }
 

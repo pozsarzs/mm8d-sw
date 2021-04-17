@@ -21,12 +21,21 @@
 #  10: bad channel value
 #  11: bad UID value
 
+use constant USRLOCALDIR => 1;
+
 use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
 
 $contname = 'MM8D';
 $contversion = 'v0.1';
+if (USRLOCALDIR eq 1)
+{
+  $conffile = "/usr/local/etc/mm8d/mm8d.ini";
+} else
+{
+  $conffile = "/etc/mm8d/mm8d.ini";
+}
 
 print "Content-type:text/plain\r\n\r\n";
 
@@ -39,7 +48,7 @@ if ($ENV{'REQUEST_METHOD'} eq "GET")
 }
 
 # test data
-buffer = 'channel=1&uid=00000000&value=2';
+#buffer = 'channel=1&uid=00000000&value=2';
 
 # split input data
 @pairs = split(/&/, $buffer);
@@ -61,8 +70,6 @@ if (($channel eq '') || ($uid eq '') || ($value eq ''))
 }
 
 # load configuration
-#$conffile = "/etc/mm8d/mm8d.ini";
-$conffile = "/usr/local/etc/mm8d/mm8d.ini";
 if (-e $conffile)
 {
   open CONF, "< $conffile";
@@ -88,15 +95,7 @@ if (-e $conffile)
       case "usr_nam" { $usr_nam = $columns[1]; }
       case "usr_uid" { $usr_uid = $columns[1]; }
     }
-    my @b = (0..9);
-    for (@b)
-    {
-      if ($columns[0] eq "nam_ch0" . $_)
-      {
-        $nam_ch[$_] = $columns[1];
-      }
-    }
-    my @b = (10..16);
+    my @b = (0..8);
     for (@b)
     {
       if ($columns[0] eq "nam_ch" . $_)
@@ -114,25 +113,18 @@ if (-e $conffile)
 }
 
 # create output
-$lockfile = $dir_lck . "mm8d.lock";
-$logfile = $dir_log . "mm8d-ch";
+$lockfile = "$dir_lck/mm8d.lock";
+$logfile = "$dir_log/mm8d-ch";
 if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 {
-  if ( $channel >=0  &&  $channel <= 9 )
-  {
-    $logfile = $logfile . "0" . $channel . ".log";
-  }
-  else
-  {
-    $logfile = $logfile . $channel . ".log";
-  }
+  $ch = $channel;
 } else
 {
   print "ERROR #10\n";
   print "Bad channel value!\n";
   exit 10;
 }
-
+$logfile = $logfile . $ch . ".log";
 if ( $uid eq $usr_uid )
 {
   while (-e $lockfile)

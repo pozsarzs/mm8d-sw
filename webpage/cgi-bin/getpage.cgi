@@ -20,6 +20,8 @@
 #   9: no parameter(s)
 #  10: bad channel value
 
+use constant USRLOCALDIR => 1;
+
 use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
@@ -28,7 +30,29 @@ $dark="<font color=\"gray\">&#9679;</font>";
 $green="<font color=\"green\">&#9679;</font>";
 $red="<font color=\"red\">&#9679;</font>";
 $yellow="<font color=\"yellow\">&#9679;</font>";
+if (USRLOCALDIR eq 1)
+{
+  $conffile = "/usr/local/etc/mm8d/mm8d.ini";
+  $creatediagprog = "/usr/local/bin/mm8d-creatediagrams";
+} else
+{
+  $conffile = "/etc/mm8d/mm8d.ini";
+  $creatediagprog = "/usr/bin/mm8d-creatediagrams";
+}
 
+# write header of webpage
+sub writeheader()
+{
+  open HEADER, $headerfile;
+  while (<HEADER>)
+  {
+    chomp;
+    print "$_";
+  }
+  close HEADER;
+}
+
+# write footer of webpage
 sub writefooter()
 {
   open FOOTER, $footerfile;
@@ -40,6 +64,7 @@ sub writefooter()
   close FOOTER;
 }
 
+# write table on webpage
 sub writetable()
 {
   my(@columns)= split(",");
@@ -70,7 +95,7 @@ sub writetable()
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
-    if ($columns[5] eq 1) { $columns[5] = $green } else { $columns[5] = $dark };
+    if ($columns[5] eq 1) { $columns[5] = "H" } else { $columns[5] = "M" };
     if ($columns[6] eq 1) { $columns[6] = $yellow } else { $columns[6] = $dark };
     if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
     if ($columns[8] eq 1) { $columns[8] = $red } else { $columns[8] = $dark };
@@ -96,9 +121,6 @@ if ($ENV{'REQUEST_METHOD'} eq "GET")
   $buffer = $ENV{'QUERY_STRING'};
 }
 
-# test data
-#$buffer = 'channel=1';
-
 # split input data
 @pairs = split(/&/, $buffer);
 foreach $pair (@pairs)
@@ -111,14 +133,13 @@ foreach $pair (@pairs)
 $channel = $FORM{channel};
 if ($channel eq '')
 {
-  print "ERROR #9:\n";
+  print "Content-type:text/plain\r\n\r\n";
+  print "ERROR #9\n";
   print "Usage: getpage.cgi?channel=...\n";
   exit 9;
 }
 
 # load configuration
-#$conffile = "/etc/mm8d/mm8d.ini";
-$conffile = "/usr/local/etc/mm8d/mm8d.ini";
 if (-e $conffile)
 {
   open CONF, "< $conffile";
@@ -158,6 +179,7 @@ if (-e $conffile)
   close CONF;
 } else
 {
+  print "Content-type:text/plain\r\n\r\n";
   print "ERROR #1:\n";
   print "Cannot open ",$conffile," configuration file!\n";
   exit 1;
@@ -167,31 +189,26 @@ if (-e $conffile)
 $msg01 = "MM8D";
 $msg08 = "Channel";
 $msg10 = "Names";
-$msg11 = "MM7D Temperature in &deg;C";
-$msg12 = "MM7D Relative humidity in %";
-$msg13 = "MM7D Relative gas concentrate in %";
-$msg14 = "MM7D Good values";
-$msg15 = "MM7D Out of optimal range";
-$msg16 = "MM7D Bad values";
-$msg17 = "MM6D Operation mode (hyphae/mushroom)";
-$msg18 = "MM6D Manual operation";
-$msg19 = "MM6D Opened overcurrent breaker";
-$msg20 = "MM6D Alarm event detected";
-$msg21 = "MM6D Output lamps ";
-$msg22 = "MM6D Output vents";
-$msg23 = "MM6D Output heaters";
+$msg11 = "Temperature in &deg;C";
+$msg12 = "Relative humidity in %";
+$msg13 = "Relative gas concentrate in %";
+$msg17 = "Operation mode (hyphae/mushroom)";
+$msg18 = "Manual operation";
+$msg19 = "Overcurrent breakers";
+$msg20 = "Alarm";
+$msg21 = "Lamp output";
+$msg22 = "Ventilator output";
+$msg23 = "Heater output";
 $msg24 = "Date";
 $msg25 = "Time";
 $msg26 = "Latest status";
 $msg27 = "Refresh";
 $msg28 = "Camera";
 $msg29 = "Log";
-$msg30 = "If you want to see full log, please login to device via SSH, and use <i>mm8d-viewlog</i> command.";
+$msg30 = "Login via SSH and run <i>mm8d-viewlog</i> to see full log.";
 $msg31 = "Start page";
-$msg32 = "No mains voltage";
-$msg33 = "Opened overcurrent breaker";
-$msg34 = "Alarm event detected";
-$msg35 = "The siren is working now";
+$msg32 = "Mains voltage sensor";
+$msg33 = "Overcurrent breaker";
 
 $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
@@ -215,9 +232,6 @@ while(<MSG>)
     case "msg11" { $msg11 = $columns[1]; }
     case "msg12" { $msg12 = $columns[1]; }
     case "msg13" { $msg13 = $columns[1]; }
-    case "msg14" { $msg14 = $columns[1]; }
-    case "msg15" { $msg15 = $columns[1]; }
-    case "msg16" { $msg16 = $columns[1]; }
     case "msg17" { $msg17 = $columns[1]; }
     case "msg18" { $msg18 = $columns[1]; }
     case "msg19" { $msg19 = $columns[1]; }
@@ -235,8 +249,6 @@ while(<MSG>)
     case "msg31" { $msg31 = $columns[1]; }
     case "msg32" { $msg32 = $columns[1]; }
     case "msg33" { $msg33 = $columns[1]; }
-    case "msg34" { $msg34 = $columns[1]; }
-    case "msg35" { $msg35 = $columns[1]; }
   }
 }
 close MSG;
@@ -251,28 +263,19 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
   $ch = $channel;
 } else
 {
+  print "Content-type:text/plain\r\n\r\n";
   print "ERROR #10\n";
   print "Bad channel value!\n";
   exit 10;
 }
 $logfile = $logfile . $ch . ".log";
 
-if (channel > 0)
-{
-  # create diagram pictures
-  #system("/usr/bin/mm8d-creatediagrams $channel");
-  system("/usr/local/bin/mm8d-creatediagrams $channel");
-}
+# create diagram pictures
+if (channel > 0) {system("$creatediagprog $channel"); }
 
 # create output
 print "Content-type:text/html\r\n\r\n";
-open HEADER, $headerfile;
-while (<HEADER>)
-{
-  chomp;
-  print "$_";
-}
-close HEADER;
+writeheader();
 while (-e $lockfile)
 {
   sleep 1;

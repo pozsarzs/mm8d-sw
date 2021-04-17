@@ -19,6 +19,14 @@
 #   2: specified value is not number
 #   3: wrong channel number
 
+USRLOCALDIR="1"
+if [ $USRLOCALDIR -eq "1" ]
+then
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+else
+  CFGFILE="/etc/mm8d/mm8d.ini"
+fi
+
 checkparameter()
 {
   if [[ ! $1 =~ ^[0-9]+$ ]]; then 
@@ -44,8 +52,6 @@ checkparameter()
 
 loadconfiguration()
 {
-  #CFGFILE="/etc/mm8d/mm8d.ini"
-  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
   if [ ! -f $CFGFILE ]
   then
     echo "ERROR #1: Cannot open $CFGFILE configuration file!"
@@ -59,11 +65,11 @@ loadconfiguration()
 
 creatediagrams()
 {
-  TMPFILE=$DIR_HTM"diagrams/mm8d-creatediagrams.tmp"
-  LOGFILE=$DIR_LOG"mm8d-ch"$CHANNEL".log"
+  TMPFILE=$DIR_HTM"/diagrams/mm8d-creatediagrams.tmp"
+  LOGFILE=$DIR_LOG"/mm8d-ch"$CHANNEL".log"
 
-  EMPTYPIC=$DIR_HTM"pics/temperature-empty.png"
-  PNGFILE=$DIR_HTM"diagrams/temperature-ch$CHANNEL.png"
+  EMPTYPIC=$DIR_HTM"/pics/temperature-empty.png"
+  PNGFILE=$DIR_HTM"/diagrams/temperature-ch$CHANNEL.png"
   head -n $WEB_LINES $LOGFILE > $TMPFILE 2> /dev/null
   gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
@@ -88,7 +94,7 @@ EOF
   fi
 
   EMPTYPIC="$DIR_HTM/pics/humidity-empty.png"
-  PNGFILE=$DIR_HTM"diagrams/humidity-ch$CHANNEL.png"
+  PNGFILE=$DIR_HTM"/diagrams/humidity-ch$CHANNEL.png"
   gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
 set rmargin at screen 0.90
@@ -111,8 +117,8 @@ EOF
     cp $EMPTYPIC $PNGFILE
   fi
 
-  EMPTYPIC=$DIR_HTM"pics/gasconcentrate-empty.png"
-  PNGFILE=$DIR_HTM"diagrams/gasconcentrate-ch$CHANNEL.png"
+  EMPTYPIC=$DIR_HTM"/pics/gasconcentrate-empty.png"
+  PNGFILE=$DIR_HTM"/diagrams/gasconcentrate-ch$CHANNEL.png"
   gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
 set rmargin at screen 0.90

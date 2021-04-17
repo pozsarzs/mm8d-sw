@@ -1,6 +1,6 @@
 # /etc/cron.d/mm8d-sw: crontab entries for MM8D
 
 SHELL=/bin/sh
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+PATH=/usr/local/bin:/usr/bin
 
 0 2 * * *			root	mm8d-maintainlog > /dev/null 2>&1
