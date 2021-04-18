@@ -16,8 +16,8 @@
 procedure loadoutfiles(directory: string);
 var
   b, bb: byte;
-  outf: text;
-  s: string;
+  outf:  text;
+  s:     string;
 
 begin
   for b:=1 to 3 do

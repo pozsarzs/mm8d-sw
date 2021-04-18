@@ -23,55 +23,57 @@ program editenvirconf;
 uses
   INIFiles, SysUtils, character, crt, untcommon;
 var
-  bottom: byte;
-  gasconmax: byte;
-  hheaterdis, mheaterdis: array[0..23] of byte;
-  hventdis, mventdis: array[0..23] of byte;
+  bottom:                           byte;
+  gasconmax:                        byte;
+  hheaterdis, mheaterdis:           array[0..23] of byte;
+  hventdis, mventdis:               array[0..23] of byte;
   hventdislowtemp, mventdislowtemp: array[0..23] of byte;
-  hhummax, mhummax: byte;
-  hhummin, mhummin: byte;
-  hhumoff, mhumoff: byte;
-  hhumon, mhumon: byte;
-  hlightsoff1, mlightsoff1, hlightsoff2, mlightsoff2: byte;
-  hlightson1, mlightson1, hlightson2, mlightson2: byte;
-  htempmax, mtempmax: byte;
-  htempmin, mtempmin: byte;
-  htempoff, mtempoff: byte;
-  htempon, mtempon: byte;
-  hventlowtemp, mventlowtemp: shortint;
-  hventoff, mventoff: byte;
-  hventon, mventon: byte;
+  hhummax, mhummax:                 byte;
+  hhummin, mhummin:                 byte;
+  hhumoff, mhumoff:                 byte;
+  hhumon, mhumon:                   byte;
+  hlightsoff1, mlightsoff1:         byte;
+  hlightsoff2, mlightsoff2:         byte;
+  hlightson1, mlightson1:           byte;
+  hlightson2, mlightson2:           byte;
+  htempmax, mtempmax:               byte;
+  htempmin, mtempmin:               byte;
+  htempoff, mtempoff:               byte;
+  htempon, mtempon:                 byte;
+  hventlowtemp, mventlowtemp:       shortint;
+  hventoff, mventoff:               byte;
+  hventon, mventon:                 byte;
 const
-  VERSION: string='v0.1';
-  PRGNAME: string='MM8D-EditEnvirConf';
-  BLOCKS: array[1..9] of byte=(1,3,1,6,1,3,1,6,1);
-  MINPOSX: array[1..9,1..6] of byte=((46,0,0,0,0,0),
-                                     (46,17,35,0,0,0),
-                                     (46,0,0,0,0,0),
-                                     (46,17,35,53,71,46),
-                                     (46,0,0,0,0,0),
-                                     (46,17,35,0,0,0),
-                                     (46,0,0,0,0,0),
-                                     (46,17,35,53,71,46),
-                                     (46,0,0,0,0,0));
-  MINPOSY: array[1..9,1..6] of byte=((3,0,0,0,0,0),
-                                     (3,10,10,0,0,0),
-                                     (3,0,0,0,0,0),
-                                     (3,8,8,8,8,21),
-                                     (3,0,0,0,0,0),
-                                     (3,10,10,0,0,0),
-                                     (3,0,0,0,0,0),
-                                     (3,8,8,8,8,21),
-                                     (3,0,0,0,0,0));
-  MAXPOSY: array[1..9,1..6] of byte=((6,0,0,0,0,0),
-                                     (6,21,21,0,0,0),
-                                     (6,0,0,0,0,0),
-                                     (4,19,19,19,19,21),
-                                     (6,0,0,0,0,0),
-                                     (6,21,21,0,0,0),
-                                     (6,0,0,0,0,0),
-                                     (4,19,19,19,19,21),
-                                     (3,0,0,0,0,0));
+  VERSION:                          string='v0.1';
+  PRGNAME:                          string='MM8D-EditEnvirConf';
+  BLOCKS:                           array[1..9] of byte=(1,3,1,6,1,3,1,6,1);
+  MINPOSX:                          array[1..9,1..6] of byte=((46,0,0,0,0,0),
+                                                             (46,17,35,0,0,0),
+                                                             (46,0,0,0,0,0),
+                                                             (46,17,35,53,71,46),
+                                                              (46,0,0,0,0,0),
+                                                              (46,17,35,0,0,0),
+                                                              (46,0,0,0,0,0),
+                                                              (46,17,35,53,71,46),
+                                                              (46,0,0,0,0,0));
+  MINPOSY:                          array[1..9,1..6] of byte=((3,0,0,0,0,0),
+                                                              (3,10,10,0,0,0),
+                                                              (3,0,0,0,0,0),
+                                                              (3,8,8,8,8,21),
+                                                              (3,0,0,0,0,0),
+                                                              (3,10,10,0,0,0),
+                                                              (3,0,0,0,0,0),
+                                                              (3,8,8,8,8,21),
+                                                              (3,0,0,0,0,0));
+  MAXPOSY:                          array[1..9,1..6] of byte=((6,0,0,0,0,0),
+                                                              (6,21,21,0,0,0),
+                                                              (6,0,0,0,0,0),
+                                                              (4,19,19,19,19,21),
+                                                              (6,0,0,0,0,0),
+                                                              (6,21,21,0,0,0),
+                                                              (6,0,0,0,0,0),
+                                                              (4,19,19,19,19,21),
+                                                              (3,0,0,0,0,0));
   FOOTERS: array[1..4] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                   '<Enter> accept  <Esc> cancel',
                                   '<+>/<-> sign change  <Enter> accept  <Esc> cancel',

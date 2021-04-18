@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incsaveoutfiles.pas                                                      | }
-{ | Save out files                                                           | }
+{ | incpage8screen.pas                                                       | }
+{ | Show screen content of page #8                                           | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -12,21 +12,14 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
-// save output files
-function saveoutfiles(directory: string): boolean;
-var
-  b:    byte;
-  outf: text;
-
+procedure page8screen;
 begin
-  saveoutfiles:=true;
-  for b:=1 to 3 do
-  try
-    assignfile(outf,directory+'out'+inttostr(b));
-    rewrite(outf);
-    writeln(outf,outputs[b]);
-    closefile(outf);
-  except
-    saveoutfiles:=false;
-  end;
+  header(PRGNAME+' '+VERSION+' * Page 8/9: Logging');
+  textcolor(white);
+  gotoxy(4,3); writeln('Storing time of log records in days:');
+  gotoxy(4,4); writeln('Enable debug log (0: disable):');
+  gotoxy(4,5); writeln('Number of log lines on web interface:');
+  gotoxy(MINPOSX[8,1],3); writeln(day_log);
+  gotoxy(MINPOSX[8,1],4); writeln(dbg_log);
+  gotoxy(MINPOSX[8,1],5); writeln(web_lines);
 end;

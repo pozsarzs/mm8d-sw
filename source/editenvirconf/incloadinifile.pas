@@ -16,11 +16,11 @@
 function loadinifile(filename: string): boolean;
 var
   iif: TINIFile;
-  b: byte;
+  b:   byte;
 const
-  C: string='common';
-  H: string='hyphae';
-  M: string='mushroom';
+  C:   string='common';
+  H:   string='hyphae';
+  M:   string='mushroom';
 
 begin
   iif:=TIniFile.Create(filename);

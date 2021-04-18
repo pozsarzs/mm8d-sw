@@ -16,7 +16,7 @@
 function saveinifile(filename: string): boolean;
 var
   iif: text;
-  b: byte;
+  b:   byte;
 const
   HEADER1='; +----------------------------------------------------------------------------+';
   HEADER2='; | MM8D v0.1 * Growing house controlling and remote monitoring device         |';
