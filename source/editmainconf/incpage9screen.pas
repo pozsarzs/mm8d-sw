@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage6screen.pas                                                       | }
-{ | Show screen content of page #6                                           | }
+{ | incpage9screen.pas                                                       | }
+{ | Show screen content of page #9                                           | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -12,22 +12,17 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
-procedure page6screen;
+procedure page9screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 6/10: URL of IP cameras');
+  header(PRGNAME+' '+VERSION+' * Page 9/10: Language of webpages');
   textcolor(white);
-  for b:=1 to 8 do
-  begin
-    gotoxy(4,b+2);
-    write('Channel #'+inttostr(b)+':');
-  end;
-  gotoxy(4,9+2+1); write('Show camera snapshots:');
-  for b:=1 to 8 do
-  begin
-    gotoxy(MINPOSX[6,1],b+2);
-    writeln(cam_ch[b]);
-  end;
-  gotoxy(MINPOSX[6,2],9+2+1); writeln(lpt_prt);
+  gotoxy(4,3); writeln('English');
+  gotoxy(4,4); writeln('Hungarian');
+  b:=0;
+  for b:=3 to 4 do
+    if lng=CODE[b] then break;
+  if b=0 then b:=5;
+  gotoxy(MINPOSX[9,1],b); writeln('<<');
 end;

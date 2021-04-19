@@ -27,6 +27,6 @@ clean:
 install:
 	@echo -n "- Installing binary files..."
 	@for x in $(binfiles); do \
-	  if [ -e ../_lib/$(architecture)-$(os)/$$x ]; then $(install) -m $(binmode) ../_lib/$(architecture)-$(os)/$$x ../../binary/; fi; \
+	  if [ -e ../_lib/$(architecture)-$(os)/$$x ]; then $(install) -m $(binmode) ../_lib/$(architecture)-$(os)/$$x ../../binary/$(architecture)/; fi; \
 	done
 	@echo "...done."

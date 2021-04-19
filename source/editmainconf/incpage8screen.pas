@@ -14,12 +14,12 @@
 
 procedure page8screen;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 8/9: Logging');
+  header(PRGNAME+' '+VERSION+' * Page 8/10: OpenWeather.org account');
   textcolor(white);
-  gotoxy(4,3); writeln('Storing time of log records in days:');
-  gotoxy(4,4); writeln('Enable debug log (0: disable):');
-  gotoxy(4,5); writeln('Number of log lines on web interface:');
-  gotoxy(MINPOSX[8,1],3); writeln(day_log);
-  gotoxy(MINPOSX[8,1],4); writeln(dbg_log);
-  gotoxy(MINPOSX[8,1],5); writeln(web_lines);
+  gotoxy(4,3); writeln('API key:');
+  gotoxy(4,4); writeln('URL:');
+  gotoxy(4,5); writeln('Name of city:');
+  gotoxy(MINPOSX[8,1],3); writeln(api_key);
+  gotoxy(MINPOSX[8,1],4); writeln(base_url);
+  gotoxy(MINPOSX[8,1],5); writeln(city_name);
 end;

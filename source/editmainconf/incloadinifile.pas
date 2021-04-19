@@ -48,14 +48,14 @@ begin
     dir_lck:=iif.ReadString(D,'dir_lck','/var/local/lock/');
     dir_log:=iif.ReadString(D,'dir_log','/var/local/log/');
     dir_msg:=iif.ReadString(D,'dir_msg','/usr/local/share/locale/');
-    dir_shr:=iif.ReadString(D,'dir_shr','/usr/local/share/mm5d/');
-    dir_var:=iif.ReadString(D,'dir_var','/var/local/lib/mm5d/');
+    dir_shr:=iif.ReadString(D,'dir_shr','/usr/local/share/mm8d/');
+    dir_var:=iif.ReadString(D,'dir_var','/var/local/lib/mm8d/');
 {$ELSE}
     dir_lck:=iif.ReadString(D,'dir_lck','/var/lock/');
     dir_log:=iif.ReadString(D,'dir_log','/var/log/');
     dir_msg:=iif.ReadString(D,'dir_msg','/usr/share/locale/');
-    dir_shr:=iif.ReadString(D,'dir_shr','/usr/share/mm5d/');
-    dir_var:=iif.ReadString(D,'dir_var','/var/lib/mm5d/');
+    dir_shr:=iif.ReadString(D,'dir_shr','/usr/share/mm8d/');
+    dir_var:=iif.ReadString(D,'dir_var','/var/lib/mm8d/');
 {$ENDIF}
     api_key:=iif.ReadString(W,'api_key','');
     base_url:=iif.ReadString(W,'base_url','http://api.openweathermap.org/data/2.5/weather?');

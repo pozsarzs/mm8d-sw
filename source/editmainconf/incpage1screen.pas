@@ -16,7 +16,7 @@ procedure page1screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 1/9: User data');
+  header(PRGNAME+' '+VERSION+' * Page 1/10: User data');
   textcolor(white);
   gotoxy(4,3); write('User''s name:');
   gotoxy(4,4); write('User''s ID:');

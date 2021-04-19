@@ -72,9 +72,9 @@ begin
     writeln(iif,'');
     writeln(iif,'['+L+']');
     writeln(iif,'; address of used LPT port');
-    writeln(iif,'; 0: 0x378');
-    writeln(iif,'; 1: 0x278');
-    writeln(iif,'; 2: 0x3BC');
+    writeln(iif,'; 1: 0x378');
+    writeln(iif,'; 2: 0x278');
+    writeln(iif,'; 3: 0x3BC');
     writeln(iif,'lpt_prt='+inttostr(lpt_prt));
     writeln(iif,'');
     writeln(iif,'['+D+']');

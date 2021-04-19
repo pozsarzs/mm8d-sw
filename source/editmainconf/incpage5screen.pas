@@ -13,21 +13,24 @@
 // FOR A PARTICULAR PURPOSE.
 
 procedure page5screen;
+var
+  b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 5/9: Directories');
+  header(PRGNAME+' '+VERSION+' * Page 5/10: I/O ports');
   textcolor(white);
-  gotoxy(4,3); writeln('HTML files for webserver:');
-  gotoxy(4,4); writeln('lock file:');
-  gotoxy(4,5); writeln('log files:');
-  gotoxy(4,6); writeln('translations:');
-  gotoxy(4,7); writeln('changing files:');
-  gotoxy(4,8); writeln('temporary files:');
-  gotoxy(4,9); writeln('data files:');
-  gotoxy(MINPOSX[5,1],3); writeln(dir_htm);
-  gotoxy(MINPOSX[5,1],4); writeln(dir_lck);
-  gotoxy(MINPOSX[5,1],5); writeln(dir_log);
-  gotoxy(MINPOSX[5,1],6); writeln(dir_msg);
-  gotoxy(MINPOSX[5,1],7); writeln(dir_shr);
-  gotoxy(MINPOSX[5,1],8); writeln(dir_tmp);
-  gotoxy(MINPOSX[5,1],9); writeln(dir_var);
+  for b:=0 to 7 do
+  begin
+    gotoxy(4,b+2+1); write('IN'+inttostr(b)+':   GPIO');
+    gotoxy(4,b+2+9+1); write('OUT'+inttostr(b)+':  GPIO');
+  end;
+  gotoxy(4,9+2+9+1); write('Address of LPT port:');
+  gotoxy(4,10+2+9+1); write('  0: 0x378');
+  gotoxy(4,11+2+9+1); write('  1: 0x278');
+  gotoxy(4,12+2+9+1); write('  2: 0x3bc');
+  for b:=0 to 7 do
+  begin
+    gotoxy(MINPOSX[5,1],b+2+1); writeln(prt_in[b]);
+    gotoxy(MINPOSX[5,2],b+2+9+1); writeln(prt_out[b]);
+  end;
+  gotoxy(MINPOSX[5,3],9+2+9+1); writeln(lpt_prt);
 end;
