@@ -65,10 +65,12 @@ begin
     writeln(iif,'');
     writeln(iif,'['+G+']');
     writeln(iif,'; number of used GPIO ports');
-    for b:=0 to 7 do
-      writeln(iif,'prt_in'+inttostr(b)+'='+inttostr(prt_in[b]));
-    for b:=0 to 7 do
-      writeln(iif,'prt_out'+inttostr(b)+'='+inttostr(prt_out[b]));
+    for b:=1 to 4 do
+      writeln(iif,'prt_i'+inttostr(b)+'='+inttostr(prt_i[b]));
+    for b:=1 to 4 do
+      writeln(iif,'prt_ro'+inttostr(b)+'='+inttostr(prt_ro[b]));
+    for b:=1 to 4 do
+      writeln(iif,'prt_lo'+inttostr(b)+'='+inttostr(prt_lo[b]));
     writeln(iif,'');
     writeln(iif,'['+L+']');
     writeln(iif,'; address of used LPT port');

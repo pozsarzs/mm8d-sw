@@ -35,10 +35,11 @@ begin
       adr_mm7dch[b]:=iif.ReadString(M7,'adr_mm7dch'+inttostr(b),'');
       cam_ch[b]:=iif.ReadString(I,'cam_ch'+inttostr(b),'');
     end;
-    for b:=0 to 7 do
+    for b:=1 to 4 do
     begin
-      prt_in[b]:=strtoint(iif.ReadString(G,'prt_in'+inttostr(b),''));
-      prt_out[b]:=strtoint(iif.ReadString(G,'prt_out'+inttostr(b),''));
+      prt_i[b]:=strtoint(iif.ReadString(G,'prt_i'+inttostr(b),''));
+      prt_ro[b]:=strtoint(iif.ReadString(G,'prt_ro'+inttostr(b),''));
+      prt_lo[b]:=strtoint(iif.ReadString(G,'prt_lo'+inttostr(b),''));
     end;
     lpt_prt:=strtoint(iif.ReadString(L,'lpt_prt',''));
 

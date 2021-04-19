@@ -18,6 +18,7 @@ Exit codes of executable files
  14: cannot open environment characteristics configuration file
  15: cannot create log file
  16: cannot create lock file
+ 17: cannot access i/o port
 
 --------------------------------------------------------------------------------
  MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

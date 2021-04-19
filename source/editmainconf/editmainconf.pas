@@ -48,8 +48,9 @@ var
   lng:        string;
   lpt_prt:    byte;
   nam_ch:     array[0..8] of string;
-  prt_in:     array[0..7] of byte;
-  prt_out:    array[0..7] of byte;
+  prt_i:      array[1..4] of byte;
+  prt_ro:     array[1..4] of byte;
+  prt_lo:     array[1..4] of byte;
   usr_dt:     array[1..3] of string;
   usr_nam:    string;
   usr_uid:    string;
@@ -69,12 +70,12 @@ const
   I:          string='IPcameras';
   A:          string='language';
   O:          string='log';
-  BLOCKS:     array[1..10] of byte=(1,1,1,2,3,2,1,1,1,1);
+  BLOCKS:     array[1..10] of byte=(1,1,1,2,4,2,1,1,1,1);
   MINPOSX:    array[1..10,1..6] of byte=((29,0,0,0,0,0),
                                          (17,0,0,0,0,0),
                                          (17,0,0,0,0,0),
                                          (25,25,0,0,0,0),
-                                         (15,15,25,0,0,0),
+                                         (15,15,15,25,0,0),
                                          (17,27,0,0,0,0),
                                          (31,0,0,0,0,0),
                                          (19,0,0,0,0,0),
@@ -84,7 +85,7 @@ const
                                          (3,0,0,0,0,0),
                                          (3,0,0,0,0,0),
                                          (3,12,0,0,0,0),
-                                         (3,12,21,0,0,0),
+                                         (3,8,13,18,0,0),
                                          (3,12,0,0,0,0),
                                          (3,0,0,0,0,0),
                                          (3,0,0,0,0,0),
@@ -94,7 +95,7 @@ const
                                          (10,0,0,0,0,0),
                                          (11,0,0,0,0,0),
                                          (10,19,0,0,0,0),
-                                         (10,19,21,0,0,0),
+                                         (6,11,16,18,0,0),
                                          (10,12,0,0,0,0),
                                          (9,0,0,0,0,0),
                                          (5,0,0,0,0,0),
@@ -301,8 +302,8 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        prt_in[posy-3]:=strtoint(s);
-        write(prt_in[posy-3]);
+        prt_i[posy-3]:=strtoint(s);
+        write(prt_i[posy-3]);
       end;
       // page #5 - block #2
       if block=2 then
@@ -310,11 +311,20 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        prt_out[posy-3-10]:=strtoint(s);
-        write(prt_out[posy-3-10]);
+        prt_ro[posy-3-10]:=strtoint(s);
+        write(prt_ro[posy-3-10]);
       end;
       // page #5 - block #3
       if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        prt_lo[posy-3-10]:=strtoint(s);
+        write(prt_lo[posy-3-10]);
+      end;
+      // page #5 - block #4
+      if block=4 then
       begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;

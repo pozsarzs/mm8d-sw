@@ -18,19 +18,21 @@ var
 begin
   header(PRGNAME+' '+VERSION+' * Page 5/10: I/O ports');
   textcolor(white);
-  for b:=0 to 7 do
+  for b:=1 to 4 do
   begin
-    gotoxy(4,b+2+1); write('IN'+inttostr(b)+':   GPIO');
-    gotoxy(4,b+2+9+1); write('OUT'+inttostr(b)+':  GPIO');
+    gotoxy(4,b+2); write('I'+inttostr(b)+':   GPIO');
+    gotoxy(4,b+2+5); write('RO'+inttostr(b)+':  GPIO');
+    gotoxy(4,b+2+10); write('LO'+inttostr(b)+':  GPIO');
   end;
-  gotoxy(4,9+2+9+1); write('Address of LPT port:');
-  gotoxy(4,10+2+9+1); write('  0: 0x378');
-  gotoxy(4,11+2+9+1); write('  1: 0x278');
-  gotoxy(4,12+2+9+1); write('  2: 0x3bc');
-  for b:=0 to 7 do
+  gotoxy(4,18); write('Address of LPT port:');
+  gotoxy(4,19); write('  0: 0x378');
+  gotoxy(4,20); write('  1: 0x278');
+  gotoxy(4,21); write('  2: 0x3bc');
+  for b:=1 to 4 do
   begin
-    gotoxy(MINPOSX[5,1],b+2+1); writeln(prt_in[b]);
-    gotoxy(MINPOSX[5,2],b+2+9+1); writeln(prt_out[b]);
+    gotoxy(MINPOSX[5,1],b+2); writeln(prt_i[b]);
+    gotoxy(MINPOSX[5,2],b+2+5); writeln(prt_ro[b]);
+    gotoxy(MINPOSX[5,3],b+2+10); writeln(prt_lo[b]);
   end;
-  gotoxy(MINPOSX[5,3],9+2+9+1); writeln(lpt_prt);
+  gotoxy(MINPOSX[5,4],18); writeln(lpt_prt);
 end;

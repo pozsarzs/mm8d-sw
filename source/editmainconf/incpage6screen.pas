@@ -23,11 +23,11 @@ begin
     gotoxy(4,b+2);
     write('Channel #'+inttostr(b)+':');
   end;
-  gotoxy(4,9+2+1); write('Show camera snapshots:');
+  gotoxy(4,12); write('Show camera snapshots:');
   for b:=1 to 8 do
   begin
     gotoxy(MINPOSX[6,1],b+2);
     writeln(cam_ch[b]);
   end;
-  gotoxy(MINPOSX[6,2],9+2+1); writeln(lpt_prt);
+  gotoxy(MINPOSX[6,2],12); writeln(lpt_prt);
 end;
