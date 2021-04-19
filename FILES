@@ -9,7 +9,7 @@ binary/armhf/mm8d-editmainconf.bin
 binary/armhf/mm8d-override.bin                                             
 --------------------------------------------------------------------------------
 binary/i386/mm8d-editenvirconf.bin                                         READY
-binary/i386/mm8d-editmainconf.bin                                          
+binary/i386/mm8d-editmainconf.bin                                          READY
 binary/i386/mm8d-override.bin                                              READY
 --------------------------------------------------------------------------------
 documents/AUTHORS                                                          READY
@@ -67,7 +67,7 @@ packaging/web-all/md5sums
 packaging/web-all/postinst                                                 
 packaging/web-all/prerm                                                    
 --------------------------------------------------------------------------------
-programs/mm8d-hwtest.py                                                    
+programs/mm8d-hwtest.py                                                    READY
 programs/mm8d.py                                                           
 --------------------------------------------------------------------------------
 scripts/mm8d-creatediagrams                                                READY
@@ -124,11 +124,19 @@ source/editenvirconf/incpage9screen.pas                                    READY
 source/editenvirconf/incsaveinifile.pas                                    READY
 source/editenvirconf/Makefile                                              READY
 --------------------------------------------------------------------------------
-source/editmainconf/editmainconf.pas                                       
-source/editmainconf/incloadinifile.pas                                     
-source/editmainconf/incpage1screen.pas                                     
-
-source/editmainconf/incsaveinifile.pas                                     
+source/editmainconf/editmainconf.pas                                       READY
+source/editmainconf/incloadinifile.pas                                     READY
+source/editmainconf/incpage1screen.pas                                     READY
+source/editmainconf/incpage2screen.pas                                     READY
+source/editmainconf/incpage3screen.pas                                     READY
+source/editmainconf/incpage4screen.pas                                     READY
+source/editmainconf/incpage5screen.pas                                     READY
+source/editmainconf/incpage6screen.pas                                     READY
+source/editmainconf/incpage7screen.pas                                     READY
+source/editmainconf/incpage8screen.pas                                     READY
+source/editmainconf/incpage9screen.pas                                     READY
+source/editmainconf/incpage10screen.pas                                    READY
+source/editmainconf/incsaveinifile.pas                                     READY
 source/editmainconf/Makefile                                               READY
 --------------------------------------------------------------------------------
 source/override/incloadoutfiles.pas                                        READY
