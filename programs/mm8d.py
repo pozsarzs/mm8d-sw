@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
 # | MM8D v0.1 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | Copyright (C) 2020-2021 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d.py                                                                    |
 # | Main program                                                               |
 # +----------------------------------------------------------------------------+
@@ -18,6 +18,7 @@
 #   1: cannot open configuration file
 #  14: cannot open environment characteristic configuration file
 #  15: cannot create lock file
+#  17: cannot access i/o port
 
 import configparser
 import daemon
@@ -38,10 +39,19 @@ else:
   hw=0
   import RPi.GPIO as GPIO
 
+USRLOCALDIR = 1
+if (USRLOCALDIR == 1):
+  confdir='/usr/local/etc/mm8d/'
+else:
+  confdir='/etc/mm8d/'
+
+global lptaddresses
+lptaddresses = [0x378,0x278,0x3bc]
+
 # initializing ports
 def initports():
   writetodebuglog("i","Initializing I/O ports.")
-  if (hw == 0):
+  if (hw==0):
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(prt_i1,GPIO.IN)
@@ -57,7 +67,15 @@ def initports():
     GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
     GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
   else:
-    portio.outb(0,lpt_adr)
+    status = portio.ioperm(lptaddresses[lpt_prt], 1, 1)
+    if status:
+      print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]));
+      sys.exit(17)
+    status = portio.ioperm(lptaddresses[lpt_prt]+1, 1, 1)
+    if status:
+      print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]));
+      sys.exit(17)
+      portio.outb(0,lptaddresses[lpt_prt])
 
 # write a line to debug logfile
 def writetodebuglog(level,text):
@@ -79,7 +97,6 @@ def writetodebuglog(level,text):
 
 # load configuration
 def loadconfiguration(conffile):
-  global address
   global adr_mm6dch
   global adr_mm7dch
   global api_key
@@ -92,15 +109,24 @@ def loadconfiguration(conffile):
   global lockfile
   global logfile
   global lpt_adr
-  global prt_in
-  global prt_out
+  global prt_i1
+  global prt_i2
+  global prt_i3
+  global prt_i4
+  global prt_ro1
+  global prt_ro2
+  global prt_ro3
+  global prt_ro4
+  global prt_lo1
+  global prt_lo2
+  global prt_lo3
+  global prt_lo4
   global usr_uid
   try:
     with open(conffile) as f:
       mainconfig=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mainconfig))
-    address=config.get('e-mail','address')
     adr_mm6dch=[0 for x in range(17)]
     for i in range(1,17):
       adr_mm6dch[i]=config.get('MM6D','adr_mm6dch'+addzero(i))
@@ -118,13 +144,20 @@ def loadconfiguration(conffile):
     for i in range(1,17):
       ena_ch[i]=int(config.get('enable','ena_ch'+addzero(i)))
     lockfile=config.get('directories','dir_lck')+'mm8d.lck'
-    lpt_adr=int(config.get('LPTport','lpt_adr'))
     prt_in=[0 for x in range(8)]
-    for i in range(8):
-      prt_in[i]=int(config.get('GPIOports','prt_in'+str(i)))
-    prt_out=[0 for x in range(8)]
-    for i in range(8):
-      prt_out[i]=int(config.get('GPIOports','prt_out'+str(i)))
+    prt_i1=int(config.get('GPIOports','prt_i1'))
+    prt_i2=int(config.get('GPIOports','prt_i2'))
+    prt_i3=int(config.get('GPIOports','prt_i3'))
+    prt_i4=int(config.get('GPIOports','prt_i4'))
+    prt_ro1=int(config.get('GPIOports','prt_ro1'))
+    prt_ro2=int(config.get('GPIOports','prt_ro2'))
+    prt_ro3=int(config.get('GPIOports','prt_ro3'))
+    prt_ro4=int(config.get('GPIOports','prt_ro4'))
+    prt_ro1=int(config.get('GPIOports','prt_lo1'))
+    prt_lo2=int(config.get('GPIOports','prt_lo2'))
+    prt_lo3=int(config.get('GPIOports','prt_lo3'))
+    prt_lo4=int(config.get('GPIOports','prt_lo4'))
+    lpt_prt=int(config.get('LPTport','lpt_prt'))
     usr_uid=config.get('user','usr_uid')
     writetodebuglog("i","Configuration is loaded.")
   except:
@@ -142,6 +175,7 @@ def addzero(num):
 
 # load environment characteristics
 def loadenvirchars(channel,conffile):
+  global gasconcentrate_max
   global hheater_disable
   global hheater_off
   global hheater_on
@@ -180,8 +214,10 @@ def loadenvirchars(channel,conffile):
   global mvent_lowtemp
   global mvent_off
   global mvent_on
+  C="common"
   H="hyphae"
   M="mushroom"
+  gasconcentrate_max=0
   hheater_disable=[[0 for x in range(24)] for x in range(17)]
   hheater_off=[0 for x in range(17)]
   hheater_on=[0 for x in range(17)]
@@ -225,6 +261,14 @@ def loadenvirchars(channel,conffile):
       envir_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(envir_config))
+    gasconcentrate_max=int(config.get(C,'gasconcentrate_max'))
+
+
+
+
+# !!! Idáig kész !!!
+
+
 #    for x in range(24):
 #      hhumidifier_disable[x][channel]=int(config.get(H,'humidifier_disable_'+addzero(x)))
 #    for x in range(24):
@@ -397,8 +441,6 @@ global prevmm6dinputs
 global prevmm6doutputs
 global prevmm8dinputs
 global prevmm8doutputs
-#confdir="/etc/mm8d/"
-confdir="/usr/local/etc/mm8d/"
 loadconfiguration(confdir+"mm8d.ini")
 for x in range(1,17):
   if (ena_ch[x]==1):

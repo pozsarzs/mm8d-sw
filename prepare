@@ -43,8 +43,8 @@ if [ $ARCH = 'armhf' ]
 then
   sudo apt-get install python3-rpi.gpio
 else
+  cp libraries/portio-0.5.tar.gz /tmp/
   cd /tmp/
-  wget http://portio.inrim.it/portio-0.5.tar.gz
   tar -xzf portio-0.5.tar.gz
   cd portio-0.5
   sudo python3 setup.py install

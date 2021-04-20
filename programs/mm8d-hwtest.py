@@ -16,6 +16,7 @@
 # Exit codes:
 #   0: normal exit
 #   1: cannot open configuration file
+#  17: cannot access i/o port
 
 import configparser
 import io

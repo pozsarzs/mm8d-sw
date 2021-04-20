@@ -22,6 +22,9 @@ documents/connecting.txt                                                   READY
 documents/exitcodes.txt                                                    READY
 documents/logfiles.txt                                                     READY
 --------------------------------------------------------------------------------
+libraries/get                                                              READY
+libraries/portio-0.5.tar.gz                                                READY
+--------------------------------------------------------------------------------
 manuals/mm8d-creatediagrams.1.gz                                           READY
 manuals/mm8d-editenvirconf.1.gz                                            READY
 manuals/mm8d-editmainconf.1.gz                                             READY

@@ -1,0 +1,9 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
+# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | get                                                                        |
+# | get library packages                                                       |
+# +----------------------------------------------------------------------------+
+
+wget http://portio.inrim.it/portio-0.5.tar.gz

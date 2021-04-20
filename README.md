@@ -11,3 +11,7 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
  - language:           en (hu)
  - licence:            EUPL v1.1
  - user interface:     TUI and CLI and webpage
+
+**External libraries in package**
+
+ - portio v0.5 by Fabrizio Pollastri
