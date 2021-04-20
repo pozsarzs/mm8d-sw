@@ -50,25 +50,25 @@ packaging/eec-armhf/prerm                                                  READY
 --------------------------------------------------------------------------------
 packaging/eec-i386/control                                                 
 packaging/eec-i386/md5sums                                                 
-packaging/eec-i386/postinst                                                
-packaging/eec-i386/prerm                                                   
+packaging/eec-i386/postinst                                                READY
+packaging/eec-i386/prerm                                                   READY
 --------------------------------------------------------------------------------
-packaging/sw-armhf/conffiles                                               
+packaging/sw-armhf/conffiles                                               READY
 packaging/sw-armhf/control                                                 
 packaging/sw-armhf/md5sums                                                 
-packaging/sw-armhf/postinst                                                
-0packaging/sw-armhf/prerm                                                   
+packaging/sw-armhf/postinst                                                READY
+0packaging/sw-armhf/prerm                                                  READY
 --------------------------------------------------------------------------------
-packaging/sw-i386/conffiles                                                
+packaging/sw-i386/conffiles                                                READY
 packaging/sw-i386/control                                                  
 packaging/sw-i386/md5sums                                                  
-packaging/sw-i386/postinst                                                 
-packaging/sw-i386/prerm                                                    
+packaging/sw-i386/postinst                                                 READY
+packaging/sw-i386/prerm                                                    READY
 --------------------------------------------------------------------------------
 packaging/web-all/control                                                  
 packaging/web-all/md5sums                                                  
-packaging/web-all/postinst                                                 
-packaging/web-all/prerm                                                    
+packaging/web-all/postinst                                                 READY
+packaging/web-all/prerm                                                    READY
 --------------------------------------------------------------------------------
 programs/mm8d-hwtest.py                                                    READY
 programs/mm8d.py                                                           

@@ -111,9 +111,9 @@ else:
     sys.exit(17)
   status = portio.ioperm(lptaddresses[lpt_prt]+1, 1, 1)
   if status:
-    print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]));
+    print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]+1));
     sys.exit(17)
-    portio.outb(0,lptaddresses[lpt_prt])
+  portio.outb(0,lptaddresses[lpt_prt])
 
 while True:
   print(" * What do you like?")

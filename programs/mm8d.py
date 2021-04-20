@@ -48,6 +48,15 @@ else:
 global lptaddresses
 lptaddresses = [0x378,0x278,0x3bc]
 
+# add a zero char
+def addzero(num):
+  if num<10:
+    z="0"
+  else:
+    z=""
+  s=z+str(num)
+  return s
+
 # initializing ports
 def initports():
   writetodebuglog("i","Initializing I/O ports.")
@@ -73,9 +82,9 @@ def initports():
       sys.exit(17)
     status = portio.ioperm(lptaddresses[lpt_prt]+1, 1, 1)
     if status:
-      print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]));
+      print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]+1));
       sys.exit(17)
-      portio.outb(0,lptaddresses[lpt_prt])
+    portio.outb(0,lptaddresses[lpt_prt])
 
 # write a line to debug logfile
 def writetodebuglog(level,text):
@@ -108,7 +117,7 @@ def loadconfiguration(conffile):
   global ena_ch
   global lockfile
   global logfile
-  global lpt_adr
+  global lpt_prt
   global prt_i1
   global prt_i2
   global prt_i3
@@ -127,12 +136,12 @@ def loadconfiguration(conffile):
       mainconfig=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mainconfig))
-    adr_mm6dch=[0 for x in range(17)]
-    for i in range(1,17):
-      adr_mm6dch[i]=config.get('MM6D','adr_mm6dch'+addzero(i))
-    adr_mm7dch=[0 for x in range(17)]
-    for i in range(1,17):
-      adr_mm7dch[i]=config.get('MM7D','adr_mm7dch'+addzero(i))
+    adr_mm6dch=[0 for x in range(9)]
+    for i in range(1,9):
+      adr_mm6dch[i]=config.get('MM6D','adr_mm6dch'+str(i))
+    adr_mm7dch=[0 for x in range(9)]
+    for i in range(1,9):
+      adr_mm7dch[i]=config.get('MM7D','adr_mm7dch'+str(i))
     api_key=config.get('openweathermap.org','api_key')
     base_url=config.get('openweathermap.org','base_url')
     city_name=config.get('openweathermap.org','city_name')
@@ -140,11 +149,10 @@ def loadconfiguration(conffile):
     dbg_log=config.get('log','dbg_log')
     dir_log=config.get('directories','dir_log')
     dir_var=config.get('directories','dir_var')
-    ena_ch=[0 for x in range(17)]
-    for i in range(1,17):
-      ena_ch[i]=int(config.get('enable','ena_ch'+addzero(i)))
+    ena_ch=[0 for x in range(9)]
+    for i in range(1,9):
+      ena_ch[i]=int(config.get('enable','ena_ch'+str(i)))
     lockfile=config.get('directories','dir_lck')+'mm8d.lck'
-    prt_in=[0 for x in range(8)]
     prt_i1=int(config.get('GPIOports','prt_i1'))
     prt_i2=int(config.get('GPIOports','prt_i2'))
     prt_i3=int(config.get('GPIOports','prt_i3'))
@@ -163,15 +171,6 @@ def loadconfiguration(conffile):
   except:
     writetodebuglog("e","Cannot open "+conffile+"!")
     exit(1)
-
-# add a zero char
-def addzero(num):
-  if num<10:
-    z="0"
-  else:
-    z=""
-  s=z+str(num)
-  return s
 
 # load environment characteristics
 def loadenvirchars(channel,conffile):
@@ -217,104 +216,91 @@ def loadenvirchars(channel,conffile):
   C="common"
   H="hyphae"
   M="mushroom"
-  gasconcentrate_max=0
-  hheater_disable=[[0 for x in range(24)] for x in range(17)]
-  hheater_off=[0 for x in range(17)]
-  hheater_on=[0 for x in range(17)]
-  hhumidifier_disable=[[0 for x in range(24)] for x in range(17)]
-  hhumidifier_off=[0 for x in range(17)]
-  hhumidifier_on=[0 for x in range(17)]
-  hhumidity_max=[0 for x in range(17)]
-  hhumidity_min=[0 for x in range(17)]
-  hlight_off1=[0 for x in range(17)]
-  hlight_off2=[0 for x in range(17)]
-  hlight_on1=[0 for x in range(17)]
-  hlight_on2=[0 for x in range(17)]
-  htemperature_max=[0 for x in range(17)]
-  htemperature_min=[0 for x in range(17)]
-  hvent_disable=[[0 for x in range(24)] for x in range(17)]
-  hvent_disablelowtemp=[[0 for x in range(24)] for x in range(17)]
-  hvent_lowtemp=[0 for x in range(17)]
-  hvent_off=[0 for x in range(17)]
-  hvent_on=[0 for x in range(17)]
-  mheater_disable=[[0 for x in range(24)] for x in range(17)]
-  mheater_off=[0 for x in range(17)]
-  mheater_on=[0 for x in range(17)]
-  mhumidifier_disable=[[0 for x in range(24)] for x in range(17)]
-  mhumidifier_off=[0 for x in range(17)]
-  humidifier_on=[0 for x in range(17)]
-  mhumidity_max=[0 for x in range(17)]
-  mhumidity_min=[0 for x in range(17)]
-  mlight_off1=[0 for x in range(17)]
-  mlight_off2=[0 for x in range(17)]
-  mlight_on1=[0 for x in range(17)]
-  mlight_on2=[0 for x in range(17)]
-  mtemperature_max=[0 for x in range(17)]
-  mtemperature_min=[0 for x in range(17)]
-  mvent_disable=[[0 for x in range(24)] for x in range(17)]
-  mvent_disablelowtemp=[[0 for x in range(24)] for x in range(17)]
-  mvent_lowtemp=[0 for x in range(17)]
-  mvent_off=[0 for x in range(17)]
-  mvent_on=[0 for x in range(17)]
+  gasconcentrate_max=[0 for x in range(9)]
+  hhumidifier_off=[0 for x in range(9)]
+  hhumidity_max=[0 for x in range(9)]
+  hhumidity_min=[0 for x in range(9)]
+  hhumidifier_on=[0 for x in range(9)]
+  htemperature_max=[0 for x in range(9)]
+  hheater_off=[0 for x in range(9)]
+  hheater_on=[0 for x in range(9)]
+  htemperature_min=[0 for x in range(9)]
+  hheater_disable=[[0 for x in range(9)] for y in range(24)]
+  hlight_off1=[0 for x in range(9)]
+  hlight_off2=[0 for x in range(9)]
+  hlight_on1=[0 for x in range(9)]
+  hlight_on2=[0 for x in range(9)]
+  hvent_on=[0 for x in range(9)]
+  hvent_off=[0 for x in range(9)]
+  hvent_disable=[[0 for x in range(9)] for x in range(24)]
+  hvent_disablelowtemp=[[0 for x in range(9)] for x in range(24)]
+  hvent_lowtemp=[0 for x in range(9)]
+  mhumidifier_off=[0 for x in range(9)]
+  mhumidity_max=[0 for x in range(9)]
+  mhumidity_min=[0 for x in range(9)]
+  mhumidifier_on=[0 for x in range(9)]
+  mtemperature_max=[0 for x in range(9)]
+  mheater_off=[0 for x in range(9)]
+  mheater_on=[0 for x in range(9)]
+  mtemperature_min=[0 for x in range(9)]
+  mheater_disable=[[0 for x in range(9)] for y in range(24)]
+  mlight_off1=[0 for x in range(9)]
+  mlight_off2=[0 for x in range(9)]
+  mlight_on1=[0 for x in range(9)]
+  mlight_on2=[0 for x in range(9)]
+  mvent_on=[0 for x in range(9)]
+  mvent_off=[0 for x in range(9)]
+  mvent_disable=[[0 for x in range(9)] for x in range(24)]
+  mvent_disablelowtemp=[[0 for x in range(9)] for x in range(24)]
+  mvent_lowtemp=[0 for x in range(9)]
   try:
     with open(conffile) as f:
       envir_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(envir_config))
-    gasconcentrate_max=int(config.get(C,'gasconcentrate_max'))
-
-
-
-
-# !!! Idáig kész !!!
-
-
-#    for x in range(24):
-#      hhumidifier_disable[x][channel]=int(config.get(H,'humidifier_disable_'+addzero(x)))
-#    for x in range(24):
-#      hheater_disable[x][channel]=int(config.get(H,'heater_disable_'+addzero(x)))
-#    for x in range(24):
-#      hvent_disable[x][channel]=int(config.get(H,'vent_disable_'+addzero(x)))
-#    for x in range(24):
-#      hvent_disablelowtemp[x][channel]=int(config.get(H,'vent_disablelowtemp_'+addzero(x)))
-    hheater_off[channel]=int(config.get(H,'heater_off'))
-    hheater_on[channel]=int(config.get(H,'heater_on'))
+    gasconcentrate_max[channel]=int(config.get(C,'gasconcentrate_max'))
     hhumidifier_off[channel]=int(config.get(H,'humidifier_off'))
-    hhumidifier_on[channel]=int(config.get(H,'humidifier_on'))
     hhumidity_max[channel]=int(config.get(H,'humidity_max'))
     hhumidity_min[channel]=int(config.get(H,'humidity_min'))
-    hlight_off1[channel]=int(config.get(H,'light_off1'))
-    hlight_off2[channel]=int(config.get(H,'light_off2'))
-    hlight_on1[channel]=int(config.get(H,'light_on1'))
-    hlight_on2[channel]=int(config.get(H,'light_on2'))
+    hhumidifier_on[channel]=int(config.get(H,'humidifier_on'))
     htemperature_max[channel]=int(config.get(H,'temperature_max'))
+    hheater_off[channel]=int(config.get(H,'heater_off'))
+    hheater_on[channel]=int(config.get(H,'heater_on'))
     htemperature_min[channel]=int(config.get(H,'temperature_min'))
-    hvent_lowtemp[channel]=int(config.get(H,'vent_lowtemp'))
-    hvent_off[channel]=int(config.get(H,'vent_off'))
+    for x in range(24):
+      hheater_disable[x][channel]=int(config.get(H,'heater_disable_'+addzero(x)))
+    hlight_on1[channel]=int(config.get(H,'light_on1'))
+    hlight_off1[channel]=int(config.get(H,'light_off1'))
+    hlight_on2[channel]=int(config.get(H,'light_on2'))
+    hlight_off2[channel]=int(config.get(H,'light_off2'))
     hvent_on[channel]=int(config.get(H,'vent_on'))
-#    for x in range(24):
-#      mhumidifier_disable[x][channel]=int(config.get(M,'humidifier_disable_'+addzero(x)))
-#    for x in range(24):
-#      mheater_disable[x][channel]=int(config.get(M,'heater_disable_'+addzero(x)))
-#    for x in range(24):
-#      mvent_disable[x][channel]=int(config.get(M,'vent_disable_'+addzero(x)))
-#    for x in range(24):
-#      mvent_disablelowtemp[x][channel]=int(config.get(M,'vent_disablelowtemp_'+addzero(x)))
+    hvent_off[channel]=int(config.get(H,'vent_off'))
+    for x in range(24):
+      hvent_disable[x][channel]=int(config.get(H,'vent_disable_'+addzero(x)))
+    for x in range(24):
+      hvent_disablelowtemp[x][channel]=int(config.get(H,'vent_disablelowtemp_'+addzero(x)))
+    hvent_lowtemp[channel]=int(config.get(H,'vent_lowtemp'))
+    mhumidifier_off[channel]=int(config.get(M,'humidifier_off'))
+    mhumidity_max[channel]=int(config.get(M,'humidity_max'))
+    mhumidity_min[channel]=int(config.get(M,'humidity_min'))
+    mhumidifier_on[channel]=int(config.get(M,'humidifier_on'))
+    mtemperature_max[channel]=int(config.get(M,'temperature_max'))
     mheater_off[channel]=int(config.get(M,'heater_off'))
     mheater_on[channel]=int(config.get(M,'heater_on'))
-#    mhumidifier_off[channel]=int(config.get(M,'humidifier_off'))
-#    mhumidifier_on[channel]=int(config.get(M,'humidifier_on'))
-#    mhumidity_max[channel]=int(config.get(M,'humidity_max'))
-#    mhumidity_min[channel]=int(config.get(M,'humidity_min'))
-    mlight_off1[channel]=int(config.get(M,'light_off1'))
-    mlight_off2[channel]=int(config.get(M,'light_off2'))
-    mlight_on1[channel]=int(config.get(M,'light_on1'))
-    mlight_on2[channel]=int(config.get(M,'light_on2'))
-    mtemperature_max[channel]=int(config.get(M,'temperature_max'))
     mtemperature_min[channel]=int(config.get(M,'temperature_min'))
-    mvent_lowtemp[channel]=int(config.get(M,'vent_lowtemp'))
-    mvent_off[channel]=int(config.get(M,'vent_off'))
+    for x in range(24):
+      mheater_disable[x][channel]=int(config.get(M,'heater_disable_'+addzero(x)))
+    mlight_on1[channel]=int(config.get(M,'light_on1'))
+    mlight_off1[channel]=int(config.get(M,'light_off1'))
+    mlight_on2[channel]=int(config.get(M,'light_on2'))
+    mlight_off2[channel]=int(config.get(M,'light_off2'))
     mvent_on[channel]=int(config.get(M,'vent_on'))
+    mvent_off[channel]=int(config.get(M,'vent_off'))
+    for x in range(24):
+      mvent_disable[x][channel]=int(config.get(M,'vent_disable_'+addzero(x)))
+    for x in range(24):
+      mvent_disablelowtemp[x][channel]=int(config.get(M,'vent_disablelowtemp_'+addzero(x)))
+    mvent_lowtemp[channel]=int(config.get(M,'vent_lowtemp'))
     writetodebuglog("i","Environment characteristics is loaded.")
   except:
     writetodebuglog("e","Cannot open "+conffile+"!")
@@ -442,17 +428,17 @@ global prevmm6doutputs
 global prevmm8dinputs
 global prevmm8doutputs
 loadconfiguration(confdir+"mm8d.ini")
-for x in range(1,17):
+for x in range(1,9):
   if (ena_ch[x]==1):
-    loadenvirchars(x,confdir+"envir-ch"+addzero(x)+".ini")
+    loadenvirchars(x,confdir+"envir-ch"+str(x)+".ini")
 initports()
 first=1
 exttemp=18
-prevtemperature=[0 for x in range(17)]
-prevhumidity=[0 for x in range(17)]
-prevgasconcentrate=[0 for x in range(17)]
-prevmm6dinputs=["" for x in range(17)]
-prevmm6doutputs=["" for x in range(17)]
+prevtemperature=[0 for x in range(9)]
+prevhumidity=[0 for x in range(9)]
+prevgasconcentrate=[0 for x in range(9)]
+prevmm6dinputs=["" for x in range(9)]
+prevmm6doutputs=["" for x in range(9)]
 prevmm8dinputs=""
 prevmm8doutputs=""
 writetodebuglog("i","Starting program as daemon.")
@@ -462,14 +448,14 @@ with daemon.DaemonContext() as context:
     while True:
       # get input data from MM6D controllers
       writetodebuglog("i","Getting input data from MM6Ds.")
-      for x in range(1,17):
+      for x in range(1,9):
         if (ena_ch[x]=="1"):
           MM6DGetInputData(x)
       writetodebuglog("i","Getting is done.")
       blinkactled()
       # get analog data from MM7D controllers
       writetodebuglog("i","Getting analog values from MM7Ds.")
-      for x in range(1,17):
+      for x in range(1,9):
         if (ena_ch[x]=="1"):
           MM7DGetAnalogData(x)
       writetodebuglog("i","Getting is done.")
@@ -484,14 +470,14 @@ with daemon.DaemonContext() as context:
       MakeLogFiles()
       # set output data to MM6D controllers
       writetodebuglog("i","Setting output data to MM6Ds.")
-      for x in range(1,17):
+      for x in range(1,9):
         if (ena_ch[x]=="1"):
           MM6DSetOutputData(x)
       writetodebuglog("i","Setting is done.")
       blinkactled()
       # get analog data from MM7D controllers
       writetodebuglog("i","Setting status LEDs to MM7Ds.")
-      for x in range(1,17):
+      for x in range(1,9):
         if (ena_ch[x]=="1"):
           MM7DGetStatusLED(x)
       writetodebuglog("i","Setting is done.")
