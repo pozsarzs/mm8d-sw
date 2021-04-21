@@ -19,6 +19,7 @@
 #  14: cannot open environment characteristic configuration file
 #  15: cannot create lock file
 #  17: cannot access i/o port
+#  18: there is not enabled channel
 
 import configparser
 import daemon
@@ -63,7 +64,7 @@ def addzero(num):
   return s
 
 # initializing ports
-def initports():
+def resetlocalports():
   writetodebuglog("i","Initializing I/O ports.")
   if (hw==0):
     GPIO.setwarnings(False)
@@ -83,11 +84,11 @@ def initports():
   else:
     status = portio.ioperm(lptaddresses[lpt_prt], 1, 1)
     if status:
-      print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]));
+      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt])))
       sys.exit(17)
     status = portio.ioperm(lptaddresses[lpt_prt]+1, 1, 1)
     if status:
-      print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]+1));
+      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt]+1)))
       sys.exit(17)
     portio.outb(0,lptaddresses[lpt_prt])
 
@@ -174,7 +175,7 @@ def loadconfiguration(conffile):
     usr_uid=config.get('user','usr_uid')
     writetodebuglog("i","Configuration is loaded.")
   except:
-    writetodebuglog("e","Cannot open "+conffile+"!")
+    writetodebuglog("e","ERROR #01: Cannot open "+conffile+"!")
     exit(1)
 
 # load environment characteristics
@@ -308,7 +309,7 @@ def loadenvirchars(channel,conffile):
     mvent_lowtemp[channel]=int(config.get(M,'vent_lowtemp'))
     writetodebuglog("i","Environment characteristics is loaded.")
   except:
-    writetodebuglog("e","Cannot open "+conffile+"!")
+    writetodebuglog("e","ERROR #14: Cannot open "+conffile+"!")
     exit(14)
 
 # create and remove lock file
@@ -355,7 +356,7 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
       f.writelines(lines)
       f.close()
   except:
-    writetodebuglog("e","Cannot write "+logfile+"!")
+    writetodebuglog("e","ERROR #15: Cannot write "+logfile+"!")
     lckfile(0)
     exit(15)
   lckfile(0)
@@ -379,6 +380,10 @@ def extcont(channel,output,status):
 
 # blink ACTIVE LED
 def blinkactiveled(on):
+  """
+  ...
+
+  """
   return 0
 
 # get external temperature from openweathermap.org
@@ -396,29 +401,27 @@ def getexttemp():
     writetodebuglog("w","Cannot get external temperature from internet.")
     return 18
 
-def MM6DGetInputData(channel):
-  return 0
 
-def MM6DSetOutputData(channel):
-  return 0
+"""
+...
 
-def MM7DGetAnalogData(channel):
-  return 0
+"""
 
-def MM7DSetStatusLED(channel):
-  return 0
-
-def MM8DGetInputData(channel):
-  return 0
-
-def MM8DSetOutputData(channel):
-  return 0
-
-def AnalizeData():
-  return 0
-
-def MakeLogFiles():
-  return 0
+# set auto mode of MM7D device
+def setautomodeMM7Ddevice(channel):
+  rc=0
+  blinkactiveled(1);
+  url="http://"+adr_mm7dch[channel]+"/mode/auto?uid="+usr_uid
+  try:
+    r=requests.get(url,timeout=3)
+    if (r.status_code==200):
+      rc=1
+    else:
+      rc=0
+  except:
+    rc=0
+  blinkactiveled(0)
+  return rc
 
 # get version data from controllers
 def getcontrollerversion(conttype,channel):
@@ -496,45 +499,106 @@ for channel in range(1,9):
     if getcontrollerversion(6,channel):
       if (mv*10+sv < COMPMV6*10+COMPSV6):
         ena_ch[channel] = 0;
-        writetodebuglog("e","Version of MM6D on channel #"+str(channel)+" is not compatible.")
+        writetodebuglog("w","Version of MM6D on channel #"+str(channel)+" is not compatible.")
     else:
       ena_ch[channel] = 0;
-      writetodebuglog("e","MM6D on channel #"+str(channel)+" is not accessible.")
+      writetodebuglog("w","MM6D on channel #"+str(channel)+" is not accessible.")
 for channel in range(1,9):
   if (ena_ch[channel] > 0):
     if getcontrollerversion(7,channel):
       if (mv*10+sv < COMPMV7*10+COMPSV7):
         ena_ch[channel] = 0;
-        writetodebuglog("e","Version of MM7D on channel #"+str(channel)+" is not compatible.")
+        writetodebuglog("w","Version of MM7D on channel #"+str(channel)+" is not compatible.")
     else:
       ena_ch[channel] = 0;
-      writetodebuglog("e","MM7D on channel #"+str(channel)+" is not accessible.")
-
-
+      writetodebuglog("w","MM7D on channel #"+str(channel)+" is not accessible.")
 # check number of enabled channels
-#  ii = 0;
-#  for (int channel = 0; channel < 8; ++channel) ii = ii + ena_ch[channel];
-#  if (ii == 0)
-#  {
-#    printf(msg(18));
-#    exit(2);
-#  }
-
-
+ii = 0;
+for channel in range(1,9):
+  ii=ii+ena_ch[channel];
+if (ii==0):
+  writetodebuglog("e","ERROR #18: There is not enabled channel")
+  exit(18);
 # load environment parameter settings
-for x in range(1,9):
-  if (ena_ch[x]==1):
-    loadenvirchars(x,confdir+"envir-ch"+str(x)+".ini")
-
-exit()
-
-initports()
+for channel in range(1,9):
+  if (ena_ch[channel]==1):
+    loadenvirchars(channel,confdir+"envir-ch"+str(channel)+".ini")
+# set local ports to default state
+resetlocalports()
+# set auto mode of MM7D device
+for channel in range(1,9):
+  if (ena_ch[channel]==1):
+    if (setautomodeMM7Ddevice(channel)):
+      writetodebuglog("i","Set auto mode of MM7D on channel #"+str(channel))
+    else:
+      writetodebuglog("w","Cannot set auto mode of MM7D on channel #"+str(channel))
+# *** start loop ***
 exttemp=18
 writetodebuglog("i","Starting program as daemon.")
 with daemon.DaemonContext() as context:
   try:
     time.sleep(1)
     while True:
+
+
+
+      """
+ // section #1:
+    // read data from local port
+    printf("%s%s", msg(29), msg(0));
+    if (readlocalports()) printf(msg(4)); else
+    {
+      printf(msg(5));
+      printf(msg(46));
+    }
+    // analise data
+    printf("%s%s\n", msg(31), msg(0));
+    analise(1);
+    // write data to local port
+    printf("%s%s", msg(30), msg(0));
+    if (writelocalports()) printf(msg(4)); else
+    {
+      printf(msg(5));
+      printf(msg(46));
+    }
+    // set outputs of MM6D
+    for (int channel = 0; channel < 8; channel++)
+      if (ena_ch[channel] > 0)
+      {
+        printf("%s%d%s", msg(34), channel+1, msg(0));
+        if (readwriteMM6Ddevice(channel,1))
+          printf(msg(4)); else
+          printf(msg(5));
+   }
+    // section #2:
+    // get parameters of air from MM7Ds
+    for (int channel = 0; channel < 8; channel++)
+      if (ena_ch[channel] > 0)
+      {
+        printf("%s%d%s", msg(32), channel+1, msg(0));
+        if (readwriteMM7Ddevice(channel))
+          printf(msg(4)); else
+          printf(msg(5));
+      }
+    // analise data
+    printf("%s%s\n", msg(31), msg(0));
+    analise(2);
+    printf(msg(36));
+#ifdef __DOS__
+    if (loop) delay(1000 * DELAY);
+#else
+    if (loop) usleep(1000000 * DELAY);
+#endif
+      """
+
+
+
+
+      exit(99)
+
+
+
+      """
       # get input data from MM6D controllers
       writetodebuglog("i","Getting input data from MM6Ds.")
       for x in range(1,9):
@@ -579,6 +643,33 @@ with daemon.DaemonContext() as context:
       # wait 10s
       writetodebuglog("i","Waiting 10 s.")
       time.sleep(10)
+      """
   except KeyboardInterrupt:
     GPIO.cleanup
+
+
+    """
+  // *** stop loop ***
+  printf(msg(14));
+  // set local ports to default state
+  printf("%s%s", msg(9), msg(0));
+  if (resetlocalports()) printf(msg(4)); else
+  {
+    printf(msg(5));
+    printf(msg(46));
+  }
+  // set remote devices to default state
+  for (int channel = 0; channel < 8; channel++)
+    if (ena_ch[channel] > 0)
+    {
+      printf("%s%d to OFF%s", msg(34), channel+1, msg(0));
+      if (resetMM6Ddevice(channel))
+        printf(msg(4)); else
+        printf(msg(5));
+    }
+  // exit to OS
+  remove(TEMPFILE);
+  return 0;
+
+    """
 exit(0)
