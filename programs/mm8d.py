@@ -45,6 +45,11 @@ if (USRLOCALDIR == 1):
 else:
   confdir='/etc/mm8d/'
 
+COMPMV6=0
+COMPSV6=3
+COMPMV7=0
+COMPSV7=3
+
 global lptaddresses
 lptaddresses = [0x378,0x278,0x3bc]
 
@@ -95,7 +100,7 @@ def writetodebuglog(level,text):
       lv="WARNING"
     if level=="e":
       lv="ERROR  "
-    debugfile=dir_log+time.strftime("debug-%Y%m%d.log")
+    debugfile=dir_log+'/'+time.strftime("debug-%Y%m%d.log")
     dt=(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
     try:
       with open(debugfile, "a") as d:
@@ -321,7 +326,7 @@ def lckfile(mode):
 
 # write data to log with timestamp
 def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
-  logfile=dir_log+'mm8d_ch'+addzero(channel)+'.log'
+  logfile=dir_log+'/mm8d_ch'+str(channel)+'.log'
   dt=(strftime("%Y-%m-%d,%H:%M",gmtime()))
   lckfile(1)
   writetodebuglog("i","Writing data to log.")
@@ -336,7 +341,7 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
       if (channel==0):
         s=dt+','+ \
               statusdata[0]+','+statusdata[1]+','+statusdata[2]+','+ \
-              statusdata[3]+','+statusdata[4]+','+statusdata[5]+'\n'
+              statusdata[3]+','+statusdata[4]+'\n'
       else:
         s=dt+','+ \
               str(temperature)+','+ \
@@ -344,8 +349,7 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
               str(gasconcentrate)+','+ \
               statusdata[0]+','+statusdata[1]+','+statusdata[2]+','+ \
               statusdata[3]+','+statusdata[4]+','+statusdata[5]+','+ \
-              statusdata[6]+','+statusdata[7]+','+statusdata[8]+','+ \
-              statusdata[9]+'\n'
+              statusdata[6]+','+statusdata[7]+'\n'
       f.write(s)
       f.write(first_line)
       f.writelines(lines)
@@ -358,15 +362,15 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
 
 # check external control files
 def extcont(channel,output,status):
-  writetodebuglog("i","Checking override file: "+dir_var+addzero(channel)+"/out"+str(output)+".")
-  if os.path.isfile(dir_var+addzero(channel)+"/out"+str(output)):
+  writetodebuglog("i","Checking override file: "+dir_var+'/'+str(channel)+"/out"+str(output)+".")
+  if os.path.isfile(dir_var+'/'+str(channel)+"/out"+str(output)):
     try:
-      f=open(dir_var+addzero(channel)+"/out"+str(output),'r')
+      f=open(dir_var+'/'+str(channel)+"/out"+str(output),'r')
       v=f.read()
       f.close()
-      if v == "neutral": s=status
-      if v == "off": s="0"
-      if v == "on": s="1"
+      if v=="neutral": s=status
+      if v=="off": s="0"
+      if v=="on": s="1"
     except:
       s=status
   else:
@@ -374,11 +378,8 @@ def extcont(channel,output,status):
   return s
 
 # blink ACTIVE LED
-def blinkactled():
-  GPIO.output(prt_act,1)
-  time.sleep(0.5)
-  GPIO.output(prt_act,0)
-  time.sleep(0.5)
+def blinkactiveled(on):
+  return 0
 
 # get external temperature from openweathermap.org
 def getexttemp():
@@ -419,28 +420,116 @@ def AnalizeData():
 def MakeLogFiles():
   return 0
 
+# get version data from controllers
+def getcontrollerversion(conttype,channel):
+  global mv
+  global sv
+  mv=0
+  sv=0
+  rc=0
+  blinkactiveled(1);
+  if (conttype==6):
+    url="http://"+adr_mm6dch[channel]+"/version"
+  else:
+    url="http://"+adr_mm7dch[channel]+"/version"
+  try:
+    r=requests.get(url,timeout=3)
+    if (r.status_code==200):
+      rc=1
+      l=0
+      for line in r.text.splitlines():
+        l=l+1
+        if (l==2):
+          mv=int(line[0])
+          sv=int(line[2])
+          break
+    else:
+      rc=0
+  except:
+    rc=0
+  blinkactiveled(0);
+  return rc
+
 # main program
-global prevtemperature
-global prevhumidity
-global prevgasconcentrate
-global prevmm6dinputs
-global prevmm6doutputs
-global prevmm8dinputs
-global prevmm8doutputs
+global in_ocprot
+global in_opmode
+global in_swmanu
+global in_alarm
+global in_humidity
+global in_temperature
+global in_gasconcentrate
+global out_lamps
+global out_vents
+global out_heaters
+global mainssensor
+global mainsbreaker1
+global mainsbreaker2
+global mainsbreaker3
+global relay_alarm
+global led_active
+global led_warning
+global led_error
+# reset variables
+in_ocprot=[0 for channel in range(9)]
+in_opmode=[0 for channel in range(9)]
+in_swmanu=[0 for channel in range(9)]
+in_alarm=[0 for channel in range(9)]
+in_humidity=[0 for channel in range(9)]
+in_temperature=[0 for channel in range(9)]
+in_gasconcentrate=[0 for channel in range(9)]
+out_lamps=[0 for channel in range(9)]
+out_vents=[0 for channel in range(9)]
+out_heaters=[0 for channel in range(9)]
+mainssensor=0
+mainsbreaker1=0
+mainsbreaker2=0
+mainsbreaker3=0
+relay_alarm=0
+led_active=0
+led_warning=0
+led_error=0
+# load main settings
 loadconfiguration(confdir+"mm8d.ini")
+# checking version of remote devices
+for channel in range(1,9):
+  if (ena_ch[channel] > 0):
+    if getcontrollerversion(6,channel):
+      if (mv*10+sv < COMPMV6*10+COMPSV6):
+        ena_ch[channel] = 0;
+        writetodebuglog("e","Version of MM6D on channel #"+str(channel)+" is not compatible.")
+    else:
+      ena_ch[channel] = 0;
+      writetodebuglog("e","MM6D on channel #"+str(channel)+" is not accessible.")
+for channel in range(1,9):
+  if (ena_ch[channel] > 0):
+    if getcontrollerversion(7,channel):
+      if (mv*10+sv < COMPMV7*10+COMPSV7):
+        ena_ch[channel] = 0;
+        writetodebuglog("e","Version of MM7D on channel #"+str(channel)+" is not compatible.")
+    else:
+      ena_ch[channel] = 0;
+      writetodebuglog("e","MM7D on channel #"+str(channel)+" is not accessible.")
+
+
+# check number of enabled channels
+#  ii = 0;
+#  for (int channel = 0; channel < 8; ++channel) ii = ii + ena_ch[channel];
+#  if (ii == 0)
+#  {
+#    printf(msg(18));
+#    exit(2);
+#  }
+
+
+# load environment parameter settings
 for x in range(1,9):
   if (ena_ch[x]==1):
     loadenvirchars(x,confdir+"envir-ch"+str(x)+".ini")
+
+exit()
+
 initports()
-first=1
 exttemp=18
-prevtemperature=[0 for x in range(9)]
-prevhumidity=[0 for x in range(9)]
-prevgasconcentrate=[0 for x in range(9)]
-prevmm6dinputs=["" for x in range(9)]
-prevmm6doutputs=["" for x in range(9)]
-prevmm8dinputs=""
-prevmm8doutputs=""
 writetodebuglog("i","Starting program as daemon.")
 with daemon.DaemonContext() as context:
   try:
