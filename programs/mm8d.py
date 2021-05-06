@@ -64,43 +64,6 @@ def addzero(num):
   s=z+str(num)
   return s
 
-# initializing ports
-def initializelocalports():
-  writetodebuglog("i","Initializing local I/O ports.")
-  if (hw==0):
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(prt_i1,GPIO.IN)
-    GPIO.setup(prt_i2,GPIO.IN)
-    GPIO.setup(prt_i3,GPIO.IN)
-    GPIO.setup(prt_i4,GPIO.IN)
-    GPIO.setup(prt_ro1,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_ro2,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_ro3,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_ro4,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo1,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo2,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
-  else:
-    status = portio.ioperm(lptaddresses[lpt_prt], 1, 1)
-    if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt])))
-      sys.exit(17)
-    status = portio.ioperm(lptaddresses[lpt_prt]+1, 1, 1)
-    if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt]+1)))
-      sys.exit(17)
-    portio.outb(0,lptaddresses[lpt_prt])
-
-# set local ports to default state
-def closelocalports():
-  writetodebuglog("i","Close local I/O ports.")
-  if (hw==0):
-    GPIO.cleanup
-  else:
-    portio.outb(0,lptaddresses[lpt_prt])
-
 # write a line to debug logfile
 def writetodebuglog(level,text):
   if dbg_log=="1":
@@ -410,27 +373,85 @@ def getexttemp():
 def analise(step):
   return 0
 
-# write data to local I/O port
+# local port controller functions
+
+def initializelocalports():
+  writetodebuglog("i","Initializing local I/O ports.")
+  if (hw==0):
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(prt_i1,GPIO.IN)
+    GPIO.setup(prt_i2,GPIO.IN)
+    GPIO.setup(prt_i3,GPIO.IN)
+    GPIO.setup(prt_i4,GPIO.IN)
+    GPIO.setup(prt_ro1,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(prt_ro2,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(prt_ro3,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(prt_ro4,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(prt_lo1,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(prt_lo2,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
+  else:
+    status = portio.ioperm(lptaddresses[lpt_prt], 1, 1)
+    if status:
+      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt])))
+      sys.exit(17)
+    status = portio.ioperm(lptaddresses[lpt_prt]+1, 1, 1)
+    if status:
+      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt]+1)))
+      sys.exit(17)
+    portio.outb(0,lptaddresses[lpt_prt])
+
 def writelocalports():
-  return 0
+  if (hw==0):
+    GPIO.output(prt_lo1,led_active)
+    GPIO.output(prt_lo2,led_warning)
+    GPIO.output(prt_lo3,led_error)
+    GPIO.output(prt_ro1,relay_alarm)
+    return 0
+  else:
+    outdata = 64*led_error+32*led_warning+16*led_active+relay_alarm;
+    portio.outb(outdata,lptaddresses[lpt_prt]);
+    if (portio.inb(lptaddresses[lpt_prt]) == outdata):
+      return 1
+    else:
+      return 0
 
-# read data from local I/O port
 def readlocalports():
-  return 0
+  if (hw==0):
+    GPIO.input(prt_i1,mainssensor)
+    GPIO.input(prt_i2,mainsbreaker1)
+    GPIO.input(prt_i3,mainsbreaker2)
+    GPIO.input(prt_i4,mainsbreaker3)
+  else:
+    indata = portio.inb(lpt_adr[lpt_prt]+1);
+    mainssensor = indata & 8;
+    if (mainssensor > 1):
+      mainssensor=1;
+    mainsbreaker1=indata & 16;
+    if (lpt_mainsbreaker1 > 1):
+      mainsbreaker1=1;
+    mainsbreaker2=indata & 32;
+    if (lpt_mainsbreaker2 > 1):
+      mainsbreaker1=1;
+    mainsbreaker3=indata & 64;
+    if (lpt_mainsbreaker3 > 1):
+      mainsbreaker1=1;
+  return 1;
 
-# set outputs of MM6D device to default state
-def resetMM6Ddevice(channel):
-  return 0
+def closelocalports():
+  writetodebuglog("i","Close local I/O ports.")
+  if (hw==0):
+    GPIO.cleanup
+  else:
+    portio.outb(0,lptaddresses[lpt_prt])
 
-# read/write MM6D device
-def readwriteMM6Ddevice(channel):
-  return 0
+# remote device controller functions
 
-# read/write MM7D device
 def readwriteMM7Ddevice(channel):
   return 0
 
-# set auto mode of MM7D device
 def setautomodeMM7Ddevice(channel):
   rc=0
   blinkactiveled(1);
@@ -446,7 +467,39 @@ def setautomodeMM7Ddevice(channel):
   blinkactiveled(0)
   return rc
 
-# get version data from controllers
+def readwriteMM6Ddevice(channel):
+  return 0
+
+def resetMM6Ddevice(channel):
+  rc=0
+  blinkactiveled(1);
+  url="http://"+adr_mm6dch[channel]+"/set/all/off?uid="+usr_uid
+  try:
+    r=requests.get(url,timeout=3)
+    if (r.status_code==200):
+      rc=1
+    else:
+      rc=0
+  except:
+    rc=0
+  blinkactiveled(0)
+  return rc
+
+def restoreMM6Dalarm(channel):
+  rc=0
+  blinkactiveled(1);
+  url="http://"+adr_mm6dch[channel]+"/set/alarm/off?uid="+usr_uid
+  try:
+    r=requests.get(url,timeout=3)
+    if (r.status_code==200):
+      rc=1
+    else:
+      rc=0
+  except:
+    rc=0
+  blinkactiveled(0)
+  return rc
+
 def getcontrollerversion(conttype,channel):
   global mv
   global sv
