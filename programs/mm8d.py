@@ -50,6 +50,7 @@ COMPMV6=0
 COMPSV6=3
 COMPMV7=0
 COMPSV7=3
+DELAY=10
 
 global lptaddresses
 lptaddresses = [0x378,0x278,0x3bc]
@@ -64,8 +65,8 @@ def addzero(num):
   return s
 
 # initializing ports
-def resetlocalports():
-  writetodebuglog("i","Initializing I/O ports.")
+def initializelocalports():
+  writetodebuglog("i","Initializing local I/O ports.")
   if (hw==0):
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
@@ -90,6 +91,14 @@ def resetlocalports():
     if status:
       writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt]+1)))
       sys.exit(17)
+    portio.outb(0,lptaddresses[lpt_prt])
+
+# set local ports to default state
+def closelocalports():
+  writetodebuglog("i","Close local I/O ports.")
+  if (hw==0):
+    GPIO.cleanup
+  else:
     portio.outb(0,lptaddresses[lpt_prt])
 
 # write a line to debug logfile
@@ -380,10 +389,6 @@ def extcont(channel,output,status):
 
 # blink ACTIVE LED
 def blinkactiveled(on):
-  """
-  ...
-
-  """
   return 0
 
 # get external temperature from openweathermap.org
@@ -401,11 +406,29 @@ def getexttemp():
     writetodebuglog("w","Cannot get external temperature from internet.")
     return 18
 
+# analise data
+def analise(step):
+  return 0
 
-"""
-...
+# write data to local I/O port
+def writelocalports():
+  return 0
 
-"""
+# read data from local I/O port
+def readlocalports():
+  return 0
+
+# set outputs of MM6D device to default state
+def resetMM6Ddevice(channel):
+  return 0
+
+# read/write MM6D device
+def readwriteMM6Ddevice(channel):
+  return 0
+
+# read/write MM7D device
+def readwriteMM7Ddevice(channel):
+  return 0
 
 # set auto mode of MM7D device
 def setautomodeMM7Ddevice(channel):
@@ -523,15 +546,15 @@ if (ii==0):
 for channel in range(1,9):
   if (ena_ch[channel]==1):
     loadenvirchars(channel,confdir+"envir-ch"+str(channel)+".ini")
-# set local ports to default state
-resetlocalports()
+# initialize local ports to default state
+initializelocalports()
 # set auto mode of MM7D device
 for channel in range(1,9):
   if (ena_ch[channel]==1):
     if (setautomodeMM7Ddevice(channel)):
-      writetodebuglog("i","Set auto mode of MM7D on channel #"+str(channel))
+      writetodebuglog("i","Set auto mode of MM7D on channel #"+str(channel))+"."
     else:
-      writetodebuglog("w","Cannot set auto mode of MM7D on channel #"+str(channel))
+      writetodebuglog("w","Cannot set auto mode of MM7D on channel #"+str(channel))+"."
 # *** start loop ***
 exttemp=18
 writetodebuglog("i","Starting program as daemon.")
@@ -539,137 +562,48 @@ with daemon.DaemonContext() as context:
   try:
     time.sleep(1)
     while True:
-
-
-
-      """
- // section #1:
-    // read data from local port
-    printf("%s%s", msg(29), msg(0));
-    if (readlocalports()) printf(msg(4)); else
-    {
-      printf(msg(5));
-      printf(msg(46));
-    }
-    // analise data
-    printf("%s%s\n", msg(31), msg(0));
-    analise(1);
-    // write data to local port
-    printf("%s%s", msg(30), msg(0));
-    if (writelocalports()) printf(msg(4)); else
-    {
-      printf(msg(5));
-      printf(msg(46));
-    }
-    // set outputs of MM6D
-    for (int channel = 0; channel < 8; channel++)
-      if (ena_ch[channel] > 0)
-      {
-        printf("%s%d%s", msg(34), channel+1, msg(0));
-        if (readwriteMM6Ddevice(channel,1))
-          printf(msg(4)); else
-          printf(msg(5));
-   }
-    // section #2:
-    // get parameters of air from MM7Ds
-    for (int channel = 0; channel < 8; channel++)
-      if (ena_ch[channel] > 0)
-      {
-        printf("%s%d%s", msg(32), channel+1, msg(0));
-        if (readwriteMM7Ddevice(channel))
-          printf(msg(4)); else
-          printf(msg(5));
-      }
-    // analise data
-    printf("%s%s\n", msg(31), msg(0));
-    analise(2);
-    printf(msg(36));
-#ifdef __DOS__
-    if (loop) delay(1000 * DELAY);
-#else
-    if (loop) usleep(1000000 * DELAY);
-#endif
-      """
-
-
-
-
-      exit(99)
-
-
-
-      """
-      # get input data from MM6D controllers
-      writetodebuglog("i","Getting input data from MM6Ds.")
-      for x in range(1,9):
-        if (ena_ch[x]=="1"):
-          MM6DGetInputData(x)
-      writetodebuglog("i","Getting is done.")
-      blinkactled()
-      # get analog data from MM7D controllers
-      writetodebuglog("i","Getting analog values from MM7Ds.")
-      for x in range(1,9):
-        if (ena_ch[x]=="1"):
-          MM7DGetAnalogData(x)
-      writetodebuglog("i","Getting is done.")
-      blinkactled()
-      # get input data from MM8D controller
-      writetodebuglog("i","Getting input data from MM8D.")
-      MM8DGetInputData
-      writetodebuglog("i","Getting is done.")
-      blinkactled()
-      # analize data and make logfiles
-      AnalizeData()
-      MakeLogFiles()
-      # set output data to MM6D controllers
-      writetodebuglog("i","Setting output data to MM6Ds.")
-      for x in range(1,9):
-        if (ena_ch[x]=="1"):
-          MM6DSetOutputData(x)
-      writetodebuglog("i","Setting is done.")
-      blinkactled()
-      # get analog data from MM7D controllers
-      writetodebuglog("i","Setting status LEDs to MM7Ds.")
-      for x in range(1,9):
-        if (ena_ch[x]=="1"):
-          MM7DGetStatusLED(x)
-      writetodebuglog("i","Setting is done.")
-      blinkactled()
-      # set output data to MM8D controller
-      writetodebuglog("i","Setting output data to MM8D.")
-      MM8DGetInputData
-      writetodebuglog("i","Setting is done.")
-      blinkactled()
-      # wait 10s
-      writetodebuglog("i","Waiting 10 s.")
-      time.sleep(10)
-      """
+      # section #1:
+      # read data from local port
+      if (readlocalport()):
+        writetodebuglog("i","Read data from local I/O port.")
+      else:
+        writetodebuglog("w","Cannot read data from local I/O port.")
+      # analise data
+      analise(1);
+      # write data to local port
+      if (writelocalport()):
+        writetodebuglog("i","Write data to local I/O port.")
+      else:
+        writetodebuglog("w","Cannot write data to local I/O port.")
+      # set outputs of MM6D
+      for channel in range(1,9):
+        if (ena_ch[channel]==1):
+          if (readwriteMM6Ddevice(channel,1)):
+            writetodebuglog("i","Set outputs of MM6D on channel #"+str(channel))+"."
+          else:
+            writetodebuglog("w","Cannot set outputs of MM6D on channel #"+str(channel))+"."
+      # section #2:
+      # get parameters of air from MM7Ds
+      for channel in range(1,9):
+        if (ena_ch[channel]==1):
+          if (readwriteMM7Ddevice(channel)):
+            writetodebuglog("i","Get parameters of air from MM7D on channel #"+str(channel))+"."
+          else:
+            writetodebuglog("w","Cannot get parameters of air from MM7D on channel #"+str(channel))+"."
+      # analise data
+      analise(2);
+      # waiting
+      writetodebuglog("i","Waiting "+str(DELAY)+".")
+      time.sleep(DELAY)
   except KeyboardInterrupt:
-    GPIO.cleanup
-
-
-    """
-  // *** stop loop ***
-  printf(msg(14));
-  // set local ports to default state
-  printf("%s%s", msg(9), msg(0));
-  if (resetlocalports()) printf(msg(4)); else
-  {
-    printf(msg(5));
-    printf(msg(46));
-  }
-  // set remote devices to default state
-  for (int channel = 0; channel < 8; channel++)
-    if (ena_ch[channel] > 0)
-    {
-      printf("%s%d to OFF%s", msg(34), channel+1, msg(0));
-      if (resetMM6Ddevice(channel))
-        printf(msg(4)); else
-        printf(msg(5));
-    }
-  // exit to OS
-  remove(TEMPFILE);
-  return 0;
-
-    """
-exit(0)
+    # *** stop loop ***
+    # close local ports
+    closelocalports()
+    # set outputs of MM6D
+    for channel in range(1,9):
+      if (ena_ch[channel]==1):
+        if (resetMM6Ddevice(channel,1)):
+          writetodebuglog("i","Set outputs of MM6D to default state on channel #"+str(channel))+"."
+        else:
+          writetodebuglog("w","Cannot set outputs of MM6D to default state on channel #"+str(channel))+"."
+    sys.exit(0)
