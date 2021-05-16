@@ -20,6 +20,6 @@ Exit codes of executable files
  16: cannot create lock file
  17: cannot access i/o port
  18: there is not enabled channel
-
+ 19: fatal error (ony daemon)
 --------------------------------------------------------------------------------
  MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

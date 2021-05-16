@@ -20,6 +20,7 @@
 #  15: cannot create lock file
 #  17: cannot access i/o port
 #  18: there is not enabled channel
+#  19: fatal error
 
 import configparser
 import daemon
@@ -157,7 +158,9 @@ def loadconfiguration(conffile):
 
 # load environment characteristics
 def loadenvirchars(channel,conffile):
-  global gasconcentrate_max
+  print(channel)
+  print(conffile)
+  global cgasconcentrate_max
   global hheater_disable
   global hheater_off
   global hheater_on
@@ -199,7 +202,7 @@ def loadenvirchars(channel,conffile):
   C = "common"
   H = "hyphae"
   M = "mushroom"
-  gasconcentrate_max = [0 for x in range(9)]
+  cgasconcentrate_max = [0 for x in range(9)]
   hhumidifier_off = [0 for x in range(9)]
   hhumidity_max = [0 for x in range(9)]
   hhumidity_min = [0 for x in range(9)]
@@ -241,7 +244,7 @@ def loadenvirchars(channel,conffile):
       envir_config = f.read()
     config = configparser.RawConfigParser(allow_no_value = True)
     config.read_file(io.StringIO(envir_config))
-    gasconcentrate_max[channel] = int(config.get(C,'gasconcentrate_max'))
+    cgasconcentrate_max[channel] = int(config.get(C,'gasconcentrate_max'))
     hhumidifier_off[channel] = int(config.get(H,'humidifier_off'))
     hhumidity_max[channel] = int(config.get(H,'humidity_max'))
     hhumidity_min[channel] = int(config.get(H,'humidity_min'))
@@ -412,107 +415,107 @@ def analise(section):
           writetodebuglog("e","Overcurrent breaker of MM6D is opened on channel #" + str(channel) + "!")
   else:
     for channel in range(1,9):
-      if ena_ch[channel]==1:
-        writetodebuglog("i","CH" + str(channel) + ": " + str(in_temperature[channel]) + "C")
+      if ena_ch[channel] == 1:
+        writetodebuglog("i","CH" + str(channel) + ": " + str(in_temperature[channel]) + " C")
         writetodebuglog("i","CH" + str(channel) + ": " + str(in_humidity[channel]) + "%")
         writetodebuglog("i","CH" + str(channel) + ": " + str(in_gasconcentrate[channel]) + "%")
-        if in_opmode[channel]==0:
+        if in_opmode[channel] == 0:
           # growing mushroom
           writetodebuglog("i","CH" + str(channel) + ": operation mode: growing mushroom.")
           # bad temperature
-          if in_temperature[channel] < m_temperature_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low!")
-          if in_temperature[channel] > m_temperature_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high!.")
+          if in_temperature[channel] < mtemperature_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (< " + str(mtemperature_min[channel]) + " C)")
+          if in_temperature[channel] > mtemperature_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (> " + str(mtemperature_max[channel]) + " C)")
           # bad humidity
-          if in_humidity[channel] < m_humidity_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low!")
-          if in_humidity[channel] > m_humidity_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high!.")
+          if in_humidity[channel] < mhumidity_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (< " + str(mhumidity_min[channel]) + "%)")
+          if in_humidity[channel] > mhumidity_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (< " + str(mhumidity_max[channel]) + "%)")
           # bad gas concentrate
-          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high!")
+          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (< " + str(cgasconcentrate_max[channel]) + "%)")
           # heaters
           out_heaters[channel] = 0
-          if in_temperature[channel] < m_heater_on[channel]:
+          if in_temperature[channel] < mheater_on[channel]:
             out_heaters[channel] = 1
-          if in_temperature[channel] > m_heater_off[channel]:
+          if in_temperature[channel] > mheater_off[channel]:
             out_heaters[channel] = 0
-          if m_heater_disable[channel][h] == 1:
-            out_heaters[channel] = 0
+          #if mheater_disable[channel][h] == 1:
+          #  out_heaters[channel] = 0
           # lights
           out_lamps[channel] = 0
-          if (h >= m_light_on1[channel]) and (h < m_light_off1[channel]):
-            out_lamps[channel] = 1
-          if (h >= m_light_on2[channel]) and (h < m_light_off2[channel]):
-            out_lamps[channel] = 1
+          #if (h >= mlight_on1[channel]) and (h < mlight_off1[channel]):
+          #  out_lamps[channel] = 1
+          #if (h >= mlight_on2[channel]) and (h < mlight_off2[channel]):
+          #  out_lamps[channel] = 1
           # ventilators
           out_vents[channel] = 0
-          if (m > m_vent_on[channel]) and (m < m_vent_off[channel]):
+          #if (m > mvent_on[channel]) and (m < mvent_off[channel]):
+          #  out_vents[channel] = 1
+          #if mvent_disable[channel][h] == 1:
+          #  out_vents[channel] = 0
+          if in_humidity[channel] > mhumidity_max[channel]:
             out_vents[channel] = 1
-          if m_vent_disable[channel][h] == 1:
-            out_vents[channel] = 0
-          if in_humidity[channel] > m_humidity_max[channel]:
+          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
             out_vents[channel] = 1
-          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
-            out_vents[channel] = 1
-          if in_temperature[channel] > m_temperature_max[channel]:
+          if in_temperature[channel] > mtemperature_max[channel]:
             out_vents[channel] = 1
         else:
           # growing hyphae
           writetodebuglog("i","CH" + str(channel) + ": operation mode: growing hyphae.")
           # bad temperature
-          if in_temperature[channel] < h_temperature_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low!")
-          if in_temperature[channel] > h_temperature_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high!.")
+          if in_temperature[channel] < htemperature_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (< " + str(htemperature_min[channel]) + " C)")
+          if in_temperature[channel] > htemperature_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (> " + str(htemperature_max[channel]) + " C)")
           # bad humidity
-          if in_humidity[channel] < h_humidity_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low!")
-          if in_humidity[channel] > h_humidity_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high!.")
+          if in_humidity[channel] < hhumidity_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (< " + str(hhumidity_min[channel]) + "%)")
+          if in_humidity[channel] > hhumidity_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (< " + str(hhumidity_max[channel]) + "%)")
           # bad gas concentrate
-          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high!")
+          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (< " + str(cgasconcentrate_max[channel]) + "%)")
           # heaters
           out_heaters[channel] = 0
-          if in_temperature[channel] < h_heater_on[channel]:
+          if in_temperature[channel] < hheater_on[channel]:
             out_heaters[channel] = 1
-          if in_temperature[channel] > h_heater_off[channel]:
+          if in_temperature[channel] > hheater_off[channel]:
             out_heaters[channel] = 0
-          if h_heater_disable[channel][h] == 1:
+          if hheater_disable[channel][h] == 1:
             out_heaters[channel] = 0
           # lights
           out_lamps[channel] = 0
-          if (h >= h_light_on1[channel]) and (h < h_light_off1[channel]):
+          if (h >= hlight_on1[channel]) and (h < hlight_off1[channel]):
             out_lamps[channel] = 1
-          if (h >= h_light_on2[channel]) and (h < h_light_off2[channel]):
+          if (h >= hlight_on2[channel]) and (h < hlight_off2[channel]):
             out_lamps[channel] = 1
           # ventilators
           out_vents[channel] = 0
-          if (m > h_vent_on[channel]) and (m < h_vent_off[channel]):
+          if (m > hvent_on[channel]) and (m < hvent_off[channel]):
             out_vents[channel] = 1
-          if h_vent_disable[channel][h] == 1:
+          if hvent_disable[channel][h] == 1:
             out_vents[channel] = 0
-          if in_humidity[channel] > h_humidity_max[channel]:
+          if in_humidity[channel] > hhumidity_max[channel]:
             out_vents[channel] = 1
-          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
+          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
             out_vents[channel] = 1
-          if in_temperature[channel] > h_temperature_max[channel]:
+          if in_temperature[channel] > htemperature_max[channel]:
             out_vents[channel] = 1
-    # messages
-    if out_heaters[channel] == 1:
-      writetodebuglog("i","CH" + str(channel) + ": heaters ON")
-    else:
-      writetodebuglog("i","CH" + str(channel) + ": heaters OFF")
-    if out_lamps[channel] == 1:
-      writetodebuglog("i","CH" + str(channel) + ": lamps ON")
-    else:
-      writetodebuglog("i","CH" + str(channel) + ": lamps OFF")
-    if out_vents[channel] == 1:
-      writetodebuglog("i","CH" + str(channel) + ": ventilators ON")
-    else:
-      writetodebuglog("i","CH" + str(channel) + ": ventilators OFF")
+        # messages
+        if out_heaters[channel] == 1:
+          writetodebuglog("i","CH" + str(channel) + ": heaters ON")
+        else:
+          writetodebuglog("i","CH" + str(channel) + ": heaters OFF")
+        if out_lamps[channel] == 1:
+          writetodebuglog("i","CH" + str(channel) + ": lamps ON")
+        else:
+          writetodebuglog("i","CH" + str(channel) + ": lamps OFF")
+        if out_vents[channel] == 1:
+          writetodebuglog("i","CH" + str(channel) + ": ventilators ON")
+        else:
+          writetodebuglog("i","CH" + str(channel) + ": ventilators OFF")
 
 # initialize GPIO/LPT port
 def initializelocalports():
@@ -592,7 +595,41 @@ def closelocalports():
 
 # read and write remote MM7D device
 def readwriteMM7Ddevice(channel):
-  return 0
+  rc = 0
+  blinkactiveled(1);
+  if in_opmode[channel] == 0:
+    url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
+      "&h1=" + str(mhumidity_min[channel]) + "&h2=" + str(mhumidifier_on[channel]) + \
+      "&h3=" + str(mhumidifier_off[channel]) + "&h4=" + str(mhumidity_max[channel]) + \
+      "&t1=" + str(mtemperature_min[channel]) + "&t2=" + str(mheater_on[channel]) + \
+      "&t3=" + str(mheater_off[channel]) + "&t4=" + str(mtemperature_max[channel]) + \
+      "&g=" + str(cgasconcentrate_max[channel])
+  else:
+    url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
+      "&h1=" + str(hhumidity_min[channel]) + "&h2=" + str(hhumidifier_on[channel]) + \
+      "&h3=" + str(hhumidifier_off[channel]) + "&h4=" + str(hhumidity_max[channel]) + \
+      "&t1=" + str(htemperature_min[channel]) + "&t2=" + str(hheater_on[channel]) + \
+      "&t3=" + str(hheater_off[channel]) + "&t4=" + str(htemperature_max[channel]) + \
+      "&g=" + str(cgasconcentrate_max[channel])
+  try:
+    r = requests.get(url,timeout = 3)
+    if r.status_code == 200:
+      rc = 1
+      l = 0
+      for line in r.text.splitlines():
+        l = l + 1
+        if l == 1:
+          in_gasconcentrate[channel] = int(line)
+        if l == 2:
+          in_humidity[channel] = int(line)
+        if l == 3:
+          in_temperature[channel] = int(line)
+    else:
+      rc = 0
+  except:
+    rc = 0
+  blinkactiveled(0);
+  return rc
 
 # set automatic mode of remote MM7D device
 def setautomodeMM7Ddevice(channel):
@@ -612,7 +649,31 @@ def setautomodeMM7Ddevice(channel):
 
 # read and write remote MM6D device
 def readwriteMM6Ddevice(channel):
-  return 0
+  rc = 0
+  blinkactiveled(1);
+  url = "http://" + adr_mm6dch[channel] + "/operation?uid=" + usr_uid + \
+    "&a=0&h=" + str(out_heaters[channel]) + "&l=" + str(out_lamps[channel]) + "&v=" + str(out_vents[channel])
+  try:
+    r = requests.get(url,timeout = 3)
+    if r.status_code == 200:
+      rc = 1
+      l = 0
+      for line in r.text.splitlines():
+        l = l + 1
+        if l == 1:
+          in_alarm[channel] = int(line)
+        if l == 2:
+          in_opmode[channel] = int(line)
+        if l == 3:
+          in_swmanu[channel] = int(line)
+        if l == 4:
+          in_ocprot[channel] = int(line)
+    else:
+      rc = 0
+  except:
+    rc = 0
+  blinkactiveled(0);
+  return rc
 
 # set default state of remote MM6D device
 def resetMM6Ddevice(channel):
@@ -758,52 +819,65 @@ for channel in range(1,9):
 # *** start loop ***
 exttemp = 18
 writetodebuglog("i","Starting program as daemon.")
-with daemon.DaemonContext() as context:
+while True:
   try:
     time.sleep(1)
-    while True:
-      # section #1:
-      # read data from local port
-      if readlocalport():
-        writetodebuglog("i","Read data from local I/O port.")
-      else:
-        writetodebuglog("w","Cannot read data from local I/O port.")
-      # analise data
-      analise(1);
-      # write data to local port
-      if writelocalport():
-        writetodebuglog("i","Write data to local I/O port.")
-      else:
-        writetodebuglog("w","Cannot write data to local I/O port.")
-      # set outputs of MM6D
-      for channel in range(1,9):
-        if ena_ch[channel] == 1:
-          if readwriteMM6Ddevice(channel,1):
-            writetodebuglog("i","Set outputs of MM6D on channel #" + str(channel) + ".")
-          else:
-            writetodebuglog("w","Cannot set outputs of MM6D on channel #" + str(channel) + ".")
-      # section #2:
-      # get parameters of air from MM7Ds
-      for channel in range(1,9):
-        if ena_ch[channel] == 1:
-          if readwriteMM7Ddevice(channel):
-            writetodebuglog("i","Get parameters of air from MM7D on channel #" + str(channel) + ".")
-          else:
-            writetodebuglog("w","Cannot get parameters of air from MM7D on channel #" + str(channel) + ".")
-      # analise data
-      analise(2);
-      # waiting
-      writetodebuglog("i","Waiting " + str(DELAY) + ".")
-      time.sleep(DELAY)
-  except KeyboardInterrupt:
+    # section #1:
+    # read data from local port
+    writetodebuglog("i","MARKER1")
+    #if readlocalport():
+    #  writetodebuglog("i","Read data from local I/O port.")
+    #else:
+    #  writetodebuglog("w","Cannot read data from local I/O port.")
+    # analise data
+    writetodebuglog("i","MARKER2")
+    analise(1);
+    # write data to local port
+    #if writelocalport():
+    #  writetodebuglog("i","Write data to local I/O port.")
+    #else:
+    #  writetodebuglog("w","Cannot write data to local I/O port.")
+    # set outputs of MM6D
+    writetodebuglog("i","MARKER3")
+    for channel in range(1,9):
+      if ena_ch[channel] == 1:
+        if readwriteMM6Ddevice(channel):
+          writetodebuglog("i","Set outputs of MM6D on channel #" + str(channel) + ".")
+        else:
+          writetodebuglog("w","Cannot set outputs of MM6D on channel #" + str(channel) + ".")
+    # section #2:
+    # get parameters of air from MM7Ds
+    for channel in range(1,9):
+      if ena_ch[channel] == 1:
+        if readwriteMM7Ddevice(channel):
+          writetodebuglog("i","Get parameters of air from MM7D on channel #" + str(channel) + ".")
+        else:
+          writetodebuglog("w","Cannot get parameters of air from MM7D on channel #" + str(channel) + ".")
+    # analise data
+    analise(2);
+    # waiting
+    writetodebuglog("i","Waiting " + str(DELAY) + ".")
+    time.sleep(DELAY)
+  except:
     # *** stop loop ***
+    writetodebuglog("e","ERROR #19: Fatal error!")
     # close local ports
     closelocalports()
     # set outputs of MM6D
     for channel in range(1,9):
       if ena_ch[channel] == 1:
-        if resetMM6Ddevice(channel,1):
+        if resetMM6Ddevice(channel):
           writetodebuglog("i","Set outputs of MM6D to default state on channel #" + str(channel) + ".")
         else:
           writetodebuglog("w","Cannot set outputs of MM6D to default state on channel #" + str(channel) + ".")
     sys.exit(0)
+# close local ports
+closelocalports()
+# set outputs of MM6D
+for channel in range(1,9):
+  if ena_ch[channel] == 1:
+    if resetMM6Ddevice(channel):
+      writetodebuglog("i","Set outputs of MM6D to default state on channel #" + str(channel) + ".")
+    else:
+      writetodebuglog("w","Cannot set outputs of MM6D to default state on channel #" + str(channel) + ".")
+sys.exit(0)
