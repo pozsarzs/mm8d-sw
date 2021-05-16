@@ -33,15 +33,15 @@ import time
 from time import gmtime, strftime
 
 arch=platform.machine()
-if (arch.find("86") > -1):
-  hw=1
+if arch.find("86") > -1:
+  hw = 1
   import portio
 else:
-  hw=0
+  hw = 0
   import RPi.GPIO as GPIO
 
 USRLOCALDIR = 1
-if (USRLOCALDIR == 1):
+if USRLOCALDIR == 1:
   confdir='/usr/local/etc/mm8d/'
 else:
   confdir='/etc/mm8d/'
@@ -57,27 +57,27 @@ lptaddresses = [0x378,0x278,0x3bc]
 
 # add a zero char
 def addzero(num):
-  if num<10:
-    z="0"
+  if num < 10:
+    z = "0"
   else:
-    z=""
-  s=z+str(num)
+    z = ""
+  s = z + str(num)
   return s
 
 # write a line to debug logfile
 def writetodebuglog(level,text):
-  if dbg_log=="1":
-    if level=="i":
-      lv="INFO   "
-    if level=="w":
-      lv="WARNING"
-    if level=="e":
-      lv="ERROR  "
-    debugfile=dir_log+'/'+time.strftime("debug-%Y%m%d.log")
-    dt=(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+  if dbg_log == "1":
+    if level == "i":
+      lv = "INFO   "
+    if level == "w":
+      lv = "WARNING"
+    if level == "e":
+      lv = "ERROR  "
+    debugfile = dir_log + '/' + time.strftime("debug-%Y%m%d.log")
+    dt = (strftime("%Y-%m-%d %H:%M:%S", gmtime()))
     try:
-      with open(debugfile, "a") as d:
-        d.write(dt+'  '+lv+' '+text+'\n')
+      with open(debugfile,"a") as d:
+        d.write(dt + '  ' + lv + ' ' + text + '\n')
         d.close()
     except:
       print ("")
@@ -95,59 +95,64 @@ def loadconfiguration(conffile):
   global ena_ch
   global lockfile
   global logfile
-  global lpt_prt
-  global prt_i1
-  global prt_i2
-  global prt_i3
-  global prt_i4
-  global prt_ro1
-  global prt_ro2
-  global prt_ro3
-  global prt_ro4
-  global prt_lo1
-  global prt_lo2
-  global prt_lo3
-  global prt_lo4
   global usr_uid
+  if (hw == 0):
+    global prt_i1
+    global prt_i2
+    global prt_i3
+    global prt_i4
+    global prt_ro1
+    global prt_ro2
+    global prt_ro3
+    global prt_ro4
+    global prt_lo1
+    global prt_lo2
+    global prt_lo3
+    global prt_lo4
+  else:
+    global lpt_prt
+
   try:
     with open(conffile) as f:
-      mainconfig=f.read()
-    config=configparser.RawConfigParser(allow_no_value=True)
+      mainconfig = f.read()
+    config = configparser.RawConfigParser(allow_no_value = True)
     config.read_file(io.StringIO(mainconfig))
-    adr_mm6dch=[0 for x in range(9)]
+    adr_mm6dch = [0 for x in range(9)]
     for i in range(1,9):
-      adr_mm6dch[i]=config.get('MM6D','adr_mm6dch'+str(i))
-    adr_mm7dch=[0 for x in range(9)]
+      adr_mm6dch[i] = config.get('MM6D','adr_mm6dch' + str(i))
+    adr_mm7dch = [0 for x in range(9)]
     for i in range(1,9):
-      adr_mm7dch[i]=config.get('MM7D','adr_mm7dch'+str(i))
-    api_key=config.get('openweathermap.org','api_key')
-    base_url=config.get('openweathermap.org','base_url')
-    city_name=config.get('openweathermap.org','city_name')
-    dbg_log='0'
-    dbg_log=config.get('log','dbg_log')
-    dir_log=config.get('directories','dir_log')
-    dir_var=config.get('directories','dir_var')
-    ena_ch=[0 for x in range(9)]
+      adr_mm7dch[i] = config.get('MM7D','adr_mm7dch' + str(i))
+    api_key = config.get('openweathermap.org','api_key')
+    base_url = config.get('openweathermap.org','base_url')
+    city_name = config.get('openweathermap.org','city_name')
+    dbg_log = '0'
+    dbg_log = config.get('log','dbg_log')
+    dir_log = config.get('directories','dir_log')
+    dir_var = config.get('directories','dir_var')
+    ena_ch = [0 for x in range(9)]
     for i in range(1,9):
-      ena_ch[i]=int(config.get('enable','ena_ch'+str(i)))
-    lockfile=config.get('directories','dir_lck')+'mm8d.lck'
-    prt_i1=int(config.get('GPIOports','prt_i1'))
-    prt_i2=int(config.get('GPIOports','prt_i2'))
-    prt_i3=int(config.get('GPIOports','prt_i3'))
-    prt_i4=int(config.get('GPIOports','prt_i4'))
-    prt_ro1=int(config.get('GPIOports','prt_ro1'))
-    prt_ro2=int(config.get('GPIOports','prt_ro2'))
-    prt_ro3=int(config.get('GPIOports','prt_ro3'))
-    prt_ro4=int(config.get('GPIOports','prt_ro4'))
-    prt_ro1=int(config.get('GPIOports','prt_lo1'))
-    prt_lo2=int(config.get('GPIOports','prt_lo2'))
-    prt_lo3=int(config.get('GPIOports','prt_lo3'))
-    prt_lo4=int(config.get('GPIOports','prt_lo4'))
-    lpt_prt=int(config.get('LPTport','lpt_prt'))
-    usr_uid=config.get('user','usr_uid')
+      ena_ch[i] = int(config.get('enable','ena_ch' + str(i)))
+    lockfile = config.get('directories','dir_lck') + 'mm8d.lck'
+    usr_uid = config.get('user','usr_uid')
+    if hw == 0:
+      prt_i1 = int(config.get('GPIOports','prt_i1'))
+      prt_i2 = int(config.get('GPIOports','prt_i2'))
+      prt_i3 = int(config.get('GPIOports','prt_i3'))
+      prt_i4 = int(config.get('GPIOports','prt_i4'))
+      prt_ro1 = int(config.get('GPIOports','prt_ro1'))
+      prt_ro2 = int(config.get('GPIOports','prt_ro2'))
+      prt_ro3 = int(config.get('GPIOports','prt_ro3'))
+      prt_ro4 = int(config.get('GPIOports','prt_ro4'))
+      prt_ro1 = int(config.get('GPIOports','prt_lo1'))
+      prt_lo2 = int(config.get('GPIOports','prt_lo2'))
+      prt_lo3 = int(config.get('GPIOports','prt_lo3'))
+      prt_lo4 = int(config.get('GPIOports','prt_lo4'))
+    else:
+      lpt_prt = int(config.get('LPTport','lpt_prt'))
     writetodebuglog("i","Configuration is loaded.")
   except:
-    writetodebuglog("e","ERROR #01: Cannot open "+conffile+"!")
+    writetodebuglog("e","ERROR #01: Cannot open " + conffile + "!")
     exit(1)
 
 # load environment characteristics
@@ -191,94 +196,94 @@ def loadenvirchars(channel,conffile):
   global mvent_lowtemp
   global mvent_off
   global mvent_on
-  C="common"
-  H="hyphae"
-  M="mushroom"
-  gasconcentrate_max=[0 for x in range(9)]
-  hhumidifier_off=[0 for x in range(9)]
-  hhumidity_max=[0 for x in range(9)]
-  hhumidity_min=[0 for x in range(9)]
-  hhumidifier_on=[0 for x in range(9)]
-  htemperature_max=[0 for x in range(9)]
-  hheater_off=[0 for x in range(9)]
-  hheater_on=[0 for x in range(9)]
-  htemperature_min=[0 for x in range(9)]
-  hheater_disable=[[0 for x in range(9)] for y in range(24)]
-  hlight_off1=[0 for x in range(9)]
-  hlight_off2=[0 for x in range(9)]
-  hlight_on1=[0 for x in range(9)]
-  hlight_on2=[0 for x in range(9)]
-  hvent_on=[0 for x in range(9)]
-  hvent_off=[0 for x in range(9)]
-  hvent_disable=[[0 for x in range(9)] for x in range(24)]
-  hvent_disablelowtemp=[[0 for x in range(9)] for x in range(24)]
-  hvent_lowtemp=[0 for x in range(9)]
-  mhumidifier_off=[0 for x in range(9)]
-  mhumidity_max=[0 for x in range(9)]
-  mhumidity_min=[0 for x in range(9)]
-  mhumidifier_on=[0 for x in range(9)]
-  mtemperature_max=[0 for x in range(9)]
-  mheater_off=[0 for x in range(9)]
-  mheater_on=[0 for x in range(9)]
-  mtemperature_min=[0 for x in range(9)]
-  mheater_disable=[[0 for x in range(9)] for y in range(24)]
-  mlight_off1=[0 for x in range(9)]
-  mlight_off2=[0 for x in range(9)]
-  mlight_on1=[0 for x in range(9)]
-  mlight_on2=[0 for x in range(9)]
-  mvent_on=[0 for x in range(9)]
-  mvent_off=[0 for x in range(9)]
-  mvent_disable=[[0 for x in range(9)] for x in range(24)]
-  mvent_disablelowtemp=[[0 for x in range(9)] for x in range(24)]
-  mvent_lowtemp=[0 for x in range(9)]
+  C = "common"
+  H = "hyphae"
+  M = "mushroom"
+  gasconcentrate_max = [0 for x in range(9)]
+  hhumidifier_off = [0 for x in range(9)]
+  hhumidity_max = [0 for x in range(9)]
+  hhumidity_min = [0 for x in range(9)]
+  hhumidifier_on = [0 for x in range(9)]
+  htemperature_max = [0 for x in range(9)]
+  hheater_off = [0 for x in range(9)]
+  hheater_on = [0 for x in range(9)]
+  htemperature_min = [0 for x in range(9)]
+  hheater_disable = [[0 for x in range(9)] for y in range(24)]
+  hlight_off1 = [0 for x in range(9)]
+  hlight_off2 = [0 for x in range(9)]
+  hlight_on1 = [0 for x in range(9)]
+  hlight_on2 = [0 for x in range(9)]
+  hvent_on = [0 for x in range(9)]
+  hvent_off = [0 for x in range(9)]
+  hvent_disable = [[0 for x in range(9)] for x in range(24)]
+  hvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+  hvent_lowtemp = [0 for x in range(9)]
+  mhumidifier_off = [0 for x in range(9)]
+  mhumidity_max = [0 for x in range(9)]
+  mhumidity_min = [0 for x in range(9)]
+  mhumidifier_on = [0 for x in range(9)]
+  mtemperature_max = [0 for x in range(9)]
+  mheater_off = [0 for x in range(9)]
+  mheater_on = [0 for x in range(9)]
+  mtemperature_min = [0 for x in range(9)]
+  mheater_disable = [[0 for x in range(9)] for y in range(24)]
+  mlight_off1 = [0 for x in range(9)]
+  mlight_off2 = [0 for x in range(9)]
+  mlight_on1 = [0 for x in range(9)]
+  mlight_on2 = [0 for x in range(9)]
+  mvent_on = [0 for x in range(9)]
+  mvent_off = [0 for x in range(9)]
+  mvent_disable = [[0 for x in range(9)] for x in range(24)]
+  mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+  mvent_lowtemp = [0 for x in range(9)]
   try:
     with open(conffile) as f:
-      envir_config=f.read()
-    config=configparser.RawConfigParser(allow_no_value=True)
+      envir_config = f.read()
+    config = configparser.RawConfigParser(allow_no_value = True)
     config.read_file(io.StringIO(envir_config))
-    gasconcentrate_max[channel]=int(config.get(C,'gasconcentrate_max'))
-    hhumidifier_off[channel]=int(config.get(H,'humidifier_off'))
-    hhumidity_max[channel]=int(config.get(H,'humidity_max'))
-    hhumidity_min[channel]=int(config.get(H,'humidity_min'))
-    hhumidifier_on[channel]=int(config.get(H,'humidifier_on'))
-    htemperature_max[channel]=int(config.get(H,'temperature_max'))
-    hheater_off[channel]=int(config.get(H,'heater_off'))
-    hheater_on[channel]=int(config.get(H,'heater_on'))
-    htemperature_min[channel]=int(config.get(H,'temperature_min'))
+    gasconcentrate_max[channel] = int(config.get(C,'gasconcentrate_max'))
+    hhumidifier_off[channel] = int(config.get(H,'humidifier_off'))
+    hhumidity_max[channel] = int(config.get(H,'humidity_max'))
+    hhumidity_min[channel] = int(config.get(H,'humidity_min'))
+    hhumidifier_on[channel] = int(config.get(H,'humidifier_on'))
+    htemperature_max[channel] = int(config.get(H,'temperature_max'))
+    hheater_off[channel] = int(config.get(H,'heater_off'))
+    hheater_on[channel] = int(config.get(H,'heater_on'))
+    htemperature_min[channel] = int(config.get(H,'temperature_min'))
     for x in range(24):
-      hheater_disable[x][channel]=int(config.get(H,'heater_disable_'+addzero(x)))
-    hlight_on1[channel]=int(config.get(H,'light_on1'))
-    hlight_off1[channel]=int(config.get(H,'light_off1'))
-    hlight_on2[channel]=int(config.get(H,'light_on2'))
-    hlight_off2[channel]=int(config.get(H,'light_off2'))
-    hvent_on[channel]=int(config.get(H,'vent_on'))
-    hvent_off[channel]=int(config.get(H,'vent_off'))
+      hheater_disable[x][channel] = int(config.get(H,'heater_disable_' + addzero(x)))
+    hlight_on1[channel] = int(config.get(H,'light_on1'))
+    hlight_off1[channel] = int(config.get(H,'light_off1'))
+    hlight_on2[channel] = int(config.get(H,'light_on2'))
+    hlight_off2[channel] = int(config.get(H,'light_off2'))
+    hvent_on[channel] = int(config.get(H,'vent_on'))
+    hvent_off[channel] = int(config.get(H,'vent_off'))
     for x in range(24):
-      hvent_disable[x][channel]=int(config.get(H,'vent_disable_'+addzero(x)))
+      hvent_disable[x][channel] = int(config.get(H,'vent_disable_' + addzero(x)))
     for x in range(24):
-      hvent_disablelowtemp[x][channel]=int(config.get(H,'vent_disablelowtemp_'+addzero(x)))
-    hvent_lowtemp[channel]=int(config.get(H,'vent_lowtemp'))
-    mhumidifier_off[channel]=int(config.get(M,'humidifier_off'))
-    mhumidity_max[channel]=int(config.get(M,'humidity_max'))
-    mhumidity_min[channel]=int(config.get(M,'humidity_min'))
-    mhumidifier_on[channel]=int(config.get(M,'humidifier_on'))
-    mtemperature_max[channel]=int(config.get(M,'temperature_max'))
-    mheater_off[channel]=int(config.get(M,'heater_off'))
-    mheater_on[channel]=int(config.get(M,'heater_on'))
-    mtemperature_min[channel]=int(config.get(M,'temperature_min'))
+      hvent_disablelowtemp[x][channel] = int(config.get(H,'vent_disablelowtemp_' + addzero(x)))
+    hvent_lowtemp[channel] = int(config.get(H,'vent_lowtemp'))
+    mhumidifier_off[channel] = int(config.get(M,'humidifier_off'))
+    mhumidity_max[channel] = int(config.get(M,'humidity_max'))
+    mhumidity_min[channel] = int(config.get(M,'humidity_min'))
+    mhumidifier_on[channel] = int(config.get(M,'humidifier_on'))
+    mtemperature_max[channel] = int(config.get(M,'temperature_max'))
+    mheater_off[channel] = int(config.get(M,'heater_off'))
+    mheater_on[channel] = int(config.get(M,'heater_on'))
+    mtemperature_min[channel] = int(config.get(M,'temperature_min'))
     for x in range(24):
-      mheater_disable[x][channel]=int(config.get(M,'heater_disable_'+addzero(x)))
-    mlight_on1[channel]=int(config.get(M,'light_on1'))
-    mlight_off1[channel]=int(config.get(M,'light_off1'))
-    mlight_on2[channel]=int(config.get(M,'light_on2'))
-    mlight_off2[channel]=int(config.get(M,'light_off2'))
-    mvent_on[channel]=int(config.get(M,'vent_on'))
-    mvent_off[channel]=int(config.get(M,'vent_off'))
+      mheater_disable[x][channel] = int(config.get(M,'heater_disable_' + addzero(x)))
+    mlight_on1[channel] = int(config.get(M,'light_on1'))
+    mlight_off1[channel] = int(config.get(M,'light_off1'))
+    mlight_on2[channel] = int(config.get(M,'light_on2'))
+    mlight_off2[channel] = int(config.get(M,'light_off2'))
+    mvent_on[channel] = int(config.get(M,'vent_on'))
+    mvent_off[channel] = int(config.get(M,'vent_off'))
     for x in range(24):
-      mvent_disable[x][channel]=int(config.get(M,'vent_disable_'+addzero(x)))
+      mvent_disable[x][channel] = int(config.get(M,'vent_disable_' + addzero(x)))
     for x in range(24):
-      mvent_disablelowtemp[x][channel]=int(config.get(M,'vent_disablelowtemp_'+addzero(x)))
-    mvent_lowtemp[channel]=int(config.get(M,'vent_lowtemp'))
+      mvent_disablelowtemp[x][channel] = int(config.get(M,'vent_disablelowtemp_' + addzero(x)))
+    mvent_lowtemp[channel] = int(config.get(M,'vent_lowtemp'))
     writetodebuglog("i","Environment characteristics is loaded.")
   except:
     writetodebuglog("e","ERROR #14: Cannot open "+conffile+"!")
@@ -287,67 +292,67 @@ def loadenvirchars(channel,conffile):
 # create and remove lock file
 def lckfile(mode):
   try:
-    if mode>0:
-      lcf=open(lockfile,'w')
+    if mode > 0:
+      lcf = open(lockfile,'w')
       lcf.close()
       writetodebuglog("i","Creating lockfile.")
     else:
       writetodebuglog("i","Removing lockfile.")
       os.remove(lockfile)
   except:
-    writetodebuglog("w","Cannot create/remove"+lockfile+"!")
+    writetodebuglog("w","Cannot create/remove"+lockfile+".")
 
 # write data to log with timestamp
 def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
-  logfile=dir_log+'/mm8d_ch'+str(channel)+'.log'
-  dt=(strftime("%Y-%m-%d,%H:%M",gmtime()))
+  logfile = dir_log + '/mm8d_ch' + str(channel) + '.log'
+  dt = (strftime("%Y-%m-%d,%H:%M",gmtime()))
   lckfile(1)
   writetodebuglog("i","Writing data to log.")
   if not os.path.isfile(logfile):
-    f=open(logfile,'w')
+    f = open(logfile,'w')
     f.close()
   try:
     with open(logfile,"r+") as f:
-      first_line=f.readline()
-      lines=f.readlines()
+      first_line = f.readline()
+      lines = f.readlines()
       f.seek(0)
-      if (channel==0):
-        s=dt+','+ \
-              statusdata[0]+','+statusdata[1]+','+statusdata[2]+','+ \
-              statusdata[3]+','+statusdata[4]+'\n'
+      if (channel == 0):
+        s = dt + ',' + \
+              statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + \
+              statusdata[3] + ',' + statusdata[4] + '\n'
       else:
-        s=dt+','+ \
-              str(temperature)+','+ \
-              str(humidity)+','+ \
-              str(gasconcentrate)+','+ \
-              statusdata[0]+','+statusdata[1]+','+statusdata[2]+','+ \
-              statusdata[3]+','+statusdata[4]+','+statusdata[5]+','+ \
-              statusdata[6]+','+statusdata[7]+'\n'
+        s = dt + ',' + \
+              str(temperature) + ',' + \
+              str(humidity) + ',' + \
+              str(gasconcentrate) + ',' + \
+              statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + \
+              statusdata[3] + ',' + statusdata[4] + ',' + statusdata[5] + ',' + \
+              statusdata[6] + ',' + statusdata[7] + '\n'
       f.write(s)
       f.write(first_line)
       f.writelines(lines)
       f.close()
   except:
-    writetodebuglog("e","ERROR #15: Cannot write "+logfile+"!")
+    writetodebuglog("e","ERROR #15: Cannot write " + logfile + "!")
     lckfile(0)
     exit(15)
   lckfile(0)
 
 # check external control files
 def extcont(channel,output,status):
-  writetodebuglog("i","Checking override file: "+dir_var+'/'+str(channel)+"/out"+str(output)+".")
-  if os.path.isfile(dir_var+'/'+str(channel)+"/out"+str(output)):
+  writetodebuglog("i","Checking override file: " + dir_var + '/' + str(channel) + "/out" + str(output) + ".")
+  if os.path.isfile(dir_var + '/' + str(channel) + "/out" + str(output)):
     try:
-      f=open(dir_var+'/'+str(channel)+"/out"+str(output),'r')
-      v=f.read()
+      f = open(dir_var + '/' + str(channel) + "/out" + str(output),'r')
+      v = f.read()
       f.close()
-      if v=="neutral": s=status
-      if v=="off": s="0"
-      if v=="on": s="1"
+      if v == "neutral": s = status
+      if v == "off": s = "0"
+      if v == "on": s = "1"
     except:
-      s=status
+      s = status
   else:
-    s=status
+    s = status
   return s
 
 # blink ACTIVE LED
@@ -357,27 +362,162 @@ def blinkactiveled(on):
 # get external temperature from openweathermap.org
 def getexttemp():
   writetodebuglog("i","Get external temperature from internet.")
-  response=requests.get(base_url+"appid="+api_key+"&q="+city_name)
+  response=requests.get(base_url + "appid=" + api_key + "&q=" + city_name)
   x=response.json()
-  if x["cod"]!="404":
-    y=x["main"] 
-    current_temperature=y["temp"]
-    current_temperature=round(current_temperature-273)
-    writetodebuglog("i","External temperature: "+str(current_temperature)+" degree Celsius")
+  if x["cod"] != "404":
+    y = x["main"] 
+    current_temperature = y["temp"]
+    current_temperature = round(current_temperature - 273)
+    writetodebuglog("i","External temperature: " + str(current_temperature) + " degree Celsius")
     return current_temperature
   else:
     writetodebuglog("w","Cannot get external temperature from internet.")
     return 18
 
 # analise data
-def analise(step):
-  return 0
+def analise(section):
+  relay_alarm = 0
+  led_active = 0
+  led_warning = 0
+  led_error = 0
+  if section == 1:
+    # local ports
+    if mainssensor == 1:
+      led_error = 1
+      writetodebuglog("w","No mains voltage.")
+    if (mainsbreaker1 == 1) or (mainsbreaker2 == 1) or (mainsbreaker3 == 1):
+      led_error = 1
+    if mainsbreaker1 == 1:
+      writetodebuglog("e","Overcurrent breaker #1 is opened!")
+    if mainsbreaker2 == 1:
+      writetodebuglog("e","Overcurrent breaker #2 is opened!")
+    if mainsbreaker3 == 1:
+      writetodebuglog("e","Overcurrent breaker #3 is opened!")
+    # MM6D
+    for channel in range(1,9):
+      if ena_ch[channel] == 1:
+        if in_alarm[channel] == 1:
+          relay_alarm = 1
+          writetodebuglog("w","Alarm event detected on channel #" + str(channel) + ".")
+          writetodebuglog("i","Restore alarm input of MM6D device on channel #" + str(channel) + ".")
+          if restoreMM6Dalarm(channel) == 0:
+            writetodebuglog("i","Restore is succes.")
+          else:
+            writetodebuglog("w","Restore is failed.")
+        if in_swmanu[channel] == 1:
+          led_warning = 1
+          writetodebuglog("w","Manual mode switch is on position on channel #" + str(channel) + ".")
+        if in_ocprot[channel] == 1:
+          led_error = 1
+          writetodebuglog("e","Overcurrent breaker of MM6D is opened on channel #" + str(channel) + "!")
+  else:
+    for channel in range(1,9):
+      if ena_ch[channel]==1:
+        writetodebuglog("i","CH" + str(channel) + ": " + str(in_temperature[channel]) + "C")
+        writetodebuglog("i","CH" + str(channel) + ": " + str(in_humidity[channel]) + "%")
+        writetodebuglog("i","CH" + str(channel) + ": " + str(in_gasconcentrate[channel]) + "%")
+        if in_opmode[channel]==0:
+          # growing mushroom
+          writetodebuglog("i","CH" + str(channel) + ": operation mode: growing mushroom.")
+          # bad temperature
+          if in_temperature[channel] < m_temperature_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low!")
+          if in_temperature[channel] > m_temperature_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high!.")
+          # bad humidity
+          if in_humidity[channel] < m_humidity_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low!")
+          if in_humidity[channel] > m_humidity_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high!.")
+          # bad gas concentrate
+          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high!")
+          # heaters
+          out_heaters[channel] = 0
+          if in_temperature[channel] < m_heater_on[channel]:
+            out_heaters[channel] = 1
+          if in_temperature[channel] > m_heater_off[channel]:
+            out_heaters[channel] = 0
+          if m_heater_disable[channel][h] == 1:
+            out_heaters[channel] = 0
+          # lights
+          out_lamps[channel] = 0
+          if (h >= m_light_on1[channel]) and (h < m_light_off1[channel]):
+            out_lamps[channel] = 1
+          if (h >= m_light_on2[channel]) and (h < m_light_off2[channel]):
+            out_lamps[channel] = 1
+          # ventilators
+          out_vents[channel] = 0
+          if (m > m_vent_on[channel]) and (m < m_vent_off[channel]):
+            out_vents[channel] = 1
+          if m_vent_disable[channel][h] == 1:
+            out_vents[channel] = 0
+          if in_humidity[channel] > m_humidity_max[channel]:
+            out_vents[channel] = 1
+          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
+            out_vents[channel] = 1
+          if in_temperature[channel] > m_temperature_max[channel]:
+            out_vents[channel] = 1
+        else:
+          # growing hyphae
+          writetodebuglog("i","CH" + str(channel) + ": operation mode: growing hyphae.")
+          # bad temperature
+          if in_temperature[channel] < h_temperature_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low!")
+          if in_temperature[channel] > h_temperature_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high!.")
+          # bad humidity
+          if in_humidity[channel] < h_humidity_min[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low!")
+          if in_humidity[channel] > h_humidity_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high!.")
+          # bad gas concentrate
+          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
+            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high!")
+          # heaters
+          out_heaters[channel] = 0
+          if in_temperature[channel] < h_heater_on[channel]:
+            out_heaters[channel] = 1
+          if in_temperature[channel] > h_heater_off[channel]:
+            out_heaters[channel] = 0
+          if h_heater_disable[channel][h] == 1:
+            out_heaters[channel] = 0
+          # lights
+          out_lamps[channel] = 0
+          if (h >= h_light_on1[channel]) and (h < h_light_off1[channel]):
+            out_lamps[channel] = 1
+          if (h >= h_light_on2[channel]) and (h < h_light_off2[channel]):
+            out_lamps[channel] = 1
+          # ventilators
+          out_vents[channel] = 0
+          if (m > h_vent_on[channel]) and (m < h_vent_off[channel]):
+            out_vents[channel] = 1
+          if h_vent_disable[channel][h] == 1:
+            out_vents[channel] = 0
+          if in_humidity[channel] > h_humidity_max[channel]:
+            out_vents[channel] = 1
+          if in_gasconcentrate[channel] > c_gasconcentrate_max[channel]:
+            out_vents[channel] = 1
+          if in_temperature[channel] > h_temperature_max[channel]:
+            out_vents[channel] = 1
+    # messages
+    if out_heaters[channel] == 1:
+      writetodebuglog("i","CH" + str(channel) + ": heaters ON")
+    else:
+      writetodebuglog("i","CH" + str(channel) + ": heaters OFF")
+    if out_lamps[channel] == 1:
+      writetodebuglog("i","CH" + str(channel) + ": lamps ON")
+    else:
+      writetodebuglog("i","CH" + str(channel) + ": lamps OFF")
+    if out_vents[channel] == 1:
+      writetodebuglog("i","CH" + str(channel) + ": ventilators ON")
+    else:
+      writetodebuglog("i","CH" + str(channel) + ": ventilators OFF")
 
-# local port controller functions
-
+# initialize GPIO/LPT port
 def initializelocalports():
   writetodebuglog("i","Initializing local I/O ports.")
-  if (hw==0):
+  if hw == 0:
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(prt_i1,GPIO.IN)
@@ -393,98 +533,104 @@ def initializelocalports():
     GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
     GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
   else:
-    status = portio.ioperm(lptaddresses[lpt_prt], 1, 1)
+    status = portio.ioperm(lptaddresses[lpt_prt],1,1)
     if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt])))
+      writetodebuglog("e","ERROR #17: Cannot access I/O port:" + str(hex(lptaddresses[lpt_prt])) + "!")
       sys.exit(17)
-    status = portio.ioperm(lptaddresses[lpt_prt]+1, 1, 1)
+    status = portio.ioperm(lptaddresses[lpt_prt] + 1,1,1)
     if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port:"+str(hex(lptaddresses[lpt_prt]+1)))
+      writetodebuglog("e","ERROR #17: Cannot access I/O port:" + str(hex(lptaddresses[lpt_prt] + 1)) + "!")
       sys.exit(17)
     portio.outb(0,lptaddresses[lpt_prt])
 
+# write data from GPIO/LPT port
 def writelocalports():
-  if (hw==0):
+  if hw == 0:
     GPIO.output(prt_lo1,led_active)
     GPIO.output(prt_lo2,led_warning)
     GPIO.output(prt_lo3,led_error)
     GPIO.output(prt_ro1,relay_alarm)
     return 0
   else:
-    outdata = 64*led_error+32*led_warning+16*led_active+relay_alarm;
-    portio.outb(outdata,lptaddresses[lpt_prt]);
+    outdata = 64 * led_error + 32 * led_warning + 16 * led_active + relay_alarm
+    portio.outb(outdata,lptaddresses[lpt_prt])
     if (portio.inb(lptaddresses[lpt_prt]) == outdata):
       return 1
     else:
       return 0
 
+# read data from GPIO/LPT port
 def readlocalports():
-  if (hw==0):
+  if hw == 0:
     GPIO.input(prt_i1,mainssensor)
     GPIO.input(prt_i2,mainsbreaker1)
     GPIO.input(prt_i3,mainsbreaker2)
     GPIO.input(prt_i4,mainsbreaker3)
   else:
-    indata = portio.inb(lpt_adr[lpt_prt]+1);
-    mainssensor = indata & 8;
-    if (mainssensor > 1):
-      mainssensor=1;
-    mainsbreaker1=indata & 16;
-    if (lpt_mainsbreaker1 > 1):
-      mainsbreaker1=1;
-    mainsbreaker2=indata & 32;
-    if (lpt_mainsbreaker2 > 1):
-      mainsbreaker1=1;
-    mainsbreaker3=indata & 64;
-    if (lpt_mainsbreaker3 > 1):
-      mainsbreaker1=1;
-  return 1;
+    indata = portio.inb(lpt_adr[lpt_prt] + 1)
+    mainssensor = indata & 8
+    if mainssensor > 1:
+      mainssensor = 1
+    mainsbreaker1 = indata & 16
+    if lpt_mainsbreaker1 > 1:
+      mainsbreaker1 = 1
+    mainsbreaker2 = indata & 32
+    if lpt_mainsbreaker2 > 1:
+      mainsbreaker2 = 1
+    mainsbreaker3=indata & 64
+    if lpt_mainsbreaker3 > 1:
+      mainsbreaker3 = 1
+  return 1
 
+# close GPIO/LPT port
 def closelocalports():
   writetodebuglog("i","Close local I/O ports.")
-  if (hw==0):
+  if hw == 0:
     GPIO.cleanup
   else:
     portio.outb(0,lptaddresses[lpt_prt])
 
-# remote device controller functions
-
+# read and write remote MM7D device
 def readwriteMM7Ddevice(channel):
   return 0
 
+# set automatic mode of remote MM7D device
 def setautomodeMM7Ddevice(channel):
-  rc=0
+  rc = 0
   blinkactiveled(1);
-  url="http://"+adr_mm7dch[channel]+"/mode/auto?uid="+usr_uid
+  url = "http://" + adr_mm7dch[channel] + "/mode/auto?uid=" + usr_uid
   try:
-    r=requests.get(url,timeout=3)
-    if (r.status_code==200):
-      rc=1
+    r = requests.get(url,timeout = 3)
+    if r.status_code == 200:
+      rc = 1
     else:
-      rc=0
+      rc = 0
   except:
-    rc=0
+    rc = 0
   blinkactiveled(0)
   return rc
 
+# read and write remote MM6D device
 def readwriteMM6Ddevice(channel):
   return 0
 
+# set default state of remote MM6D device
 def resetMM6Ddevice(channel):
-  rc=0
+  rc = 0
   blinkactiveled(1);
-  url="http://"+adr_mm6dch[channel]+"/set/all/off?uid="+usr_uid
+  url = "http://" + adr_mm6dch[channel] + "/set/all/off?uid=" + usr_uid
   try:
-    r=requests.get(url,timeout=3)
-    if (r.status_code==200):
-      rc=1
+    r = requests.get(url,timeout = 3)
+    if r.status_code == 200:
+      rc = 1
     else:
-      rc=0
+      rc = 0
   except:
-    rc=0
+    rc = 0
   blinkactiveled(0)
   return rc
 
+# restore alarm input of remote MM6D device
 def restoreMM6Dalarm(channel):
   rc=0
   blinkactiveled(1);
@@ -500,32 +646,33 @@ def restoreMM6Dalarm(channel):
   blinkactiveled(0)
   return rc
 
+# get version of remote MM6D and MM7D device
 def getcontrollerversion(conttype,channel):
   global mv
   global sv
-  mv=0
-  sv=0
-  rc=0
+  mv = 0
+  sv = 0
+  rc = 0
   blinkactiveled(1);
-  if (conttype==6):
-    url="http://"+adr_mm6dch[channel]+"/version"
+  if conttype == 6:
+    url = "http://" + adr_mm6dch[channel] + "/version"
   else:
-    url="http://"+adr_mm7dch[channel]+"/version"
+    url = "http://" + adr_mm7dch[channel] + "/version"
   try:
-    r=requests.get(url,timeout=3)
-    if (r.status_code==200):
-      rc=1
-      l=0
+    r = requests.get(url,timeout = 3)
+    if r.status_code == 200:
+      rc = 1
+      l = 0
       for line in r.text.splitlines():
-        l=l+1
-        if (l==2):
-          mv=int(line[0])
-          sv=int(line[2])
+        l = l + 1
+        if l == 2:
+          mv = int(line[0])
+          sv = int(line[2])
           break
     else:
-      rc=0
+      rc = 0
   except:
-    rc=0
+    rc = 0
   blinkactiveled(0);
   return rc
 
@@ -549,67 +696,67 @@ global led_active
 global led_warning
 global led_error
 # reset variables
-in_ocprot=[0 for channel in range(9)]
-in_opmode=[0 for channel in range(9)]
-in_swmanu=[0 for channel in range(9)]
-in_alarm=[0 for channel in range(9)]
-in_humidity=[0 for channel in range(9)]
-in_temperature=[0 for channel in range(9)]
-in_gasconcentrate=[0 for channel in range(9)]
-out_lamps=[0 for channel in range(9)]
-out_vents=[0 for channel in range(9)]
-out_heaters=[0 for channel in range(9)]
-mainssensor=0
-mainsbreaker1=0
-mainsbreaker2=0
-mainsbreaker3=0
-relay_alarm=0
-led_active=0
-led_warning=0
-led_error=0
+in_ocprot = [0 for channel in range(9)]
+in_opmode = [0 for channel in range(9)]
+in_swmanu = [0 for channel in range(9)]
+in_alarm = [0 for channel in range(9)]
+in_humidity = [0 for channel in range(9)]
+in_temperature = [0 for channel in range(9)]
+in_gasconcentrate = [0 for channel in range(9)]
+out_lamps = [0 for channel in range(9)]
+out_vents = [0 for channel in range(9)]
+out_heaters = [0 for channel in range(9)]
+mainssensor = 0
+mainsbreaker1 = 0
+mainsbreaker2 = 0
+mainsbreaker3 = 0
+relay_alarm = 0
+led_active = 0
+led_warning = 0
+led_error = 0
 # load main settings
-loadconfiguration(confdir+"mm8d.ini")
+loadconfiguration(confdir + "mm8d.ini")
 # checking version of remote devices
 for channel in range(1,9):
-  if (ena_ch[channel] > 0):
+  if ena_ch[channel] > 0:
     if getcontrollerversion(6,channel):
-      if (mv*10+sv < COMPMV6*10+COMPSV6):
+      if (mv * 10 + sv) < (COMPMV6 * 10 + COMPSV6):
         ena_ch[channel] = 0;
-        writetodebuglog("w","Version of MM6D on channel #"+str(channel)+" is not compatible.")
+        writetodebuglog("w","Version of MM6D on channel #" + str(channel) + " is not compatible.")
     else:
       ena_ch[channel] = 0;
-      writetodebuglog("w","MM6D on channel #"+str(channel)+" is not accessible.")
+      writetodebuglog("w","MM6D on channel #" + str(channel) + " is not accessible.")
 for channel in range(1,9):
-  if (ena_ch[channel] > 0):
+  if ena_ch[channel] > 0:
     if getcontrollerversion(7,channel):
-      if (mv*10+sv < COMPMV7*10+COMPSV7):
+      if (mv * 10 + sv) < (COMPMV7 * 10 + COMPSV7):
         ena_ch[channel] = 0;
-        writetodebuglog("w","Version of MM7D on channel #"+str(channel)+" is not compatible.")
+        writetodebuglog("w","Version of MM7D on channel #" + str(channel) + " is not compatible.")
     else:
       ena_ch[channel] = 0;
-      writetodebuglog("w","MM7D on channel #"+str(channel)+" is not accessible.")
+      writetodebuglog("w","MM7D on channel #" + str(channel) + " is not accessible.")
 # check number of enabled channels
 ii = 0;
 for channel in range(1,9):
   ii=ii+ena_ch[channel];
-if (ii==0):
-  writetodebuglog("e","ERROR #18: There is not enabled channel")
+if ii == 0:
+  writetodebuglog("e","ERROR #18: There is not enabled channel!")
   exit(18);
 # load environment parameter settings
 for channel in range(1,9):
-  if (ena_ch[channel]==1):
-    loadenvirchars(channel,confdir+"envir-ch"+str(channel)+".ini")
+  if ena_ch[channel] == 1:
+    loadenvirchars(channel,confdir + "envir-ch" + str(channel) + ".ini")
 # initialize local ports to default state
 initializelocalports()
 # set auto mode of MM7D device
 for channel in range(1,9):
-  if (ena_ch[channel]==1):
-    if (setautomodeMM7Ddevice(channel)):
-      writetodebuglog("i","Set auto mode of MM7D on channel #"+str(channel))+"."
+  if ena_ch[channel] == 1:
+    if setautomodeMM7Ddevice(channel):
+      writetodebuglog("i","Set auto mode of MM7D on channel #" + str(channel) + ".")
     else:
-      writetodebuglog("w","Cannot set auto mode of MM7D on channel #"+str(channel))+"."
+      writetodebuglog("w","Cannot set auto mode of MM7D on channel #" + str(channel) + ".")
 # *** start loop ***
-exttemp=18
+exttemp = 18
 writetodebuglog("i","Starting program as daemon.")
 with daemon.DaemonContext() as context:
   try:
@@ -617,36 +764,36 @@ with daemon.DaemonContext() as context:
     while True:
       # section #1:
       # read data from local port
-      if (readlocalport()):
+      if readlocalport():
         writetodebuglog("i","Read data from local I/O port.")
       else:
         writetodebuglog("w","Cannot read data from local I/O port.")
       # analise data
       analise(1);
       # write data to local port
-      if (writelocalport()):
+      if writelocalport():
         writetodebuglog("i","Write data to local I/O port.")
       else:
         writetodebuglog("w","Cannot write data to local I/O port.")
       # set outputs of MM6D
       for channel in range(1,9):
-        if (ena_ch[channel]==1):
-          if (readwriteMM6Ddevice(channel,1)):
-            writetodebuglog("i","Set outputs of MM6D on channel #"+str(channel))+"."
+        if ena_ch[channel] == 1:
+          if readwriteMM6Ddevice(channel,1):
+            writetodebuglog("i","Set outputs of MM6D on channel #" + str(channel) + ".")
           else:
-            writetodebuglog("w","Cannot set outputs of MM6D on channel #"+str(channel))+"."
+            writetodebuglog("w","Cannot set outputs of MM6D on channel #" + str(channel) + ".")
       # section #2:
       # get parameters of air from MM7Ds
       for channel in range(1,9):
-        if (ena_ch[channel]==1):
-          if (readwriteMM7Ddevice(channel)):
-            writetodebuglog("i","Get parameters of air from MM7D on channel #"+str(channel))+"."
+        if ena_ch[channel] == 1:
+          if readwriteMM7Ddevice(channel):
+            writetodebuglog("i","Get parameters of air from MM7D on channel #" + str(channel) + ".")
           else:
-            writetodebuglog("w","Cannot get parameters of air from MM7D on channel #"+str(channel))+"."
+            writetodebuglog("w","Cannot get parameters of air from MM7D on channel #" + str(channel) + ".")
       # analise data
       analise(2);
       # waiting
-      writetodebuglog("i","Waiting "+str(DELAY)+".")
+      writetodebuglog("i","Waiting " + str(DELAY) + ".")
       time.sleep(DELAY)
   except KeyboardInterrupt:
     # *** stop loop ***
@@ -654,9 +801,9 @@ with daemon.DaemonContext() as context:
     closelocalports()
     # set outputs of MM6D
     for channel in range(1,9):
-      if (ena_ch[channel]==1):
-        if (resetMM6Ddevice(channel,1)):
-          writetodebuglog("i","Set outputs of MM6D to default state on channel #"+str(channel))+"."
+      if ena_ch[channel] == 1:
+        if resetMM6Ddevice(channel,1):
+          writetodebuglog("i","Set outputs of MM6D to default state on channel #" + str(channel) + ".")
         else:
-          writetodebuglog("w","Cannot set outputs of MM6D to default state on channel #"+str(channel))+"."
+          writetodebuglog("w","Cannot set outputs of MM6D to default state on channel #" + str(channel) + ".")
     sys.exit(0)
