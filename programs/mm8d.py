@@ -158,87 +158,9 @@ def loadconfiguration(conffile):
 
 # load environment characteristics
 def loadenvirchars(channel,conffile):
-  print(channel)
-  print(conffile)
-  global cgasconcentrate_max
-  global hheater_disable
-  global hheater_off
-  global hheater_on
-  global hhumidifier_disable
-  global hhumidifier_off
-  global hhumidifier_on
-  global hhumidity_max
-  global hhumidity_min
-  global hlight_off1
-  global hlight_off2
-  global hlight_on1
-  global hlight_on2
-  global htemperature_max
-  global htemperature_min
-  global hvent_disable
-  global hvent_disablelowtemp
-  global hvent_lowtemp
-  global hvent_off
-  global hvent_on
-  global mheater_disable
-  global mheater_off
-  global mheater_on
-  global mhumidifier_disable
-  global mhumidifier_off
-  global mhumidifier_on
-  global mhumidity_max
-  global mhumidity_min
-  global mlight_off1
-  global mlight_off2
-  global mlight_on1
-  global mlight_on2
-  global mtemperature_max
-  global mtemperature_min
-  global mvent_disable
-  global mvent_disablelowtemp
-  global mvent_lowtemp
-  global mvent_off
-  global mvent_on
   C = "common"
   H = "hyphae"
   M = "mushroom"
-  cgasconcentrate_max = [0 for x in range(9)]
-  hhumidifier_off = [0 for x in range(9)]
-  hhumidity_max = [0 for x in range(9)]
-  hhumidity_min = [0 for x in range(9)]
-  hhumidifier_on = [0 for x in range(9)]
-  htemperature_max = [0 for x in range(9)]
-  hheater_off = [0 for x in range(9)]
-  hheater_on = [0 for x in range(9)]
-  htemperature_min = [0 for x in range(9)]
-  hheater_disable = [[0 for x in range(9)] for y in range(24)]
-  hlight_off1 = [0 for x in range(9)]
-  hlight_off2 = [0 for x in range(9)]
-  hlight_on1 = [0 for x in range(9)]
-  hlight_on2 = [0 for x in range(9)]
-  hvent_on = [0 for x in range(9)]
-  hvent_off = [0 for x in range(9)]
-  hvent_disable = [[0 for x in range(9)] for x in range(24)]
-  hvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
-  hvent_lowtemp = [0 for x in range(9)]
-  mhumidifier_off = [0 for x in range(9)]
-  mhumidity_max = [0 for x in range(9)]
-  mhumidity_min = [0 for x in range(9)]
-  mhumidifier_on = [0 for x in range(9)]
-  mtemperature_max = [0 for x in range(9)]
-  mheater_off = [0 for x in range(9)]
-  mheater_on = [0 for x in range(9)]
-  mtemperature_min = [0 for x in range(9)]
-  mheater_disable = [[0 for x in range(9)] for y in range(24)]
-  mlight_off1 = [0 for x in range(9)]
-  mlight_off2 = [0 for x in range(9)]
-  mlight_on1 = [0 for x in range(9)]
-  mlight_on2 = [0 for x in range(9)]
-  mvent_on = [0 for x in range(9)]
-  mvent_off = [0 for x in range(9)]
-  mvent_disable = [[0 for x in range(9)] for x in range(24)]
-  mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
-  mvent_lowtemp = [0 for x in range(9)]
   try:
     with open(conffile) as f:
       envir_config = f.read()
@@ -287,7 +209,7 @@ def loadenvirchars(channel,conffile):
     for x in range(24):
       mvent_disablelowtemp[x][channel] = int(config.get(M,'vent_disablelowtemp_' + addzero(x)))
     mvent_lowtemp[channel] = int(config.get(M,'vent_lowtemp'))
-    writetodebuglog("i","Environment characteristics is loaded.")
+    writetodebuglog("i","CH"+ str(channel) +": Environment characteristics is loaded.")
   except:
     writetodebuglog("e","ERROR #14: Cannot open "+conffile+"!")
     exit(14)
@@ -384,6 +306,7 @@ def analise(section):
   led_warning = 0
   led_error = 0
   if section == 1:
+    # section #1: breakers, switches and alarm sensors
     # local ports
     if mainssensor == 1:
       led_error = 1
@@ -401,19 +324,22 @@ def analise(section):
       if ena_ch[channel] == 1:
         if in_alarm[channel] == 1:
           relay_alarm = 1
-          writetodebuglog("w","Alarm event detected on channel #" + str(channel) + ".")
-          writetodebuglog("i","Restore alarm input of MM6D device on channel #" + str(channel) + ".")
-          if restoreMM6Dalarm(channel) == 0:
-            writetodebuglog("i","Restore is succes.")
+          writetodebuglog("w","CH"+ str(channel) +": Alarm event detected.")
+          writetodebuglog("i","CH"+ str(channel) +": Restore alarm input of MM6D device.")
+          if restoreMM6Dalarm(channel) == 1:
+            writetodebuglog("i","CH"+ str(channel) +": Restore succeeded.")
           else:
-            writetodebuglog("w","Restore is failed.")
+            writetodebuglog("w","CH"+ str(channel) +": Restore failed.")
         if in_swmanu[channel] == 1:
           led_warning = 1
-          writetodebuglog("w","Manual mode switch is on position on channel #" + str(channel) + ".")
+          writetodebuglog("w","CH"+ str(channel) +": Manual mode switch is on position.")
         if in_ocprot[channel] == 1:
           led_error = 1
-          writetodebuglog("e","Overcurrent breaker of MM6D is opened on channel #" + str(channel) + "!")
+          writetodebuglog("e","CH"+ str(channel) +": Overcurrent breaker of MM6D is opened!")
   else:
+    h=int(time.strftime("%H"))
+    m=int(time.strftime("%M"))
+    # section #1: growing environments
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         writetodebuglog("i","CH" + str(channel) + ": " + str(in_temperature[channel]) + " C")
@@ -441,20 +367,20 @@ def analise(section):
             out_heaters[channel] = 1
           if in_temperature[channel] > mheater_off[channel]:
             out_heaters[channel] = 0
-          #if mheater_disable[channel][h] == 1:
-          #  out_heaters[channel] = 0
+          if mheater_disable[h][channel] == 1:
+            out_heaters[channel] = 0
           # lights
           out_lamps[channel] = 0
-          #if (h >= mlight_on1[channel]) and (h < mlight_off1[channel]):
-          #  out_lamps[channel] = 1
-          #if (h >= mlight_on2[channel]) and (h < mlight_off2[channel]):
-          #  out_lamps[channel] = 1
+          if (h >= mlight_on1[channel]) and (h < mlight_off1[channel]):
+            out_lamps[channel] = 1
+          if (h >= mlight_on2[channel]) and (h < mlight_off2[channel]):
+            out_lamps[channel] = 1
           # ventilators
           out_vents[channel] = 0
-          #if (m > mvent_on[channel]) and (m < mvent_off[channel]):
-          #  out_vents[channel] = 1
-          #if mvent_disable[channel][h] == 1:
-          #  out_vents[channel] = 0
+          if (m > mvent_on[channel]) and (m < mvent_off[channel]):
+            out_vents[channel] = 1
+          if mvent_disable[h][channel] == 1:
+            out_vents[channel] = 0
           if in_humidity[channel] > mhumidity_max[channel]:
             out_vents[channel] = 1
           if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
@@ -483,7 +409,7 @@ def analise(section):
             out_heaters[channel] = 1
           if in_temperature[channel] > hheater_off[channel]:
             out_heaters[channel] = 0
-          if hheater_disable[channel][h] == 1:
+          if hheater_disable[h][channel] == 1:
             out_heaters[channel] = 0
           # lights
           out_lamps[channel] = 0
@@ -495,7 +421,7 @@ def analise(section):
           out_vents[channel] = 0
           if (m > hvent_on[channel]) and (m < hvent_off[channel]):
             out_vents[channel] = 1
-          if hvent_disable[channel][h] == 1:
+          if hvent_disable[h][channel] == 1:
             out_vents[channel] = 0
           if in_humidity[channel] > hhumidity_max[channel]:
             out_vents[channel] = 1
@@ -756,6 +682,45 @@ global relay_alarm
 global led_active
 global led_warning
 global led_error
+global cgasconcentrate_max
+global hheater_disable
+global hheater_off
+global hheater_on
+global hhumidifier_disable
+global hhumidifier_off
+global hhumidifier_on
+global hhumidity_max
+global hhumidity_min
+global hlight_off1
+global hlight_off2
+global hlight_on1
+global hlight_on2
+global htemperature_max
+global htemperature_min
+global hvent_disable
+global hvent_disablelowtemp
+global hvent_lowtemp
+global hvent_off
+global hvent_on
+global mheater_disable
+global mheater_off
+global mheater_on
+global mhumidifier_disable
+global mhumidifier_off
+global mhumidifier_on
+global mhumidity_max
+global mhumidity_min
+global mlight_off1
+global mlight_off2
+global mlight_on1
+global mlight_on2
+global mtemperature_max
+global mtemperature_min
+global mvent_disable
+global mvent_disablelowtemp
+global mvent_lowtemp
+global mvent_off
+global mvent_on
 # reset variables
 in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
@@ -775,6 +740,43 @@ relay_alarm = 0
 led_active = 0
 led_warning = 0
 led_error = 0
+cgasconcentrate_max = [0 for x in range(9)]
+hhumidifier_off = [0 for x in range(9)]
+hhumidity_max = [0 for x in range(9)]
+hhumidity_min = [0 for x in range(9)]
+hhumidifier_on = [0 for x in range(9)]
+htemperature_max = [0 for x in range(9)]
+hheater_off = [0 for x in range(9)]
+hheater_on = [0 for x in range(9)]
+htemperature_min = [0 for x in range(9)]
+hheater_disable = [[0 for x in range(9)] for y in range(24)]
+hlight_off1 = [0 for x in range(9)]
+hlight_off2 = [0 for x in range(9)]
+hlight_on1 = [0 for x in range(9)]
+hlight_on2 = [0 for x in range(9)]
+hvent_on = [0 for x in range(9)]
+hvent_off = [0 for x in range(9)]
+hvent_disable = [[0 for x in range(9)] for x in range(24)]
+hvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+hvent_lowtemp = [0 for x in range(9)]
+mhumidifier_off = [0 for x in range(9)]
+mhumidity_max = [0 for x in range(9)]
+mhumidity_min = [0 for x in range(9)]
+mhumidifier_on = [0 for x in range(9)]
+mtemperature_max = [0 for x in range(9)]
+mheater_off = [0 for x in range(9)]
+mheater_on = [0 for x in range(9)]
+mtemperature_min = [0 for x in range(9)]
+mheater_disable = [[0 for x in range(9)] for y in range(24)]
+mlight_off1 = [0 for x in range(9)]
+mlight_off2 = [0 for x in range(9)]
+mlight_on1 = [0 for x in range(9)]
+mlight_on2 = [0 for x in range(9)]
+mvent_on = [0 for x in range(9)]
+mvent_off = [0 for x in range(9)]
+mvent_disable = [[0 for x in range(9)] for x in range(24)]
+mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+mvent_lowtemp = [0 for x in range(9)]
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # checking version of remote devices
@@ -783,19 +785,19 @@ for channel in range(1,9):
     if getcontrollerversion(6,channel):
       if (mv * 10 + sv) < (COMPMV6 * 10 + COMPSV6):
         ena_ch[channel] = 0;
-        writetodebuglog("w","Version of MM6D on channel #" + str(channel) + " is not compatible.")
+        writetodebuglog("w","CH"+ str(channel) +": Version of MM6D is not compatible.")
     else:
       ena_ch[channel] = 0;
-      writetodebuglog("w","MM6D on channel #" + str(channel) + " is not accessible.")
+      writetodebuglog("w","CH"+ str(channel) +": MM6D is not accessible.")
 for channel in range(1,9):
   if ena_ch[channel] > 0:
     if getcontrollerversion(7,channel):
       if (mv * 10 + sv) < (COMPMV7 * 10 + COMPSV7):
         ena_ch[channel] = 0;
-        writetodebuglog("w","Version of MM7D on channel #" + str(channel) + " is not compatible.")
+        writetodebuglog("w","CH"+ str(channel) +": Version of MM7D is not compatible.")
     else:
       ena_ch[channel] = 0;
-      writetodebuglog("w","MM7D on channel #" + str(channel) + " is not accessible.")
+      writetodebuglog("w","CH"+ str(channel) +": MM7D is not accessible.")
 # check number of enabled channels
 ii = 0;
 for channel in range(1,9):
@@ -813,9 +815,9 @@ initializelocalports()
 for channel in range(1,9):
   if ena_ch[channel] == 1:
     if setautomodeMM7Ddevice(channel):
-      writetodebuglog("i","Set auto mode of MM7D on channel #" + str(channel) + ".")
+      writetodebuglog("i","CH"+ str(channel) +": Set auto mode of MM7D.")
     else:
-      writetodebuglog("w","Cannot set auto mode of MM7D on channel #" + str(channel) + ".")
+      writetodebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
 # *** start loop ***
 exttemp = 18
 writetodebuglog("i","Starting program as daemon.")
@@ -842,17 +844,17 @@ while True:
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         if readwriteMM6Ddevice(channel):
-          writetodebuglog("i","Set outputs of MM6D on channel #" + str(channel) + ".")
+          writetodebuglog("i","CH"+ str(channel) +": Set outputs of MM6D.")
         else:
-          writetodebuglog("w","Cannot set outputs of MM6D on channel #" + str(channel) + ".")
+          writetodebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D.")
     # section #2:
     # get parameters of air from MM7Ds
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         if readwriteMM7Ddevice(channel):
-          writetodebuglog("i","Get parameters of air from MM7D on channel #" + str(channel) + ".")
+          writetodebuglog("i","CH"+ str(channel) +": Get parameters of air from MM7D.")
         else:
-          writetodebuglog("w","Cannot get parameters of air from MM7D on channel #" + str(channel) + ".")
+          writetodebuglog("w","CH"+ str(channel) +": Cannot get parameters of air from MM7D.")
     # analise data
     analise(2);
     # waiting
@@ -867,9 +869,10 @@ while True:
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         if resetMM6Ddevice(channel):
-          writetodebuglog("i","Set outputs of MM6D to default state on channel #" + str(channel) + ".")
+          writetodebuglog("i","CH"+ str(channel) +": Set outputs of MM6D to default state.")
         else:
-          writetodebuglog("w","Cannot set outputs of MM6D to default state on channel #" + str(channel) + ".")
+          writetodebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D to default state.")
+    writetodebuglog("i","Program stopped.")
     sys.exit(0)
 # close local ports
 closelocalports()
@@ -877,7 +880,8 @@ closelocalports()
 for channel in range(1,9):
   if ena_ch[channel] == 1:
     if resetMM6Ddevice(channel):
-      writetodebuglog("i","Set outputs of MM6D to default state on channel #" + str(channel) + ".")
+      writetodebuglog("i","CH"+ str(channel) +": Set outputs of MM6D to default state.")
     else:
-      writetodebuglog("w","Cannot set outputs of MM6D to default state on channel #" + str(channel) + ".")
+      writetodebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D to default state.")
+writetodebuglog("i","Program stopped.")
 sys.exit(0)
