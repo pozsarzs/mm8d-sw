@@ -301,12 +301,11 @@ def getexttemp():
 
 # analise data
 def analise(section):
-  relay_alarm = 0
-  led_active = 0
-  led_warning = 0
-  led_error = 0
   if section == 1:
     # section #1: breakers, switches and alarm sensors
+    led_error = 0
+    led_warning = 0
+    relay_alarm = 0
     # local ports
     if mainssensor == 1:
       led_error = 1
@@ -482,6 +481,7 @@ def writelocalports():
     return 0
   else:
     outdata = 64 * led_error + 32 * led_warning + 16 * led_active + relay_alarm
+    print(str(led_warning))
     portio.outb(outdata,lptaddresses[lpt_prt])
     if (portio.inb(lptaddresses[lpt_prt]) == outdata):
       return 1
@@ -496,18 +496,18 @@ def readlocalports():
     GPIO.input(prt_i3,mainsbreaker2)
     GPIO.input(prt_i4,mainsbreaker3)
   else:
-    indata = portio.inb(lpt_adr[lpt_prt] + 1)
+    indata = portio.inb(lptaddresses[lpt_prt] + 1)
     mainssensor = indata & 8
     if mainssensor > 1:
       mainssensor = 1
     mainsbreaker1 = indata & 16
-    if lpt_mainsbreaker1 > 1:
+    if mainsbreaker1 > 1:
       mainsbreaker1 = 1
     mainsbreaker2 = indata & 32
-    if lpt_mainsbreaker2 > 1:
+    if mainsbreaker2 > 1:
       mainsbreaker2 = 1
-    mainsbreaker3=indata & 64
-    if lpt_mainsbreaker3 > 1:
+    mainsbreaker3 = indata & 64
+    if mainsbreaker3 > 1:
       mainsbreaker3 = 1
   return 1
 
@@ -827,21 +827,18 @@ while True:
     time.sleep(1)
     # section #1:
     # read data from local port
-    writetodebuglog("i","MARKER1")
-    #if readlocalport():
-    #  writetodebuglog("i","Read data from local I/O port.")
-    #else:
-    #  writetodebuglog("w","Cannot read data from local I/O port.")
+    if readlocalports():
+      writetodebuglog("i","Read data from local I/O port.")
+    else:
+      writetodebuglog("w","Cannot read data from local I/O port.")
     # analise data
-    writetodebuglog("i","MARKER2")
     analise(1);
     # write data to local port
-    #if writelocalport():
-    #  writetodebuglog("i","Write data to local I/O port.")
-    #else:
-    #  writetodebuglog("w","Cannot write data to local I/O port.")
+    if writelocalports():
+      writetodebuglog("i","Write data to local I/O port.")
+    else:
+      writetodebuglog("w","Cannot write data to local I/O port.")
     # set outputs of MM6D
-    writetodebuglog("i","MARKER3")
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         if readwriteMM6Ddevice(channel):
