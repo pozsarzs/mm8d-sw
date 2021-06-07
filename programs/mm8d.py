@@ -265,7 +265,7 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
 
 # check external control files
 def extcont(channel,output,status):
-  writetodebuglog("i","Checking override file: " + dir_var + '/' + str(channel) + "/out" + str(output) + ".")
+  writetodebuglog("i","CH" + str(channel) + ": Checking override file " + str(output) + ".")
   if os.path.isfile(dir_var + '/' + str(channel) + "/out" + str(output)):
     try:
       f = open(dir_var + '/' + str(channel) + "/out" + str(output),'r')
@@ -381,11 +381,11 @@ def analise(section):
             out_vents[channel] = 1
           if mvent_disable[h][channel] == 1:
             out_vents[channel] = 0
-          if in_humidity[channel] > mhumidity_max[channel]:
+          if (in_humidity[channel] > mhumidity_max[channel]) and (exttemp < mtemperature_max[channel]):
             out_vents[channel] = 1
-          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
+          if (in_gasconcentrate[channel] > cgasconcentrate_max[channel]) and (exttemp < mtemperature_max[channel]):
             out_vents[channel] = 1
-          if in_temperature[channel] > mtemperature_max[channel]:
+          if (in_temperature[channel] > mtemperature_max[channel]) and (exttemp < mtemperature_max[channel]):
             out_vents[channel] = 1
         else:
           # growing hyphae
@@ -423,11 +423,11 @@ def analise(section):
             out_vents[channel] = 1
           if hvent_disable[h][channel] == 1:
             out_vents[channel] = 0
-          if in_humidity[channel] > hhumidity_max[channel]:
+          if (in_humidity[channel] > hhumidity_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
-          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
+          if (in_gasconcentrate[channel] > cgasconcentrate_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
-          if in_temperature[channel] > htemperature_max[channel]:
+          if (in_temperature[channel] > htemperature_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
         # messages
         if out_heaters[channel] == 1:
@@ -721,6 +721,7 @@ global mvent_disablelowtemp
 global mvent_lowtemp
 global mvent_off
 global mvent_on
+global exttemp
 # reset variables
 in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
@@ -777,6 +778,7 @@ mvent_off = [0 for x in range(9)]
 mvent_disable = [[0 for x in range(9)] for x in range(24)]
 mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
 mvent_lowtemp = [0 for x in range(9)]
+exttemp = 18
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # checking version of remote devices
@@ -819,7 +821,6 @@ for channel in range(1,9):
     else:
       writetodebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
 # *** start loop ***
-exttemp = 18
 writetodebuglog("i","Starting program as daemon.")
 while True:
   try:
@@ -855,8 +856,17 @@ while True:
           writetodebuglog("i","CH"+ str(channel) +": Get parameters of air from MM7D.")
         else:
           writetodebuglog("w","CH"+ str(channel) +": Cannot get parameters of air from MM7D.")
+    # get external temperature from internet
+    if (int(time.strftime("%M")) == 28):
+      exttemp=getexttemp()
     # analise data
     analise(2);
+    # override state of outputs
+    for channel in range(1,9):
+      if ena_ch[channel] == 1:
+        out_lamps[channel] = extcont(channel,1,out_lamps[channel])
+        out_vents[channel] = extcont(channel,2,out_vents[channel])
+        out_heaters[channel] = extcont(channel,3,out_heaters[channel])
     # waiting
     writetodebuglog("i","Waiting " + str(DELAY) + ".")
     time.sleep(DELAY)
