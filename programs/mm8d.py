@@ -301,9 +301,14 @@ def getexttemp():
 
 # analise data
 def analise(section):
+  global led_active
+  global led_error
+  global led_warning
+  global relay_alarm
   if section == 1:
     # section #1: breakers, switches and alarm sensors
     led_error = 0
+    led_active = 0
     led_warning = 0
     relay_alarm = 0
     # local ports
@@ -481,7 +486,6 @@ def writelocalports():
     return 0
   else:
     outdata = 64 * led_error + 32 * led_warning + 16 * led_active + relay_alarm
-    print(str(led_warning))
     portio.outb(outdata,lptaddresses[lpt_prt])
     if (portio.inb(lptaddresses[lpt_prt]) == outdata):
       return 1
@@ -490,6 +494,10 @@ def writelocalports():
 
 # read data from GPIO/LPT port
 def readlocalports():
+  global mainssensor
+  global mainsbreaker1
+  global mainsbreaker2
+  global mainsbreaker3
   if hw == 0:
     GPIO.input(prt_i1,mainssensor)
     GPIO.input(prt_i2,mainsbreaker1)
@@ -674,14 +682,6 @@ global in_gasconcentrate
 global out_lamps
 global out_vents
 global out_heaters
-global mainssensor
-global mainsbreaker1
-global mainsbreaker2
-global mainsbreaker3
-global relay_alarm
-global led_active
-global led_warning
-global led_error
 global cgasconcentrate_max
 global hheater_disable
 global hheater_off
@@ -733,14 +733,6 @@ in_gasconcentrate = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 out_heaters = [0 for channel in range(9)]
-mainssensor = 0
-mainsbreaker1 = 0
-mainsbreaker2 = 0
-mainsbreaker3 = 0
-relay_alarm = 0
-led_active = 0
-led_warning = 0
-led_error = 0
 cgasconcentrate_max = [0 for x in range(9)]
 hhumidifier_off = [0 for x in range(9)]
 hhumidity_max = [0 for x in range(9)]
