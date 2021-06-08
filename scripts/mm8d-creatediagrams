@@ -134,7 +134,7 @@ set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
 set output "$PNGFILE"
-plot "$TMPFILE" using 4:xticlabels(stringcolumn(2)) with lines title "Gas concentrate [%]" linecolor rgb 'green'
+plot "$TMPFILE" using 5:xticlabels(stringcolumn(2)) with lines title "Gas concentrate [%]" linecolor rgb 'green'
 EOF
   if [ $? -ne 0 ]
   then

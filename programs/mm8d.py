@@ -232,7 +232,7 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
   logfile = dir_log + '/mm8d-ch' + str(channel) + '.log'
   dt = (strftime("%Y-%m-%d,%H:%M",gmtime()))
   lckfile(1)
-  writetodebuglog("i","Writing data to log.")
+  writetodebuglog("i","CH" + str(channel) + ": Writing data to logfile.")
   if not os.path.isfile(logfile):
     f = open(logfile,'w')
     f.close()
@@ -246,12 +246,10 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
             statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + statusdata[3] + '\n'
       else:
         s = dt + ',' + \
-              str(temperature) + ',' + \
-              str(humidity) + ',' + \
-              str(gasconcentrate) + ',' + \
+            str(temperature) + ',' + str(humidity) + ',' + str(gasconcentrate) + ',' + \
               statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + \
               statusdata[3] + ',' + statusdata[4] + ',' + statusdata[5] + ',' + \
-              statusdata[6] + ',' + statusdata[7] + '\n'
+              statusdata[6] + '\n'
       f.write(s)
       f.write(first_line)
       f.writelines(lines)
@@ -768,6 +766,8 @@ led_error = 0
 led_active = 0
 led_warning = 0
 relay_alarm = 0
+prevdata = ["" for x in range(10)]
+newdata = ["" for x in range(10)]
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # checking version of remote devices
@@ -855,15 +855,17 @@ while True:
         out_vents[channel] = extcont(channel,2,out_vents[channel])
         out_heaters[channel] = extcont(channel,3,out_heaters[channel])
     # write data to log
-
-
-    writelog(0,0,0,0,str(mainssensor) + str(mainsbreaker1) + str(mainsbreaker2) + str(mainsbreaker3))
-
-
-
-#    for channel in range(1,9):
-#      if ena_ch[channel] == 1:
-#        writelog(channel,in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],):
+    newdata[0] = str(mainssensor) + str(mainsbreaker1) + str(mainsbreaker2) + str(mainsbreaker3)
+    if (prevdata[0] != newdata[0]):
+      writelog(0,0,0,0,newdata[0])
+      prevdata[0] = newdata[0]
+    for channel in range(1,9):
+      if ena_ch[channel] == 1:
+        newdata[channel] = str(in_opmode[channel]) + str(in_swmanu[channel]) + str(in_ocprot[channel]) + str(in_alarm[channel]) + \
+                           str(out_lamps[channel]) + str(out_vents[channel]) + str(out_heaters[channel])
+        if (prevdata[channel] != newdata[channel]):
+          writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
+          prevdata[channel] = newdata[channel]
     # waiting
     blinkactiveled(0);
     writetodebuglog("i","Waiting " + str(DELAY) + " seconds.")
