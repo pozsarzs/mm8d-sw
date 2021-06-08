@@ -229,7 +229,7 @@ def lckfile(mode):
 
 # write data to log with timestamp
 def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
-  logfile = dir_log + '/mm8d_ch' + str(channel) + '.log'
+  logfile = dir_log + '/mm8d-ch' + str(channel) + '.log'
   dt = (strftime("%Y-%m-%d,%H:%M",gmtime()))
   lckfile(1)
   writetodebuglog("i","Writing data to log.")
@@ -243,8 +243,7 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
       f.seek(0)
       if (channel == 0):
         s = dt + ',' + \
-              statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + \
-              statusdata[3] + ',' + statusdata[4] + '\n'
+            statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + statusdata[3] + '\n'
       else:
         s = dt + ',' + \
               str(temperature) + ',' + \
@@ -282,6 +281,9 @@ def extcont(channel,output,status):
 
 # blink ACTIVE LED
 def blinkactiveled(on):
+  global led_active
+  led_active = on
+  writelocalports()
   return 0
 
 # get external temperature from openweathermap.org
@@ -308,7 +310,6 @@ def analise(section):
   if section == 1:
     # section #1: breakers, switches and alarm sensors
     led_error = 0
-    led_active = 0
     led_warning = 0
     relay_alarm = 0
     # local ports
@@ -530,7 +531,6 @@ def closelocalports():
 # read and write remote MM7D device
 def readwriteMM7Ddevice(channel):
   rc = 0
-  blinkactiveled(1);
   if in_opmode[channel] == 0:
     url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
       "&h1=" + str(mhumidity_min[channel]) + "&h2=" + str(mhumidifier_on[channel]) + \
@@ -562,13 +562,11 @@ def readwriteMM7Ddevice(channel):
       rc = 0
   except:
     rc = 0
-  blinkactiveled(0);
   return rc
 
 # set automatic mode of remote MM7D device
 def setautomodeMM7Ddevice(channel):
   rc = 0
-  blinkactiveled(1);
   url = "http://" + adr_mm7dch[channel] + "/mode/auto?uid=" + usr_uid
   try:
     r = requests.get(url,timeout = 3)
@@ -578,13 +576,11 @@ def setautomodeMM7Ddevice(channel):
       rc = 0
   except:
     rc = 0
-  blinkactiveled(0)
   return rc
 
 # read and write remote MM6D device
 def readwriteMM6Ddevice(channel):
   rc = 0
-  blinkactiveled(1);
   url = "http://" + adr_mm6dch[channel] + "/operation?uid=" + usr_uid + \
     "&a=0&h=" + str(out_heaters[channel]) + "&l=" + str(out_lamps[channel]) + "&v=" + str(out_vents[channel])
   try:
@@ -606,13 +602,11 @@ def readwriteMM6Ddevice(channel):
       rc = 0
   except:
     rc = 0
-  blinkactiveled(0);
   return rc
 
 # set default state of remote MM6D device
 def resetMM6Ddevice(channel):
   rc = 0
-  blinkactiveled(1);
   url = "http://" + adr_mm6dch[channel] + "/set/all/off?uid=" + usr_uid
   try:
     r = requests.get(url,timeout = 3)
@@ -622,13 +616,11 @@ def resetMM6Ddevice(channel):
       rc = 0
   except:
     rc = 0
-  blinkactiveled(0)
   return rc
 
 # restore alarm input of remote MM6D device
 def restoreMM6Dalarm(channel):
   rc=0
-  blinkactiveled(1);
   url="http://"+adr_mm6dch[channel]+"/set/alarm/off?uid="+usr_uid
   try:
     r=requests.get(url,timeout=3)
@@ -638,7 +630,6 @@ def restoreMM6Dalarm(channel):
       rc=0
   except:
     rc=0
-  blinkactiveled(0)
   return rc
 
 # get version of remote MM6D and MM7D device
@@ -648,7 +639,6 @@ def getcontrollerversion(conttype,channel):
   mv = 0
   sv = 0
   rc = 0
-  blinkactiveled(1);
   if conttype == 6:
     url = "http://" + adr_mm6dch[channel] + "/version"
   else:
@@ -668,7 +658,6 @@ def getcontrollerversion(conttype,channel):
       rc = 0
   except:
     rc = 0
-  blinkactiveled(0);
   return rc
 
 # main program
@@ -722,6 +711,10 @@ global mvent_lowtemp
 global mvent_off
 global mvent_on
 global exttemp
+global led_active
+global led_error
+global led_warning
+global relay_alarm
 # reset variables
 in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
@@ -771,6 +764,10 @@ mvent_disable = [[0 for x in range(9)] for x in range(24)]
 mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
 mvent_lowtemp = [0 for x in range(9)]
 exttemp = 18
+led_error = 0
+led_active = 0
+led_warning = 0
+relay_alarm = 0
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # checking version of remote devices
@@ -817,6 +814,7 @@ writetodebuglog("i","Starting program as daemon.")
 while True:
   try:
     time.sleep(1)
+    blinkactiveled(1);
     # section #1:
     # read data from local port
     if readlocalports():
@@ -856,8 +854,19 @@ while True:
         out_lamps[channel] = extcont(channel,1,out_lamps[channel])
         out_vents[channel] = extcont(channel,2,out_vents[channel])
         out_heaters[channel] = extcont(channel,3,out_heaters[channel])
+    # write data to log
+
+
+    writelog(0,0,0,0,str(mainssensor) + str(mainsbreaker1) + str(mainsbreaker2) + str(mainsbreaker3))
+
+
+
+#    for channel in range(1,9):
+#      if ena_ch[channel] == 1:
+#        writelog(channel,in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],):
     # waiting
-    writetodebuglog("i","Waiting " + str(DELAY) + ".")
+    blinkactiveled(0);
+    writetodebuglog("i","Waiting " + str(DELAY) + " seconds.")
     time.sleep(DELAY)
   except:
     # *** stop loop ***
