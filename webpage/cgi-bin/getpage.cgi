@@ -271,7 +271,7 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 $logfile = $logfile . $ch . ".log";
 
 # create diagram pictures
-if (channel > 0) {system("$creatediagprog $channel"); }
+if ($channel > 0) { system("$creatediagprog $channel"); }
 
 # create output
 print "Content-type:text/html\r\n\r\n";

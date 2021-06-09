@@ -85,6 +85,7 @@ for X in $LANGUAGES; do
   fi;
 done
 sudo chown -R root:www-data /var/www/html
+sudo chmod 775 /var/www/html/diagrams
 sudo chmod 775 /var/www/html/pics
 sudo chmod 777 /var/$INSTDIR/lib/$SWN2
 echo "- copying files:"
