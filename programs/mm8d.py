@@ -145,7 +145,7 @@ def loadconfiguration(conffile):
       prt_ro2 = int(config.get('GPIOports','prt_ro2'))
       prt_ro3 = int(config.get('GPIOports','prt_ro3'))
       prt_ro4 = int(config.get('GPIOports','prt_ro4'))
-      prt_ro1 = int(config.get('GPIOports','prt_lo1'))
+      prt_lo1 = int(config.get('GPIOports','prt_lo1'))
       prt_lo2 = int(config.get('GPIOports','prt_lo2'))
       prt_lo3 = int(config.get('GPIOports','prt_lo3'))
       prt_lo4 = int(config.get('GPIOports','prt_lo4'))

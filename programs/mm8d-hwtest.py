@@ -73,7 +73,7 @@ def loadconfiguration(conffile):
       prt_ro2=int(config.get('GPIOports','prt_ro2'))
       prt_ro3=int(config.get('GPIOports','prt_ro3'))
       prt_ro4=int(config.get('GPIOports','prt_ro4'))
-      prt_ro1=int(config.get('GPIOports','prt_lo1'))
+      prt_lo1=int(config.get('GPIOports','prt_lo1'))
       prt_lo2=int(config.get('GPIOports','prt_lo2'))
       prt_lo3=int(config.get('GPIOports','prt_lo3'))
       prt_lo4=int(config.get('GPIOports','prt_lo4'))
@@ -139,10 +139,10 @@ while True:
     print(" * Check I1-4 inputs")
     if hw == 0:
       print("   used GPIO ports:")
-      print("     I1: GPIO", prt_in0,sep = '')
-      print("     I2: GPIO", prt_in1,sep = '')
-      print("     I3: GPIO", prt_in2,sep = '')
-      print("     I4: GPIO", prt_in3,sep = '')
+      print("     I1: GPIO", prt_i0,sep = '')
+      print("     I2: GPIO", prt_i1,sep = '')
+      print("     I3: GPIO", prt_i2,sep = '')
+      print("     I4: GPIO", prt_i3,sep = '')
       print("   Press ^C to stop!")
       try:
         while True:
