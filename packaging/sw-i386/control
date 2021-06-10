@@ -3,7 +3,7 @@ Version: 0.1
 Section: misc
 Priority: extra
 Architecture: i386
-Installed-Size: 0 kB
+Installed-Size: 1.6 MB
 Maintainer: Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
 Depends: lsb-base, build-essential, libfreetype6-dev, libjpeg-dev, python-configparser,  python3-daemon,  python3-dev, python3-openssl, python3-pip
 Description: Main program
