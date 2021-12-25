@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ]; then
+  if [ -d /usr/doc -a ! -e /usr/doc/mm8d-eec -a -d /usr/share/doc/mm8d-eec ]; then
+    ln -sf /usr/share/doc/mm8d-eec /usr/doc/mm8d-eec
+  fi
+fi

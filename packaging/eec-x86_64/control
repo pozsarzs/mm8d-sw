@@ -1,0 +1,11 @@
+Package: mm8d-eec
+Version: 0.2
+Section: misc
+Priority: extra
+Architecture: x86_64
+Installed-Size: 800 kB
+Maintainer: Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+Depends: mm8d-sw
+Description: Environment characteristic editor
+ This is a part of operating program of MM8D growing house controlling
+ and remote monitoring device.

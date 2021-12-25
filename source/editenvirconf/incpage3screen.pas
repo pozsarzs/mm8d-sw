@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage3screen.pas                                                       | }
 { | Show screen content of page #3                                           | }
@@ -12,6 +12,7 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+// write options to screen
 procedure page3screen;
 begin
   header(PRGNAME+' '+VERSION+' * Page 3/9: Growing hyphae - lighting');

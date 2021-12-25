@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incsaveoutfiles.pas                                                      | }
 { | Save out files                                                           | }

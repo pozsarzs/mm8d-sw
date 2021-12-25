@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | editenvirconf.pas                                                        | }
 { | Full-screen program for edit envir.ini file                              | }
@@ -44,8 +44,9 @@ var
   hventoff, mventoff:               byte;
   hventon, mventon:                 byte;
 const
-  VERSION:                          string='v0.1';
-  PRGNAME:                          string='MM8D-EditEnvirConf';
+  C: string='common';
+  H: string='hyphae';
+  M: string='mushroom';
   BLOCKS:                           array[1..9] of byte=(1,3,1,6,1,3,1,6,1);
   MINPOSX:                          array[1..9,1..6] of byte=((46,0,0,0,0,0),
                                                              (46,17,35,0,0,0),
@@ -79,6 +80,7 @@ const
                                   '<+>/<-> sign change  <Enter> accept  <Esc> cancel',
                                   '<Esc> cancel');
 
+{$I config.pas}
 {$I incpage1screen.pas}
 {$I incpage2screen.pas}
 {$I incpage3screen.pas}
@@ -91,6 +93,7 @@ const
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
+// draw base screen
 procedure screen(page: byte);
 begin
   background;
@@ -110,6 +113,7 @@ begin
   gotoxy(1,bottom); clreol;
 end;
 
+// get value from keyboard
 procedure getvalue(page,block,posy: byte);
 var
   c: char;
@@ -395,6 +399,7 @@ begin
   gotoxy(1,bottom); clreol;
 end;
 
+// set value
 function setvalues: boolean;
 var
   page, block, posy: byte;

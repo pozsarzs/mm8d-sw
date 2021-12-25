@@ -1,6 +1,6 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
+# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | prepare                                                                    |
 # | Prepare OS                                                                 |
@@ -13,17 +13,27 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.
 
+line()
+{
+  for ((i=0; i<${#SWCR}; i++))
+  do
+    echo -n "-"
+  done
+  echo ""
+}
+
 # constants
 ARCH=`uname -m`
 SWN1="MM8D"
 SWN2="mm8d"
+SWCR=`cat documents/copyright`
 SWV=`cat documents/VERSION`
 
-clear
-echo "--------------------------------------------------------------------------------"
-echo "$SWN1 $SWV prepare OS"
-echo "Copyright (C) 2020-2021 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>"
-echo "--------------------------------------------------------------------------------"
+# installer
+echo -e "\n$SWN1 v$SWV prepare OS"
+echo "$SWCR"
+line
+sleep 1
 echo "Installing required components..."
 sudo apt-get install apache2 \
                      build-essential \

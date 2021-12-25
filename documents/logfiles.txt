@@ -15,7 +15,7 @@ Content of log files
     6:  mains voltage overcurrent breaker #3  0: closed  1: opened
 
 
-  2. mm8d-ch[1-9].log
+  2. mm8d-ch[1-8].log
   -------------------
 
   Example line: "2020-09-19,13:59,13,23,33,1,1,1,0,1,1,1"

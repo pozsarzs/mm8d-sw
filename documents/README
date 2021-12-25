@@ -29,18 +29,20 @@ Requirements:
 ------------------------------------------
 a. Visit homepage (see later) to download installer packages:
 
-  Raspbian OS:      mm8d-sw-0.1-armhf.tar.gz
+  Raspbian OS:      mm8d-sw-0.2-armhf.tar.gz
 
-                    mm8d-eec_0.1-1_armhf.deb
-                    mm8d-sw_0.1-1_armhf.deb
-                    mm8d-web_0.1-1_all.deb
+                    mm8d-eec_0.2-1_armhf.deb
+                    mm8d-sw_0.2-1_armhf.deb
+                    mm8d-web_0.2-1_all.deb
 
-  Debian GNU/Linux: mm8d-sw-0.1-i386.tar.gz
+  Debian GNU/Linux: mm8d-sw-0.2-i386.tar.gz
+                    mm8d-sw-0.2-x86_64.tar.gz
 
-                    mm8d-eec_0.1-1_i386.deb
-                    mm8d-sw_0.1-1_i386.deb
-                    mm8d-web_0.1-1_all.deb
-
+                    mm8d-eec_0.2-1_i386.deb
+                    mm8d-sw_0.2-1_i386.deb
+                    mm8d-eec_0.2-1_x86_64.deb
+                    mm8d-sw_0.2-1_x86_64.deb
+                    mm8d-web_0.2-1_all.deb
 
 b. Download from Github
 
@@ -59,7 +61,7 @@ c. Download from Debian repository
 3. Contact
 ----------
    Homepage:             <http://www.szerafingomba.hu/softwares/>
-   Author:               Pozsar Zsolt
+   Author:               Pozsár Zsolt
    E-mail:               <pozsar.zsolt@szerafingomba.hu>
    Phone:                +36 56/470-272
    Mobile:               +36 30/249-5030

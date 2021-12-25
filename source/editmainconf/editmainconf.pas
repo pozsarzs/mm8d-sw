@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | editmainconf.pas                                                         | }
 { | Full-screen program for edit mm8d.ini file                               | }
@@ -56,8 +56,6 @@ var
   usr_uid:    string;
   web_lines:  byte;
 const
-  VERSION:    string='v0.1';
-  PRGNAME:    string='MM8D-EditMainConf';
   D:          string='directories';
   E:          string='enable';
   G:          string='GPIOports';
@@ -110,6 +108,7 @@ const
                                      '<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit');
   CODE:       array[3..4] of string=('en','hu');
 
+{$I config.pas}
 {$I incpage1screen.pas}
 {$I incpage2screen.pas}
 {$I incpage3screen.pas}
@@ -123,6 +122,7 @@ const
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
+// draw base screen
 procedure screen(page: byte);
 begin
   background;
@@ -149,6 +149,7 @@ begin
   gotoxy(1,bottom); clreol;
 end;
 
+// select one from all
 procedure selectitem(page,block,posy: byte);
 var
   b: byte;
@@ -172,6 +173,7 @@ begin
   end;
 end;
 
+// get value from keyboard
 procedure getvalue(page,block,posy: byte);
 var
   c: char;
@@ -417,6 +419,7 @@ begin
   gotoxy(1,bottom); clreol;
 end;
 
+// set value
 function setvalues: boolean;
 var
   page, block, posy: byte;

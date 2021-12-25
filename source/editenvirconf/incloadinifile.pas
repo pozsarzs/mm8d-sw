@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incloadinifile.pas                                                       | }
 { | Load configuration from ini file                                         | }
@@ -17,10 +17,6 @@ function loadinifile(filename: string): boolean;
 var
   iif: TINIFile;
   b:   byte;
-const
-  C:   string='common';
-  H:   string='hyphae';
-  M:   string='mushroom';
 
 begin
   iif:=TIniFile.Create(filename);

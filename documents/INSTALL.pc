@@ -7,7 +7,10 @@ network.
 
 Installation
 ~~~~~~~~~~~~
-  $ tar -xzf mm8d-sw-0.1-i386.tar.gz
+  $ tar -xzf mm8d-sw-0.2-i386.tar.gz
+                  or
+  $ tar -xzf mm8d-sw-0.2-x86_64.tar.gz
+
   $ cd mm8d-sw
   $ ./prepare
   $ ./install

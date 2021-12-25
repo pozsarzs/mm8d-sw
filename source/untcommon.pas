@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | untcommon.pas                                                            | }
 { | Common functions and procedures                                          | }
@@ -25,6 +25,7 @@ procedure quit(halt_code: byte; clear: boolean; message: string);
 
 implementation
 
+// check terminal size
 function terminalsize: boolean;
 begin
   if (screenwidth>=80) and (screenheight>=25)

@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | override.pas                                                             | }
 { | Full-screen program for override output status                           | }
@@ -25,8 +25,6 @@ var
   bottom:  byte;
   outputs: array[1..4] of string;
 const
-  VERSION: string='v0.1';
-  PRGNAME: string='MM8D-Override';
   MAXPOSY: byte=5;
   MINPOSX: byte=30;
   MINPOSY: byte=3;
@@ -34,11 +32,12 @@ const
   FOOTERS: array[1..3] of string=('<Up>/<Down> move  <Enter> edit  <Esc> exit',
                                   '<F1> off  <F2> on  <F3> neutral  <Enter> accept  <Esc> cancel',
                                   '<Esc> cancel');
-
+{$I config.pas}
 {$I incloadoutfiles.pas}
 {$I incpage1screen.pas}
 {$I incsaveoutfiles.pas}
 
+// draw base screen
 procedure screen;
 begin
   background;
@@ -48,6 +47,7 @@ begin
   gotoxy(1,bottom); clreol;
 end;
 
+// get value from keyboard
 procedure getvalue(posy: byte);
 var
   c: char;
@@ -81,6 +81,7 @@ begin
   gotoxy(1,bottom); clreol;
 end;
 
+// set value
 function setvalues: boolean;
 var
   posy: byte;

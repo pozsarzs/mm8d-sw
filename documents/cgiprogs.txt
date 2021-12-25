@@ -3,7 +3,8 @@ Arguments of CGI porgrams
 
   1. getdata.cgi
   --------------
-  Example line: "http://.../cgi-bin/getdata.cgi?uid=00000000&channel=2&value=2"
+  Example lines: "http://.../cgi-bin/getdata.cgi?uid=00000000&channel=2&value=2"
+                 "http://.../cgi-bin/getdata.cgi?uid=00000000&channel=2&value=2&type=xml"
 
   Arguments:
     uid:        user identity, you can set in mm8d.ini
@@ -12,6 +13,7 @@ Arguments of CGI porgrams
     value:      0:      name and version of this program
                 1:      user's data
                 2:      status of controller
+    type:       xml:    XML output format
 
   2. getpage.cgi
   --------------
@@ -21,5 +23,7 @@ Arguments of CGI porgrams
     channel:    0:      master device
                 [1-8]:  slave devices
 
+
+  See manual pages of getdata.cgi and getpage.cgi for details.
 --------------------------------------------------------------------------------
  MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

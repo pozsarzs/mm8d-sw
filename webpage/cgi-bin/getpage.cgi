@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
+# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | getpage.cgi                                                                |
 # | Get data in html format                                                    |
@@ -25,11 +25,24 @@ use constant USRLOCALDIR => 1;
 use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
+use strict;
+use warnings;
 
-$dark="<font color=\"gray\">&#9679;</font>";
-$green="<font color=\"green\">&#9679;</font>";
-$red="<font color=\"red\">&#9679;</font>";
-$yellow="<font color=\"yellow\">&#9679;</font>";
+my $ch;
+my $channel;
+my $conffile;
+my $creatediagprog;
+my $dark="<font color=\"gray\">&#9679;</font>";
+my $footerfile;
+my $green="<font color=\"green\">&#9679;</font>";
+my $headerfile;
+my $line;
+my $lockfile;
+my $logfile;
+my $red="<font color=\"red\">&#9679;</font>";
+my $row;
+my $yellow="<font color=\"yellow\">&#9679;</font>";
+
 if (USRLOCALDIR eq 1)
 {
   $conffile = "/usr/local/etc/mm8d/mm8d.ini";
@@ -77,7 +90,7 @@ sub writetable()
   my(@datarow) = split("\"\"",$row);
   my($datarownum) = $#datarow;
   print "        <tr align=\"center\">";
-  $shortdate = substr($columns[0],5,5);
+  my $shortdate = substr($columns[0],5,5);
   print "          <td>$shortdate</td>";
   print "          <td>$columns[1]</td>";
   if ($channel == 0)
@@ -114,14 +127,17 @@ sub writetable()
 }
 
 # get data
-local ($buffer, @pairs, $pair, $name, $value, %FORM);
+my $buffer;
+my @pairs;
+my $pair;
+my $name;
+my $value;
+my %FORM;
 $ENV{'REQUEST_METHOD'} =~ tr/a-z/A-Z/;
 if ($ENV{'REQUEST_METHOD'} eq "GET")
 {
   $buffer = $ENV{'QUERY_STRING'};
 }
-
-# split input data
 @pairs = split(/&/, $buffer);
 foreach $pair (@pairs)
 {
@@ -140,6 +156,16 @@ if ($channel eq '')
 }
 
 # load configuration
+my $cam_show;
+my $dir_htm;
+my $dir_lck;
+my $dir_log;
+my $dir_msg;
+my $dir_shr;
+my $lang;
+my $usr_dt1;
+my $web_lines;
+my @nam_ch;
 if (-e $conffile)
 {
   open CONF, "< $conffile";
@@ -186,31 +212,31 @@ if (-e $conffile)
 }
 
 # load messages
-$msg01 = "MM8D";
-$msg08 = "Channel";
-$msg10 = "Names";
-$msg11 = "Temperature in &deg;C";
-$msg12 = "Relative humidity in %";
-$msg13 = "Relative gas concentrate in %";
-$msg17 = "Operation mode (hyphae/mushroom)";
-$msg18 = "Manual operation";
-$msg19 = "Overcurrent breakers";
-$msg20 = "Alarm";
-$msg21 = "Lamp output";
-$msg22 = "Ventilator output";
-$msg23 = "Heater output";
-$msg24 = "Date";
-$msg25 = "Time";
-$msg26 = "Latest status";
-$msg27 = "Refresh";
-$msg28 = "Camera";
-$msg29 = "Log";
-$msg30 = "Login via SSH and run <i>mm8d-viewlog</i> to see full log.";
-$msg31 = "Start page";
-$msg32 = "Mains voltage sensor";
-$msg33 = "Overcurrent breaker";
+my $msg01 = "MM8D";
+my $msg08 = "Channel";
+my $msg10 = "Names";
+my $msg11 = "Temperature in &deg;C";
+my $msg12 = "Relative humidity in %";
+my $msg13 = "Relative gas concentrate in %";
+my $msg17 = "Operation mode (hyphae/mushroom)";
+my $msg18 = "Manual operation";
+my $msg19 = "Overcurrent breakers";
+my $msg20 = "Alarm";
+my $msg21 = "Lamp output";
+my $msg22 = "Ventilator output";
+my $msg23 = "Heater output";
+my $msg24 = "Date";
+my $msg25 = "Time";
+my $msg26 = "Latest status";
+my $msg27 = "Refresh";
+my $msg28 = "Camera";
+my $msg29 = "Log";
+my $msg30 = "Login via SSH and run <i>mm8d-viewlog</i> to see full log.";
+my $msg31 = "Start page";
+my $msg32 = "Mains voltage sensor";
+my $msg33 = "Overcurrent breaker";
 
-$msgfile = "$dir_msg/$lang/mm8d.msg";
+my $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
 while(<MSG>)
 {

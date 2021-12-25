@@ -1,6 +1,6 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
+# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | install                                                                    |
 # | Installer script                                                           |
@@ -13,6 +13,15 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.
 
+line()
+{
+  for ((i=0; i<${#SWCR}; i++))
+  do
+    echo -n "-"
+  done
+  echo ""
+}
+
 copy()
 {
   sudo cp $1 $2
@@ -23,6 +32,7 @@ copy()
 ARCH=`uname -m`
 SWN1="MM8D"
 SWN2="mm8d"
+SWCR=`cat documents/copyright`
 SWV=`cat documents/VERSION`
 INSTDIR="local"
 LANGUAGES="hu"
@@ -36,6 +46,8 @@ SUBDIRS="/usr/$INSTDIR/bin \
          /usr/$INSTDIR/share/$SWN2 \
          /usr/$INSTDIR/share/man \
          /usr/$INSTDIR/share/man/man1 \
+         /usr/$INSTDIR/share/man/man7 \
+         /usr/$INSTDIR/share/man/man8 \
          /var/$INSTDIR/lib/$SWN2 \
          /var/$INSTDIR/lib/$SWN2/1 \
          /var/$INSTDIR/lib/$SWN2/2 \
@@ -55,19 +67,21 @@ SUBDIRS="/usr/$INSTDIR/bin \
 README="/usr/$INSTDIR/share/doc/$SWN2/README"
 
 # installer
-clear
-echo "--------------------------------------------------------------------------------"
-echo "$SWN1 $SWV installer script"
-echo "Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>"
-echo "--------------------------------------------------------------------------------"
-echo "  This program is free software: you can redistribute it and/or modify it
+echo -e "\n$SWN1 v$SWV installer script"
+echo "$SWCR"
+line
+echo -e "\n  This program is free software: you can redistribute it and/or modify it
 under the terms of the European Union Public License 1.1 version.
 
   This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE."
-echo "--------------------------------------------------------------------------------"
+FOR A PARTICULAR PURPOSE.\n"
 sleep 3
+
+if ! [ -x "$(command -v apache2)" ]; then
+  echo 'ERROR: Run prepare script firstly!';
+  exit;
+fi
 
 echo -e "\nInstalling..."
 echo "- creating directories:"
@@ -91,18 +105,25 @@ sudo chmod 777 /var/$INSTDIR/lib/$SWN2
 echo "- copying files:"
 copy "LICENCE" "/usr/$INSTDIR/share/doc/$SWN2/COPYING"
 copy "documents/*" "/usr/$INSTDIR/share/doc/$SWN2/"
-copy "manuals/*" "/usr/$INSTDIR/share/man/man1/"
+copy "manuals/*.1.gz" "/usr/$INSTDIR/share/man/man1/"
+copy "manuals/*.7.gz" "/usr/$INSTDIR/share/man/man7/"
+copy "manuals/*.8.gz" "/usr/$INSTDIR/share/man/man8/"
 for X in $LANGUAGES; do
   if [ -e "messages/"$SWN2"_"$X".msg" ]
   then
     copy "messages/"$SWN2"_"$X".msg" "/usr/$INSTDIR/share/locale/$X/$SWN2.msg"
   fi;
 done
-if [ $ARCH = 'armhf' ]
+if [ $ARCH = 'x86_64' ]
 then
-  copy "binary/armhf/*.bin" "/usr/$INSTDIR/bin/"
+  copy "binary/x86_64/*.bin" "/usr/$INSTDIR/bin/"
 else
-  copy "binary/i386/*.bin" "/usr/$INSTDIR/bin/"
+  if [ $ARCH = 'armhf' ]
+  then
+    copy "binary/armhf/*.bin" "/usr/$INSTDIR/bin/"
+  else
+    copy "binary/i386/*.bin" "/usr/$INSTDIR/bin/"
+  fi
 fi
 copy "programs/*.py" "/usr/$INSTDIR/bin/"
 copy "scripts/*" "/usr/$INSTDIR/bin/"

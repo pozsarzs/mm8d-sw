@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
+# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
 # | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | getdata.cgi                                                                |
 # | Get data in plain text format                                              |
@@ -26,9 +26,12 @@ use constant USRLOCALDIR => 1;
 use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
+use strict;
+use warnings;
 
-$contname = 'MM8D';
-$contversion = 'v0.1';
+my $contname = 'MM8D';
+my $contversion = 'v0.2';
+my $conffile;
 if (USRLOCALDIR eq 1)
 {
   $conffile = "/usr/local/etc/mm8d/mm8d.ini";
@@ -40,17 +43,20 @@ if (USRLOCALDIR eq 1)
 print "Content-type:text/plain\r\n\r\n";
 
 # get data
-local ($buffer, @pairs, $pair, $name, $value, %FORM);
+my $buffer;
+my @pairs;
+my $pair;
+my $name;
+my $channel;
+my $uid;
+my $value;
+my $format;
+my %FORM;
 $ENV{'REQUEST_METHOD'} =~ tr/a-z/A-Z/;
 if ($ENV{'REQUEST_METHOD'} eq "GET")
 {
   $buffer = $ENV{'QUERY_STRING'};
 }
-
-# test data
-#buffer = 'channel=1&uid=00000000&value=2';
-
-# split input data
 @pairs = split(/&/, $buffer);
 foreach $pair (@pairs)
 {
@@ -62,14 +68,26 @@ foreach $pair (@pairs)
 $channel = $FORM{channel};
 $uid = $FORM{uid};
 $value = $FORM{value};
+$format = $FORM{type};
 if (($channel eq '') || ($uid eq '') || ($value eq ''))
 {
   print "ERROR #9\n";
   print "Usage: getdata.cgi?uid=...&channel=...&value=...\n";
+  print "       getdata.cgi?uid=...&channel=...&value=...&type=xml\n";
   exit 9;
 }
 
 # load configuration
+my $row;
+my $dir_lck;
+my $dir_log;
+my $dir_var;
+my $usr_dt1;
+my $usr_dt2;
+my $usr_dt3;
+my $usr_nam;
+my $usr_uid;
+my @nam_ch;
 if (-e $conffile)
 {
   open CONF, "< $conffile";
@@ -89,6 +107,7 @@ if (-e $conffile)
     {
       case "dir_lck" { $dir_lck = $columns[1]; }
       case "dir_log" { $dir_log = $columns[1]; }
+      case "dir_var" { $dir_var = $columns[1]; }
       case "usr_dt1" { $usr_dt1 = $columns[1]; }
       case "usr_dt2" { $usr_dt2 = $columns[1]; }
       case "usr_dt3" { $usr_dt3 = $columns[1]; }
@@ -113,8 +132,9 @@ if (-e $conffile)
 }
 
 # create output
-$lockfile = "$dir_lck/mm8d.lock";
-$logfile = "$dir_log/mm8d-ch";
+my $lockfile = "$dir_lck/mm8d.lock";
+my $logfile = "$dir_log/mm8d-ch";
+my $ch;
 if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 {
   $ch = $channel;
@@ -133,17 +153,45 @@ if ( $uid eq $usr_uid )
   }
   if ( $value eq '0' )
   {
-    print "$contname\n";
-    print "$contversion\n";
-    exit 0;
+    if ( $format eq 'xml' )
+    {
+      print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+      print "<xml>\n";
+      print "  <about>\n";
+      print "    <name>$contname</name>\n";
+      print "    <version>$contversion</version>\n";
+      print "  </about>\n";
+      print "</xml>\n";
+      exit 0;
+    } else
+    {
+      print "$contname\n";
+      print "$contversion\n";
+      exit 0;
+    }
   }
   if ( $value eq '1' )
   {
-    print "$usr_nam\n";
-    print "$usr_dt1\n";
-    print "$usr_dt2\n";
-    print "$usr_dt3\n";
-    exit 0;
+    if ( $format eq 'xml' )
+    {
+      print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+      print "<xml>\n";
+      print "  <user>\n";
+      print "    <name>$usr_nam</name>\n";
+      print "    <data1>$usr_dt1</data1>\n";
+      print "    <data2>$usr_dt2</data2>\n";
+      print "    <data3>$usr_dt3</data3>\n";
+      print "  </user>\n";
+      print "</xml>\n";
+      exit 0;
+    } else
+    {
+      print "$usr_nam\n";
+      print "$usr_dt1\n";
+      print "$usr_dt2\n";
+      print "$usr_dt3\n";
+      exit 0;
+    }
   }
   if ( $value eq '2' )
   {
@@ -162,28 +210,142 @@ if ( $uid eq $usr_uid )
         }
         my(@datarow) = split("\"\"",$row);
         my($datarownum) = $#datarow;
-        print $nam_ch[$channel] . "\n";
-        my @b = (0..7);
-        for (@b)
+        if ( $format eq 'xml' )
         {
-          print "$columns[$_]\n";
-        }
-        if ( $channel > 0 )
+          print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+          print "<xml>\n";
+          print "  <channel>\n";
+          print "    <title>$nam_ch[$channel]</title>\n";
+          print "  </channel>\n";
+          if ( $channel > 0 )
+          {
+            print "  <status>\n";
+            print "    <date>$columns[0]</date>\n";
+            print "    <time>$columns[1]</time>\n";
+            print "    <voltagesensor>$columns[2]</voltagesensor>\n";
+            print "    <overcurrentbreaker1>$columns[2]</overcurrentbreaker1>\n";
+            print "    <overcurrentbreaker2>$columns[3]</overcurrentbreaker2>\n";
+            print "    <overcurrentbreaker3>$columns[4]</overcurrentbreaker3>\n";
+            print "    <overcurrentbreaker4>$columns[5]</overcurrentbreaker4>\n";
+            print "  </status>\n";
+            print "</xml>\n";
+          } else
+          {
+            print "  <environment>\n";
+            print "    <date>$columns[0]</date>\n";
+            print "    <time>$columns[1]</time>\n";
+            print "    <temperature>$columns[2]</temperature>\n";
+            print "    <humidity>$columns[3]</humidity>\n";
+            print "    <unwantedgas>$columns[4]</unwantedgas>\n";
+            print "    <operationmode>$columns[5]</operationmode>\n";
+            print "    <manualmode>$columns[6]</manualmode>\n";
+            print "    <overcurrentbreaker>$columns[7]</overcurrentbreaker>\n";
+            print "    <alarm>$columns[8]</alarm>\n";
+            print "    <lamp>$columns[9]</lamp>\n";
+            print "    <ventilator>$columns[10]</ventilator>\n";
+            print "    <heater>$columns[11]</heater>\n";
+            print "  </environment>\n";
+            print "</xml>\n";
+          }
+        } else
         {
-          my @b = (8..15);
+          print $nam_ch[$channel] . "\n";
+
+          my @b = (0..5);
           for (@b)
           {
             print "$columns[$_]\n";
           }
+          if ( $channel > 0 )
+          {
+            my @b = (6..11);
+            for (@b)
+            {
+              print "$columns[$_]\n";
+            }
+          }
         }
         last;
       }
-    close DATA;
+      close DATA;
     } else
     {
       print "ERROR #5\n";
       print "Cannot open ",$logfile," log file!\n";
       exit 5;
+    }
+  }
+  if ( $FORM{value} eq '3' )
+  {
+    if ( $value eq '0' )
+    {
+      my $out1;
+      my $out2;
+      my $out3;
+      my $out4;
+      my $out1file = "$dir_var/",$channel,"/out1";
+      my $out2file = "$dir_var/",$channel,"/out2";
+      my $out3file = "$dir_var/",$channel,"/out3";
+      my $out4file = "$dir_var/",$channel,"/out4";
+      open DATA, "< $out1file" or $out1 = "neutral";
+      my $o1 = <DATA>;
+      close DATA;
+      switch ($o1)
+      {
+        case "neutral" { $out1 = "neutral"; }
+        case "on" { $out1 = "on"; }
+        case "off" { $out1 = "off"; }
+      }
+      open DATA, "< $out2file" or $out2 = "neutral";
+      my $o2 = <DATA>;
+      close DATA;
+      switch ($o2)
+      {
+        case "neutral" { $out2 = "neutral"; }
+        case "on" { $out2 = "on"; }
+        case "off" { $out2 = "off"; }
+      }
+      open DATA, "< $out3file" or $out3 = "neutral";
+      my $o3 = <DATA>;
+      close DATA;
+      switch ($o3)
+      {
+        case "neutral" { $out3 = "neutral"; }
+        case "on" { $out3 = "on"; }
+        case "off" { $out3 = "off"; }
+      }
+      open DATA, "< $out4file" or $out4 = "neutral";
+      my $o4 = <DATA>;
+      close DATA;
+      switch ($o4)
+      {
+        case "neutral" { $out4 = "neutral"; }
+        case "on" { $out4 = "on"; }
+        case "off" { $out4 = "off"; }
+      }
+      if ( $FORM{type} eq 'xml' )
+      {
+        print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+        print "<xml>\n";
+        print "  <channel>\n";
+        print "    <title>$nam_ch[$channel]</title>\n";
+        print "  </channel>\n";
+        print "  <override>\n";
+        print "    <channel1>$out1</channel1>\n";
+        print "    <channel2>$out2</channel2>\n";
+        print "    <channel3>$out3</channel3>\n";
+        print "    <channel4>$out4</channel4>\n";
+        print "  </override>\n";
+        print "</xml>\n";
+      } else
+      {
+        print $nam_ch[$channel] . "\n";
+        print "$out1\n";
+        print "$out2\n";
+        print "$out3\n";
+        print "$out4\n";
+      }
+      exit 0;
     }
   }
 } else

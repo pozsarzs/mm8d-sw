@@ -1,0 +1,13 @@
+/etc/cron.d/mm8d
+/etc/init.d/mm8d.sh
+/etc/mm8d/envir-ch1.ini
+/etc/mm8d/envir-ch2.ini
+/etc/mm8d/envir-ch3.ini
+/etc/mm8d/envir-ch4.ini
+/etc/mm8d/envir-ch5.ini
+/etc/mm8d/envir-ch6.ini
+/etc/mm8d/envir-ch7.ini
+/etc/mm8d/envir-ch8.ini
+/etc/mm8d/mm8d.ini
+/etc/motd
+/etc/systemd/system/mm8d.service

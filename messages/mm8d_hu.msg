@@ -1,6 +1,6 @@
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>            |
+# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
+# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d_hu.msg                                                                |
 # | message file                                                               |
 # +----------------------------------------------------------------------------+
@@ -15,7 +15,7 @@ msg07=Csatornák
 msg08=Csatorna
 msg09=Részletek
 msg10=Elnevezések
-msg11=Hőmérséklet &degC-ban
+msg11=Hőmérséklet &deg;C-ban
 msg12=Relatív páratartalom %-ban
 msg13=Relatív gáz koncentrátum %-ban
 msg14=

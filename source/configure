@@ -586,6 +586,7 @@ LIBOBJS
 version
 os
 fpflag
+copyright
 architecture
 hfpc
 make
@@ -2030,6 +2031,30 @@ else
 fi
 
 version=`cat ../documents/VERSION`
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for ../documents/copyright" >&5
+$as_echo_n "checking for ../documents/copyright... " >&6; }
+if ${ac_cv_file____documents_copyright+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r "../documents/copyright"; then
+  ac_cv_file____documents_copyright=yes
+else
+  ac_cv_file____documents_copyright=no
+fi
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_file____documents_copyright" >&5
+$as_echo "$ac_cv_file____documents_copyright" >&6; }
+if test "x$ac_cv_file____documents_copyright" = xyes; then :
+
+else
+  as_fn_error $? "copyright file not found!" "$LINENO" 5
+fi
+
+copyright=`cat ../documents/copyright`
+
 os=`fpc -iSO`
 architecture=`fpc -iSP`
 
@@ -2040,7 +2065,8 @@ architecture=`fpc -iSP`
 
 
 
-ac_config_files="$ac_config_files Makefile.global"
+
+ac_config_files="$ac_config_files Makefile.global editenvirconf/config.pas editmainconf/config.pas override/config.pas"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2748,6 +2774,9 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile.global") CONFIG_FILES="$CONFIG_FILES Makefile.global" ;;
+    "editenvirconf/config.pas") CONFIG_FILES="$CONFIG_FILES editenvirconf/config.pas" ;;
+    "editmainconf/config.pas") CONFIG_FILES="$CONFIG_FILES editmainconf/config.pas" ;;
+    "override/config.pas") CONFIG_FILES="$CONFIG_FILES override/config.pas" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

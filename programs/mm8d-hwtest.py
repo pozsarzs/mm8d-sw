@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.1 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020-2021 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
+# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d-hwtest.py                                                             |
 # | Hardware test program                                                      |
 # +----------------------------------------------------------------------------+
@@ -86,7 +86,7 @@ def loadconfiguration(conffile):
     sys.exit(1);
 
 # main function
-print("\nMM8D hardware test utility * (C)2020-2021 Pozsar Zsolt")
+print("\nMM8D hardware test utility * (C)2020-2021 Pozsár Zsolt")
 print("======================================================")
 if os.getuid():
   print(" * You need to be root!")

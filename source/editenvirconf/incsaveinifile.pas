@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.1 * Growing house controlling and remote monitoring device       | }
+{ | MM8D v0.2 * Growing house controlling and remote monitoring device       | }
 { | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incsaveinifile.pas                                                       | }
 { | Save configuration to ini file                                           | }
@@ -17,28 +17,42 @@ function saveinifile(filename: string): boolean;
 var
   iif: text;
   b:   byte;
-const
-  HEADER1='; +----------------------------------------------------------------------------+';
-  HEADER2='; | MM8D v0.1 * Growing house controlling and remote monitoring device         |';
-  HEADER3='; | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |';
-  HEADER4='; | envir-ch?.ini                                                              |';
-  HEADER5='; | Growing environment characteristics                                        |';
-  C: string='common';
-  H: string='hyphae';
-  M: string='mushroom';
+
+  // write header to file
+  procedure fileheader;
+  var
+    b:  byte;
+    l:  string;
+
+    // completes the line to be 80 chars long
+    function fullline(strin: string): string;
+    begin
+      fullline:='; | '+strin;
+      repeat
+        fullline:=fullline+' ';
+      until length(fullline)>=79;
+      fullline:=fullline+'|';
+    end;
+
+    begin
+    l:='; +';
+    for b:=1 to 76 do l:=l+'-';
+    l:=l+'+';
+    writeln(iif,l);
+    writeln(iif,fullline('MM8D '+VERSION+' * Growing house controlling and remote monitoring device'));
+    writeln(iif,fullline(COPYRIGHT));
+    writeln(iif,fullline('envir-ch?.ini'));
+    writeln(iif,fullline('Growing environment characteristics'));
+    writeln(iif,l);
+    writeln(iif,'');
+  end;
 
 begin
   saveinifile:=true;
   try
     assign(iif,filename);
     rewrite(iif);
-    writeln(iif,HEADER1);
-    writeln(iif,HEADER2);
-    writeln(iif,HEADER3);
-    writeln(iif,HEADER4);
-    writeln(iif,HEADER5);
-    writeln(iif,HEADER1);
-    writeln(iif,'');
+    fileheader;
     writeln(iif,'['+C+']');
     writeln(iif,'; common parameters');
     writeln(iif,'gasconcentrate_max=',gasconmax);
