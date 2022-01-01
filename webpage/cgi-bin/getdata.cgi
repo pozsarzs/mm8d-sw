@@ -215,9 +215,9 @@ if ( $uid eq $usr_uid )
           print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
           print "<xml>\n";
           print "  <channel>\n";
-          print "    <title>$nam_ch[$channel]</title>\n";
+          print "    <title>$nam_ch[$ch]</title>\n";
           print "  </channel>\n";
-          if ( $channel > 0 )
+          if ( $ch < 1 )
           {
             print "  <status>\n";
             print "    <date>$columns[0]</date>\n";
@@ -249,14 +249,14 @@ if ( $uid eq $usr_uid )
           }
         } else
         {
-          print $nam_ch[$channel] . "\n";
+          print $nam_ch[$ch] . "\n";
 
           my @b = (0..5);
           for (@b)
           {
             print "$columns[$_]\n";
           }
-          if ( $channel > 0 )
+          if ( $ch > 0 )
           {
             my @b = (6..11);
             for (@b)
@@ -277,16 +277,14 @@ if ( $uid eq $usr_uid )
   }
   if ( $FORM{value} eq '3' )
   {
-    if ( $value eq '0' )
+    if ( $value ne '0' )
     {
       my $out1;
       my $out2;
       my $out3;
-      my $out4;
-      my $out1file = "$dir_var/",$channel,"/out1";
-      my $out2file = "$dir_var/",$channel,"/out2";
-      my $out3file = "$dir_var/",$channel,"/out3";
-      my $out4file = "$dir_var/",$channel,"/out4";
+      my $out1file = "$dir_var/$ch/out1";
+      my $out2file = "$dir_var/$ch/out2";
+      my $out3file = "$dir_var/$ch/out3";
       open DATA, "< $out1file" or $out1 = "neutral";
       my $o1 = <DATA>;
       close DATA;
@@ -314,36 +312,25 @@ if ( $uid eq $usr_uid )
         case "on" { $out3 = "on"; }
         case "off" { $out3 = "off"; }
       }
-      open DATA, "< $out4file" or $out4 = "neutral";
-      my $o4 = <DATA>;
-      close DATA;
-      switch ($o4)
-      {
-        case "neutral" { $out4 = "neutral"; }
-        case "on" { $out4 = "on"; }
-        case "off" { $out4 = "off"; }
-      }
       if ( $FORM{type} eq 'xml' )
       {
         print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
         print "<xml>\n";
         print "  <channel>\n";
-        print "    <title>$nam_ch[$channel]</title>\n";
+        print "    <title>$nam_ch[$ch]</title>\n";
         print "  </channel>\n";
         print "  <override>\n";
         print "    <channel1>$out1</channel1>\n";
         print "    <channel2>$out2</channel2>\n";
         print "    <channel3>$out3</channel3>\n";
-        print "    <channel4>$out4</channel4>\n";
         print "  </override>\n";
         print "</xml>\n";
       } else
       {
-        print $nam_ch[$channel] . "\n";
+        print $nam_ch[$ch] . "\n";
         print "$out1\n";
         print "$out2\n";
         print "$out3\n";
-        print "$out4\n";
       }
       exit 0;
     }

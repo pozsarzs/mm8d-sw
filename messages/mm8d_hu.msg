@@ -39,5 +39,5 @@ msg31=Kezdő oldal
 msg32=Hálózati feszültség érzékelő
 msg33=Kismegszakító
 msg34=Kimenetek felülbírálása
-msg35=A felülbírálás módosításához jelentkezzen be az egységbe SSH-val és használja a <i>mm5d-override</i> parancsot!
-msg36=A környezeti jellemzők beállításához jelentkezzen be az egységbe SSH-val és használja a <i>mm5d-editenvirconf</i> parancsot!
+msg35=A felülbírálás módosításához jelentkezzen be az egységbe SSH-val és használja a <i>mm8d-override</i> parancsot!
+msg36=A környezeti jellemzők beállításához jelentkezzen be az egységbe SSH-val és használja a <i>mm8d-editenvirconf</i> parancsot!

@@ -39,6 +39,9 @@ my $headerfile;
 my $line;
 my $lockfile;
 my $logfile;
+my $out1file;
+my $out2file;
+my $out3file;
 my $red="<font color=\"red\">&#9679;</font>";
 my $row;
 my $yellow="<font color=\"yellow\">&#9679;</font>";
@@ -162,6 +165,7 @@ my $dir_lck;
 my $dir_log;
 my $dir_msg;
 my $dir_shr;
+my $dir_var;
 my $lang;
 my $usr_dt1;
 my $web_lines;
@@ -189,6 +193,7 @@ if (-e $conffile)
       case "dir_log" { $dir_log = $columns[1]; }
       case "dir_msg" { $dir_msg = $columns[1]; }
       case "dir_shr" { $dir_shr = $columns[1]; }
+      case "dir_var" { $dir_var = $columns[1]; }
       case "lng" { $lang = $columns[1]; }
       case "usr_dt1" { $usr_dt1 = $columns[1]; }
       case "web_lines" { $web_lines = $columns[1]; }
@@ -218,6 +223,9 @@ my $msg10 = "Names";
 my $msg11 = "Temperature in &deg;C";
 my $msg12 = "Relative humidity in %";
 my $msg13 = "Relative gas concentrate in %";
+my $msg14 = "neutral";
+my $msg15 = "switched on";
+my $msg16 = "switched off";
 my $msg17 = "Operation mode (hyphae/mushroom)";
 my $msg18 = "Manual operation";
 my $msg19 = "Overcurrent breakers";
@@ -235,6 +243,9 @@ my $msg30 = "Login via SSH and run <i>mm8d-viewlog</i> to see full log.";
 my $msg31 = "Start page";
 my $msg32 = "Mains voltage sensor";
 my $msg33 = "Overcurrent breaker";
+my $msg34 = "Override outputs";
+my $msg35 = "To set override, please login into unit via SSH, and use <i>mm8d-override</i> command!";
+my $msg36 = "To set environment characteristic, please login into unit via SSH, and use <i>mm8d-editenvirconf</i> command!";
 
 my $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
@@ -258,6 +269,9 @@ while(<MSG>)
     case "msg11" { $msg11 = $columns[1]; }
     case "msg12" { $msg12 = $columns[1]; }
     case "msg13" { $msg13 = $columns[1]; }
+    case "msg14" { $msg14 = $columns[1]; }
+    case "msg15" { $msg15 = $columns[1]; }
+    case "msg16" { $msg16 = $columns[1]; }
     case "msg17" { $msg17 = $columns[1]; }
     case "msg18" { $msg18 = $columns[1]; }
     case "msg19" { $msg19 = $columns[1]; }
@@ -275,15 +289,14 @@ while(<MSG>)
     case "msg31" { $msg31 = $columns[1]; }
     case "msg32" { $msg32 = $columns[1]; }
     case "msg33" { $msg33 = $columns[1]; }
+    case "msg35" { $msg35 = $columns[1]; }
+    case "msg36" { $msg36 = $columns[1]; }
   }
 }
 close MSG;
+$msg15 = "<font color=green>$msg15</font>";
+$msg16 = "<font color=red>$msg16</font>";
 
-# set filenames
-$footerfile = "$dir_shr/footer_$lang.html";
-$headerfile = "$dir_shr/header_$lang.html";
-$lockfile = "$dir_lck/mm8d.lock";
-$logfile = "$dir_log/mm8d-ch";
 if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 {
   $ch = $channel;
@@ -294,8 +307,15 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
   print "Bad channel value!\n";
   exit 10;
 }
+# set filenames
+$footerfile = "$dir_shr/footer_$lang.html";
+$headerfile = "$dir_shr/header_$lang.html";
+$lockfile = "$dir_lck/mm8d.lock";
+$logfile = "$dir_log/mm8d-ch";
+$out1file = "$dir_var/" . $ch . "/out1";
+$out2file = "$dir_var/$ch/out2";
+$out3file = "$dir_var/$ch/out3";
 $logfile = $logfile . $ch . ".log";
-
 # create diagram pictures
 if ($channel > 0) { system("$creatediagprog $channel"); }
 
@@ -316,6 +336,7 @@ print "        </tr>";
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
+# names
 print "    <b class=\"title1\">$msg10</b><br>";
 print "    <br>";
 print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
@@ -341,7 +362,9 @@ if ($channel == 0)
 }
 print "      </tbody>";
 print "    </table>";
+print "    <hr>";
 print "    <br>";
+# latest status
 print "    <b class=\"title1\">$msg26</b><br>";
 print "    <br>";
 print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
@@ -390,12 +413,57 @@ print "      <a href=/index.html><input value=\"$msg31\" type=\"submit\"></a>";
 print "      <a href=/cgi-bin/getpage.cgi?channel=$channel><input value=\"$msg27\" type=\"submit\"></a>";
 print "    </center>";
 print "    <br>";
+print "    $msg36";
 print "    <hr>";
 print "    <br>";
+# override
+my $out1;
+my $out2;
+my $out3;
+print "    <b class=\"title1\">$msg34</b><br>";
+print "    <br>";
+print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
+print "      <tbody>";
+print "        <tr>";
+print "          <td><b>$msg21:</b></td>";
+open DATA, "< $out1file" or $out1 = $msg14;
+my $o1 = <DATA>;
+close DATA;
+if ($o1 eq "neutral") { $out1 = $msg14 };
+if ($o1 eq "on") { $out1 = $msg15 };
+if ($o1 eq "off") { $out1 = $msg16 };
+print "          <td>$out1</td>";
+print "        </tr>";
+print "        <tr>";
+print "          <td><b>$msg22:</b></td>";
+open DATA, "< $out2file" or $out2 = $msg14;
+my $o2 = <DATA>;
+close DATA;
+if ($o2 eq "neutral") { $out2 = $msg14 };
+if ($o2 eq "on") { $out2 = $msg15 };
+if ($o2 eq "off") { $out2 = $msg16 };
+print "          <td>$out2</td>";
+print "        </tr>";
+print "        <tr>";
+print "          <td><b>$msg23:</b></td>";
+open DATA, "< $out3file" or $out3 = $msg14;
+my $o3 = <DATA>;
+close DATA;
+if ($o3 eq "neutral") { $out3 = $msg14 };
+if ($o3 eq "on") { $out3 = $msg15 };
+if ($o3 eq "off") { $out3 = $msg16 };
+print "          <td>$out3</td>";
+print "        </tr>";
+print "      </tbody>";
+print "    </table>";
+print "    <br>";
+print "    $msg35";
+print "    <hr>";
+print "    <br>";
+# camera
 if (($cam_show eq 1) and ($channel > 0))
 {
   print "    <b class=\"title1\">$msg28</b><br>";
-  print "    <br>";
   print "    <br>";
   print "    <table border=\"1\" cellpadding=\"20\" cellspacing=\"0\" width=\"100%\">";
   print "      <tbody>";
@@ -408,8 +476,8 @@ if (($cam_show eq 1) and ($channel > 0))
   print "    <hr>";
   print "    <br>";
 }
+# log
 print "    <b class=\"title1\">$msg29</b><br>";
-print "    <br>";
 print "    <br>";
 if ($channel > 0)
 {
