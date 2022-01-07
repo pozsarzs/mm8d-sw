@@ -843,6 +843,10 @@ while True:
           writetodebuglog("i","CH"+ str(channel) +": Get parameters of air from MM7D.")
         else:
           writetodebuglog("w","CH"+ str(channel) +": Cannot get parameters of air from MM7D.")
+        if setautomodeMM7Ddevice(channel):
+          writetodebuglog("i","CH"+ str(channel) +": Set auto mode of MM7D.")
+        else:
+          writetodebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
     # get external temperature from internet
     if (int(time.strftime("%M")) == 28):
       exttemp=getexttemp()
