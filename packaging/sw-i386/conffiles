@@ -1,4 +1,4 @@
-/etc/cron.d/mm8d
+/etc/cron.d/mm8d-sw
 /etc/init.d/mm8d.sh
 /etc/mm8d/envir-ch1.ini
 /etc/mm8d/envir-ch2.ini

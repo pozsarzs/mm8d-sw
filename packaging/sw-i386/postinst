@@ -5,6 +5,11 @@ if [ "$1" = "configure" ]; then
     ln -sf /usr/share/doc/mm8d-sw /usr/doc/mm8d-sw
   fi
 fi
+cd /tmp/
+wget http://portio.inrim.it/portio-0.5.tar.gz
+tar -xzf portio-0.5.tar.gz
+cd portio-0.5
+python3 setup.py install
 mkdir --parents /var/lib/mm8d/
 invoke-rc.d mm8d.sh stop
 ln -sf /etc/init.d/mm8d.sh /etc/rc0.d/K01mm8d.sh

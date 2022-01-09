@@ -2,9 +2,9 @@ Package: mm8d-sw
 Version: 0.2
 Section: misc
 Priority: extra
-Architecture: x86_64
-Installed-Size: 1.6 MB
-Maintainer: Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+Architecture: amd64
+Installed-Size: 2.1 MB
+Maintainer: Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>
 Depends: lsb-base, build-essential, libfreetype6-dev, libjpeg-dev, python-configparser,  python3-daemon,  python3-dev, python3-openssl, python3-pip
 Description: Main program
  This is a part of operating program of MM8D growing house controlling

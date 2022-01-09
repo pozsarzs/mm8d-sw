@@ -12,11 +12,11 @@ d813a309dea910e0259289ff578245eb  etc/cron.d/mm8d-sw
 fa08bad0d4696fcdee9d72d482ae8638  etc/motd
 68b8e15cd6dd84a3d6a618d2627c5624  etc/systemd/system/mm8d.service
 3cf1682d0df1dc0dd98377252fa650fd  usr/bin/mm8d-editmainconf
-9b77ae2fd4b7128df213eabd8af87779  usr/bin/mm8d-editmainconf.bin
+ac95a2a88da80566a4fc54ca49049ee7  usr/bin/mm8d-editmainconf.bin
 98f75e61e147e2ae6787f5ed02e0d314  usr/bin/mm8d-hwtest.py
 7063278dcf32fb05a48f951c495d2498  usr/bin/mm8d-maintainlog
 af6a381778946901304f5ebff8c8c419  usr/bin/mm8d-override
-baa0c80c4db95c4c495a5e11ed98326c  usr/bin/mm8d-override.bin
+a35da616a02e841977849f5b0165f468  usr/bin/mm8d-override.bin
 ed591e3da6876c71721c6480a917a388  usr/bin/mm8d.py
 c0be10e105bf38ac2a61d1538562ae3c  usr/bin/mm8d-startdaemon
 6b166e1aaa7b935bc226061059d5eb01  usr/bin/mm8d-statusofdaemon
