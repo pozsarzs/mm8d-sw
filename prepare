@@ -48,6 +48,7 @@ sudo apt-get install apache2 \
                      python3-pip \
                      python3-requests \
                      python-configparser \
+                     libconfig-tiny-perl \
                      sudo \
                      wget
 if [ $ARCH = 'armhf' ]

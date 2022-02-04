@@ -71,6 +71,7 @@ loadmessages()
   MSG07="Channels"
   MSG08="Channel"
   MSG09="Details"
+  MSG37="Environment"
 
   MSGFILE="$DIR_MSG/$LNG/mm8d.msg"
   if [ -f "$MSGFILE" ]
@@ -84,6 +85,7 @@ loadmessages()
     MSG07=`cat $MSGFILE | grep msg07 | sed 's/msg07=//'`
     MSG08=`cat $MSGFILE | grep msg08 | sed 's/msg08=//'`
     MSG09=`cat $MSGFILE | grep msg09 | sed 's/msg09=//'`
+    MSG37=`cat $MSGFILE | grep msg37 | sed 's/msg37=//'`
   fi
 }
 
@@ -145,8 +147,10 @@ EOF
     echo -n "          <td align=\"right\">" >> $DIR_TMP/index.html
     if [ ${!ENAB} = 1 ]
     then
+      echo "<a href=\"cgi-bin/getenvirconf.cgi?channel=$i\"><button type=\"button\">$MSG37</button></a>&nbsp;" >> $DIR_TMP/index.html
       echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\">$MSG09</button></a></td>" >> $DIR_TMP/index.html
     else
+      echo "<a href=\"cgi-bin/getenvirconf.cgi?channel=$i\"><button type=\"button\" disabled>$MSG37</button></a>&nbsp;" >> $DIR_TMP/index.html
       echo "<a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\" disabled>$MSG09</button></a></td>" >> $DIR_TMP/index.html
     fi
     echo "        </tr>" >> $DIR_TMP/index.html

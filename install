@@ -78,7 +78,7 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.\n"
 sleep 3
 
-if ! [ -x "$(command -v apache2)" ]; then
+if ! [ -x "$(command -v sudo apache2)" ]; then
   echo 'ERROR: Run prepare script firstly!';
   exit;
 fi
