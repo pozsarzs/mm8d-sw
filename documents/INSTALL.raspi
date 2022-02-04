@@ -7,7 +7,7 @@ and enable SPI module.
 
 Installation
 ~~~~~~~~~~~~
-  $ tar -xzf mm8d-sw-0.2-armhf.tar.gz
+  $ tar -xzf mm8d-sw-0.3-armhf.tar.gz
   $ cd mm8d-sw
   $ sudo raspi-config
   $ ./prepare
@@ -32,4 +32,4 @@ Removing
   $ ./uninstall
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

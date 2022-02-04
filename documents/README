@@ -1,13 +1,18 @@
-MM8D - Growing house controlling and remote monitoring device
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+MM8D - Growing house and irrigation controlling and remote monitoring system
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. About software
 -----------------
-  It is an internal software for MM8D controlling and monitoring device.
-You can view actual status with a browser application and administrate it
-with SSH client.
-  This software originally made to Raspberry Pi, but you can install on
-Debian GNU/Linux on PC, too.
+
+  It is a contoller software for MM8D system. MM8D system contents up to
+eight MM6D remote controlled switching devices, eight MM7D air quality
+measuring device, one MM9A irrigation controller, one MM8D interface
+board and a PC or Raspberry Pi.  MM6Ds and MM7Ds connects via wireles
+LAN, MM9A and others (auxiliary contact of overcurrent breakers, rain
+sensor and LEDs) via MM8D interface board.
+
+ You can view actual status with a browser application and administrate
+it with SSH client.
 
 Requirements:
 
@@ -29,20 +34,20 @@ Requirements:
 ------------------------------------------
 a. Visit homepage (see later) to download installer packages:
 
-  Raspbian OS:      mm8d-sw-0.2-armhf.tar.gz
+  Raspbian OS:      mm8d-sw-0.3-armhf.tar.gz
 
-                    mm8d-eec_0.2-1_armhf.deb
-                    mm8d-sw_0.2-1_armhf.deb
-                    mm8d-web_0.2-1_all.deb
+                    mm8d-eec_0.3-1_armhf.deb
+                    mm8d-sw_0.3-1_armhf.deb
+                    mm8d-web_0.3-1_all.deb
 
-  Debian GNU/Linux: mm8d-sw-0.2-i386.tar.gz
-                    mm8d-sw-0.2-amd64.tar.gz
+  Debian GNU/Linux: mm8d-sw-0.3-i386.tar.gz
+                    mm8d-sw-0.3-amd64.tar.gz
 
-                    mm8d-eec_0.2-1_i386.deb
-                    mm8d-sw_0.2-1_i386.deb
-                    mm8d-eec_0.2-1_amd64.deb
-                    mm8d-sw_0.2-1_amd64.deb
-                    mm8d-web_0.2-1_all.deb
+                    mm8d-eec_0.3-1_i386.deb
+                    mm8d-sw_0.3-1_i386.deb
+                    mm8d-eec_0.3-1_amd64.deb
+                    mm8d-sw_0.3-1_amd64.deb
+                    mm8d-web_0.3-1_all.deb
 
 b. Download from Github
 
@@ -71,4 +76,4 @@ c. Download from Debian repository
                          Hungary
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

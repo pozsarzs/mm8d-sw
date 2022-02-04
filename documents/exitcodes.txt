@@ -15,11 +15,12 @@ Exit codes of executable files
  11: bad UID value (only CGI program)
  12: minimal terminal size is 80x25
  13: cannot write configuration file
- 14: cannot open environment characteristics configuration file
+ 14: cannot open environment characteristic configuration file
  15: cannot create log file
  16: cannot create lock file
  17: cannot access i/o port
  18: there is not enabled channel
  19: fatal error (ony daemon)
+
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+ MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

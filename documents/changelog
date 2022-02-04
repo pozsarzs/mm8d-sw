@@ -1,3 +1,12 @@
+ MM8D (0.3) unstable; urgency=low
+
+  * Some bugfix.
+  * Buttons for get environment characteristic of growing houses.
+  * Modified function of inputs (on interface board).
+  * New  function of outputs (on interface board).
+
+ -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Ddd, dd Mmm 2022 hh:mm:ss
+
  MM8D (0.2) unstable; urgency=low
 
   * New section (Override outputs) on webpage.
@@ -6,11 +15,11 @@
   * Packages for amd64 architecture.
   * Some bugfix.
 
- -- Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>  Fri, 31 Dec 2021 23:59:59
+ -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Fri, 31 Dec 2021 23:59:59
 
 
  MM8D (0.1) unstable; urgency=low
 
   * Initial release.
 
- -- Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>  Thu, 10 Jun 2021 08:28:00
+ -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Thu, 10 Jun 2021 08:28:00

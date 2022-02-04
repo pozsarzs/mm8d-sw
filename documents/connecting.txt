@@ -1,27 +1,27 @@
 Connecting devices
 ~~~~~~~~~~~~~~~~~~
-+-----------------------+------------------------------------------------------+
-|    MM8D connectors    |    GPIO port   |     LPT port   |       short        |
-| sign | pin | function | pin | function | pin | function |    description     |
-+------+-----+----------+-----+----------+-------------------------------------+
-| J2   |  1  |   I1C    |  3  |   GPIO02 | 15      -ERROR | mains sensor       |
-|      |  2  |   I2C    |  5  |   GPIO03 | 13      SELECT | mains breaker #1   |
-|      |  3  |   I3C    |  7  |   GPIO04 | 12      PE     | mains breaker #2   |
-|      |  4  |   I4C    | 11  |   GPIO17 | 10      -ACK   | mains breaker #3   |
-| J3   |  1  |   +5 V   |  2  |   +5 V   |                | power input +5 V   |
-|      |  2  |   GND    |  6  |   GND    |                | power input GND    |
-|      |  3  |   GND    |  9  |   GND    | 25      GND    | GND                |
-|      |  4  |   +3.3 V | 17  |   +3.3 V |  -       -     | power input +3.3 V |
-| J4   |  1  |   RO1C   | 12  |   GPIO18 |  2       DO    | alarm output       |
-|      |  2  |   RO2C   | 16  |   GPIO23 |  3       D1    | unused             |
-|      |  3  |   RO3C   | 18  |   GPIO24 |  4       D2    | unused             |
-|      |  4  |   RO4C   | 22  |   GPIO25 |  5       D3    | unused             |
-| J5   |  1  |   LO1C   | 32  |   GPIO12 |  6       D4    | ACTIVE light (B)   |
-|      |  2  |   LO2C   | 36  |   GPIO16 |  7       D5    | WARNING light (Y)  |
-|      |  3  |   LO3C   | 38  |   GPIO20 |  8       D6    | ERROR light (R)    |
-|      |  4  |   LO4C   | 40  |   GPIO21 |  9       D7    | unused             |
-+------+----------------+-----+----------+----------------+--------------------+
++-----------------------+------------------------------------------------------------+
+|    MM8D connectors    |    GPIO port   |     LPT port   |          short           |
+| sign | pin | function | pin | function | pin | function |       description        |
++------+-----+----------+-----+----------+-------------------------------------------+
+| J2   |  1  |   I1C    |  3  |   GPIO02 | 15      -ERROR | overcurrent breakers     |
+|      |  2  |   I2C    |  5  |   GPIO03 | 13      SELECT | water pump low pressure  |
+|      |  3  |   I3C    |  7  |   GPIO04 | 12      PE     | water pump high pressure |
+|      |  4  |   I4C    | 11  |   GPIO17 | 10      -ACK   | rain sensor              |
+| J3   |  1  |   +5 V   |  2  |   +5 V   |                | power input +5 V         |
+|      |  2  |   GND    |  6  |   GND    |                | power input GND          |
+|      |  3  |   GND    |  9  |   GND    | 25      GND    | GND                      |
+|      |  4  |   +3.3 V | 17  |   +3.3 V |  -       -     | power input +3.3 V       |
+| J4   |  1  |   RO1C   | 12  |   GPIO18 |  2       DO    | to alarm input           |
+|      |  2  |   RO2C   | 16  |   GPIO23 |  3       D1    | to irrigator TU #1       |
+|      |  3  |   RO3C   | 18  |   GPIO24 |  4       D2    | to irrigator TU #2       |
+|      |  4  |   RO4C   | 22  |   GPIO25 |  5       D3    | to irrigator TU #3       |
+| J5   |  1  |   LO1C   | 32  |   GPIO12 |  6       D4    | ACTIVE light (B)         |
+|      |  2  |   LO2C   | 36  |   GPIO16 |  7       D5    | WARNING light (Y)        |
+|      |  3  |   LO3C   | 38  |   GPIO20 |  8       D6    | ERROR light (R)          |
+|      |  4  |   LO4C   | 40  |   GPIO21 |  9       D7    | WATER pump ON (G)        |
++------+----------------+-----+----------+----------------+--------------------------+
 
---------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+--------------------------------------------------------------------------------------
+     MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
 
