@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
 # | MM8D v0.2 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | Copyright (C) 2020-2022 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d.py                                                                    |
 # | Main program                                                               |
 # +----------------------------------------------------------------------------+
@@ -17,7 +17,7 @@
 #   0: normal exit
 #   1: cannot open configuration file
 #  14: cannot open environment characteristic configuration file
-#  15: cannot create lock file
+#  15: cannot create log file
 #  17: cannot access i/o port
 #  18: there is not enabled channel
 #  19: fatal error
