@@ -41,36 +41,36 @@ manuals/mm8d-webpage.1.gz                       OK
 messages/mm8d_hu.msg
 packaging/eec-amd64/control
 packaging/eec-amd64/md5sums
-packaging/eec-amd64/postinst
-packaging/eec-amd64/prerm
+packaging/eec-amd64/postinst                    OK
+packaging/eec-amd64/prerm                       OK
 packaging/eec-armhf/control
 packaging/eec-armhf/md5sums
-packaging/eec-armhf/postinst
-packaging/eec-armhf/prerm
+packaging/eec-armhf/postinst                    OK
+packaging/eec-armhf/prerm                       OK
 packaging/eec-i386/control
 packaging/eec-i386/md5sums
-packaging/eec-i386/postinst
-packaging/eec-i386/prerm
-packaging/sw-amd64/conffiles
+packaging/eec-i386/postinst                     OK
+packaging/eec-i386/prerm                        OK
+packaging/sw-amd64/conffiles                    OK
 packaging/sw-amd64/control
 packaging/sw-amd64/md5sums
-packaging/sw-amd64/postinst
-packaging/sw-amd64/prerm
-packaging/sw-armhf/conffiles
+packaging/sw-amd64/postinst                     OK
+packaging/sw-amd64/prerm                        OK
+packaging/sw-armhf/conffiles                    OK
 packaging/sw-armhf/control
 packaging/sw-armhf/md5sums
-packaging/sw-armhf/postinst
-packaging/sw-armhf/prerm
-packaging/sw-i386/conffiles
+packaging/sw-armhf/postinst                     OK
+packaging/sw-armhf/prerm                        OK
+packaging/sw-i386/conffiles                     OK
 packaging/sw-i386/control
 packaging/sw-i386/md5sums
-packaging/sw-i386/postinst
-packaging/sw-i386/prerm
-packaging/web-all/conffiles
+packaging/sw-i386/postinst                      OK
+packaging/sw-i386/prerm                         OK
+packaging/web-all/conffiles                     OK
 packaging/web-all/control
 packaging/web-all/md5sums
-packaging/web-all/postinst
-packaging/web-all/prerm
+packaging/web-all/postinst                      OK
+packaging/web-all/prerm                         OK
 programs/mm8d-hwtest.py                         OK
 programs/mm8d.py
 scripts/mm8d-creatediagrams                     OK
@@ -103,9 +103,9 @@ settings/systemd/system/mm8d.service            OK
 source/_config/config.guess                     OK
 source/_config/config.sub                       OK
 source/_config/install-sh                       OK
-source/configure
-source/configure.in
-source/editenvirconf/config.pas.in
+source/configure                                OK
+source/configure.in                             OK
+source/editenvirconf/config.pas.in              OK
 source/editenvirconf/editenvirconf.pas
 source/editenvirconf/incloadinifile.pas
 source/editenvirconf/incpage1screen.pas
@@ -118,41 +118,41 @@ source/editenvirconf/incpage7screen.pas
 source/editenvirconf/incpage8screen.pas
 source/editenvirconf/incpage9screen.pas
 source/editenvirconf/incsaveinifile.pas
-source/editenvirconf/Makefile
-source/editmainconf/config.pas.in
-source/editmainconf/editmainconf.pas
-source/editmainconf/incloadinifile.pas
-source/editmainconf/incpage10screen.pas
-source/editmainconf/incpage1screen.pas
-source/editmainconf/incpage2screen.pas
-source/editmainconf/incpage3screen.pas
-source/editmainconf/incpage4screen.pas
-source/editmainconf/incpage5screen.pas
-source/editmainconf/incpage6screen.pas
-source/editmainconf/incpage7screen.pas
-source/editmainconf/incpage8screen.pas
-source/editmainconf/incpage9screen.pas
-source/editmainconf/incsaveinifile.pas
-source/editmainconf/Makefile
+source/editenvirconf/Makefile                   OK
+source/editmainconf/config.pas.in               OK
+source/editmainconf/editmainconf.pas            OK
+source/editmainconf/incloadinifile.pas          OK
+source/editmainconf/incpage10screen.pas         OK
+source/editmainconf/incpage1screen.pas          OK
+source/editmainconf/incpage2screen.pas          OK
+source/editmainconf/incpage3screen.pas          OK
+source/editmainconf/incpage4screen.pas          OK
+source/editmainconf/incpage5screen.pas          OK
+source/editmainconf/incpage6screen.pas          OK
+source/editmainconf/incpage7screen.pas          OK
+source/editmainconf/incpage8screen.pas          OK
+source/editmainconf/incpage9screen.pas          OK
+source/editmainconf/incsaveinifile.pas          OK
+source/editmainconf/Makefile                    OK
 source/_lib/arm-linux/.gitignore                OK
 source/_lib/i386-linux/.gitignore               OK
 source/_lib/x86_64-linux/.gitignore             OK
-source/Makefile
-source/Makefile.global.in
-source/override/config.pas.in
+source/Makefile                                 OK
+source/Makefile.global.in                       OK
+source/override/config.pas.in                   OK
 source/override/incloadoutfiles.pas
 source/override/incpage1screen.pas
 source/override/incsaveoutfiles.pas
-source/override/Makefile
+source/override/Makefile                        OK
 source/override/override.pas
-source/untcommon.pas
+source/untcommon.pas                            OK
 webpage/cgi-bin/getdata.cgi
 webpage/cgi-bin/getenvirconf.cgi
 webpage/cgi-bin/getpage.cgi
-webpage/footer_en.html
-webpage/footer_hu.html
-webpage/header_en.html
-webpage/header_hu.html
+webpage/footer_en.html                          OK
+webpage/footer_hu.html                          OK
+webpage/header_en.html                          OK
+webpage/header_hu.html                          OK
 webpage/pics/ants.jpg                           OK
 webpage/pics/gasconcentrate-empty.png           OK
 webpage/pics/humidity-empty.png                 OK
