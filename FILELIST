@@ -73,30 +73,31 @@ packaging/web-all/postinst
 packaging/web-all/prerm
 programs/mm8d-hwtest.py                         OK
 programs/mm8d.py
-scripts/mm8d-creatediagrams
-scripts/mm8d-editenvirconf
-scripts/mm8d-editmainconf
-scripts/mm8d-getsnapshots
-scripts/mm8d-maintainlog
+scripts/mm8d-creatediagrams                     OK
+scripts/mm8d-editenvirconf                      OK
+scripts/mm8d-editmainconf                       OK
+scripts/mm8d-getsnapshots                       OK
+scripts/mm8d-maintainlog                        OK
 scripts/mm8d-override
-scripts/mm8d-startdaemon
-scripts/mm8d-statusofdaemon
-scripts/mm8d-stopdaemon
-scripts/mm8d-updatestartpage
+scripts/mm8d-startdaemon                        OK
+scripts/mm8d-statusofdaemon                     OK
+scripts/mm8d-stopdaemon                         OK
+scripts/mm8d-updatestartpage                    OK
 scripts/mm8d-viewlog
-scripts/mm8d-webpage
+scripts/mm8d-webpage                            OK
 settings/cron.d/mm8d-sw                         OK
 settings/cron.d/mm8d-web                        OK
 settings/init.d/mm8d.sh                         OK
-settings/mm8d/envir-ch1.ini
-settings/mm8d/envir-ch2.ini
-settings/mm8d/envir-ch3.ini
-settings/mm8d/envir-ch4.ini
-settings/mm8d/envir-ch5.ini
-settings/mm8d/envir-ch6.ini
-settings/mm8d/envir-ch7.ini
-settings/mm8d/envir-ch8.ini
-settings/mm8d/mm8d.ini
+settings/mm8d/envir-ch1.ini                     OK
+settings/mm8d/envir-ch2.ini                     OK
+settings/mm8d/envir-ch3.ini                     OK
+settings/mm8d/envir-ch4.ini                     OK
+settings/mm8d/envir-ch5.ini                     OK
+settings/mm8d/envir-ch6.ini                     OK
+settings/mm8d/envir-ch7.ini                     OK
+settings/mm8d/envir-ch8.ini                     OK
+settings/mm8d/irrigator.ini                     OK
+settings/mm8d/mm8d.ini                          OK
 settings/motd                                   OK
 settings/systemd/system/mm8d.service            OK
 source/_config/config.guess                     OK
