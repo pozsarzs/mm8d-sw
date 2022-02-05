@@ -83,7 +83,7 @@ scripts/mm8d-startdaemon                        OK
 scripts/mm8d-statusofdaemon                     OK
 scripts/mm8d-stopdaemon                         OK
 scripts/mm8d-updatestartpage                    OK
-scripts/mm8d-viewlog
+scripts/mm8d-viewlog                            OK
 scripts/mm8d-webpage                            OK
 settings/cron.d/mm8d-sw                         OK
 settings/cron.d/mm8d-web                        OK

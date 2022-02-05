@@ -42,23 +42,48 @@ viewlogfile()
 {
   if [ $CHANNEL -eq "00" ]
   then
+    echo ""
     echo "Log file of Channel #"$CHANNEL":"
-    echo "+------------+-------+---------+"
-    echo "|    Date    | Time  |  MM8D   |"
-    echo "+------------+-------+---------+"
+    echo ""
+    echo "1:  overcurrent breaker error            0: closed  1: opened"
+    echo "2:  water pump pressure error (no water) 0: good    1: bad"
+    echo "3:  water pump pressure error (clogging) 0: good    1: bad"
+    echo "4:  status of rain sensor                0: no rain 1: rain"
+    echo "5:  external temperature"
+    echo "6:  status of water pump and tube #1     0: off     1: on"
+    echo "7:  status of water pump and tube #2     0: off     1: on"
+    echo "8:  status of water pump and tube #3     0: off     1: on"
+    echo ""
+    echo "+------------+-------+--------------------+"
+    echo "|    Date    | Time  | 1 2 3 4  5   6 7 8 |"
+    echo "+------------+-------+--------------------+"
     OLDIFS=$IFS
     IFS=,
     while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11 C12
     do
-      echo "| $C1 | $C2 | $C3 $C4 $C5 $C6 |"
+      if [ ${#C7} -eq "1" ]; then C7=" $C7"; fi
+      echo "| $C1 | $C2 | $C3 $C4 $C5 $C6 $C7°C $C8 $C9 $C10 |"
     done < $LOGFILE
-    echo "+------------+-------+---------+"
+    echo "+------------+-------+--------------------+"
     IFS=$OLDIFS
   else
+    echo ""
     echo "Log file of Channel #"$CHANNEL":"
-    echo "+------------+-------+------+------+------+---------------+"
-    echo "|    Date    | Time  | Temp |  RH  |  Gas |     MM6D      |"
-    echo "+------------+-------+------+------+------+---------------+"
+    echo ""
+    echo " 1: temperature"
+    echo " 2: relative humidity"
+    echo " 3: relative unwanted gas concentrate"
+    echo " 4: operation mode                        0: hyphae  1: mushroom"
+    echo " 5: manual mode                           0: auto    1: manual"
+    echo " 6: overcurrent breaker error             0: closed  1: opened"
+    echo " 7: status of door (alarm)                0: closed  1: opened"
+    echo " 8: status of lamp output                 0: off     1: on"
+    echo " 9: status of ventilator output           0: off     1: on"
+    echo "10: status of heater output               0: off     1: on"
+    echo ""
+    echo "+------------+-------+------------------------------+"
+    echo "|    Date    | Time  |  1    2     3  4 5 6 7 8 9 10|"
+    echo "+------------+-------+------------------------------+"
     OLDIFS=$IFS
     IFS=,
     while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11 C12
@@ -68,9 +93,9 @@ viewlogfile()
       if [ ${#C4} -eq "2" ]; then C4=" $C4"; fi
       if [ ${#C5} -eq "1" ]; then C5="  $C5"; fi
       if [ ${#C5} -eq "2" ]; then C5=" $C5"; fi
-      echo "| $C1 | $C2 | $C3°C | $C4% | $C5% | $C6 $C7 $C8 $C9 $C10 $C11 $C12 |"
+      echo "| $C1 | $C2 | $C3°C $C4% $C5% $C6 $C7 $C8 $C9 $C10 $C11 $C12 |"
     done < $LOGFILE
-    echo "+------------+-------+------+------+------+---------------+"
+    echo "+------------+-------+------------------------------+"
     IFS=$OLDIFS
   fi
 }
