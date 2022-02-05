@@ -4,15 +4,19 @@ Content of log files
   1. mm8d-ch0.log
   ---------------
 
-  Example line: "2020-09-19,13:15,1,1,1,1"
+  Example line: "2020-09-19,13:15,0,0,0,0,31,0,0,0"
 
   Columns:
     1:  date
     2:  time
-    3:  overcurrent breakers                  0: good    1: bad
-    4:  water pump pressure (no water)        0: low     1: good
-    5:  water pump pressure (clogging)        0: high    1: good
-    6:  rain sensor                           0: rain    1: no rain
+    3:  overcurrent breaker error             0: closed  1: opened
+    4:  water pump pressure error (no water)  0: good    1: bad
+    5:  water pump pressure error (clogging)  0: good    1: bad
+    6:  status of rain sensor                 0: no rain 1: rain
+    7:  external temperature in °C
+    8:  status of water pump and tube #1      0: off     1: on
+    9:  status of water pump and tube #2      0: off     1: on
+   10:  status of water pump and tube #3      0: off     1: on
 
 
   2. mm8d-ch[1-8].log
@@ -28,31 +32,14 @@ Content of log files
     5:  relative unwanted gas concentrate
     6:  operation mode                        0: hyphae  1: mushroom
     7:  manual mode                           0: auto    1: manual
-    8:  mains voltage overcurrent breakers    0: closed  1: opened
+    8:  overcurrent breaker error             0: closed  1: opened
     9:  status of alarm                       0: closed  1: opened
    10:  status of lamp output                 0: off     1: on
    11:  status of ventilator output           0: off     1: on
    12:  status of heater output               0: off     1: on
 
 
-  3. mm8d-tu[1-3].log
-  ------------------
-
-  Example line: "2020-09-19,13:59,13,23,33,1,1,1,0,1,1,1"
-
-  Columns:
-    1:  date
-    2:  time
-    3:  external temperature in °C
-    4:  rainfall
-    5:  water pump pressure (no water)        0: low     1: good
-    6:  water pump pressure (clogging)        0: high    1: good
-    7:  status of water pump and tube #1      0: off     1: on
-    8:  status of water pump and tube #2      0: off     1: on
-    9:  status of water pump and tube #3      0: off     1: on
-
-
-  4. debug-YYMMDD.log
+  3. debug-YYMMDD.log
   -------------------
 
   Example line: "2020-09-19 21:01:33  INFO Initializing I/O ports."

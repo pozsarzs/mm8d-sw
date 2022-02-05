@@ -1,5 +1,5 @@
-Installation instruction tar.gz package
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Installation instruction for tar.gz package
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Before install this program please install Raspbian Lite OS to SD-CARD
 (X Window System is not needed). Do not forget to set hostname and network

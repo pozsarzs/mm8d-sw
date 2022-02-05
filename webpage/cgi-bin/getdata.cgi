@@ -320,9 +320,9 @@ if ( $uid eq $usr_uid )
         print "    <title>$nam_ch[$ch]</title>\n";
         print "  </channel>\n";
         print "  <override>\n";
-        print "    <channel1>$out1</channel1>\n";
-        print "    <channel2>$out2</channel2>\n";
-        print "    <channel3>$out3</channel3>\n";
+        print "    <lamp>$out1</lamp>\n";
+        print "    <ventilator>$out2</ventilator>\n";
+        print "    <heater>$out3</heater>\n";
         print "  </override>\n";
         print "</xml>\n";
       } else

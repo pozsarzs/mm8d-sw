@@ -1,0 +1,160 @@
+filename                                        status        note
+--------------------------------------------------------------------------------
+README.md                                       OK
+LICENCE                                         OK
+install                                         OK
+prepare                                         OK
+uninstall                                       OK
+binary/armhf/.gitignore                         OK
+binary/i386/.gitignore                          OK
+binary/x86_64/.gitignore                        OK
+documents/AUTHORS                               OK
+documents/cgiprogs.txt                          OK
+documents/changelog
+documents/connecting.txt                        OK
+documents/copyright                             OK
+documents/exitcodes.txt                         OK
+documents/INSTALL.pc                            OK
+documents/INSTALL.raspi                         OK
+documents/logfiles.txt                          OK
+documents/README                                OK
+documents/VERSION                               OK
+libraries/get                                   OK
+libraries/portio-0.5.tar.gz                     OK
+manuals/getdata.cgi.7.gz                        OK
+manuals/getenvirconf.cgi.7.gz                   OK
+manuals/getpage.cgi.7.gz                        OK
+manuals/mm8d-creatediagrams.1.gz                OK
+manuals/mm8d-editenvirconf.1.gz
+manuals/mm8d-editmainconf.1.gz                  OK
+manuals/mm8d-getsnapshots.1.gz                  OK
+manuals/mm8d-hwtest.py.1.gz                     OK
+manuals/mm8d-maintainlog.1.gz
+manuals/mm8d-override.1.gz
+manuals/mm8d.py.8.gz                            OK
+manuals/mm8d-startdaemon.1.gz                   OK
+manuals/mm8d-statusofdaemon.1.gz                OK
+manuals/mm8d-stopdaemon.1.gz                    OK
+manuals/mm8d-updatestartpage.1.gz               OK
+manuals/mm8d-viewlog.1.gz
+manuals/mm8d-webpage.1.gz                       OK
+messages/mm8d_hu.msg
+packaging/eec-amd64/control
+packaging/eec-amd64/md5sums
+packaging/eec-amd64/postinst
+packaging/eec-amd64/prerm
+packaging/eec-armhf/control
+packaging/eec-armhf/md5sums
+packaging/eec-armhf/postinst
+packaging/eec-armhf/prerm
+packaging/eec-i386/control
+packaging/eec-i386/md5sums
+packaging/eec-i386/postinst
+packaging/eec-i386/prerm
+packaging/sw-amd64/conffiles
+packaging/sw-amd64/control
+packaging/sw-amd64/md5sums
+packaging/sw-amd64/postinst
+packaging/sw-amd64/prerm
+packaging/sw-armhf/conffiles
+packaging/sw-armhf/control
+packaging/sw-armhf/md5sums
+packaging/sw-armhf/postinst
+packaging/sw-armhf/prerm
+packaging/sw-i386/conffiles
+packaging/sw-i386/control
+packaging/sw-i386/md5sums
+packaging/sw-i386/postinst
+packaging/sw-i386/prerm
+packaging/web-all/conffiles
+packaging/web-all/control
+packaging/web-all/md5sums
+packaging/web-all/postinst
+packaging/web-all/prerm
+programs/mm8d-hwtest.py
+programs/mm8d.py
+scripts/mm8d-creatediagrams
+scripts/mm8d-editenvirconf
+scripts/mm8d-editmainconf
+scripts/mm8d-getsnapshots
+scripts/mm8d-maintainlog
+scripts/mm8d-override
+scripts/mm8d-startdaemon
+scripts/mm8d-statusofdaemon
+scripts/mm8d-stopdaemon
+scripts/mm8d-updatestartpage
+scripts/mm8d-viewlog
+scripts/mm8d-webpage
+settings/cron.d/mm8d-sw
+settings/cron.d/mm8d-web
+settings/init.d/mm8d.sh
+settings/mm8d/envir-ch1.ini
+settings/mm8d/envir-ch2.ini
+settings/mm8d/envir-ch3.ini
+settings/mm8d/envir-ch4.ini
+settings/mm8d/envir-ch5.ini
+settings/mm8d/envir-ch6.ini
+settings/mm8d/envir-ch7.ini
+settings/mm8d/envir-ch8.ini
+settings/mm8d/mm8d.ini
+settings/motd
+settings/systemd/system/mm8d.service
+source/_config/config.guess
+source/_config/config.sub
+source/_config/install-sh
+source/configure
+source/configure.in
+source/editenvirconf/config.pas.in
+source/editenvirconf/editenvirconf.pas
+source/editenvirconf/incloadinifile.pas
+source/editenvirconf/incpage1screen.pas
+source/editenvirconf/incpage2screen.pas
+source/editenvirconf/incpage3screen.pas
+source/editenvirconf/incpage4screen.pas
+source/editenvirconf/incpage5screen.pas
+source/editenvirconf/incpage6screen.pas
+source/editenvirconf/incpage7screen.pas
+source/editenvirconf/incpage8screen.pas
+source/editenvirconf/incpage9screen.pas
+source/editenvirconf/incsaveinifile.pas
+source/editenvirconf/Makefile
+source/editmainconf/config.pas.in
+source/editmainconf/editmainconf.pas
+source/editmainconf/incloadinifile.pas
+source/editmainconf/incpage10screen.pas
+source/editmainconf/incpage1screen.pas
+source/editmainconf/incpage2screen.pas
+source/editmainconf/incpage3screen.pas
+source/editmainconf/incpage4screen.pas
+source/editmainconf/incpage5screen.pas
+source/editmainconf/incpage6screen.pas
+source/editmainconf/incpage7screen.pas
+source/editmainconf/incpage8screen.pas
+source/editmainconf/incpage9screen.pas
+source/editmainconf/incsaveinifile.pas
+source/editmainconf/Makefile
+source/_lib/arm-linux/.gitignore                OK
+source/_lib/i386-linux/.gitignore               OK
+source/_lib/x86_64-linux/.gitignore             OK
+source/Makefile
+source/Makefile.global.in
+source/override/config.pas.in
+source/override/incloadoutfiles.pas
+source/override/incpage1screen.pas
+source/override/incsaveoutfiles.pas
+source/override/Makefile
+source/override/override.pas
+source/untcommon.pas
+webpage/cgi-bin/getdata.cgi
+webpage/cgi-bin/getenvirconf.cgi
+webpage/cgi-bin/getpage.cgi
+webpage/footer_en.html
+webpage/footer_hu.html
+webpage/header_en.html
+webpage/header_hu.html
+webpage/pics/ants.jpg                           OK
+webpage/pics/gasconcentrate-empty.png           OK
+webpage/pics/humidity-empty.png                 OK
+webpage/pics/szerafin.ico                       OK
+webpage/pics/temperature-empty.png              OK
+webpage/styles.css                              OK

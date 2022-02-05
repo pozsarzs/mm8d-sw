@@ -4,12 +4,12 @@ MM8D - Growing house and irrigation controlling and remote monitoring system
 1. About software
 -----------------
 
-  It is a contoller software for MM8D system. MM8D system contents up to
-eight MM6D remote controlled switching devices, eight MM7D air quality
-measuring device, one MM9A irrigation controller, one MM8D interface
-board and a PC or Raspberry Pi.  MM6Ds and MM7Ds connects via wireles
-LAN, MM9A and others (auxiliary contact of overcurrent breakers, rain
-sensor and LEDs) via MM8D interface board.
+  It is a contoller software for MM8D system. MM8D system contents up to eight
+MM6D remote controlled switching devices, eight MM7D air quality measuring
+device, one MM9A irrigation controller, one MM8D interface board and a PC or
+Raspberry Pi.  MM6Ds and MM7Ds connects via wireles LAN, MM9A and others
+(auxiliary contact of overcurrent breakers, rain sensor and LEDs) via MM8D
+interface board.
 
  You can view actual status with a browser application and administrate
 it with SSH client.
