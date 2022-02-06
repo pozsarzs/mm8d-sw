@@ -45,81 +45,136 @@ checkparameter()
     echo "ERROR #2: Specified value is not number!"
     exit 2
   fi
-  if [ $1 -ge "1" ]
+  if [ $1 -ge "0" ]
   then
     if [ $1 -le "8" ]
     then
       CHANNEL=$1
     else
       echo "ERROR #3: Wrong channel number!"
-      echo "Valid values: 1..8"
+      echo "Valid values: 0..8"
       exit 3
     fi
   else
     echo "ERROR #3: Wrong channel number!"
-    echo "Valid values: 1..8"
+    echo "Valid values: 0..8"
     exit 3
   fi
 }
 
 writetofile()
 {
-  case $2 in
-    "lamp") OF="out1";;
-    "ventilator") OF="out2";;
-    "heater") OF="out3";;
-    *)\
-      echo "ERROR #6: Wrong output name!"; \
-      echo "Valid values: heater, lamp, ventilator"; \
-      exit 6;;
-  esac
-  if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
+  if [ $CHANNEL -eq 0 ]
   then
-    sudo mkdir --parents $DIR_VAR/$CHANNEL 2>/dev/null
-    sudo echo -n $3 2>/dev/null 1> $DIR_VAR/$CHANNEL"/"$OF
-    if [ $? = 0 ]
+    case $2 in
+      "tube1") OF="out1";;
+      "tube2") OF="out2";;
+      "tube3") OF="out3";;
+      *)\
+        echo "ERROR #6: Wrong output name!"; \
+        echo "Valid values: tube1, tube2, tube3"; \
+        exit 6;;
+    esac
+    if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
     then
-      echo "Output '"$2"' of channel #"$CHANNEL" is set to $3."
-      exit 0
-    else
-      echo "ERROR #8 Cannot write "$DIR_VAR/$CHANNEL"/"$OF" output file!"
-      exit 8
+      sudo mkdir --parents $DIR_VAR/$CHANNEL 2>/dev/null
+      sudo echo -n $3 2>/dev/null 1> $DIR_VAR/$CHANNEL"/"$OF
+      if [ $? = 0 ]
+      then
+        echo "Output '"$2"' of channel #"$CHANNEL" is set to $3."
+        exit 0
+      else
+        echo "ERROR #8 Cannot write "$DIR_VAR/$CHANNEL"/"$OF" output file!"
+        exit 8
+      fi
     fi
+    echo "ERROR #7: Wrong output state!"; \
+    echo "Valid values: neutral, on, off"
+    exit 7
+  else
+    case $2 in
+      "lamp") OF="out1";;
+      "ventilator") OF="out2";;
+      "heater") OF="out3";;
+      *)\
+        echo "ERROR #6: Wrong output name!"; \
+        echo "Valid values: heater, lamp, ventilator"; \
+        exit 6;;
+    esac
+    if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
+    then
+      sudo mkdir --parents $DIR_VAR/$CHANNEL 2>/dev/null
+      sudo echo -n $3 2>/dev/null 1> $DIR_VAR/$CHANNEL"/"$OF
+      if [ $? = 0 ]
+      then
+        echo "Output '"$2"' of channel #"$CHANNEL" is set to $3."
+        exit 0
+      else
+        echo "ERROR #8 Cannot write "$DIR_VAR/$CHANNEL"/"$OF" output file!"
+        exit 8
+      fi
+    fi
+    echo "ERROR #7: Wrong output state!"; \
+    echo "Valid values: neutral, on, off"
+    exit 7
   fi
-  echo "ERROR #7: Wrong output state!"; \
-  echo "Valid values: neutral, on, off"
-  exit 7
 }
 
 getstatus()
 {
-  if [ -f "$DIR_VAR/$CHANNEL/out1" ]
+  if [ $CHANNEL -eq 0 ]
   then
-    LAMP=`cat "$DIR_VAR/$CHANNEL/out1"`
+    if [ -f "$DIR_VAR/$CHANNEL/out1" ]
+    then
+      TUBE1=`cat "$DIR_VAR/$CHANNEL/out1"`
+    else
+      TUBE1="neutral"
+    fi
+    if [ -f "$DIR_VAR/$CHANNEL/out2" ]
+    then
+      TUBE2=`cat "$DIR_VAR/$CHANNEL/out2"`
+    else
+      TUBE2="neutral"
+    fi
+    if [ -f "$DIR_VAR/$CHANNEL/out3" ]
+    then
+      TUBE3=`cat "$DIR_VAR/$CHANNEL/out3"`
+    else
+      TUBE3="neutral"
+    fi
+    echo "Output status of Channel #"$CHANNEL":"
+    echo -e "- tube #1:\t$TUBE1"
+    echo -e "- tube #2:\t$TUBE2"
+    echo -e "- tube #3:\t$TUBE3"
   else
-    LAMP="neutral"
+    if [ -f "$DIR_VAR/$CHANNEL/out1" ]
+    then
+      LAMP=`cat "$DIR_VAR/$CHANNEL/out1"`
+    else
+      LAMP="neutral"
+    fi
+    if [ -f "$DIR_VAR/$CHANNEL/out2" ]
+    then
+      VENT=`cat "$DIR_VAR/$CHANNEL/out2"`
+    else
+      VENT="neutral"
+    fi
+    if [ -f "$DIR_VAR/$CHANNEL/out3" ]
+    then
+      HEAT=`cat "$DIR_VAR/$CHANNEL/out3"`
+    else
+      HEAT="neutral"
+    fi
+    echo "Output status of Channel #"$CHANNEL":"
+    echo -e "- lamp:\t\t$LAMP"
+    echo -e "- ventilator:\t$VENT"
+    echo -e "- heater:\t$HEAT"
   fi
-  if [ -f "$DIR_VAR$CHANNEL/out2" ]
-  then
-    VENT=`cat "$DIR_VAR/$CHANNEL/out2"`
-  else
-    VENT="neutral"
-  fi
-  if [ -f "$DIR_VAR$CHANNEL/out3" ]
-  then
-    HEAT=`cat "$DIR_VAR/$CHANNEL/out3"`
-  else
-    HEAT="neutral"
-  fi
-  echo "Output status of Channel #"$CHANNEL":"
-  echo -e "- lamp:\t\t$LAMP"
-  echo -e "- ventilator:\t$VENT"
-  echo -e "- heater:\t$HEAT"
 }
 
 runfullscreenprogram()
 {
-  read -p "Channel (1-8): " CH
+  read -p "Channel (0-8): " CH
   checkparameter $CH
   sudo mm8d-override.bin $DIR_VAR/$CHANNEL
 }
@@ -129,7 +184,9 @@ usage()
   echo -e "\nUsage:"
   echo    "       $0 -f|--full-screen"
   echo    "       $0 channel"
-  echo -e "       $0 channel heater|lamp|ventilator neutral|on|off\n"
+  echo -e "       $0 channel output state"
+  echo    "       $0 0 tube1|tube2|tube3 neutral|on|off"
+  echo -e "       $0 [1-8] heater|lamp|ventilator neutral|on|off\n"
   exit 0
 }
 

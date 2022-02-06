@@ -78,7 +78,7 @@ scripts/mm8d-editenvirconf                      OK
 scripts/mm8d-editmainconf                       OK
 scripts/mm8d-getsnapshots                       OK
 scripts/mm8d-maintainlog                        OK
-scripts/mm8d-override
+scripts/mm8d-override                           OK
 scripts/mm8d-startdaemon                        OK
 scripts/mm8d-statusofdaemon                     OK
 scripts/mm8d-stopdaemon                         OK

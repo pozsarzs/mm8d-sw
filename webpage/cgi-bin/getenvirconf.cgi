@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
-# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.3 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | getenvirconf.cgi                                                           |
 # | CGI program                                                                |
 # +----------------------------------------------------------------------------+

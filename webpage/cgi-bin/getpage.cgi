@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
-# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
-# | Copyright (C) 2020-2021 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.3 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | getpage.cgi                                                                |
-# | Get data in html format                                                    |
+# | Get data in HTML format                                                    |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it
@@ -101,11 +101,18 @@ sub writetable()
     if ($columns[2] eq 1) { $columns[2] = $red } else { $columns[2] = $dark };
     if ($columns[3] eq 1) { $columns[3] = $red } else { $columns[3] = $dark };
     if ($columns[4] eq 1) { $columns[4] = $red } else { $columns[4] = $dark };
-    if ($columns[5] eq 1) { $columns[5] = $red } else { $columns[5] = $dark };
+    if ($columns[5] eq 1) { $columns[5] = $yellow } else { $columns[5] = $dark };
+    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
+    if ($columns[8] eq 1) { $columns[8] = $red } else { $columns[8] = $dark };
+    if ($columns[9] eq 1) { $columns[9] = $red } else { $columns[9] = $dark };
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
     print "          <td>$columns[5]</td>";
+    print "          <td>$columns[6]</td>";
+    print "          <td>$columns[7]</td>";
+    print "          <td>$columns[8]</td>";
+    print "          <td>$columns[9]</td>";
   } else
   {
     print "          <td>$columns[2]</td>";
@@ -220,33 +227,36 @@ if (-e $conffile)
 my $msg01 = "MM8D";
 my $msg08 = "Channel";
 my $msg10 = "Names";
-my $msg11 = "Temperature in &deg;C";
-my $msg12 = "Relative humidity in %";
-my $msg13 = "Relative gas concentrate in %";
+my $msg11 = "temperature in &deg;C";
+my $msg12 = "relative humidity in %";
+my $msg13 = "relative gas concentrate in %";
 my $msg14 = "neutral";
 my $msg15 = "switched on";
 my $msg16 = "switched off";
-my $msg17 = "Operation mode (hyphae/mushroom)";
-my $msg18 = "Manual operation";
-my $msg19 = "Overcurrent breakers";
-my $msg20 = "Alarm";
-my $msg21 = "Lamp output";
-my $msg22 = "Ventilator output";
-my $msg23 = "Heater output";
-my $msg24 = "Date";
-my $msg25 = "Time";
+my $msg17 = "operation mode (hyphae/mushroom)";
+my $msg18 = "manual operation";
+my $msg19 = "overcurrent breaker error";
+my $msg20 = "alarm";
+my $msg21 = "lamp output";
+my $msg22 = "ventilator output";
+my $msg23 = "heater output";
+my $msg24 = "date";
+my $msg25 = "time";
 my $msg26 = "Latest status";
 my $msg27 = "Refresh";
 my $msg28 = "Camera";
 my $msg29 = "Log";
 my $msg30 = "Login via SSH and run <i>mm8d-viewlog</i> to see full log.";
 my $msg31 = "Start page";
-my $msg32 = "Mains voltage sensor";
-my $msg33 = "Overcurrent breaker";
+my $msg32 = "water pump pressure error (no water)";
+my $msg33 = "water pump pressure error (clogging)";
 my $msg34 = "Override outputs";
 my $msg35 = "To set override, please login into unit via SSH, and use <i>mm8d-override</i> command!";
 my $msg36 = "To set environment characteristic, please login into unit via SSH, and use <i>mm8d-editenvirconf</i> command!";
-
+my $msg51 = "status of rain sensor";
+my $msg52 = "external temperature in &deg;C";
+my $msg53 = "status of water pump and tube #";
+my $msg54 = "irrigator tube #";
 my $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
 while(<MSG>)
@@ -291,6 +301,10 @@ while(<MSG>)
     case "msg33" { $msg33 = $columns[1]; }
     case "msg35" { $msg35 = $columns[1]; }
     case "msg36" { $msg36 = $columns[1]; }
+    case "msg51" { $msg51 = $columns[1]; }
+    case "msg52" { $msg52 = $columns[1]; }
+    case "msg53" { $msg53 = $columns[1]; }
+    case "msg54" { $msg54 = $columns[1]; }
   }
 }
 close MSG;
@@ -343,10 +357,14 @@ print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\
 print "      <tbody>";
 if ($channel == 0)
 {
-  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg32</td></tr>";
-  print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg33 #1</td></tr>";
-  print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg33 #2</td></tr>";
-  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg33 #3</td></tr>";
+  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg19</td></tr>";
+  print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg32</td></tr>";
+  print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg33</td></tr>";
+  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg51</td></tr>";
+  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg52</td></tr>";
+  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg53" . "1</td></tr>";
+  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg53" . "2</td></tr>";
+  print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg53" . "3</td></tr>";
 } else
 {
   print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg11</td></tr>";
@@ -373,7 +391,7 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($channel == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
 } else
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
@@ -417,52 +435,67 @@ print "    $msg36";
 print "    <hr>";
 print "    <br>";
 # override
+my $out1;
+my $out2;
+my $out3;
+print "    <b class=\"title1\">$msg34</b><br>";
+print "    <br>";
+print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
+print "      <tbody>";
+print "        <tr>";
 if ($channel > 0)
 {
-  my $out1;
-  my $out2;
-  my $out3;
-  print "    <b class=\"title1\">$msg34</b><br>";
-  print "    <br>";
-  print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
-  print "      <tbody>";
-  print "        <tr>";
   print "          <td><b>$msg21:</b></td>";
-  open DATA, "< $out1file" or $out1 = $msg14;
-  my $o1 = <DATA>;
-  close DATA;
-  if ($o1 eq "neutral") { $out1 = $msg14 };
-  if ($o1 eq "on") { $out1 = $msg15 };
-  if ($o1 eq "off") { $out1 = $msg16 };
-  print "          <td>$out1</td>";
-  print "        </tr>";
-  print "        <tr>";
-  print "          <td><b>$msg22:</b></td>";
-  open DATA, "< $out2file" or $out2 = $msg14;
-  my $o2 = <DATA>;
-  close DATA;
-  if ($o2 eq "neutral") { $out2 = $msg14 };
-  if ($o2 eq "on") { $out2 = $msg15 };
-  if ($o2 eq "off") { $out2 = $msg16 };
-  print "          <td>$out2</td>";
-  print "        </tr>";
-  print "        <tr>";
-  print "          <td><b>$msg23:</b></td>";
-  open DATA, "< $out3file" or $out3 = $msg14;
-  my $o3 = <DATA>;
-  close DATA;
-  if ($o3 eq "neutral") { $out3 = $msg14 };
-  if ($o3 eq "on") { $out3 = $msg15 };
-  if ($o3 eq "off") { $out3 = $msg16 };
-  print "          <td>$out3</td>";
-  print "        </tr>";
-  print "      </tbody>";
-  print "    </table>";
-  print "    <br>";
-  print "    $msg35";
-  print "    <hr>";
-  print "    <br>";
+} else
+{
+  print "          <td><b>$msg54" . "1:</b></td>";
 }
+open DATA, "< $out1file" or $out1 = $msg14;
+my $o1 = <DATA>;
+close DATA;
+if ($o1 eq "neutral") { $out1 = $msg14 };
+if ($o1 eq "on") { $out1 = $msg15 };
+if ($o1 eq "off") { $out1 = $msg16 };
+print "          <td>$out1</td>";
+print "        </tr>";
+print "        <tr>";
+if ($channel > 0)
+{
+  print "          <td><b>$msg22:</b></td>";
+} else
+{
+  print "          <td><b>$msg54" . "2:</b></td>";
+}
+open DATA, "< $out2file" or $out2 = $msg14;
+my $o2 = <DATA>;
+close DATA;
+if ($o2 eq "neutral") { $out2 = $msg14 };
+if ($o2 eq "on") { $out2 = $msg15 };
+if ($o2 eq "off") { $out2 = $msg16 };
+print "          <td>$out2</td>";
+print "        </tr>";
+print "        <tr>";
+if ($channel > 0)
+{
+  print "          <td><b>$msg23:</b></td>";
+} else
+{
+  print "          <td><b>$msg54" . "3:</b></td>";
+}
+open DATA, "< $out3file" or $out3 = $msg14;
+my $o3 = <DATA>;
+close DATA;
+if ($o3 eq "neutral") { $out3 = $msg14 };
+if ($o3 eq "on") { $out3 = $msg15 };
+if ($o3 eq "off") { $out3 = $msg16 };
+print "          <td>$out3</td>";
+print "        </tr>";
+print "      </tbody>";
+print "    </table>";
+print "    <br>";
+print "    $msg35";
+print "    <hr>";
+print "    <br>";
 # camera
 if (($cam_show eq 1) and ($channel > 0))
 {
@@ -499,7 +532,7 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($channel == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
 } else
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";

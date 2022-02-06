@@ -49,6 +49,7 @@ SUBDIRS="/usr/$INSTDIR/bin \
          /usr/$INSTDIR/share/man/man7 \
          /usr/$INSTDIR/share/man/man8 \
          /var/$INSTDIR/lib/$SWN2 \
+         /var/$INSTDIR/lib/$SWN2/0 \
          /var/$INSTDIR/lib/$SWN2/1 \
          /var/$INSTDIR/lib/$SWN2/2 \
          /var/$INSTDIR/lib/$SWN2/3 \
