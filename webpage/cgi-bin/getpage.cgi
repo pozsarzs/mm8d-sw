@@ -236,7 +236,7 @@ my $msg16 = "switched off";
 my $msg17 = "operation mode (hyphae/mushroom)";
 my $msg18 = "manual operation";
 my $msg19 = "overcurrent breaker error";
-my $msg20 = "alarm";
+my $msg20 = "door opened (alarm)";
 my $msg21 = "lamp output";
 my $msg22 = "ventilator output";
 my $msg23 = "heater output";
@@ -322,17 +322,16 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
   exit 10;
 }
 # set filenames
-$footerfile = "$dir_shr/footer_$lang.html";
-$headerfile = "$dir_shr/header_$lang.html";
+$footerfile = "$dir_shr/footer_" . $lang . ".html";
+$headerfile = "$dir_shr/header_" . $lang . ".html";
 $lockfile = "$dir_lck/mm8d.lock";
 $logfile = "$dir_log/mm8d-ch";
 $out1file = "$dir_var/" . $ch . "/out1";
-$out2file = "$dir_var/$ch/out2";
-$out3file = "$dir_var/$ch/out3";
+$out2file = "$dir_var/" . $ch . "/out2";
+$out3file = "$dir_var/" . $ch . "/out3";
 $logfile = $logfile . $ch . ".log";
 # create diagram pictures
-if ($channel > 0) { system("$creatediagprog $channel"); }
-
+if ($channel > 0) { system("$creatediagprog $ch"); }
 # create output
 print "Content-type:text/html\r\n\r\n";
 writeheader();
@@ -394,8 +393,7 @@ if ($channel == 0)
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
 } else
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
-  print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
 }
 print "        </tr>";
 if (-e $logfile)
@@ -535,8 +533,7 @@ if ($channel == 0)
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
 } else
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>";
-  print "          <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
 }
 print "        </tr>";
 $line = 0;
