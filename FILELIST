@@ -146,7 +146,7 @@ source/override/incsaveoutfiles.pas
 source/override/Makefile                        KÉSZ
 source/override/override.pas
 source/untcommon.pas                            KÉSZ
-webpage/cgi-bin/getdata.cgi
+webpage/cgi-bin/getdata.cgi                     KÉSZ
 webpage/cgi-bin/getenvirconf.cgi
 webpage/cgi-bin/getpage.cgi                     KÉSZ
 webpage/footer_en.html                          KÉSZ

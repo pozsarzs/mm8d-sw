@@ -30,7 +30,7 @@ use strict;
 use warnings;
 
 my $contname = 'MM8D';
-my $contversion = 'v0.2';
+my $contversion = 'v0.3';
 my $conffile;
 if (USRLOCALDIR eq 1)
 {
@@ -222,11 +222,14 @@ if ( $uid eq $usr_uid )
             print "  <status>\n";
             print "    <date>$columns[0]</date>\n";
             print "    <time>$columns[1]</time>\n";
-            print "    <voltagesensor>$columns[2]</voltagesensor>\n";
-            print "    <overcurrentbreaker1>$columns[2]</overcurrentbreaker1>\n";
-            print "    <overcurrentbreaker2>$columns[3]</overcurrentbreaker2>\n";
-            print "    <overcurrentbreaker3>$columns[4]</overcurrentbreaker3>\n";
-            print "    <overcurrentbreaker4>$columns[5]</overcurrentbreaker4>\n";
+            print "    <overcurrentbreaker>$columns[2]</overcurrentbreaker>\n";
+            print "    <waterpressure1>$columns[3]</waterpressure1>\n";
+            print "    <waterpressure2>$columns[4]</waterpressure2>\n";
+            print "    <rainfall>$columns[5]</rainfall>\n";
+            print "    <externaltemperature>$columns[6]</externaltemperature>\n";
+            print "    <tube1>$columns[7]</tube1>\n";
+            print "    <tube2>$columns[8]</tube2>\n";
+            print "    <tube3>$columns[9]</tube3>\n";
             print "  </status>\n";
             print "</xml>\n";
           } else
@@ -250,15 +253,14 @@ if ( $uid eq $usr_uid )
         } else
         {
           print $nam_ch[$ch] . "\n";
-
-          my @b = (0..5);
+          my @b = (0..9);
           for (@b)
           {
             print "$columns[$_]\n";
           }
           if ( $ch > 0 )
           {
-            my @b = (6..11);
+            my @b = (10..11);
             for (@b)
             {
               print "$columns[$_]\n";
@@ -277,63 +279,68 @@ if ( $uid eq $usr_uid )
   }
   if ( $FORM{value} eq '3' )
   {
-    if ( $value ne '0' )
+    my $out1;
+    my $out2;
+    my $out3;
+    my $out1file = "$dir_var/$ch/out1";
+    my $out2file = "$dir_var/$ch/out2";
+    my $out3file = "$dir_var/$ch/out3";
+    open DATA, "< $out1file" or $out1 = "neutral";
+    my $o1 = <DATA>;
+    close DATA;
+    switch ($o1)
     {
-      my $out1;
-      my $out2;
-      my $out3;
-      my $out1file = "$dir_var/$ch/out1";
-      my $out2file = "$dir_var/$ch/out2";
-      my $out3file = "$dir_var/$ch/out3";
-      open DATA, "< $out1file" or $out1 = "neutral";
-      my $o1 = <DATA>;
-      close DATA;
-      switch ($o1)
+      case "neutral" { $out1 = "neutral"; }
+      case "on" { $out1 = "on"; }
+      case "off" { $out1 = "off"; }
+    }
+    open DATA, "< $out2file" or $out2 = "neutral";
+    my $o2 = <DATA>;
+    close DATA;
+    switch ($o2)
+    {
+      case "neutral" { $out2 = "neutral"; }
+      case "on" { $out2 = "on"; }
+      case "off" { $out2 = "off"; }
+    }
+    open DATA, "< $out3file" or $out3 = "neutral";
+    my $o3 = <DATA>;
+    close DATA;
+    switch ($o3)
+    {
+      case "neutral" { $out3 = "neutral"; }
+      case "on" { $out3 = "on"; }
+      case "off" { $out3 = "off"; }
+    }
+    if ( $FORM{type} eq 'xml' )
+    {
+      print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+      print "<xml>\n";
+      print "  <channel>\n";
+      print "    <title>$nam_ch[$ch]</title>\n";
+      print "  </channel>\n";
+      print "  <override>\n";
+      if ($channel > 0)
       {
-        case "neutral" { $out1 = "neutral"; }
-        case "on" { $out1 = "on"; }
-        case "off" { $out1 = "off"; }
-      }
-      open DATA, "< $out2file" or $out2 = "neutral";
-      my $o2 = <DATA>;
-      close DATA;
-      switch ($o2)
-      {
-        case "neutral" { $out2 = "neutral"; }
-        case "on" { $out2 = "on"; }
-        case "off" { $out2 = "off"; }
-      }
-      open DATA, "< $out3file" or $out3 = "neutral";
-      my $o3 = <DATA>;
-      close DATA;
-      switch ($o3)
-      {
-        case "neutral" { $out3 = "neutral"; }
-        case "on" { $out3 = "on"; }
-        case "off" { $out3 = "off"; }
-      }
-      if ( $FORM{type} eq 'xml' )
-      {
-        print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-        print "<xml>\n";
-        print "  <channel>\n";
-        print "    <title>$nam_ch[$ch]</title>\n";
-        print "  </channel>\n";
-        print "  <override>\n";
         print "    <lamp>$out1</lamp>\n";
         print "    <ventilator>$out2</ventilator>\n";
         print "    <heater>$out3</heater>\n";
-        print "  </override>\n";
-        print "</xml>\n";
       } else
       {
-        print $nam_ch[$ch] . "\n";
-        print "$out1\n";
-        print "$out2\n";
-        print "$out3\n";
+        print "    <tube1>$out1</tube1>\n";
+        print "    <tube2>$out2</tube2>\n";
+        print "    <tube3>$out3</tube3>\n";
       }
-      exit 0;
+      print "  </override>\n";
+      print "</xml>\n";
+    } else
+    {
+      print $nam_ch[$ch] . "\n";
+      print "$out1\n";
+      print "$out2\n";
+      print "$out3\n";
     }
+    exit 0;
   }
 } else
 {
