@@ -96,7 +96,7 @@ sub writetable()
   my $shortdate = substr($columns[0],5,5);
   print "          <td>$shortdate</td>";
   print "          <td>$columns[1]</td>";
-  if ($channel == 0)
+  if ($ch == 0)
   {
     if ($columns[2] eq 1) { $columns[2] = $red } else { $columns[2] = $dark };
     if ($columns[3] eq 1) { $columns[3] = $red } else { $columns[3] = $dark };
@@ -308,8 +308,8 @@ while(<MSG>)
   }
 }
 close MSG;
-$msg15 = "<font color=green>$msg15</font>";
-$msg16 = "<font color=red>$msg16</font>";
+$msg15 = "<font color=green>" . $msg15 . "</font>";
+$msg16 = "<font color=red>" . $msg16 . "</font>";
 
 if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 {
@@ -322,16 +322,16 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
   exit 10;
 }
 # set filenames
-$footerfile = "$dir_shr/footer_" . $lang . ".html";
-$headerfile = "$dir_shr/header_" . $lang . ".html";
-$lockfile = "$dir_lck/mm8d.lock";
-$logfile = "$dir_log/mm8d-ch";
-$out1file = "$dir_var/" . $ch . "/out1";
-$out2file = "$dir_var/" . $ch . "/out2";
-$out3file = "$dir_var/" . $ch . "/out3";
+$footerfile = $dir_shr . "/footer_" . $lang . ".html";
+$headerfile = $dir_shr . "/header_" . $lang . ".html";
+$lockfile = $dir_lck . "/mm8d.lock";
+$logfile = $dir_log . "/mm8d-ch";
+$out1file = $dir_var . "/" . $ch . "/out1";
+$out2file = $dir_var . "/" . $ch . "/out2";
+$out3file = $dir_var . "/" . $ch . "/out3";
 $logfile = $logfile . $ch . ".log";
 # create diagram pictures
-if ($channel > 0) { system("$creatediagprog $ch"); }
+if ($ch > 0) { system("$creatediagprog $ch"); }
 # create output
 print "Content-type:text/html\r\n\r\n";
 writeheader();
@@ -354,7 +354,7 @@ print "    <b class=\"title1\">$msg10</b><br>";
 print "    <br>";
 print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 print "      <tbody>";
-if ($channel == 0)
+if ($ch == 0)
 {
   print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg19</td></tr>";
   print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg32</td></tr>";
@@ -388,7 +388,7 @@ print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\
 print "      <tbody>";
 print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
-if ($channel == 0)
+if ($ch == 0)
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
 } else
@@ -426,7 +426,7 @@ print "    </table>";
 print "    <br>";
 print "    <center>";
 print "      <a href=/index.html><input value=\"$msg31\" type=\"submit\"></a>";
-print "      <a href=/cgi-bin/getpage.cgi?channel=$channel><input value=\"$msg27\" type=\"submit\"></a>";
+print "      <a href=/cgi-bin/getpage.cgi?channel=$ch><input value=\"$msg27\" type=\"submit\"></a>";
 print "    </center>";
 print "    <br>";
 print "    $msg36";
@@ -441,7 +441,7 @@ print "    <br>";
 print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\">";
 print "      <tbody>";
 print "        <tr>";
-if ($channel > 0)
+if ($ch > 0)
 {
   print "          <td><b>$msg21:</b></td>";
 } else
@@ -457,7 +457,7 @@ if ($o1 eq "off") { $out1 = $msg16 };
 print "          <td>$out1</td>";
 print "        </tr>";
 print "        <tr>";
-if ($channel > 0)
+if ($ch > 0)
 {
   print "          <td><b>$msg22:</b></td>";
 } else
@@ -473,7 +473,7 @@ if ($o2 eq "off") { $out2 = $msg16 };
 print "          <td>$out2</td>";
 print "        </tr>";
 print "        <tr>";
-if ($channel > 0)
+if ($ch > 0)
 {
   print "          <td><b>$msg23:</b></td>";
 } else
@@ -495,7 +495,7 @@ print "    $msg35";
 print "    <hr>";
 print "    <br>";
 # camera
-if (($cam_show eq 1) and ($channel > 0))
+if (($cam_show eq 1) and ($ch > 0))
 {
   print "    <b class=\"title1\">$msg28</b><br>";
   print "    <br>";
@@ -513,7 +513,7 @@ if (($cam_show eq 1) and ($channel > 0))
 # log
 print "    <b class=\"title1\">$msg29</b><br>";
 print "    <br>";
-if ($channel > 0)
+if ($ch > 0)
 {
   print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
   print "      <tbody>";
@@ -528,7 +528,7 @@ print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\
 print "      <tbody>";
 print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
-if ($channel == 0)
+if ($ch == 0)
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
 } else

@@ -132,8 +132,8 @@ if (-e $conffile)
 }
 
 # create output
-my $lockfile = "$dir_lck/mm8d.lock";
-my $logfile = "$dir_log/mm8d-ch";
+my $lockfile = $dir_lck . "/mm8d.lock";
+my $logfile = $dir_log . "/mm8d-ch";
 my $ch;
 if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
 {
@@ -320,7 +320,7 @@ if ( $uid eq $usr_uid )
       print "    <title>$nam_ch[$ch]</title>\n";
       print "  </channel>\n";
       print "  <override>\n";
-      if ($channel > 0)
+      if ($ch > 0)
       {
         print "    <lamp>$out1</lamp>\n";
         print "    <ventilator>$out2</ventilator>\n";

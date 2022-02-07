@@ -99,7 +99,8 @@ for X in $LANGUAGES; do
     echo "  /usr/$INSTDIR/share/locale/$X"
   fi;
 done
-sudo chown -R root:www-data /var/www/html
+sudo rm --force /var/www/html/diagrams/* 2> /dev/null
+sudo chown root:www-data /var/www/html
 sudo chmod 775 /var/www/html/diagrams
 sudo chmod 775 /var/www/html/pics
 sudo chmod 777 /var/$INSTDIR/lib/$SWN2
