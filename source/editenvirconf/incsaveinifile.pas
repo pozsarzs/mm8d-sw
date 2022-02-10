@@ -42,7 +42,7 @@ var
     writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and remote monitoring system'));
     writeln(iif,fullline(COPYRIGHT));
     writeln(iif,fullline('envir-ch?.ini'));
-    writeln(iif,fullline('Growing environment characteristics'));
+    writeln(iif,fullline('Growing environment characteristic'));
     writeln(iif,l);
     writeln(iif,'');
   end;

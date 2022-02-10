@@ -17,7 +17,7 @@ procedure page1screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 1/9: Growing hyphae - humidifying');
+  header(PRGNAME+' '+VERSION+' * Page 1/2: Common parameters');
   textcolor(white);
   gotoxy(4,3); writeln('Minimal relative humidity:');
   gotoxy(4,4); writeln('Lower warning level of humidity:');
@@ -28,3 +28,11 @@ begin
   if hhumoff>9 then gotoxy(45,5) else gotoxy(46,5); writeln(hhumoff,' %');
   if hhummax>9 then gotoxy(45,6) else gotoxy(46,6); writeln(hhummax,' %');
 end;
+
+{
+
+  rainafternoon, rainnight:     byte;
+  tempday, tempmax, tempmin:    byte;
+  workstart, workstop:          byte;
+
+}

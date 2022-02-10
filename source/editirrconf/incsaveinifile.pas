@@ -41,8 +41,8 @@ var
     writeln(iif,l);
     writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and remote monitoring system'));
     writeln(iif,fullline(COPYRIGHT));
-    writeln(iif,fullline('envir-ch?.ini'));
-    writeln(iif,fullline('Growing environment characteristics'));
+    writeln(iif,fullline('irrigator.ini'));
+    writeln(iif,fullline('Irrigator settings'));
     writeln(iif,l);
     writeln(iif,'');
   end;
@@ -54,81 +54,35 @@ begin
     rewrite(iif);
     fileheader;
     writeln(iif,'['+C+']');
-    writeln(iif,'; common parameters');
-    writeln(iif,'gasconcentrate_max=',gasconmax);
     writeln(iif,'');
-    writeln(iif,'['+H+']');
-    writeln(iif,'; humidifier');
-    writeln(iif,'humidity_min=',hhummin);
-    writeln(iif,'humidifier_on=',hhumon);
-    writeln(iif,'humidifier_off=',hhumoff);
-    writeln(iif,'humidity_max=',hhummax);
-    writeln(iif,'');
-    writeln(iif,'; heaters');
-    writeln(iif,'temperature_min=',htempmin);
-    writeln(iif,'heater_on=',htempon);
-    writeln(iif,'heater_off=',htempoff);
-    writeln(iif,'temperature_max=',htempmax);
-    for b:=0 to 9 do
-      writeln(iif,'heater_disable_0'+inttostr(b)+'=',hheaterdis[b]);
-    for b:=10 to 23 do
-      writeln(iif,'heater_disable_'+inttostr(b)+'=',hheaterdis[b]);
-    writeln(iif,'');
-    writeln(iif,'; lights');
-    writeln(iif,'light_on1=',hlightson1);
-    writeln(iif,'light_off1=',hlightsoff1);
-    writeln(iif,'light_on2=',hlightson2);
-    writeln(iif,'light_off2=',hlightsoff2);
-    writeln(iif,'');
-    writeln(iif,'; ventillators');
-    writeln(iif,'vent_on=',hventon);
-    writeln(iif,'vent_off=',hventoff);
-    for b:=0 to 9 do
-      writeln(iif,'vent_disable_0'+inttostr(b)+'=',hventdis[b]);
-    for b:=10 to 23 do
-      writeln(iif,'vent_disable_'+inttostr(b)+'=',hventdis[b]);
-    for b:=0 to 9 do
-      writeln(iif,'vent_disablelowtemp_0'+inttostr(b)+'=',hventdislowtemp[b]);
-    for b:=10 to 23 do
-      writeln(iif,'vent_disablelowtemp_'+inttostr(b)+'=',hventdislowtemp[b]);
-    writeln(iif,'vent_lowtemp=',hventlowtemp);
-    writeln(iif,'');
-    writeln(iif,'['+M+']');
-    writeln(iif,'; humidifier');
-    writeln(iif,'humidity_min=',mhummin);
-    writeln(iif,'humidifier_on=',mhumon);
-    writeln(iif,'humidifier_off=',mhumoff);
-    writeln(iif,'humidity_max=',mhummax);
-    writeln(iif,'');
-    writeln(iif,'; heaters');
-    writeln(iif,'temperature_min=',mtempmin);
-    writeln(iif,'heater_on=',mtempon);
-    writeln(iif,'heater_off=',mtempoff);
-    writeln(iif,'temperature_max=',mtempmax);
-    for b:=0 to 9 do
-      writeln(iif,'heater_disable_0'+inttostr(b)+'=',mheaterdis[b]);
-    for b:=10 to 23 do
-      writeln(iif,'heater_disable_'+inttostr(b)+'=',mheaterdis[b]);
-    writeln(iif,'');
-    writeln(iif,'; lights');
-    writeln(iif,'light_on1=',mlightson1);
-    writeln(iif,'light_off1=',mlightsoff1);
-    writeln(iif,'light_on2=',mlightson2);
-    writeln(iif,'light_off2=',mlightsoff2);
-    writeln(iif,'');
-    writeln(iif,'; ventillators');
-    writeln(iif,'vent_on=',mventon);
-    writeln(iif,'vent_off=',mventoff);
-    for b:=0 to 9 do
-      writeln(iif,'vent_disable_0'+inttostr(b)+'=',mventdis[b]);
-    for b:=10 to 23 do
-      writeln(iif,'vent_disable_'+inttostr(b)+'=',mventdis[b]);
-    for b:=0 to 9 do
-      writeln(iif,'vent_disablelowtemp_0'+inttostr(b)+'=',mventdislowtemp[b]);
-    for b:=10 to 23 do
-      writeln(iif,'vent_disablelowtemp_'+inttostr(b)+'=',mventdislowtemp[b]);
-    writeln(iif,'vent_lowtemp=',mventlowtemp);
-    writeln(iif,'');
+    writeln(iif,'; start month of work');
+    writeln(iif,'work_start=',workstart);
+    writeln(iif,'; end month of work');
+    writeln(iif,'work_stop=',workstop);
+    writeln(iif,'; minimal temperature (below this value, irrigation is missed)');
+    writeln(iif,'temp_min=',tempmin);
+    writeln(iif,'; maximal temperature (above this value, irrigation is missed)');
+    writeln(iif,'temp_max=',tempmax);
+    writeln(iif,'; daytime average temperature (below this value, evening irrigation is missed)');
+    writeln(iif,'temp_day=',tempday);
+    writeln(iif,'; all time of night rainfall');
+    writeln(iif,'rain_night=',rainnight);
+    writeln(iif,'; all time of afternoon rainfall');
+    writeln(iif,'rain_afternoon=',rainafternoon);
+
+    for b:=1 to 3 do
+    begin
+      writeln(iif,'');
+      writeln(iif,'['+T+inttorstr(b)+']');
+      writeln(iif,'; name of tube');
+      writeln(iif,'name=',name[b]);
+      writeln(iif,'; morning irrigation interval');
+      writeln(iif,'morning_start=',morning_start[b]);
+      writeln(iif,'morning_stop=',morning_stop[b]);
+      writeln(iif,'; evening irrigation interval');
+      writeln(iif,'evening_start=',evening_start[b]);
+      writeln(iif,'evening_stop=',evening_stop[b]);
+    end;
     close(iif);
   except
     saveinifile:=false;

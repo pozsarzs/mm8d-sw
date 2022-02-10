@@ -17,7 +17,7 @@ procedure page2screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 2/9: Growing hyphae - heating');
+  header(PRGNAME+' '+VERSION+' * Page 2/2: Irrigator tubes');
   textcolor(white);
   gotoxy(4,3); writeln('Minimal temperature:');
   gotoxy(4,4); writeln('Heating switch-on temperature:');
@@ -44,3 +44,11 @@ begin
     writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',hheaterdis[b]);
   end;
 end;
+
+{
+
+  eveningstart, eveningstop:    array[1..3] of integer;
+  morningstart, morningstop:    array[1..3] of integer;
+  name:                         array[1..3] of string;
+
+}
