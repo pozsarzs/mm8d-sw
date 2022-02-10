@@ -23,7 +23,7 @@ begin
   gotoxy(4,4); writeln('Heating switch-on temperature:');
   gotoxy(4,5); writeln('Heating switch-off temperature:');
   gotoxy(4,6); writeln('Maximal temperature:');
-  if htempmin>9 then gotoxy(45,3) else gotoxy(46,3); writeln(htempmin,' °C');
+{  if htempmin>9 then gotoxy(45,3) else gotoxy(46,3); writeln(htempmin,' °C');
   if htempon>9 then gotoxy(45,4) else gotoxy(46,4); writeln(htempon,' °C');
   if htempoff>9 then gotoxy(45,5) else gotoxy(46,5); writeln(htempoff,' °C');
   if htempmax>9 then gotoxy(45,6) else gotoxy(46,6); writeln(htempmax,' °C');
@@ -42,10 +42,13 @@ begin
   begin
     gotoxy(22,b-2);
     writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',hheaterdis[b]);
-  end;
+  end;}
 end;
 
 {
+; name of tube
+; morning irrigation interval
+; evening irrigation interval
 
   eveningstart, eveningstop:    array[1..3] of integer;
   morningstart, morningstop:    array[1..3] of integer;

@@ -31,11 +31,11 @@ begin
     rainafternoon:=strtoint(iif.ReadString(C,'rain_afternoon','0'));
     for b:=1 to 3 do
     begin
-      name:=iif.ReadString(T+inttostr(b),'name','Irrigator tube #'+inttostr(b));
-      morningstart:=strtoint(iif.ReadString(T+inttostr(b),'morning_start','0'));
-      morningstop:=strtoint(iif.ReadString(T+inttostr(b),'morning_stop','0'));
-      eveningstar:=strtoint(iif.ReadString(T+inttostr(b),'evening_start','0'));
-      eveningstop:=strtoint(iif.ReadString(T+inttostr(b),'evening_stop','0'));
+      name[b]:=iif.ReadString(T+inttostr(b),'name','Irrigator tube #'+inttostr(b));
+      morningstart[b]:=strtoint(iif.ReadString(T+inttostr(b),'morning_start','0'));
+      morningstop[b]:=strtoint(iif.ReadString(T+inttostr(b),'morning_stop','0'));
+      eveningstart[b]:=strtoint(iif.ReadString(T+inttostr(b),'evening_start','0'));
+      eveningstop[b]:=strtoint(iif.ReadString(T+inttostr(b),'evening_stop','0'));
     end;
   except
     loadinifile:=false;

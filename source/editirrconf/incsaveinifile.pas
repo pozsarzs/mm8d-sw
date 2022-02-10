@@ -73,15 +73,15 @@ begin
     for b:=1 to 3 do
     begin
       writeln(iif,'');
-      writeln(iif,'['+T+inttorstr(b)+']');
+      writeln(iif,'['+T+inttostr(b)+']');
       writeln(iif,'; name of tube');
       writeln(iif,'name=',name[b]);
       writeln(iif,'; morning irrigation interval');
-      writeln(iif,'morning_start=',morning_start[b]);
-      writeln(iif,'morning_stop=',morning_stop[b]);
+      writeln(iif,'morning_start=',morningstart[b]);
+      writeln(iif,'morning_stop=',morningstop[b]);
       writeln(iif,'; evening irrigation interval');
-      writeln(iif,'evening_start=',evening_start[b]);
-      writeln(iif,'evening_stop=',evening_stop[b]);
+      writeln(iif,'evening_start=',eveningstart[b]);
+      writeln(iif,'evening_stop=',eveningstop[b]);
     end;
     close(iif);
   except

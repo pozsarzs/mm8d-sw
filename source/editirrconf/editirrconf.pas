@@ -34,15 +34,14 @@ const
   C: string='common';
   T: string='tube-';
   BLOCKS:                       array[1..2] of byte=(1,3);
-  MINPOSX:                      array[1..2,1..6] of byte=((46,0,0,0,0,0),
+  MINPOSX:                      array[1..2,1..6] of byte=((76,0,0,0,0,0),
                                                           (46,17,35,0,0,0));
   MINPOSY:                      array[1..2,1..6] of byte=((3,0,0,0,0,0),
                                                           (3,10,10,0,0,0));
-  MAXPOSY:                      array[1..2,1..6] of byte=((6,0,0,0,0,0),
+  MAXPOSY:                      array[1..2,1..6] of byte=((9,0,0,0,0,0),
                                                           (6,21,21,0,0,0));
-  FOOTERS: array[1..4] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
+  FOOTERS: array[1..3] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                   '<Enter> accept  <Esc> cancel',
-                                  '<+>/<-> sign change  <Enter> accept  <Esc> cancel',
                                   '<Esc> cancel');
 
 {$I config.pas}
@@ -72,17 +71,11 @@ var
 begin
   textbackground(black);
   footer(bottom-1,FOOTERS[2]);
-  if block=6 then footer(bottom-1,FOOTERS[3]);
   textcolor(lightgray);
   gotoxy(1,bottom); write('>');
   s:='';
   repeat
     c:=readkey;
-    if (block=6) and (length(s)>0) then
-      case c of
-        '-': if strtoint(s)>0 then s:=inttostr(strtoint(s)*(-1));
-        '+': if strtoint(s)<0 then s:=inttostr(strtoint(s)*(-1));
-      end;
     if isnumber(c) then
       case block of
         1: if length(s)<2 then s:=s+c;
@@ -105,14 +98,17 @@ begin
         gotoxy(MINPOSX[page,block]-1,posy); write('  ');
         gotoxy(MINPOSX[page,block]-length(s)+1,posy);
         case posy of
-          3: begin hhummin:=strtoint(s); write(hhummin); end;
-          4: begin hhumon:=strtoint(s); write(hhumon); end;
-          5: begin hhumoff:=strtoint(s); write(hhumoff); end;
-          6: begin hhummax:=strtoint(s); write(hhummax); end;
+          3: begin workstart:=strtoint(s); if workstart>12 then workstart:=12; write(workstart); end;
+          4: begin workstop:=strtoint(s); if workstop>12 then workstop:=12; write(workstop); end;
+          5: begin tempmin:=strtoint(s); write(tempmin); end;
+          6: begin tempmax:=strtoint(s); write(tempmax); end;
+          7: begin tempday:=strtoint(s); write(tempday); end;
+          8: begin rainafternoon:=strtoint(s); write(rainafternoon); end;
+          9: begin rainnight:=strtoint(s); write(rainnight); end;
         end;
       end;
     end;
-    // -- page #2 --
+{    // -- page #2 --
     if page=2 then
     begin
       // page #2 - block #1
@@ -142,7 +138,7 @@ begin
         hheaterdis[posy+2]:=strtoint(s);
         write(hheaterdis[posy+2]);
       end;
-    end;
+    end;}
   end;
   footer(bottom-1,FOOTERS[1]);
   gotoxy(1,bottom); clreol;
@@ -229,7 +225,7 @@ begin
         end;
   // exit
   until k=#27;
-  footer(bottom-1,FOOTERS[4]);
+  footer(bottom-1,FOOTERS[3]);
   textcolor(lightgray);
   gotoxy(1,bottom); write('Save to '+paramstr(1)+'? (y/n) ');
   textcolor(white);
