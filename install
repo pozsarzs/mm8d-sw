@@ -83,7 +83,45 @@ if ! [ -x "$(command -v sudo apache2)" ]; then
   echo 'ERROR: Run prepare script firstly!';
   exit;
 fi
+echo -e "\nChecking binaries:"
+if [ $ARCH = 'x86_64' ]
+then
+  BINDIR="binary/$ARCH"
+else
+  if [ $ARCH = 'armhf' ]
+  then
+    BINDIR="binary/$ARCH"
+  else
+    BINDIR="binary/i386"
+  fi
+fi
+EXISTBIN=0
+if [ -f "$BINDIR/$SWN2-editenvirconf.bin" ]
+then
+  echo " $BINDIR/$SWN2-editenvirconf.bin"
+  if [ -f "$BINDIR/$SWN2-editmainconf.bin" ]
+  then
+    echo " $BINDIR/$SWN2-editmainconf.bin"
+    if [ -f "$BINDIR/$SWN2-override.bin" ]
+    then
+      echo " $BINDIR/$SWN2-override.bin"
+      EXISTBIN=1
+    fi
+  fi
+fi
+if [ $EXISTBIN -ne 1 ]
+then 
+  echo "-e \Building source code:"
+  cd source
+  ./configure && make && make install
+  cd ..
+fi
 
+if [ -f "binary/x86_64/*.bin" ]
+  then
+    echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+    exit 1
+  fi
 echo -e "\nInstalling..."
 echo "- creating directories:"
 sudo mkdir --parents /usr/$INSTDIR 2> /dev/null
