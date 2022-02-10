@@ -36,6 +36,7 @@ AC_SUBST(rm)
 AC_SUBST(version)
 AC_OUTPUT(Makefile.global\
           editenvirconf/config.pas\
+          editirrconf/config.pas\
           editmainconf/config.pas\
           override/config.pas)
 

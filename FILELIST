@@ -38,7 +38,7 @@ manuals/mm8d-stopdaemon.1.gz                    KÉSZ
 manuals/mm8d-updatestartpage.1.gz               KÉSZ
 manuals/mm8d-viewlog.1.gz                       KÉSZ
 manuals/mm8d-webpage.1.gz                       KÉSZ
-messages/mm8d_hu.msg                            FOLYAMATBAN
+messages/mm8d_hu.msg                            KÉSZ
 packaging/eec-amd64/control
 packaging/eec-amd64/md5sums
 packaging/eec-amd64/postinst                    KÉSZ
@@ -106,19 +106,33 @@ source/_config/install-sh                       KÉSZ
 source/configure                                KÉSZ
 source/configure.in                             KÉSZ
 source/editenvirconf/config.pas.in              KÉSZ
-source/editenvirconf/editenvirconf.pas
-source/editenvirconf/incloadinifile.pas
-source/editenvirconf/incpage1screen.pas
-source/editenvirconf/incpage2screen.pas
-source/editenvirconf/incpage3screen.pas
-source/editenvirconf/incpage4screen.pas
-source/editenvirconf/incpage5screen.pas
-source/editenvirconf/incpage6screen.pas
-source/editenvirconf/incpage7screen.pas
-source/editenvirconf/incpage8screen.pas
-source/editenvirconf/incpage9screen.pas
-source/editenvirconf/incsaveinifile.pas
+source/editenvirconf/editenvirconf.pas          KÉSZ
+source/editenvirconf/incloadinifile.pas         KÉSZ
+source/editenvirconf/incpage1screen.pas         KÉSZ
+source/editenvirconf/incpage2screen.pas         KÉSZ
+source/editenvirconf/incpage3screen.pas         KÉSZ
+source/editenvirconf/incpage4screen.pas         KÉSZ
+source/editenvirconf/incpage5screen.pas         KÉSZ
+source/editenvirconf/incpage6screen.pas         KÉSZ
+source/editenvirconf/incpage7screen.pas         KÉSZ
+source/editenvirconf/incpage8screen.pas         KÉSZ
+source/editenvirconf/incpage9screen.pas         KÉSZ
+source/editenvirconf/incsaveinifile.pas         KÉSZ
 source/editenvirconf/Makefile                   KÉSZ
+source/editirrconf/config.pas.in                KÉSZ
+source/editirrconf/editirrconf.pas
+source/editirrconf/incloadinifile.pas
+source/editirrconf/incpage1screen.pas
+source/editirrconf/incpage2screen.pas
+source/editirrconf/incpage3screen.pas
+source/editirrconf/incpage4screen.pas
+source/editirrconf/incpage5screen.pas
+source/editirrconf/incpage6screen.pas
+source/editirrconf/incpage7screen.pas
+source/editirrconf/incpage8screen.pas
+source/editirrconf/incpage9screen.pas
+source/editirrconf/incsaveinifile.pas
+source/editirrconf/Makefile                     KÉSZ
 source/editmainconf/config.pas.in               KÉSZ
 source/editmainconf/editmainconf.pas            KÉSZ
 source/editmainconf/incloadinifile.pas          KÉSZ
@@ -140,11 +154,11 @@ source/_lib/x86_64-linux/.gitignore             KÉSZ
 source/Makefile                                 KÉSZ
 source/Makefile.global.in                       KÉSZ
 source/override/config.pas.in                   KÉSZ
-source/override/incloadoutfiles.pas
-source/override/incpage1screen.pas
-source/override/incsaveoutfiles.pas
+source/override/incloadoutfiles.pas             KÉSZ
+source/override/incpage1screen.pas              KÉSZ
+source/override/incsaveoutfiles.pas             KÉSZ
 source/override/Makefile                        KÉSZ
-source/override/override.pas
+source/override/override.pas                    KÉSZ
 source/untcommon.pas                            KÉSZ
 webpage/cgi-bin/getdata.cgi                     KÉSZ
 webpage/cgi-bin/getenvirconf.cgi                KÉSZ

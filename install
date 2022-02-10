@@ -99,13 +99,17 @@ EXISTBIN=0
 if [ -f "$BINDIR/$SWN2-editenvirconf.bin" ]
 then
   echo " $BINDIR/$SWN2-editenvirconf.bin"
-  if [ -f "$BINDIR/$SWN2-editmainconf.bin" ]
+  if [ -f "$BINDIR/$SWN2-editirrconf.bin" ]
   then
-    echo " $BINDIR/$SWN2-editmainconf.bin"
-    if [ -f "$BINDIR/$SWN2-override.bin" ]
+    echo " $BINDIR/$SWN2-editirrconf.bin"
+    if [ -f "$BINDIR/$SWN2-editmainconf.bin" ]
     then
-      echo " $BINDIR/$SWN2-override.bin"
-      EXISTBIN=1
+      echo " $BINDIR/$SWN2-editmainconf.bin"
+      if [ -f "$BINDIR/$SWN2-override.bin" ]
+      then
+        echo " $BINDIR/$SWN2-override.bin"
+        EXISTBIN=1
+      fi
     fi
   fi
 fi

@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.3 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | editenvirconf.pas                                                        | }
-{ | Full-screen program for edit envir-ch?.ini file                          | }
+{ | editirrconf.pas                                                          | }
+{ | Full-screen program for edit irrigation.ini file                         | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -18,7 +18,7 @@
 //   12: bad terminal size
 //   13: cannot write configuration file
 
-program editenvirconf;
+program editirrconf;
 {$MODE OBJFPC}{$H+}
 uses
   INIFiles, SysUtils, character, crt, untcommon;
@@ -495,7 +495,7 @@ begin
   textcolor(lightgray); textbackground(black);
   if paramcount=0
   then
-    quit(0,false,'Usage: '+paramstr(0)+' /path/envir.ini');
+    quit(0,false,'Usage: '+paramstr(0)+' /path/irr.ini');
   if not terminalsize
   then
     quit(12,false,'ERROR #12: Minimal terminal size is 80x25!');

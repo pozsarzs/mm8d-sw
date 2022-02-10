@@ -7,7 +7,7 @@
 
 include ./Makefile.global
 
-dirs =  editenvirconf editmainconf override
+dirs =  editenvirconf editirrconf editmainconf override
 
 all:
 	@echo Compiling source code:

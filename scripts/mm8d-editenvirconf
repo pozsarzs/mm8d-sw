@@ -45,7 +45,10 @@ then
       echo "ERROR #1: Cannot open $CFGDIR/$CFGFILE configuration file!"
       exit 1
     fi
-    sudo mm8d-editenvirconf.bin "$CFGDIR/$CFGFILE"
+    if [ $CHANNEL -eq "0" ]
+      then sudo mm8d-editirrconf.bin "$CFGDIR/$CFGFILE"
+      else sudo mm8d-editenvirconf.bin "$CFGDIR/$CFGFILE"
+    fi
     if [ $? -eq 0 ]
     then
       mm8d-stopdaemon
