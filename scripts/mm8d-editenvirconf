@@ -22,12 +22,12 @@
 USRLOCALDIR="1"
 if [ $USRLOCALDIR -eq "1" ]
 then
-  CFGFILE="/usr/local/etc/mm8d/envir-ch"
+  CFGDIR="/usr/local/etc/mm8d"
 else
-  CFGFILE="/etc/mm8d/envir-ch"
+  CFGDIR="/etc/mm8d"
 fi
 
-read -p "Channel (1-8): " CHANNEL
+read -p "Channel (0-8): " CHANNEL
 if [[ ! "$CHANNEL" =~ ^[0-9]+$ ]]; then 
   echo "ERROR #2: Specified value is not number!"
   exit 2
@@ -36,13 +36,16 @@ if [ $CHANNEL -ge "0" ]
 then
   if [ $CHANNEL -le "8" ]
   then
-    CFGFILE=$CFGFILE$CHANNEL".ini"
-    if [ ! -f $CFGFILE ]
+    if [ $CHANNEL -eq "0" ]
+      then CFGFILE="irrigator.ini"
+      else CFGFILE="envir-ch$CHANNEL.ini"
+    fi
+    if [ ! -f "$CFGDIR/$CFGFILE" ]
     then
-      echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+      echo "ERROR #1: Cannot open $CFGDIR/$CFGFILE configuration file!"
       exit 1
     fi
-    sudo mm8d-editenvirconf.bin $CFGFILE
+    sudo mm8d-editenvirconf.bin "$CFGDIR/$CFGFILE"
     if [ $? -eq 0 ]
     then
       mm8d-stopdaemon

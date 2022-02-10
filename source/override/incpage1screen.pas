@@ -13,15 +13,23 @@
 // FOR A PARTICULAR PURPOSE.
 
 // write options to screen
-procedure page1screen;
+procedure page1screen(dir: string);
 var
   b: byte;
 begin
   header(PRGNAME+' '+VERSION+' * Override output status');
   textcolor(white);
-  gotoxy(4,3); writeln('Output #1 - lamp:');
-  gotoxy(4,4); writeln('Output #2 - ventilator:');
-  gotoxy(4,5); writeln('Output #3 - heater:');
+  if dir[length(dir)] = '0' then
+  begin  
+    gotoxy(4,3); writeln('Irrigator tube #1:');
+    gotoxy(4,4); writeln('Irrigator tube #2:');
+    gotoxy(4,5); writeln('Irrigator tube #3:');
+  end else
+  begin
+    gotoxy(4,3); writeln('Output #1 - lamp:');
+    gotoxy(4,4); writeln('Output #2 - ventilator:');
+    gotoxy(4,5); writeln('Output #3 - heater:');
+  end;
   for b:=1 to 3 do
   begin
     gotoxy(30,2+b); writeln(outputs[b]);

@@ -41,7 +41,7 @@ const
 procedure screen;
 begin
   background;
-  page1screen;
+  page1screen(paramstr(1));
   footer(bottom-1,FOOTERS[1]);
   textbackground(black);
   gotoxy(1,bottom); clreol;

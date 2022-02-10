@@ -176,7 +176,7 @@ runfullscreenprogram()
 {
   read -p "Channel (0-8): " CH
   checkparameter $CH
-  sudo mm8d-override.bin $DIR_VAR/$CHANNEL
+  sudo mm8d-override.bin "$DIR_VAR/$CHANNEL"
 }
 
 usage()

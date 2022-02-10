@@ -22,7 +22,7 @@ begin
   saveoutfiles:=true;
   for b:=1 to 3 do
   try
-    assignfile(outf,directory+'out'+inttostr(b));
+    assignfile(outf,directory+'/out'+inttostr(b));
     rewrite(outf);
     writeln(outf,outputs[b]);
     closefile(outf);

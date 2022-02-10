@@ -23,7 +23,7 @@ begin
   for b:=1 to 3 do
   try
     outputs[b]:=STATUS[2];
-    assignfile(outf,directory+'out'+inttostr(b));
+    assignfile(outf,directory+'/out'+inttostr(b));
     reset(outf);
     readln(outf,s);
     for bb:=0 to 1 do
