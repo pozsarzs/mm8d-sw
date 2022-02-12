@@ -39,7 +39,7 @@ var
     for b:=1 to 76 do l:=l+'-';
     l:=l+'+';
     writeln(iif,l);
-    writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and remote monitoring system'));
+    writeln(iif,fullline('MM8D v'+VERSION+' * Growing house and irrigation controlling and monitoring system'));
     writeln(iif,fullline(COPYRIGHT));
     writeln(iif,fullline('envir-ch?.ini'));
     writeln(iif,fullline('Growing environment characteristic'));

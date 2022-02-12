@@ -39,7 +39,7 @@ var
     for b:=1 to 76 do l:=l+'-';
     l:=l+'+';
     writeln(iif,l);
-    writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and remote monitoring system'));
+    writeln(iif,fullline('MM8D v'+VERSION+' * Growing house and irrigation controlling and monitoring system'));
     writeln(iif,fullline(COPYRIGHT));
     writeln(iif,fullline('irrigator.ini'));
     writeln(iif,fullline('Irrigator settings'));
@@ -54,7 +54,6 @@ begin
     rewrite(iif);
     fileheader;
     writeln(iif,'['+C+']');
-    writeln(iif,'');
     writeln(iif,'; start month of work');
     writeln(iif,'work_start=',workstart);
     writeln(iif,'; end month of work');

@@ -39,8 +39,8 @@ var
     for b:=1 to 76 do l:=l+'-';
     l:=l+'+';
     writeln(iif,l);
-    writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and remote monitoring system'));
-    writeln(iif,fullline(COPYRIGHT));
+    writeln(iif,fullline('MM8D v'+VERSION+' * Growing house and irrigation controlling and monitoring system'));
+    writeln(iif,fullline(COPYRIGHT+' '));
     writeln(iif,fullline('mm8d.ini'));
     writeln(iif,fullline('Main settings'));
     writeln(iif,l);

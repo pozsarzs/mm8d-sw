@@ -21,6 +21,7 @@ all:
 
 clean:
 	@echo -n "- Cleaning source code..."
+	@$(rm) config.pas
 	@$(rm) ../_lib/$(architecture)-$(os)/*
 	@echo "...done."
 

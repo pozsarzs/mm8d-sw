@@ -120,18 +120,11 @@ source/editenvirconf/incpage9screen.pas         KÉSZ
 source/editenvirconf/incsaveinifile.pas         KÉSZ
 source/editenvirconf/Makefile                   KÉSZ
 source/editirrconf/config.pas.in                KÉSZ
-source/editirrconf/editirrconf.pas
-source/editirrconf/incloadinifile.pas
-source/editirrconf/incpage1screen.pas
-source/editirrconf/incpage2screen.pas
-source/editirrconf/incpage3screen.pas
-source/editirrconf/incpage4screen.pas
-source/editirrconf/incpage5screen.pas
-source/editirrconf/incpage6screen.pas
-source/editirrconf/incpage7screen.pas
-source/editirrconf/incpage8screen.pas
-source/editirrconf/incpage9screen.pas
-source/editirrconf/incsaveinifile.pas
+source/editirrconf/editirrconf.pas              KÉSZ
+source/editirrconf/incloadinifile.pas           KÉSZ
+source/editirrconf/incpage1screen.pas           KÉSZ
+source/editirrconf/incpage2screen.pas           KÉSZ
+source/editirrconf/incsaveinifile.pas           KÉSZ
 source/editirrconf/Makefile                     KÉSZ
 source/editmainconf/config.pas.in               KÉSZ
 source/editmainconf/editmainconf.pas            KÉSZ

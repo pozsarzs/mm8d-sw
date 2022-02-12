@@ -76,20 +76,29 @@ begin
   s:='';
   repeat
     c:=readkey;
-    if (isnumber(c)) or (c=':') then
+    if c=#8 then delete(s,length(s),1) else
     begin
-      if (page=1) and (block=1) then
-        if length(s)<2 then s:=s+c;
-      if page=2 then
-        if length(s)<5 then s:=s+c;
+      if (page=2) and ((posy=3) or (posy=10) or (posy=17)) then
+      begin
+        if (length(s)<32) and (c<>#0) and (c<>#8) and (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+      end else
+      begin
+        if (isnumber(c)) or (c=':') then
+        begin
+          if (page=1) and (block=1) then
+            if length(s)<2 then s:=s+c;
+          if page=2 then
+            if length(s)<5 then s:=s+c;
+        end;
+      end;
     end;
-    if c=#8 then delete(s,length(s),1);
     gotoxy(1,bottom); clreol; write('>'+s);
   until (c=#13) or (c=#27);
   textcolor(white);
   if (c=#13) and (length(s)>0) then
   begin
     // -- page #1 --
+    textbackground(blue);
     if page=1 then
     begin
       // page #1 - block #1
@@ -110,24 +119,36 @@ begin
       end;
     end;
     // -- page #2 --
+    textbackground(blue);
     if page=2 then
     begin
-      textbackground(blue);
-      if length(s)=5 then 
-        if s[3]=':' then
-          if strtoint(s[1]+s[2])<24 then
-           if strtoint(s[4]+s[5])<60 then
-           begin
-             gotoxy(MINPOSX[page,block],posy); write('     ');
-             gotoxy(MINPOSX[page,block],posy);
-             posy:=posy-7*(block-1);
-             case posy of
-               4: begin morningstart[block]:=s; write(morningstart[block]); end;
-               5: begin morningstop[block]:=s; write(morningstop[block]); end;
-               6: begin eveningstart[block]:=s; write(eveningstart[block]); end;
-               7: begin eveningstop[block]:=s; write(eveningstop[block]); end;
+      if (posy=3) or (posy=10) or (posy=17) then
+      begin
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        posy:=posy-7*(block-1);
+        case posy of
+          3: begin name[block]:=s; write(name[block]); end;
+        end;
+      end else
+      begin
+        if length(s)=5 then 
+          if s[3]=':' then
+            if strtoint(s[1]+s[2])<24 then
+             if strtoint(s[4]+s[5])<60 then
+             begin
+               gotoxy(MINPOSX[page,block],posy); write('     ');
+               gotoxy(MINPOSX[page,block],posy);
+               posy:=posy-7*(block-1);
+               case posy of
+                 3: begin name[block]:=s; write(name[block]); end;
+                 4: begin morningstart[block]:=s; write(morningstart[block]); end;
+                 5: begin morningstop[block]:=s; write(morningstop[block]); end;
+                 6: begin eveningstart[block]:=s; write(eveningstart[block]); end;
+                 7: begin eveningstop[block]:=s; write(eveningstop[block]); end;
+               end;
              end;
-           end;
+      end;
     end;
   end;
   footer(bottom-1,FOOTERS[1]);
