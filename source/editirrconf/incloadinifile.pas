@@ -32,10 +32,10 @@ begin
     for b:=1 to 3 do
     begin
       name[b]:=iif.ReadString(T+inttostr(b),'name','Irrigator tube #'+inttostr(b));
-      morningstart[b]:=strtoint(iif.ReadString(T+inttostr(b),'morning_start','0'));
-      morningstop[b]:=strtoint(iif.ReadString(T+inttostr(b),'morning_stop','0'));
-      eveningstart[b]:=strtoint(iif.ReadString(T+inttostr(b),'evening_start','0'));
-      eveningstop[b]:=strtoint(iif.ReadString(T+inttostr(b),'evening_stop','0'));
+      morningstart[b]:=iif.ReadString(T+inttostr(b),'morning_start','00:00');
+      morningstop[b]:=iif.ReadString(T+inttostr(b),'morning_stop','00:00');
+      eveningstart[b]:=iif.ReadString(T+inttostr(b),'evening_start','00:00');
+      eveningstop[b]:=iif.ReadString(T+inttostr(b),'evening_stop','00:00');
     end;
   except
     loadinifile:=false;

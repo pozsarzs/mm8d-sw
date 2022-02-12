@@ -24,8 +24,8 @@ uses
   INIFiles, SysUtils, character, crt, untcommon;
 var
   bottom:                       byte;
-  eveningstart, eveningstop:    array[1..3] of integer;
-  morningstart, morningstop:    array[1..3] of integer;
+  eveningstart, eveningstop:    array[1..3] of string;
+  morningstart, morningstop:    array[1..3] of string;
   name:                         array[1..3] of string;
   rainafternoon, rainnight:     byte;
   tempday, tempmax, tempmin:    byte;
@@ -35,11 +35,11 @@ const
   T: string='tube-';
   BLOCKS:                       array[1..2] of byte=(1,3);
   MINPOSX:                      array[1..2,1..6] of byte=((76,0,0,0,0,0),
-                                                          (46,17,35,0,0,0));
+                                                          (40,40,40,0,0,0));
   MINPOSY:                      array[1..2,1..6] of byte=((3,0,0,0,0,0),
-                                                          (3,10,10,0,0,0));
+                                                          (3,10,17,0,0,0));
   MAXPOSY:                      array[1..2,1..6] of byte=((9,0,0,0,0,0),
-                                                          (6,21,21,0,0,0));
+                                                          (7,14,21,0,0,0));
   FOOTERS: array[1..3] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                   '<Enter> accept  <Esc> cancel',
                                   '<Esc> cancel');
@@ -76,12 +76,13 @@ begin
   s:='';
   repeat
     c:=readkey;
-    if isnumber(c) then
-      case block of
-        1: if length(s)<2 then s:=s+c;
-        6: if length(s)<3 then s:=s+c;
-      else if (c='0') or (c='1') then s:=c;
-      end;
+    if (isnumber(c)) or (c=':') then
+    begin
+      if (page=1) and (block=1) then
+        if length(s)<2 then s:=s+c;
+      if page=2 then
+        if length(s)<5 then s:=s+c;
+    end;
     if c=#8 then delete(s,length(s),1);
     gotoxy(1,bottom); clreol; write('>'+s);
   until (c=#13) or (c=#27);
@@ -108,37 +109,26 @@ begin
         end;
       end;
     end;
-{    // -- page #2 --
+    // -- page #2 --
     if page=2 then
     begin
-      // page #2 - block #1
-      if block=1 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block]-1,posy);write('  ');
-        gotoxy(MINPOSX[page,block]-length(s)+1,posy);
-        case posy of
-          3: begin htempmin:=strtoint(s); write(htempmin); end;
-          4: begin htempon:=strtoint(s); write(htempon); end;
-          5: begin htempoff:=strtoint(s); write(htempoff); end;
-          6: begin htempmax:=strtoint(s); write(htempmax); end;
-        end;
-      end;
-      // page #2 - block #2
-      if block=2 then
-      begin
-        gotoxy(MINPOSX[page,block],posy); textbackground(blue);
-        hheaterdis[posy-10]:=strtoint(s);
-        write(hheaterdis[posy-10]);
-      end;
-      // page #2 - block #3
-      if block=3 then
-      begin
-        gotoxy(MINPOSX[page,block],posy); textbackground(blue);
-        hheaterdis[posy+2]:=strtoint(s);
-        write(hheaterdis[posy+2]);
-      end;
-    end;}
+      textbackground(blue);
+      if length(s)=5 then 
+        if s[3]=':' then
+          if strtoint(s[1]+s[2])<24 then
+           if strtoint(s[4]+s[5])<60 then
+           begin
+             gotoxy(MINPOSX[page,block],posy); write('     ');
+             gotoxy(MINPOSX[page,block],posy);
+             posy:=posy-7*(block-1);
+             case posy of
+               4: begin morningstart[block]:=s; write(morningstart[block]); end;
+               5: begin morningstop[block]:=s; write(morningstop[block]); end;
+               6: begin eveningstart[block]:=s; write(eveningstart[block]); end;
+               7: begin eveningstop[block]:=s; write(eveningstop[block]); end;
+             end;
+           end;
+    end;
   end;
   footer(bottom-1,FOOTERS[1]);
   gotoxy(1,bottom); clreol;

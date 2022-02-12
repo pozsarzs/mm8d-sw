@@ -16,42 +16,22 @@
 procedure page2screen;
 var
   b: byte;
+  x: byte;
 begin
   header(PRGNAME+' '+VERSION+' * Page 2/2: Irrigator tubes');
   textcolor(white);
-  gotoxy(4,3); writeln('Minimal temperature:');
-  gotoxy(4,4); writeln('Heating switch-on temperature:');
-  gotoxy(4,5); writeln('Heating switch-off temperature:');
-  gotoxy(4,6); writeln('Maximal temperature:');
-{  if htempmin>9 then gotoxy(45,3) else gotoxy(46,3); writeln(htempmin,' °C');
-  if htempon>9 then gotoxy(45,4) else gotoxy(46,4); writeln(htempon,' °C');
-  if htempoff>9 then gotoxy(45,5) else gotoxy(46,5); writeln(htempoff,' °C');
-  if htempmax>9 then gotoxy(45,6) else gotoxy(46,6); writeln(htempmax,' °C');
-  gotoxy(4,9); writeln('Disable heater (0/1):');
-  for b:=0 to 9 do
+  x:=40;
+  for b:=1 to 3 do
   begin
-    gotoxy(4,b+10);
-    writeln(' '+inttostr(b)+'.00...'+inttostr(b)+'.59 ',hheaterdis[b]);
+    gotoxy(4,3+7*(b-1)); writeln('name of tube #'+inttostr(b)+' :');
+    gotoxy(4,4+7*(b-1)); writeln('start of morning irrigation:');
+    gotoxy(4,5+7*(b-1)); writeln('end of morning irrigation:');
+    gotoxy(4,6+7*(b-1)); writeln('start of evening irrigation:');
+    gotoxy(4,7+7*(b-1)); writeln('end of evening irrigation:');
+    gotoxy(x,3+7*(b-1)); writeln(name[b]);
+    gotoxy(x,4+7*(b-1)); writeln(morningstart[b]);
+    gotoxy(x,5+7*(b-1)); writeln(morningstop[b]);
+    gotoxy(x,6+7*(b-1)); writeln(eveningstart[b]);
+    gotoxy(x,7+7*(b-1)); writeln(eveningstop[b]);
   end;
-  for b:=10 to 11 do
-  begin
-    gotoxy(4,b+10);
-    writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',hheaterdis[b]);
-  end;
-  for b:=12 to 23 do
-  begin
-    gotoxy(22,b-2);
-    writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',hheaterdis[b]);
-  end;}
 end;
-
-{
-; name of tube
-; morning irrigation interval
-; evening irrigation interval
-
-  eveningstart, eveningstop:    array[1..3] of integer;
-  morningstart, morningstop:    array[1..3] of integer;
-  name:                         array[1..3] of string;
-
-}
