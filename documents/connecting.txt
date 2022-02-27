@@ -7,7 +7,7 @@ Connecting devices
 | J2   |  1  |   I1C    |  3  |   GPIO02 | 15      -ERROR | overcurrent breakers     |
 |      |  2  |   I2C    |  5  |   GPIO03 | 13      SELECT | water pump low pressure  |
 |      |  3  |   I3C    |  7  |   GPIO04 | 12      PE     | water pump high pressure |
-|      |  4  |   I4C    | 11  |   GPIO17 | 10      -ACK   | rain sensor              |
+|      |  4  |   I4C    | 11  |   GPIO17 | 10      -ACK   | (unused)                 |
 | J3   |  1  |   +5 V   |  2  |   +5 V   |                | power input +5 V         |
 |      |  2  |   GND    |  6  |   GND    |                | power input GND          |
 |      |  3  |   GND    |  9  |   GND    | 25      GND    | GND                      |
@@ -19,7 +19,7 @@ Connecting devices
 | J5   |  1  |   LO1C   | 32  |   GPIO12 |  6       D4    | ACTIVE light (B)         |
 |      |  2  |   LO2C   | 36  |   GPIO16 |  7       D5    | WARNING light (Y)        |
 |      |  3  |   LO3C   | 38  |   GPIO20 |  8       D6    | ERROR light (R)          |
-|      |  4  |   LO4C   | 40  |   GPIO21 |  9       D7    | WATER pump ON (G)        |
+|      |  4  |   LO4C   | 40  |   GPIO21 |  9       D7    | PUMP ERROR light (R)     |
 +------+----------------+-----+----------+----------------+--------------------------+
 
 --------------------------------------------------------------------------------------

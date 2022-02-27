@@ -1,168 +1,162 @@
-fájlnév                                        állapot      megjegyzés
+filename                                        status      note
 --------------------------------------------------------------------------------
-README.md                                       KÉSZ
-LICENCE                                         KÉSZ
-install                                         KÉSZ
-prepare                                         KÉSZ
-uninstall                                       KÉSZ
-binary/armhf/.gitignore                         KÉSZ
-binary/i386/.gitignore                          KÉSZ
-binary/x86_64/.gitignore                        KÉSZ
-documents/AUTHORS                               KÉSZ
-documents/cgiprogs.txt                          KÉSZ
+README.md                                       READY
+LICENCE                                         READY
+install                                         READY
+prepare                                         READY
+uninstall                                       READY
+documents/AUTHORS                               READY
+documents/cgiprogs.txt                          
 documents/changelog
-documents/connecting.txt                        KÉSZ
-documents/copyright                             KÉSZ
-documents/exitcodes.txt                         KÉSZ
-documents/INSTALL.pc                            KÉSZ
-documents/INSTALL.raspi                         KÉSZ
-documents/logfiles.txt                          KÉSZ
-documents/README                                KÉSZ
-documents/VERSION                               KÉSZ
-libraries/get                                   KÉSZ
-libraries/portio-0.5.tar.gz                     KÉSZ
-manuals/getdata.cgi.7.gz                        KÉSZ
-manuals/getenvirconf.cgi.7.gz                   KÉSZ
-manuals/getpage.cgi.7.gz                        KÉSZ
-manuals/mm8d-creatediagrams.1.gz                KÉSZ
-manuals/mm8d-editenvirconf.1.gz                 KÉSZ
-manuals/mm8d-editmainconf.1.gz                  KÉSZ
-manuals/mm8d-getsnapshots.1.gz                  KÉSZ
-manuals/mm8d-hwtest.py.1.gz                     KÉSZ
-manuals/mm8d-maintainlog.1.gz                   KÉSZ
-manuals/mm8d-override.1.gz                      KÉSZ
-manuals/mm8d.py.8.gz                            KÉSZ
-manuals/mm8d-startdaemon.1.gz                   KÉSZ
-manuals/mm8d-statusofdaemon.1.gz                KÉSZ
-manuals/mm8d-stopdaemon.1.gz                    KÉSZ
-manuals/mm8d-updatestartpage.1.gz               KÉSZ
-manuals/mm8d-viewlog.1.gz                       KÉSZ
-manuals/mm8d-webpage.1.gz                       KÉSZ
-messages/mm8d_hu.msg                            KÉSZ
+documents/connecting.txt                        
+documents/copyright                             
+documents/exitcodes.txt                         
+documents/INSTALL.pc                            
+documents/INSTALL.raspi                         
+documents/logfiles.txt                          
+documents/README                                
+documents/VERSION                               READY
+libraries/get                                   READY
+libraries/portio-0.5.tar.gz                     READY
+manuals/getdata.cgi.7.gz                        
+manuals/getenvirconf.cgi.7.gz                   
+manuals/getpage.cgi.7.gz                        
+manuals/mm8d-creatediagrams.1.gz                
+manuals/mm8d-editenvirconf.1.gz                 
+manuals/mm8d-editmainconf.1.gz                  
+manuals/mm8d-getsnapshots.1.gz                  
+manuals/mm8d-hwtest.py.1.gz                     
+manuals/mm8d-maintainlog.1.gz                   
+manuals/mm8d-override.1.gz                      
+manuals/mm8d.py.8.gz                            
+manuals/mm8d-startdaemon.1.gz                   
+manuals/mm8d-statusofdaemon.1.gz                
+manuals/mm8d-stopdaemon.1.gz                    
+manuals/mm8d-updatestartpage.1.gz               
+manuals/mm8d-viewlog.1.gz                       
+manuals/mm8d-webpage.1.gz                       
+messages/mm8d_hu.msg                            
 packaging/eec-amd64/control
 packaging/eec-amd64/md5sums
-packaging/eec-amd64/postinst                    KÉSZ
-packaging/eec-amd64/prerm                       KÉSZ
+packaging/eec-amd64/postinst                    
+packaging/eec-amd64/prerm                       
 packaging/eec-armhf/control
 packaging/eec-armhf/md5sums
-packaging/eec-armhf/postinst                    KÉSZ
-packaging/eec-armhf/prerm                       KÉSZ
+packaging/eec-armhf/postinst                    
+packaging/eec-armhf/prerm                       
 packaging/eec-i386/control
 packaging/eec-i386/md5sums
-packaging/eec-i386/postinst                     KÉSZ
-packaging/eec-i386/prerm                        KÉSZ
-packaging/sw-amd64/conffiles                    KÉSZ
+packaging/eec-i386/postinst                     
+packaging/eec-i386/prerm                        
+packaging/sw-amd64/conffiles                    
 packaging/sw-amd64/control
 packaging/sw-amd64/md5sums
-packaging/sw-amd64/postinst                     KÉSZ
-packaging/sw-amd64/prerm                        KÉSZ
-packaging/sw-armhf/conffiles                    KÉSZ
+packaging/sw-amd64/postinst                     
+packaging/sw-amd64/prerm                        
+packaging/sw-armhf/conffiles                    
 packaging/sw-armhf/control
 packaging/sw-armhf/md5sums
-packaging/sw-armhf/postinst                     KÉSZ
-packaging/sw-armhf/prerm                        KÉSZ
-packaging/sw-i386/conffiles                     KÉSZ
+packaging/sw-armhf/postinst                     
+packaging/sw-armhf/prerm                        
+packaging/sw-i386/conffiles                     
 packaging/sw-i386/control
 packaging/sw-i386/md5sums
-packaging/sw-i386/postinst                      KÉSZ
-packaging/sw-i386/prerm                         KÉSZ
-packaging/web-all/conffiles                     KÉSZ
+packaging/sw-i386/postinst                      
+packaging/sw-i386/prerm                         
+packaging/web-all/conffiles                     
 packaging/web-all/control
 packaging/web-all/md5sums
-packaging/web-all/postinst                      KÉSZ
-packaging/web-all/prerm                         KÉSZ
-programs/mm8d-hwtest.py                         KÉSZ
+packaging/web-all/postinst                      
+packaging/web-all/prerm                         
+programs/mm8d-hwtest.py                         
 programs/mm8d.py
-scripts/mm8d-creatediagrams                     KÉSZ
-scripts/mm8d-editenvirconf                      KÉSZ
-scripts/mm8d-editmainconf                       KÉSZ
-scripts/mm8d-getsnapshots                       KÉSZ
-scripts/mm8d-maintainlog                        KÉSZ
-scripts/mm8d-override                           KÉSZ
-scripts/mm8d-startdaemon                        KÉSZ
-scripts/mm8d-statusofdaemon                     KÉSZ
-scripts/mm8d-stopdaemon                         KÉSZ
-scripts/mm8d-updatestartpage                    KÉSZ
-scripts/mm8d-viewlog                            KÉSZ
-scripts/mm8d-webpage                            KÉSZ
-settings/cron.d/mm8d-sw                         KÉSZ
-settings/cron.d/mm8d-web                        KÉSZ
-settings/init.d/mm8d.sh                         KÉSZ
-settings/mm8d/envir-ch1.ini                     KÉSZ
-settings/mm8d/envir-ch2.ini                     KÉSZ
-settings/mm8d/envir-ch3.ini                     KÉSZ
-settings/mm8d/envir-ch4.ini                     KÉSZ
-settings/mm8d/envir-ch5.ini                     KÉSZ
-settings/mm8d/envir-ch6.ini                     KÉSZ
-settings/mm8d/envir-ch7.ini                     KÉSZ
-settings/mm8d/envir-ch8.ini                     KÉSZ
-settings/mm8d/irrigator.ini                     KÉSZ
-settings/mm8d/mm8d.ini                          KÉSZ
-settings/motd                                   KÉSZ
-settings/systemd/system/mm8d.service            KÉSZ
-source/_config/config.guess                     KÉSZ
-source/_config/config.sub                       KÉSZ
-source/_config/install-sh                       KÉSZ
-source/configure                                KÉSZ
-source/configure.in                             KÉSZ
-source/editenvirconf/config.pas.in              KÉSZ
-source/editenvirconf/editenvirconf.pas          KÉSZ
-source/editenvirconf/incloadinifile.pas         KÉSZ
-source/editenvirconf/incpage1screen.pas         KÉSZ
-source/editenvirconf/incpage2screen.pas         KÉSZ
-source/editenvirconf/incpage3screen.pas         KÉSZ
-source/editenvirconf/incpage4screen.pas         KÉSZ
-source/editenvirconf/incpage5screen.pas         KÉSZ
-source/editenvirconf/incpage6screen.pas         KÉSZ
-source/editenvirconf/incpage7screen.pas         KÉSZ
-source/editenvirconf/incpage8screen.pas         KÉSZ
-source/editenvirconf/incpage9screen.pas         KÉSZ
-source/editenvirconf/incsaveinifile.pas         KÉSZ
-source/editenvirconf/Makefile                   KÉSZ
-source/editirrconf/config.pas.in                KÉSZ
-source/editirrconf/editirrconf.pas              KÉSZ
-source/editirrconf/incloadinifile.pas           KÉSZ
-source/editirrconf/incpage1screen.pas           KÉSZ
-source/editirrconf/incpage2screen.pas           KÉSZ
-source/editirrconf/incsaveinifile.pas           KÉSZ
-source/editirrconf/Makefile                     KÉSZ
-source/editmainconf/config.pas.in               KÉSZ
-source/editmainconf/editmainconf.pas            KÉSZ
-source/editmainconf/incloadinifile.pas          KÉSZ
-source/editmainconf/incpage10screen.pas         KÉSZ
-source/editmainconf/incpage1screen.pas          KÉSZ
-source/editmainconf/incpage2screen.pas          KÉSZ
-source/editmainconf/incpage3screen.pas          KÉSZ
-source/editmainconf/incpage4screen.pas          KÉSZ
-source/editmainconf/incpage5screen.pas          KÉSZ
-source/editmainconf/incpage6screen.pas          KÉSZ
-source/editmainconf/incpage7screen.pas          KÉSZ
-source/editmainconf/incpage8screen.pas          KÉSZ
-source/editmainconf/incpage9screen.pas          KÉSZ
-source/editmainconf/incsaveinifile.pas          KÉSZ
-source/editmainconf/Makefile                    KÉSZ
-source/_lib/arm-linux/.gitignore                KÉSZ
-source/_lib/i386-linux/.gitignore               KÉSZ
-source/_lib/x86_64-linux/.gitignore             KÉSZ
-source/Makefile                                 KÉSZ
-source/Makefile.global.in                       KÉSZ
-source/override/config.pas.in                   KÉSZ
-source/override/incloadoutfiles.pas             KÉSZ
-source/override/incpage1screen.pas              KÉSZ
-source/override/incsaveoutfiles.pas             KÉSZ
-source/override/Makefile                        KÉSZ
-source/override/override.pas                    KÉSZ
-source/untcommon.pas                            KÉSZ
-webpage/cgi-bin/getdata.cgi                     KÉSZ
-webpage/cgi-bin/getenvirconf.cgi                KÉSZ
-webpage/cgi-bin/getpage.cgi                     KÉSZ
-webpage/footer_en.html                          KÉSZ
-webpage/footer_hu.html                          KÉSZ
-webpage/header_en.html                          KÉSZ
-webpage/header_hu.html                          KÉSZ
-webpage/pics/ants.jpg                           KÉSZ
-webpage/pics/gasconcentrate-empty.png           KÉSZ
-webpage/pics/humidity-empty.png                 KÉSZ
-webpage/pics/szerafin.ico                       KÉSZ
-webpage/pics/temperature-empty.png              KÉSZ
-webpage/styles.css                              KÉSZ
+scripts/mm8d-creatediagrams                     
+scripts/mm8d-editenvirconf                      
+scripts/mm8d-editmainconf                       
+scripts/mm8d-getsnapshots                       
+scripts/mm8d-maintainlog                        
+scripts/mm8d-override                           
+scripts/mm8d-startdaemon                        
+scripts/mm8d-statusofdaemon                     
+scripts/mm8d-stopdaemon                         
+scripts/mm8d-updatestartpage                    
+scripts/mm8d-viewlog                            
+scripts/mm8d-webpage                            
+settings/cron.d/mm8d-sw                         READY
+settings/cron.d/mm8d-web                        READY
+settings/init.d/mm8d.sh                         READY
+settings/mm8d/envir-ch1.ini                     READY
+settings/mm8d/envir-ch2.ini                     READY
+settings/mm8d/envir-ch3.ini                     READY
+settings/mm8d/envir-ch4.ini                     READY
+settings/mm8d/envir-ch5.ini                     READY
+settings/mm8d/envir-ch6.ini                     READY
+settings/mm8d/envir-ch7.ini                     READY
+settings/mm8d/envir-ch8.ini                     READY
+settings/mm8d/irrigator.ini                     READY
+settings/mm8d/mm8d.ini                          READY
+settings/motd                                   READY
+settings/systemd/system/mm8d.service            READY
+source/_config/config.guess                     READY
+source/_config/config.sub                       READY
+source/_config/install-sh                       READY
+source/configure                                
+source/configure.in                             
+source/editenvirconf/config.pas.in              
+source/editenvirconf/editenvirconf.pas          
+source/editenvirconf/incloadinifile.pas         
+source/editenvirconf/incpage1screen.pas         
+source/editenvirconf/incpage2screen.pas         
+source/editenvirconf/incpage3screen.pas         
+source/editenvirconf/incpage4screen.pas         
+source/editenvirconf/incpage5screen.pas         
+source/editenvirconf/incpage6screen.pas         
+source/editenvirconf/incpage7screen.pas         
+source/editenvirconf/incpage8screen.pas         
+source/editenvirconf/incpage9screen.pas         
+source/editenvirconf/incsaveinifile.pas         
+source/editenvirconf/Makefile                   
+source/editirrconf/config.pas.in                
+source/editirrconf/editirrconf.pas              
+source/editirrconf/incloadinifile.pas           
+source/editirrconf/incpage1screen.pas           
+source/editirrconf/incpage2screen.pas           
+source/editirrconf/incsaveinifile.pas           
+source/editirrconf/Makefile                     
+source/editmainconf/config.pas.in               
+source/editmainconf/editmainconf.pas            
+source/editmainconf/incloadinifile.pas          
+source/editmainconf/incpage10screen.pas         
+source/editmainconf/incpage1screen.pas          
+source/editmainconf/incpage2screen.pas          
+source/editmainconf/incpage3screen.pas          
+source/editmainconf/incpage4screen.pas          
+source/editmainconf/incpage5screen.pas          
+source/editmainconf/incpage6screen.pas          
+source/editmainconf/incpage7screen.pas          
+source/editmainconf/incpage8screen.pas          
+source/editmainconf/incpage9screen.pas          
+source/editmainconf/incsaveinifile.pas          
+source/editmainconf/Makefile                    
+source/Makefile                                 
+source/Makefile.global.in                       
+source/override/config.pas.in                   
+source/override/incloadoutfiles.pas             
+source/override/incpage1screen.pas              
+source/override/incsaveoutfiles.pas             
+source/override/Makefile                        
+source/override/override.pas                    
+source/untcommon.pas                            
+webpage/cgi-bin/getdata.cgi                     
+webpage/cgi-bin/getenvirconf.cgi                
+webpage/cgi-bin/getpage.cgi                     
+webpage/footer_en.html                          
+webpage/footer_hu.html                          
+webpage/header_en.html                          
+webpage/header_hu.html                          
+webpage/pics/ants.jpg                           READY
+webpage/pics/gasconcentrate-empty.png           READY
+webpage/pics/humidity-empty.png                 READY
+webpage/pics/szerafin.ico                       READY
+webpage/pics/temperature-empty.png              READY
+webpage/styles.css                              READY

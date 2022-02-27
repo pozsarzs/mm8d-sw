@@ -12,11 +12,10 @@ Content of log files
     3:  overcurrent breaker error             0: closed  1: opened
     4:  water pump pressure error (no water)  0: good    1: bad
     5:  water pump pressure error (clogging)  0: good    1: bad
-    6:  status of rain sensor                 0: no rain 1: rain
-    7:  external temperature in °C
-    8:  status of water pump and tube #1      0: off     1: on
-    9:  status of water pump and tube #2      0: off     1: on
-   10:  status of water pump and tube #3      0: off     1: on
+    6:  external temperature in °C
+    7:  status of water pump and tube #1      0: off     1: on
+    8:  status of water pump and tube #2      0: off     1: on
+    9:  status of water pump and tube #3      0: off     1: on
 
 
   2. mm8d-ch[1-8].log

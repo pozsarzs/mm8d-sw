@@ -11,7 +11,7 @@ Raspberry Pi.  MM6Ds and MM7Ds connects via wireles LAN, MM9A and others
 (auxiliary contact of overcurrent breakers, rain sensor and LEDs) via MM8D
 interface board.
 
- You can view actual status with a browser application and administrate
+  You can view actual status with a browser application and administrate
 it with SSH client.
 
 Requirements:
