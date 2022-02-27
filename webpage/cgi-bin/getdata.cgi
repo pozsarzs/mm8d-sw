@@ -225,11 +225,10 @@ if ( $uid eq $usr_uid )
             print "    <overcurrentbreaker>$columns[2]</overcurrentbreaker>\n";
             print "    <waterpressure1>$columns[3]</waterpressure1>\n";
             print "    <waterpressure2>$columns[4]</waterpressure2>\n";
-            print "    <rainfall>$columns[5]</rainfall>\n";
-            print "    <externaltemperature>$columns[6]</externaltemperature>\n";
-            print "    <tube1>$columns[7]</tube1>\n";
-            print "    <tube2>$columns[8]</tube2>\n";
-            print "    <tube3>$columns[9]</tube3>\n";
+            print "    <externaltemperature>$columns[5]</externaltemperature>\n";
+            print "    <tube1>$columns[6]</tube1>\n";
+            print "    <tube2>$columns[7]</tube2>\n";
+            print "    <tube3>$columns[8]</tube3>\n";
             print "  </status>\n";
             print "</xml>\n";
           } else
@@ -253,7 +252,7 @@ if ( $uid eq $usr_uid )
         } else
         {
           print $nam_ch[$ch] . "\n";
-          my @b = (0..9);
+          my @b = (0..8);
           for (@b)
           {
             print "$columns[$_]\n";

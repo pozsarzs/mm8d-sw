@@ -130,13 +130,8 @@ my $msg49 = "disable power on";
 my $msg50 = "timed";
 my $msg54 ="irrigator tube #";
 my $msg55 ="Irrigator settings";
-my $msg56 ="start of work";
-my $msg57 ="end of work";
 my $msg58 ="minimal temperature";
 my $msg59 ="maximal temperature";
-my $msg60 ="daytime temperature";
-my $msg61 ="time of night rainfall";
-my $msg62 ="time of afternoon rainfall";
 my $msg63 ="name";
 my $msg64 ="start of morning irrigation";
 my $msg65 ="end of morning irrigation";
@@ -178,13 +173,8 @@ while(<MSG>)
     case "msg50" { $msg50 = $columns[1]; }
     case "msg54" { $msg54 = $columns[1]; }
     case "msg55" { $msg55 = $columns[1]; }
-    case "msg56" { $msg56 = $columns[1]; }
-    case "msg57" { $msg57 = $columns[1]; }
     case "msg58" { $msg58 = $columns[1]; }
     case "msg59" { $msg59 = $columns[1]; }
-    case "msg60" { $msg60 = $columns[1]; }
-    case "msg61" { $msg61 = $columns[1]; }
-    case "msg62" { $msg62 = $columns[1]; }
     case "msg63" { $msg63 = $columns[1]; }
     case "msg64" { $msg64 = $columns[1]; }
     case "msg65" { $msg65 = $columns[1]; }
@@ -258,16 +248,6 @@ if ($ch == 0)
   print "        <td align=\"center\"><i>$msg54" . "3</i></td>";
   print "      </tr>";
   print "      <tr>";
-  print "        <td align=\"left\"><b>$msg56</b></td>";
-  print "        <td colspan=2 align=\"center\">$config->{$section}{work_start}</td>";
-  print "        <td align=\"center\">$msg68</td>";
-  print "      </tr>";
-  print "      <tr>";
-  print "        <td  align=\"left\"><b>$msg57</b></td>";
-  print "        <td colspan=2 align=\"center\">$config->{$section}{work_stop}</td>";
-  print "        <td align=\"center\">$msg68</td>";
-  print "      </tr>";
-  print "      <tr>";
   print "        <td  align=\"left\"><b>$msg58</b></td>";
   print "        <td colspan=2 align=\"center\">$config->{$section}{temp_min}</td>";
   print "        <td align=\"center\">°C</td>";
@@ -276,21 +256,6 @@ if ($ch == 0)
   print "        <td  align=\"left\"><b>$msg59</b></td>";
   print "        <td colspan=2 align=\"center\">$config->{$section}{temp_max}</td>";
   print "        <td align=\"center\">°C</td>";
-  print "      </tr>";
-  print "      <tr>";
-  print "        <td  align=\"left\"><b>$msg60</b></td>";
-  print "        <td colspan=2 align=\"center\">$config->{$section}{temp_day}</td>";
-  print "        <td align=\"center\">°C</td>";
-  print "      </tr>";
-  print "      <tr>";
-  print "        <td  align=\"left\"><b>$msg61</b></td>";
-  print "        <td colspan=2 align=\"center\">$config->{$section}{rain_night}</td>";
-  print "        <td align=\"center\">$msg69</td>";
-  print "      </tr>";
-  print "      <tr>";
-  print "        <td  align=\"left\"><b>$msg62</b></td>";
-  print "        <td colspan=2 align=\"center\">$config->{$section}{rain_afternoon}</td>";
-  print "        <td align=\"center\">$msg69</td>";
   print "      </tr>";
   print "      <tr>";
   print "        <td align=\"left\"><b>$msg63</b></td>";

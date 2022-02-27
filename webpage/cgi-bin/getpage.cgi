@@ -101,10 +101,9 @@ sub writetable()
     if ($columns[2] eq 1) { $columns[2] = $red } else { $columns[2] = $dark };
     if ($columns[3] eq 1) { $columns[3] = $red } else { $columns[3] = $dark };
     if ($columns[4] eq 1) { $columns[4] = $red } else { $columns[4] = $dark };
-    if ($columns[5] eq 1) { $columns[5] = $yellow } else { $columns[5] = $dark };
+    if ($columns[6] eq 1) { $columns[6] = $red } else { $columns[6] = $dark };
     if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
     if ($columns[8] eq 1) { $columns[8] = $red } else { $columns[8] = $dark };
-    if ($columns[9] eq 1) { $columns[9] = $red } else { $columns[9] = $dark };
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
@@ -112,7 +111,6 @@ sub writetable()
     print "          <td>$columns[6]</td>";
     print "          <td>$columns[7]</td>";
     print "          <td>$columns[8]</td>";
-    print "          <td>$columns[9]</td>";
   } else
   {
     print "          <td>$columns[2]</td>";
@@ -253,7 +251,6 @@ my $msg33 = "water pump pressure error (clogging)";
 my $msg34 = "Override outputs";
 my $msg35 = "To set override, please login into unit via SSH, and use <i>mm8d-override</i> command!";
 my $msg36 = "To set environment characteristic, please login into unit via SSH, and use <i>mm8d-editenvirconf</i> command!";
-my $msg51 = "status of rain sensor";
 my $msg52 = "external temperature in &deg;C";
 my $msg53 = "status of water pump and tube #";
 my $msg54 = "irrigator tube #";
@@ -301,7 +298,6 @@ while(<MSG>)
     case "msg33" { $msg33 = $columns[1]; }
     case "msg35" { $msg35 = $columns[1]; }
     case "msg36" { $msg36 = $columns[1]; }
-    case "msg51" { $msg51 = $columns[1]; }
     case "msg52" { $msg52 = $columns[1]; }
     case "msg53" { $msg53 = $columns[1]; }
     case "msg54" { $msg54 = $columns[1]; }
@@ -359,11 +355,10 @@ if ($ch == 0)
   print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg19</td></tr>";
   print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg32</td></tr>";
   print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg33</td></tr>";
-  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg51</td></tr>";
-  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg52</td></tr>";
-  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg53" . "1</td></tr>";
-  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg53" . "2</td></tr>";
-  print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg53" . "3</td></tr>";
+  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg52</td></tr>";
+  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg53" . "1</td></tr>";
+  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg53" . "2</td></tr>";
+  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg53" . "3</td></tr>";
 } else
 {
   print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg11</td></tr>";
@@ -390,7 +385,7 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($ch == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>";
 } else
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
@@ -530,7 +525,7 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($ch == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>";
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>";
 } else
 {
   print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";

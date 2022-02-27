@@ -35,7 +35,7 @@ manuals/mm8d-stopdaemon.1.gz
 manuals/mm8d-updatestartpage.1.gz               
 manuals/mm8d-viewlog.1.gz                       
 manuals/mm8d-webpage.1.gz                       
-messages/mm8d_hu.msg                            
+messages/mm8d_hu.msg                            READY
 packaging/eec-amd64/control
 packaging/eec-amd64/md5sums
 packaging/eec-amd64/postinst                    
@@ -148,12 +148,12 @@ source/override/Makefile
 source/override/override.pas                    
 source/untcommon.pas                            
 webpage/cgi-bin/getdata.cgi                     
-webpage/cgi-bin/getenvirconf.cgi                
-webpage/cgi-bin/getpage.cgi                     
-webpage/footer_en.html                          
-webpage/footer_hu.html                          
-webpage/header_en.html                          
-webpage/header_hu.html                          
+webpage/cgi-bin/getenvirconf.cgi                READY
+webpage/cgi-bin/getpage.cgi                     READY
+webpage/footer_en.html                          READY
+webpage/footer_hu.html                          READY
+webpage/header_en.html                          READY
+webpage/header_hu.html                          READY
 webpage/pics/ants.jpg                           READY
 webpage/pics/gasconcentrate-empty.png           READY
 webpage/pics/humidity-empty.png                 READY
