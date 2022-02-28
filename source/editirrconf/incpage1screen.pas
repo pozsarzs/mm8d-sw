@@ -20,19 +20,9 @@ var
 begin
   header(PRGNAME+' '+VERSION+' * Page 1/2: Common parameters');
   textcolor(white);
-  gotoxy(4,3); writeln('Start month of work:');
-  gotoxy(4,4); writeln('End month of work:');
-  gotoxy(4,5); writeln('Maximal temperature (above this, irrigation is missed):');
-  gotoxy(4,6); writeln('Minimal temperature (below this, irrigation is missed):');
-  gotoxy(4,7); writeln('Daytime average temp. (below this, evening irrigation is missed):');
-  gotoxy(4,8); writeln('All time of afternoon rainfall:');
-  gotoxy(4,9); writeln('All time of night rainfall:');
+  gotoxy(4,3); writeln('Minimal temperature (below this, irrigation is missed):');
+  gotoxy(4,4); writeln('Maximal temperature (above this, irrigation is missed):');
   x:=75;
-  if workstart>9 then gotoxy(x,3) else gotoxy(x+1,3); writeln(workstart,' m');
-  if workstop>9 then gotoxy(x,4) else gotoxy(x+1,4); writeln(workstop,' m');
-  if tempmin>9 then gotoxy(x,5) else gotoxy(x+1,5); writeln(tempmin,' °C');
-  if tempmax>9 then gotoxy(x,6) else gotoxy(x+1,6); writeln(tempmax,' °C');
-  if tempday>9 then gotoxy(x,7) else gotoxy(x+1,7); writeln(tempday,' °C');
-  if rainafternoon>9 then gotoxy(x,8) else gotoxy(x+1,8); writeln(rainafternoon,' h');
-  if rainnight>9 then gotoxy(x,9) else gotoxy(x+1,9); writeln(rainnight,' h');
+  if tempmin>9 then gotoxy(x,3) else gotoxy(x+1,3); writeln(tempmin,' °C');
+  if tempmax>9 then gotoxy(x,4) else gotoxy(x+1,4); writeln(tempmax,' °C');
 end;

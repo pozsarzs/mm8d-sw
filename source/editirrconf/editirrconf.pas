@@ -38,7 +38,7 @@ const
                                                           (40,40,40,0,0,0));
   MINPOSY:                      array[1..2,1..6] of byte=((3,0,0,0,0,0),
                                                           (3,10,17,0,0,0));
-  MAXPOSY:                      array[1..2,1..6] of byte=((9,0,0,0,0,0),
+  MAXPOSY:                      array[1..2,1..6] of byte=((4,0,0,0,0,0),
                                                           (7,14,21,0,0,0));
   FOOTERS: array[1..3] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                   '<Enter> accept  <Esc> cancel',
@@ -108,13 +108,8 @@ begin
         gotoxy(MINPOSX[page,block]-1,posy); write('  ');
         gotoxy(MINPOSX[page,block]-length(s)+1,posy);
         case posy of
-          3: begin workstart:=strtoint(s); if workstart>12 then workstart:=12; write(workstart); end;
-          4: begin workstop:=strtoint(s); if workstop>12 then workstop:=12; write(workstop); end;
-          5: begin tempmin:=strtoint(s); write(tempmin); end;
-          6: begin tempmax:=strtoint(s); write(tempmax); end;
-          7: begin tempday:=strtoint(s); write(tempday); end;
-          8: begin rainafternoon:=strtoint(s); write(rainafternoon); end;
-          9: begin rainnight:=strtoint(s); write(rainnight); end;
+          3: begin tempmin:=strtoint(s); write(tempmin); end;
+          4: begin tempmax:=strtoint(s); write(tempmax); end;
         end;
       end;
     end;

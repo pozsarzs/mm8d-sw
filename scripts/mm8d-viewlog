@@ -48,23 +48,22 @@ viewlogfile()
     echo "1:  overcurrent breaker error            0: closed  1: opened"
     echo "2:  water pump pressure error (no water) 0: good    1: bad"
     echo "3:  water pump pressure error (clogging) 0: good    1: bad"
-    echo "4:  status of rain sensor                0: no rain 1: rain"
-    echo "5:  external temperature"
-    echo "6:  status of water pump and tube #1     0: off     1: on"
-    echo "7:  status of water pump and tube #2     0: off     1: on"
-    echo "8:  status of water pump and tube #3     0: off     1: on"
+    echo "4:  external temperature"
+    echo "5:  status of water pump and tube #1     0: off     1: on"
+    echo "6:  status of water pump and tube #2     0: off     1: on"
+    echo "7:  status of water pump and tube #3     0: off     1: on"
     echo ""
-    echo "+------------+-------+--------------------+"
-    echo "|    Date    | Time  | 1 2 3 4  5   6 7 8 |"
-    echo "+------------+-------+--------------------+"
+    echo "+------------+-------+------------------+"
+    echo "|    Date    | Time  | 1 2 3  4   5 6 7 |"
+    echo "+------------+-------+------------------+"
     OLDIFS=$IFS
     IFS=,
-    while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11 C12
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10
     do
-      if [ ${#C7} -eq "1" ]; then C7=" $C7"; fi
-      echo "| $C1 | $C2 | $C3 $C4 $C5 $C6 $C7°C $C8 $C9 $C10 |"
+      if [ ${#C6} -eq "1" ]; then C6=" $C6"; fi
+      echo "| $C1 | $C2 | $C3 $C4 $C5 $C6°C $C7 $C8 $C9 |"
     done < $LOGFILE
-    echo "+------------+-------+--------------------+"
+    echo "+------------+-------+------------------+"
     IFS=$OLDIFS
   else
     echo ""

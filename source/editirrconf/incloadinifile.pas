@@ -22,13 +22,8 @@ begin
   iif:=TIniFile.Create(filename);
   loadinifile:=true;
   try
-    workstart:=strtoint(iif.ReadString(C,'work_start','0'));
-    workstop:=strtoint(iif.ReadString(C,'work_stop','0'));
     tempmin:=strtoint(iif.ReadString(C,'temp_min','0'));
     tempmax:=strtoint(iif.ReadString(C,'temp_max','0'));
-    tempday:=strtoint(iif.ReadString(C,'temp_day','0'));
-    rainnight:=strtoint(iif.ReadString(C,'rain_night','0'));
-    rainafternoon:=strtoint(iif.ReadString(C,'rain_afternoon','0'));
     for b:=1 to 3 do
     begin
       name[b]:=iif.ReadString(T+inttostr(b),'name','Irrigator tube #'+inttostr(b));
