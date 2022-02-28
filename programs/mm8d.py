@@ -156,8 +156,29 @@ def loadconfiguration(conffile):
     writetodebuglog("e","ERROR #01: Cannot open " + conffile + "!")
     exit(1)
 
+# load configuration
+def loadirrconf(conffile):
+  C = "common"
+  T = "tube-"
+  try:
+    with open(conffile) as f:
+      mainconfig = f.read()
+    config = configparser.RawConfigParser(allow_no_value = True)
+    config.read_file(io.StringIO(mainconfig))
+    irtemp_max = int(config.get(C,'temp_max'))
+    irtemp_min = int(config.get(C,'temp_min'))
+    for i in range(1,4):
+      irevening_start = config.get(T + str(i),'evening_start')
+      irevening_stop = config.get(T + str(i),'evening_stop')
+      irmorning_start = config.get(T + str(i),'morning_start')
+      irmorning_stop = config.get(T + str(i),'morning_stop')
+    writetodebuglog("i","Irrigator configuration is loaded.")
+  except:
+    writetodebuglog("e","ERROR #20: Cannot open " + conffile + "!")
+    exit(20)
+
 # load environment characteristics
-def loadenvirchars(channel,conffile):
+def loadenvirconf(channel,conffile):
   C = "common"
   H = "hyphae"
   M = "mushroom"
@@ -304,24 +325,32 @@ def analise(section):
   global led_active
   global led_error
   global led_warning
+  global led_waterpumperror
   global relay_alarm
+  global relay_irrtube1
+  global relay_irrtube2
+  global relay_irrtube3
+  h=int(time.strftime("%H"))
+  m=int(time.strftime("%M"))
   if section == 1:
-    # section #1: breakers, switches and alarm sensors
+    # section #1: breakers, sensors, alarms and irrigator
     led_error = 0
     led_warning = 0
+    led_waterpumperror = 0
     relay_alarm = 0
-    # local ports
-    if mainssensor == 1:
+    relay_irrtube1 = 0
+    relay_irrtube2 = 0
+    relay_irrtube3 = 0
+    if mainsbreakers == 1:
       led_error = 1
-      writetodebuglog("w","No mains voltage.")
-    if (mainsbreaker1 == 1) or (mainsbreaker2 == 1) or (mainsbreaker3 == 1):
-      led_error = 1
-    if mainsbreaker1 == 1:
-      writetodebuglog("e","Overcurrent breaker #1 is opened!")
-    if mainsbreaker2 == 1:
-      writetodebuglog("e","Overcurrent breaker #2 is opened!")
-    if mainsbreaker3 == 1:
-      writetodebuglog("e","Overcurrent breaker #3 is opened!")
+      writetodebuglog("e","Overcurrent breaker is opened!")
+
+# for channel in range(1,4):
+# waterpressurelow
+# waterpressurehigh
+
+
+
     # MM6D
     for channel in range(1,9):
       if ena_ch[channel] == 1:
@@ -340,9 +369,7 @@ def analise(section):
           led_error = 1
           writetodebuglog("e","CH"+ str(channel) +": Overcurrent breaker of MM6D is opened!")
   else:
-    h=int(time.strftime("%H"))
-    m=int(time.strftime("%M"))
-    # section #1: growing environments
+    # section #2: growing environments
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         writetodebuglog("i","CH" + str(channel) + ": " + str(in_temperature[channel]) + " C")
@@ -481,10 +508,21 @@ def writelocalports():
     GPIO.output(prt_lo1,led_active)
     GPIO.output(prt_lo2,led_warning)
     GPIO.output(prt_lo3,led_error)
+    GPIO.output(prt_lo4,led_waterpumperror)
     GPIO.output(prt_ro1,relay_alarm)
+    GPIO.output(prt_ro2,relay_irrtube1)
+    GPIO.output(prt_ro3,relay_irrtube2)
+    GPIO.output(prt_ro4,relay_irrtube3)
     return 0
   else:
-    outdata = 64 * led_error + 32 * led_warning + 16 * led_active + relay_alarm
+    outdata = 128 * led_waterpumperror + \
+               64 * led_error + \
+               32 * led_warning + \
+               16 * led_active + \
+                8 * relay_irrtube3 + \
+                4 * relay_irrtube2 + \
+                2 * relay_irrtube1 + \
+                    relay_alarm
     portio.outb(outdata,lptaddresses[lpt_prt])
     if (portio.inb(lptaddresses[lpt_prt]) == outdata):
       return 1
@@ -493,29 +531,29 @@ def writelocalports():
 
 # read data from GPIO/LPT port
 def readlocalports():
-  global mainssensor
-  global mainsbreaker1
-  global mainsbreaker2
-  global mainsbreaker3
+  global mainsbreakers
+  global waterpressurelow
+  global waterpressurehigh
+  global unused_local_input
   if hw == 0:
-    GPIO.input(prt_i1,mainssensor)
-    GPIO.input(prt_i2,mainsbreaker1)
-    GPIO.input(prt_i3,mainsbreaker2)
-    GPIO.input(prt_i4,mainsbreaker3)
+    GPIO.input(prt_i1,mainsbreakers)
+    GPIO.input(prt_i2,waterpressurelow)
+    GPIO.input(prt_i3,waterpressurehigh)
+    GPIO.input(prt_i4,unused_local_input)
   else:
     indata = portio.inb(lptaddresses[lpt_prt] + 1)
-    mainssensor = indata & 8
-    if mainssensor > 1:
-      mainssensor = 1
-    mainsbreaker1 = indata & 16
-    if mainsbreaker1 > 1:
-      mainsbreaker1 = 1
-    mainsbreaker2 = indata & 32
-    if mainsbreaker2 > 1:
-      mainsbreaker2 = 1
-    mainsbreaker3 = indata & 64
-    if mainsbreaker3 > 1:
-      mainsbreaker3 = 1
+    mainsbreakers = indata & 8
+    if mainsbreakers > 1:
+      mainsbreakers = 1
+    waterpressurelow = indata & 16
+    if waterpressurelow > 1:
+      waterpressurelow = 1
+    waterpressurehigh = indata & 32
+    if waterpressurehigh > 1:
+      waterpressurehigh = 1
+    unused_local_input = indata & 64
+    if unused_local_input > 1:
+      unused_local_input = 1
   return 1
 
 # close GPIO/LPT port
@@ -659,17 +697,8 @@ def getcontrollerversion(conttype,channel):
   return rc
 
 # main program
-global in_ocprot
-global in_opmode
-global in_swmanu
-global in_alarm
-global in_humidity
-global in_temperature
-global in_gasconcentrate
-global out_lamps
-global out_vents
-global out_heaters
 global cgasconcentrate_max
+global exttemp
 global hheater_disable
 global hheater_off
 global hheater_on
@@ -689,6 +718,22 @@ global hvent_disablelowtemp
 global hvent_lowtemp
 global hvent_off
 global hvent_on
+global in_alarm
+global in_gasconcentrate
+global irevening_start
+global irevening_stop
+global irmorning_start
+global irmorning_stop
+global irtemp_max
+global irtemp_min
+global in_humidity
+global in_ocprot
+global in_opmode
+global in_swmanu
+global in_temperature
+global led_active
+global led_error
+global led_warning
 global mheater_disable
 global mheater_off
 global mheater_on
@@ -708,68 +753,75 @@ global mvent_disablelowtemp
 global mvent_lowtemp
 global mvent_off
 global mvent_on
-global exttemp
-global led_active
-global led_error
-global led_warning
+global out_heaters
+global out_lamps
+global out_vents
 global relay_alarm
 # reset variables
-in_ocprot = [0 for channel in range(9)]
-in_opmode = [0 for channel in range(9)]
-in_swmanu = [0 for channel in range(9)]
-in_alarm = [0 for channel in range(9)]
-in_humidity = [0 for channel in range(9)]
-in_temperature = [0 for channel in range(9)]
-in_gasconcentrate = [0 for channel in range(9)]
-out_lamps = [0 for channel in range(9)]
-out_vents = [0 for channel in range(9)]
-out_heaters = [0 for channel in range(9)]
 cgasconcentrate_max = [0 for x in range(9)]
-hhumidifier_off = [0 for x in range(9)]
-hhumidity_max = [0 for x in range(9)]
-hhumidity_min = [0 for x in range(9)]
-hhumidifier_on = [0 for x in range(9)]
-htemperature_max = [0 for x in range(9)]
+exttemp = 18
+hheater_disable = [[0 for x in range(9)] for y in range(24)]
 hheater_off = [0 for x in range(9)]
 hheater_on = [0 for x in range(9)]
-htemperature_min = [0 for x in range(9)]
-hheater_disable = [[0 for x in range(9)] for y in range(24)]
+hhumidifier_off = [0 for x in range(9)]
+hhumidifier_on = [0 for x in range(9)]
+hhumidity_max = [0 for x in range(9)]
+hhumidity_min = [0 for x in range(9)]
 hlight_off1 = [0 for x in range(9)]
 hlight_off2 = [0 for x in range(9)]
 hlight_on1 = [0 for x in range(9)]
 hlight_on2 = [0 for x in range(9)]
-hvent_on = [0 for x in range(9)]
-hvent_off = [0 for x in range(9)]
+htemperature_max = [0 for x in range(9)]
+htemperature_min = [0 for x in range(9)]
 hvent_disable = [[0 for x in range(9)] for x in range(24)]
 hvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
 hvent_lowtemp = [0 for x in range(9)]
-mhumidifier_off = [0 for x in range(9)]
-mhumidity_max = [0 for x in range(9)]
-mhumidity_min = [0 for x in range(9)]
-mhumidifier_on = [0 for x in range(9)]
-mtemperature_max = [0 for x in range(9)]
+hvent_off = [0 for x in range(9)]
+hvent_on = [0 for x in range(9)]
+in_alarm = [0 for channel in range(9)]
+in_gasconcentrate = [0 for channel in range(9)]
+in_humidity = [0 for channel in range(9)]
+in_ocprot = [0 for channel in range(9)]
+in_opmode = [0 for channel in range(9)]
+in_swmanu = [0 for channel in range(9)]
+in_temperature = [0 for channel in range(9)]
+irevening_start = [0 for channel in range(4)]
+irevening_stop = [0 for channel in range(4)]
+irmorning_start = [0 for channel in range(4)]
+irmorning_stop = [0 for channel in range(4)]
+irtemp_max = 0
+irtemp_min = 0
+led_active = 0
+led_error = 0
+led_warning = 0
+mheater_disable = [[0 for x in range(9)] for y in range(24)]
 mheater_off = [0 for x in range(9)]
 mheater_on = [0 for x in range(9)]
-mtemperature_min = [0 for x in range(9)]
-mheater_disable = [[0 for x in range(9)] for y in range(24)]
+mhumidifier_off = [0 for x in range(9)]
+mhumidifier_on = [0 for x in range(9)]
+mhumidity_max = [0 for x in range(9)]
+mhumidity_min = [0 for x in range(9)]
 mlight_off1 = [0 for x in range(9)]
 mlight_off2 = [0 for x in range(9)]
 mlight_on1 = [0 for x in range(9)]
 mlight_on2 = [0 for x in range(9)]
-mvent_on = [0 for x in range(9)]
-mvent_off = [0 for x in range(9)]
+mtemperature_max = [0 for x in range(9)]
+mtemperature_min = [0 for x in range(9)]
 mvent_disable = [[0 for x in range(9)] for x in range(24)]
 mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
 mvent_lowtemp = [0 for x in range(9)]
-exttemp = 18
-led_error = 0
-led_active = 0
-led_warning = 0
-relay_alarm = 0
-prevdata = ["" for x in range(10)]
+mvent_off = [0 for x in range(9)]
+mvent_on = [0 for x in range(9)]
 newdata = ["" for x in range(10)]
+out_heaters = [0 for channel in range(9)]
+out_lamps = [0 for channel in range(9)]
+out_vents = [0 for channel in range(9)]
+prevdata = ["" for x in range(10)]
+relay_alarm = 0
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
+# load irrigator settings
+loadirrconf(confdir + "irrigator.ini")
 # checking version of remote devices
 for channel in range(1,9):
   if ena_ch[channel] > 0:
@@ -799,7 +851,7 @@ if ii == 0:
 # load environment parameter settings
 for channel in range(1,9):
   if ena_ch[channel] == 1:
-    loadenvirchars(channel,confdir + "envir-ch" + str(channel) + ".ini")
+    loadenvirconf(channel,confdir + "envir-ch" + str(channel) + ".ini")
 # initialize local ports to default state
 initializelocalports()
 # set auto mode of MM7D device

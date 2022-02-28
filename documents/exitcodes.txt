@@ -21,6 +21,7 @@ Exit codes of executable files
  17: cannot access i/o port
  18: there is not enabled channel
  19: fatal error (ony daemon)
+ 20: cannot open irrigator configuration file
 
 --------------------------------------------------------------------------------
  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
