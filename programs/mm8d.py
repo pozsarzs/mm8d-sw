@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.2 * Growing house controlling and remote monitoring device         |
+# | MM8D v0.3 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2022 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d.py                                                                    |
 # | Main program                                                               |
@@ -21,6 +21,7 @@
 #  17: cannot access i/o port
 #  18: there is not enabled channel
 #  19: fatal error
+#  20: cannot open irrigator configuration file
 
 import configparser
 import daemon
@@ -346,17 +347,40 @@ def analise(section):
       led_error = 1
       writetodebuglog("e","Overcurrent breaker is opened!")
     # - switch on/off waterpump and valves
-
-
-#   if (bekapcsolva kell lennie az 1-esnek):
-#      relay_tube = 1
-#    if (bekapcsolva kell lennie az 2-esnek):
-#      relay_tube = 2
-#    if (bekapcsolva kell lennie az 3-esnek):
-#      relay_tube = 3
-
-
-    # messages
+    if (exttemp < irtemp_min):
+      relay_tube1 = 0
+      relay_tube2 = 0
+      relay_tube3 = 0
+      writetodebuglog("w","CH0: External temperature is too low for irrigation! (< " + str(exttemp) + " C)")
+    else
+      if (exttemp > irtemp_max):
+        relay_tube1 = 0
+        relay_tube2 = 0
+        relay_tube3 = 0
+        writetodebuglog("w","CH0: External temperature is too high for irrigation! (< " + str(exttemp) + " C)")
+      else
+        h1, m1 = irmorning_start[1].split(':')
+        h2, m2 = irmorning_stop[1].split(':')
+        h3, m3 = irevening_start[1].split(':')
+        h4, m4 = irevening_stop[1].split(':')
+        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2))  or
+           ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+          relay_tube1 = 1
+        h1, m1 = irmorning_start[2].split(':')
+        h2, m2 = irmorning_stop[2].split(':')
+        h3, m3 = irevening_start[2].split(':')
+        h4, m4 = irevening_stop[2].split(':')
+        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2))  or
+           ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+          relay_tube2 = 1
+        h1, m1 = irmorning_start[3].split(':')
+        h2, m2 = irmorning_stop[3].split(':')
+        h3, m3 = irevening_start[3].split(':')
+        h4, m4 = irevening_stop[3].split(':')
+        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2))  or
+           ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+          relay_tube3 = 1
+    # - messages
     if relay_tube = 1:
       writetodebuglog("i","CH0: water pump and valve #1 ON")
     else:
