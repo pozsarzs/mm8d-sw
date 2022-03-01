@@ -1,5 +1,6 @@
  MM8D (0.3) unstable; urgency=low
 
+  * Irrigator control is included.
   * Some bugfix.
   * Buttons for get environment characteristic of growing houses.
   * Modified function of inputs (on interface board).

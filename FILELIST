@@ -7,7 +7,7 @@ prepare                                         READY
 uninstall                                       READY
 documents/AUTHORS                               READY
 documents/cgiprogs.txt                          READY
-documents/changelog                             
+documents/changelog                             READY
 documents/connecting.txt                        READY
 documents/copyright                             READY
 documents/exitcodes.txt                         READY
@@ -69,7 +69,7 @@ packaging/web-all/md5sums
 packaging/web-all/postinst                      READY
 packaging/web-all/prerm                         READY
 programs/mm8d-hwtest.py                         READY
-programs/mm8d.py
+programs/mm8d.py                                READY       Not tested!
 scripts/mm8d-creatediagrams                     READY
 scripts/mm8d-editenvirconf                      READY
 scripts/mm8d-editmainconf                       READY
