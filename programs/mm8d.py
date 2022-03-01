@@ -282,7 +282,7 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
   lckfile(0)
 
 # check external control files
-def extcont(channel,output,status):
+def outputoverride(channel,output,status):
   writetodebuglog("i","CH" + str(channel) + ": Checking override file " + str(output) + ".")
   if os.path.isfile(dir_var + '/' + str(channel) + "/out" + str(output)):
     try:
@@ -327,49 +327,78 @@ def analise(section):
   global led_warning
   global led_waterpumperror
   global relay_alarm
-  global relay_irrtube1
-  global relay_irrtube2
-  global relay_irrtube3
+  global relay_tube1
+  global relay_tube2
+  global relay_tube3
   h=int(time.strftime("%H"))
   m=int(time.strftime("%M"))
   if section == 1:
-    # section #1: breakers, sensors, alarms and irrigator
+    # Local inputs/outputs
     led_error = 0
     led_warning = 0
     led_waterpumperror = 0
     relay_alarm = 0
-    relay_irrtube1 = 0
-    relay_irrtube2 = 0
-    relay_irrtube3 = 0
+    relay_tube1 = 0
+    relay_tube2 = 0
+    relay_tube3 = 0
+    # - opened local overcurrent breaker(s)
     if mainsbreakers == 1:
       led_error = 1
       writetodebuglog("e","Overcurrent breaker is opened!")
-
-# for channel in range(1,4):
-# waterpressurelow
-# waterpressurehigh
+    # - switch on/off waterpump and valves
 
 
+#   if (bekapcsolva kell lennie az 1-esnek):
+#      relay_tube = 1
+#    if (bekapcsolva kell lennie az 2-esnek):
+#      relay_tube = 2
+#    if (bekapcsolva kell lennie az 3-esnek):
+#      relay_tube = 3
 
+
+    # messages
+    if relay_tube = 1:
+      writetodebuglog("i","CH0: water pump and valve #1 ON")
+    else:
+      writetodebuglog("i","CH0: water pump and valve #1 OFF")
+    if relay_tube = 2:
+      writetodebuglog("i","CH0: water pump and valve #2 ON")
+    else:
+      writetodebuglog("i","CH0: water pump and valve #2 OFF")
+    if relay_tube = 3:
+      writetodebuglog("i","CH0: water pump and valve #3 ON")
+    else:
+      writetodebuglog("i","CH0: water pump and valve #3 OFF")
+    # - bad pressure
+    if ((relay_tube1 = 1) or (relay_tube2 = 1) or (relay_tube3 = 1)) and (waterpressurelow):
+      led_waterpumperror = 1
+      writetodebuglog("e","Pressure is too low after water pump!")
+    if ((relay_tube1 = 1) or (relay_tube2 = 1) or (relay_tube3 = 1)) and (waterpressurehigh):
+      led_waterpumperror = 1
+      writetodebuglog("e","Pressure is too high after water pump!")
     # MM6D
     for channel in range(1,9):
       if ena_ch[channel] == 1:
+        # - opened doors
         if in_alarm[channel] == 1:
           relay_alarm = 1
+          led_warning = 1
           writetodebuglog("w","CH"+ str(channel) +": Alarm event detected.")
           writetodebuglog("i","CH"+ str(channel) +": Restore alarm input of MM6D device.")
           if restoreMM6Dalarm(channel) == 1:
             writetodebuglog("i","CH"+ str(channel) +": Restore succeeded.")
           else:
             writetodebuglog("w","CH"+ str(channel) +": Restore failed.")
+        # - bad manual switch position
         if in_swmanu[channel] == 1:
           led_warning = 1
           writetodebuglog("w","CH"+ str(channel) +": Manual mode switch is on position.")
+        # - opened overcurrent breaker(s)
         if in_ocprot[channel] == 1:
           led_error = 1
           writetodebuglog("e","CH"+ str(channel) +": Overcurrent breaker of MM6D is opened!")
   else:
-    # section #2: growing environments
+    # Growing environments
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         writetodebuglog("i","CH" + str(channel) + ": " + str(in_temperature[channel]) + " C")
@@ -378,20 +407,20 @@ def analise(section):
         if in_opmode[channel] == 0:
           # growing mushroom
           writetodebuglog("i","CH" + str(channel) + ": operation mode: growing mushroom.")
-          # bad temperature
+          # - bad temperature
           if in_temperature[channel] < mtemperature_min[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (< " + str(mtemperature_min[channel]) + " C)")
           if in_temperature[channel] > mtemperature_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (> " + str(mtemperature_max[channel]) + " C)")
-          # bad humidity
+          # - bad humidity
           if in_humidity[channel] < mhumidity_min[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (< " + str(mhumidity_min[channel]) + "%)")
           if in_humidity[channel] > mhumidity_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (< " + str(mhumidity_max[channel]) + "%)")
-          # bad gas concentrate
+          # - bad gas concentrate
           if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (< " + str(cgasconcentrate_max[channel]) + "%)")
-          # heaters
+          # - heaters
           out_heaters[channel] = 0
           if in_temperature[channel] < mheater_on[channel]:
             out_heaters[channel] = 1
@@ -399,13 +428,13 @@ def analise(section):
             out_heaters[channel] = 0
           if mheater_disable[h][channel] == 1:
             out_heaters[channel] = 0
-          # lights
+          # - lights
           out_lamps[channel] = 0
           if (h >= mlight_on1[channel]) and (h < mlight_off1[channel]):
             out_lamps[channel] = 1
           if (h >= mlight_on2[channel]) and (h < mlight_off2[channel]):
             out_lamps[channel] = 1
-          # ventilators
+          # - ventilators
           out_vents[channel] = 0
           if (m > mvent_on[channel]) and (m < mvent_off[channel]):
             out_vents[channel] = 1
@@ -420,20 +449,20 @@ def analise(section):
         else:
           # growing hyphae
           writetodebuglog("i","CH" + str(channel) + ": operation mode: growing hyphae.")
-          # bad temperature
+          # - bad temperature
           if in_temperature[channel] < htemperature_min[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (< " + str(htemperature_min[channel]) + " C)")
           if in_temperature[channel] > htemperature_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (> " + str(htemperature_max[channel]) + " C)")
-          # bad humidity
+          # - bad humidity
           if in_humidity[channel] < hhumidity_min[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (< " + str(hhumidity_min[channel]) + "%)")
           if in_humidity[channel] > hhumidity_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (< " + str(hhumidity_max[channel]) + "%)")
-          # bad gas concentrate
+          # - bad gas concentrate
           if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (< " + str(cgasconcentrate_max[channel]) + "%)")
-          # heaters
+          # - heaters
           out_heaters[channel] = 0
           if in_temperature[channel] < hheater_on[channel]:
             out_heaters[channel] = 1
@@ -441,13 +470,13 @@ def analise(section):
             out_heaters[channel] = 0
           if hheater_disable[h][channel] == 1:
             out_heaters[channel] = 0
-          # lights
+          # - lights
           out_lamps[channel] = 0
           if (h >= hlight_on1[channel]) and (h < hlight_off1[channel]):
             out_lamps[channel] = 1
           if (h >= hlight_on2[channel]) and (h < hlight_off2[channel]):
             out_lamps[channel] = 1
-          # ventilators
+          # - ventilators
           out_vents[channel] = 0
           if (m > hvent_on[channel]) and (m < hvent_off[channel]):
             out_vents[channel] = 1
@@ -734,6 +763,7 @@ global in_temperature
 global led_active
 global led_error
 global led_warning
+global led_waterpumperror
 global mheater_disable
 global mheater_off
 global mheater_on
@@ -757,6 +787,9 @@ global out_heaters
 global out_lamps
 global out_vents
 global relay_alarm
+global relay_tube1
+global relay_tube2
+global relay_tube3
 # reset variables
 cgasconcentrate_max = [0 for x in range(9)]
 exttemp = 18
@@ -794,6 +827,7 @@ irtemp_min = 0
 led_active = 0
 led_error = 0
 led_warning = 0
+led_waterpumperror = 0
 mheater_disable = [[0 for x in range(9)] for y in range(24)]
 mheater_off = [0 for x in range(9)]
 mheater_on = [0 for x in range(9)]
@@ -818,6 +852,9 @@ out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 prevdata = ["" for x in range(10)]
 relay_alarm = 0
+relay_tube1 = 0
+relay_tube2 = 0
+relay_tube3 = 0
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # load irrigator settings
@@ -875,6 +912,10 @@ while True:
       writetodebuglog("w","Cannot read data from local I/O port.")
     # analise data
     analise(1);
+    # override state of outputs
+    relay_tube1 = outputoverride(0,1,relay_tube1)
+    relay_tube2 = outputoverride(0,1,relay_tube2)
+    relay_tube3 = outputoverride(0,1,relay_tube3)
     # write data to local port
     if writelocalports():
       writetodebuglog("i","Write data to local I/O port.")
@@ -907,9 +948,9 @@ while True:
     # override state of outputs
     for channel in range(1,9):
       if ena_ch[channel] == 1:
-        out_lamps[channel] = extcont(channel,1,out_lamps[channel])
-        out_vents[channel] = extcont(channel,2,out_vents[channel])
-        out_heaters[channel] = extcont(channel,3,out_heaters[channel])
+        out_lamps[channel] = outputoverride(channel,1,out_lamps[channel])
+        out_vents[channel] = outputoverride(channel,2,out_vents[channel])
+        out_heaters[channel] = outputoverride(channel,3,out_heaters[channel])
     # write data to log
     newdata[0] = str(mainssensor) + str(mainsbreaker1) + str(mainsbreaker2) + str(mainsbreaker3)
     if (prevdata[0] != newdata[0]):
