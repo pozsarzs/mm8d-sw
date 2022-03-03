@@ -23,62 +23,71 @@ program editenvirconf;
 uses
   INIFiles, SysUtils, character, crt, untcommon;
 var
-  bottom:                           byte;
-  gasconmax:                        byte;
-  hheaterdis, mheaterdis:           array[0..23] of byte;
-  hventdis, mventdis:               array[0..23] of byte;
-  hventdislowtemp, mventdislowtemp: array[0..23] of byte;
-  hhummax, mhummax:                 byte;
-  hhummin, mhummin:                 byte;
-  hhumoff, mhumoff:                 byte;
-  hhumon, mhumon:                   byte;
-  hlightsoff1, mlightsoff1:         byte;
-  hlightsoff2, mlightsoff2:         byte;
-  hlightson1, mlightson1:           byte;
-  hlightson2, mlightson2:           byte;
-  htempmax, mtempmax:               byte;
-  htempmin, mtempmin:               byte;
-  htempoff, mtempoff:               byte;
-  htempon, mtempon:                 byte;
-  hventlowtemp, mventlowtemp:       shortint;
-  hventoff, mventoff:               byte;
-  hventon, mventon:                 byte;
+  bottom:                             byte;
+  gasconmax:                          byte;
+  hheaterdis, mheaterdis:             array[0..23] of byte;
+  hhummax, mhummax:                   byte;
+  hhummin, mhummin:                   byte;
+  hhumoff, mhumoff:                   byte;
+  hhumon, mhumon:                     byte;
+  hlightsoff1, mlightsoff1:           byte;
+  hlightsoff2, mlightsoff2:           byte;
+  hlightson1, mlightson1:             byte;
+  hlightson2, mlightson2:             byte;
+  htempmax, mtempmax:                 byte;
+  htempmin, mtempmin:                 byte;
+  htempoff, mtempoff:                 byte;
+  htempon, mtempon:                   byte;
+  hventdishightemp, mventdishightemp: array[0..23] of byte;
+  hventdislowtemp, mventdislowtemp:   array[0..23] of byte;
+  hventdis, mventdis:                 array[0..23] of byte;
+  hventhightemp, mventhightemp:       shortint;
+  hventlowtemp, mventlowtemp:         shortint;
+  hventoff, mventoff:                 byte;
+  hventon, mventon:                   byte;
 const
-  C: string='common';
-  H: string='hyphae';
-  M: string='mushroom';
-  BLOCKS:                           array[1..9] of byte=(1,3,1,6,1,3,1,6,1);
-  MINPOSX:                          array[1..9,1..6] of byte=((46,0,0,0,0,0),
-                                                             (46,17,35,0,0,0),
-                                                             (46,0,0,0,0,0),
-                                                             (46,17,35,53,71,46),
-                                                              (46,0,0,0,0,0),
-                                                              (46,17,35,0,0,0),
-                                                              (46,0,0,0,0,0),
-                                                              (46,17,35,53,71,46),
-                                                              (46,0,0,0,0,0));
-  MINPOSY:                          array[1..9,1..6] of byte=((3,0,0,0,0,0),
-                                                              (3,10,10,0,0,0),
-                                                              (3,0,0,0,0,0),
-                                                              (3,8,8,8,8,21),
-                                                              (3,0,0,0,0,0),
-                                                              (3,10,10,0,0,0),
-                                                              (3,0,0,0,0,0),
-                                                              (3,8,8,8,8,21),
-                                                              (3,0,0,0,0,0));
-  MAXPOSY:                          array[1..9,1..6] of byte=((6,0,0,0,0,0),
-                                                              (6,21,21,0,0,0),
-                                                              (6,0,0,0,0,0),
-                                                              (4,19,19,19,19,21),
-                                                              (6,0,0,0,0,0),
-                                                              (6,21,21,0,0,0),
-                                                              (6,0,0,0,0,0),
-                                                              (4,19,19,19,19,21),
-                                                              (3,0,0,0,0,0));
-  FOOTERS: array[1..4] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
-                                  '<Enter> accept  <Esc> cancel',
-                                  '<+>/<-> sign change  <Enter> accept  <Esc> cancel',
-                                  '<Esc> cancel');
+  C:                                  string='common';
+  H:                                  string='hyphae';
+  M:                                  string='mushroom';
+  FOOTERS:                            array[1..4] of string=(
+                                        '<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
+                                        '<Enter> accept  <Esc> cancel',
+                                        '<+>/<-> sign change  <Enter> accept  <Esc> cancel',
+                                        '<Esc> cancel');
+  BLOCKS:                             array[1..11] of byte=(1,3,1,6,3,1,3,1,6,6,1);
+  MINPOSX:                            array[1..11,1..6] of byte=((46,0,0,0,0,0),
+                                                                 (46,17,35,0,0,0),
+                                                                 (46,0,0,0,0,0),
+                                                                 (46,17,35,53,71,46),
+                                                                 (17,35,46,0,0,0),
+                                                                 (46,0,0,0,0,0),
+                                                                 (46,17,35,0,0,0),
+                                                                 (46,0,0,0,0,0),
+                                                                 (46,17,35,53,71,46),
+                                                                 (17,35,46,0,0,0),
+                                                                 (46,0,0,0,0,0));
+  MINPOSY:                            array[1..11,1..6] of byte=((3,0,0,0,0,0),
+                                                                 (3,10,10,0,0,0),
+                                                                 (3,0,0,0,0,0),
+                                                                 (3,8,8,8,8,21),
+                                                                 (4,4,17,0,0,0),
+                                                                 (3,0,0,0,0,0),
+                                                                 (3,10,10,0,0,0),
+                                                                 (3,0,0,0,0,0),
+                                                                 (3,8,8,8,8,21),
+                                                                 (4,4,17,0,0,0),
+                                                                 (3,0,0,0,0,0));
+  MAXPOSY:                           array[1..11,1..6] of byte=((6,0,0,0,0,0),
+                                                                 (6,21,21,0,0,0),
+                                                                 (6,0,0,0,0,0),
+                                                                 (4,19,19,19,19,21),
+                                                                 (15,15,17,0,0,0),
+                                                                 (6,0,0,0,0,0),
+                                                                 (6,21,21,0,0,0),
+                                                                 (6,0,0,0,0,0),
+                                                                 (4,19,19,19,19,21),
+                                                                 (15,15,17,0,0,0),
+                                                                 (3,0,0,0,0,0));
 
 {$I config.pas}
 {$I incpage1screen.pas}
@@ -90,6 +99,8 @@ const
 {$I incpage7screen.pas}
 {$I incpage8screen.pas}
 {$I incpage9screen.pas}
+{$I incpage10screen.pas}
+{$I incpage11screen.pas}
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
@@ -107,6 +118,8 @@ begin
     7: page7screen;
     8: page8screen;
     9: page9screen;
+    10: page10screen;
+    11: page11screen;
   end;
   footer(bottom-1,FOOTERS[1]);
   textbackground(black);
@@ -262,10 +275,12 @@ begin
         hventlowtemp:=strtoint(s); write(hventlowtemp);
       end;
     end;
-    // -- page #5 --
-    if page=5 then
+
+
+    // -- page #6 --
+    if page=6 then
     begin
-      // page #5 - block #1
+      // page #6 - block #1
       if block=1 then
       begin
         textbackground(blue);
@@ -279,10 +294,10 @@ begin
         end;
       end;
     end;
-    // -- page #6 --
-    if page=6 then
+    // -- page #7 --
+    if page=7 then
     begin
-      // page #6 - block #1
+      // page #7 - block #1
       if block=1 then
       begin
         textbackground(blue);
@@ -295,14 +310,14 @@ begin
           6: begin mtempmax:=strtoint(s); write(mtempmax); end;
         end;
       end;
-      // page #6 - block #2
+      // page #7 - block #2
       if block=2 then
       begin
         gotoxy(MINPOSX[page,block],posy); textbackground(blue);
         mheaterdis[posy-10]:=strtoint(s);
         write(mheaterdis[posy-10]);
       end;
-      // page #6 - block #3
+      // page #7 - block #3
       if block=3 then
       begin
         gotoxy(MINPOSX[page,block],posy); textbackground(blue);
@@ -310,10 +325,10 @@ begin
         write(mheaterdis[posy+2]);
       end;
     end;
-    // -- page #7 --
-    if page=7 then
+    // -- page #8 --
+    if page=8 then
     begin
-      // page #7 - block #1
+      // page #8 - block #1
       if block=1 then
       begin
         if strtoint(s)>23 then s:=inttostr(23);
@@ -328,10 +343,10 @@ begin
         end;
       end;
     end;
-    // -- page #8 --
-    if page=8 then
+    // -- page #9 --
+    if page=9 then
     begin
-      // page #8 - block #1
+      // page #9 - block #1
       if block=1 then
       begin
         if strtoint(s)>59 then s:=inttostr(59);
@@ -343,35 +358,35 @@ begin
           4: begin mventoff:=strtoint(s); write(mventoff); end;
         end;
       end;
-      // page #8 - block #2
+      // page #9 - block #2
       if block=2 then
       begin
         gotoxy(MINPOSX[page,block],posy); textbackground(blue);
         mventdis[posy-8]:=strtoint(s);
         write(mventdis[posy-8]);
       end;
-      // page #8 - block #3
+      // page #9 - block #3
       if block=3 then
       begin
         gotoxy(MINPOSX[page,block],posy); textbackground(blue);
         mventdis[posy+4]:=strtoint(s);
         write(mventdis[posy+4]);
       end;
-      // page #8 - block #4
+      // page #9 - block #4
       if block=4 then
       begin
         gotoxy(MINPOSX[page,block],posy); textbackground(blue);
         mventdislowtemp[posy-8]:=strtoint(s);
         write(mventdislowtemp[posy-8]);
       end;
-      // page #8 - block #5
+      // page #9 - block #5
       if block=5 then
       begin
         gotoxy(MINPOSX[page,block],posy); textbackground(blue);
         mventdislowtemp[posy+4]:=strtoint(s);
         write(mventdislowtemp[posy+4]);
       end;
-      // page #8 - block #6
+      // page #9 - block #6
       if block=6 then
       begin
         textbackground(blue);
@@ -380,10 +395,10 @@ begin
         mventlowtemp:=strtoint(s); write(mventlowtemp);
       end;
     end;
-    // -- page #9 --
-    if page=9 then
+    // -- page #11 --
+    if page=11 then
     begin
-      // page #9 - block #1
+      // page #11 - block #1
       if block=1 then
       begin
         textbackground(blue);
@@ -439,7 +454,7 @@ begin
       // next page
       #81: begin
              page:=page+1;
-             if page>9 then page:=9;
+             if page>11 then page:=11;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];
@@ -447,7 +462,7 @@ begin
            end;
       // last page
       #79: begin
-             page:=9;
+             page:=11;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];

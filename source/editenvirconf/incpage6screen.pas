@@ -17,30 +17,14 @@ procedure page6screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 6/9: Growing mushroom - heating');
+  header(PRGNAME+' '+VERSION+' * Page 6/11: Growing mushroom - humidifying');
   textcolor(white);
-  gotoxy(4,3); writeln('Minimal temperature:');
-  gotoxy(4,4); writeln('Heating switch-on temperature:');
-  gotoxy(4,5); writeln('Heating switch-off temperature:');
-  gotoxy(4,6); writeln('Maximal temperature:');
-  if mtempmin>9 then gotoxy(45,3) else gotoxy(46,3); writeln(mtempmin,' °C');
-  if mtempon>9 then gotoxy(45,4) else gotoxy(46,4); writeln(mtempon,' °C');
-  if mtempoff>9 then gotoxy(45,5) else gotoxy(46,5); writeln(mtempoff,' °C');
-  if mtempmax>9 then gotoxy(45,6) else gotoxy(46,6); writeln(mtempmax,' °C');
-  gotoxy(4,9); writeln('Disable heater (0/1):');
-  for b:=0 to 9 do
-  begin
-    gotoxy(4,b+10);
-    writeln(' '+inttostr(b)+'.00...'+inttostr(b)+'.59 ',mheaterdis[b]);
-  end;
-  for b:=10 to 11 do
-  begin
-    gotoxy(4,b+10);
-    writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',mheaterdis[b]);
-  end;
-  for b:=12 to 23 do
-  begin
-    gotoxy(22,b-2);
-    writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',mheaterdis[b]);
-  end;
+  gotoxy(4,3); writeln('Minimal relative humidity:');
+  gotoxy(4,4); writeln('Lower warning level of humidity:');
+  gotoxy(4,5); writeln('Higher warning level of humidity:');
+  gotoxy(4,6); writeln('Maximal relative humidity:');
+  if mhummin>9 then gotoxy(45,3) else gotoxy(46,3); writeln(mhummin,' %');
+  if mhumon>9 then gotoxy(45,4) else gotoxy(46,4); writeln(mhumon,' %');
+  if mhumoff>9 then gotoxy(45,5) else gotoxy(46,5); writeln(mhumoff,' %');
+  if mhummax>9 then gotoxy(45,6) else gotoxy(46,6); writeln(mhummax,' %');
 end;

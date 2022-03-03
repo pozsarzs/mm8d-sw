@@ -17,7 +17,7 @@ procedure page4screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 4/9: Growing hyphae - ventilating');
+  header(PRGNAME+' '+VERSION+' * Page 4/11: Growing hyphae - ventilating 1');
   textcolor(white);
   gotoxy(4,3); writeln('Ventilators switch-on minute:');
   gotoxy(4,4); writeln('Ventilators switch-off minute:');

@@ -15,7 +15,7 @@
 // write options to screen
 procedure page3screen;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 3/9: Growing hyphae - lighting');
+  header(PRGNAME+' '+VERSION+' * Page 3/11: Growing hyphae - lighting');
   textcolor(white);
   gotoxy(4,3); writeln('Lamps switch-on time #1:');
   gotoxy(4,4); writeln('Lamps switch-off time #1:');

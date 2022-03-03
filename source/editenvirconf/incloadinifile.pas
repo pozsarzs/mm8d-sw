@@ -50,6 +50,11 @@ begin
     for b:=10 to 23 do
       hventdislowtemp[b]:=strtoint(iif.ReadString(H,'vent_disablelowtemp_'+inttostr(b),'0'));
     hventlowtemp:=strtoint(iif.ReadString(H,'vent_lowtemp','0'));
+    for b:=0 to 9 do
+      hventdishightemp[b]:=strtoint(iif.ReadString(H,'vent_disablehightemp_0'+inttostr(b),'0'));
+    for b:=10 to 23 do
+      hventdishightemp[b]:=strtoint(iif.ReadString(H,'vent_disablehightemp_'+inttostr(b),'0'));
+    hventhightemp:=strtoint(iif.ReadString(H,'vent_hightemp','0'));
     mhummax:=strtoint(iif.ReadString(M,'humidity_max','0'));
     mhummin:=strtoint(iif.ReadString(M,'humidity_min','0'));
     mhumoff:=strtoint(iif.ReadString(M,'humidifier_off','0'));
@@ -59,9 +64,9 @@ begin
     mtempoff:=strtoint(iif.ReadString(M,'heater_off','0'));
     mtempmax:=strtoint(iif.ReadString(M,'temperature_max','0'));
     for b:=0 to 9 do
-      mheaterdis[b]:=strtoint(iif.ReadString(H,'heater_disable_0'+inttostr(b),'0'));
+      mheaterdis[b]:=strtoint(iif.ReadString(M,'heater_disable_0'+inttostr(b),'0'));
     for b:=10 to 23 do
-      mheaterdis[b]:=strtoint(iif.ReadString(H,'heater_disable_'+inttostr(b),'0'));
+      mheaterdis[b]:=strtoint(iif.ReadString(M,'heater_disable_'+inttostr(b),'0'));
     mlightson1:=strtoint(iif.ReadString(M,'light_on1','0'));
     mlightsoff1:=strtoint(iif.ReadString(M,'light_off1','0'));
     mlightson2:=strtoint(iif.ReadString(M,'light_on2','0'));
@@ -69,14 +74,19 @@ begin
     mventon:=strtoint(iif.ReadString(M,'vent_on','0'));
     mventoff:=strtoint(iif.ReadString(M,'vent_off','0'));
     for b:=0 to 9 do
-      mventdis[b]:=strtoint(iif.ReadString(H,'vent_disable_0'+inttostr(b),'0'));
+      mventdis[b]:=strtoint(iif.ReadString(M,'vent_disable_0'+inttostr(b),'0'));
     for b:=10 to 23 do
-      mventdis[b]:=strtoint(iif.ReadString(H,'vent_disable_'+inttostr(b),'0'));
+      mventdis[b]:=strtoint(iif.ReadString(M,'vent_disable_'+inttostr(b),'0'));
     for b:=0 to 9 do
-      mventdislowtemp[b]:=strtoint(iif.ReadString(H,'vent_disablelowtemp_0'+inttostr(b),'0'));
+      mventdislowtemp[b]:=strtoint(iif.ReadString(M,'vent_disablelowtemp_0'+inttostr(b),'0'));
     for b:=10 to 23 do
-      mventdislowtemp[b]:=strtoint(iif.ReadString(H,'vent_disablelowtemp_'+inttostr(b),'0'));
+      mventdislowtemp[b]:=strtoint(iif.ReadString(M,'vent_disablelowtemp_'+inttostr(b),'0'));
     mventlowtemp:=strtoint(iif.ReadString(M,'vent_lowtemp','0'));
+    for b:=0 to 9 do
+      mventdishightemp[b]:=strtoint(iif.ReadString(M,'vent_disablehightemp_0'+inttostr(b),'0'));
+    for b:=10 to 23 do
+      mventdishightemp[b]:=strtoint(iif.ReadString(M,'vent_disablehightemp_'+inttostr(b),'0'));
+    mventhightemp:=strtoint(iif.ReadString(M,'vent_hightemp','0'));
   except
     loadinifile:=false;
   end;

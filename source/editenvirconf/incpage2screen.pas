@@ -17,7 +17,7 @@ procedure page2screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 2/9: Growing hyphae - heating');
+  header(PRGNAME+' '+VERSION+' * Page 2/11: Growing hyphae - heating');
   textcolor(white);
   gotoxy(4,3); writeln('Minimal temperature:');
   gotoxy(4,4); writeln('Heating switch-on temperature:');

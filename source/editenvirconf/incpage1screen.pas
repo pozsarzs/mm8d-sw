@@ -17,7 +17,7 @@ procedure page1screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 1/9: Growing hyphae - humidifying');
+  header(PRGNAME+' '+VERSION+' * Page 1/11: Growing hyphae - humidifying');
   textcolor(white);
   gotoxy(4,3); writeln('Minimal relative humidity:');
   gotoxy(4,4); writeln('Lower warning level of humidity:');

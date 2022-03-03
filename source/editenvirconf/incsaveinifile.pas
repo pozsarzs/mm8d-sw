@@ -92,6 +92,11 @@ begin
     for b:=10 to 23 do
       writeln(iif,'vent_disablelowtemp_'+inttostr(b)+'=',hventdislowtemp[b]);
     writeln(iif,'vent_lowtemp=',hventlowtemp);
+    for b:=0 to 9 do
+      writeln(iif,'vent_disablehightemp_0'+inttostr(b)+'=',hventdishightemp[b]);
+    for b:=10 to 23 do
+      writeln(iif,'vent_disablehightemp_'+inttostr(b)+'=',hventdishightemp[b]);
+    writeln(iif,'vent_hightemp=',hventhightemp);
     writeln(iif,'');
     writeln(iif,'['+M+']');
     writeln(iif,'; humidifier');
@@ -128,6 +133,11 @@ begin
     for b:=10 to 23 do
       writeln(iif,'vent_disablelowtemp_'+inttostr(b)+'=',mventdislowtemp[b]);
     writeln(iif,'vent_lowtemp=',mventlowtemp);
+    for b:=0 to 9 do
+      writeln(iif,'vent_disablehightemp_0'+inttostr(b)+'=',mventdishightemp[b]);
+    for b:=10 to 23 do
+      writeln(iif,'vent_disablehightemp_'+inttostr(b)+'=',mventdishightemp[b]);
+    writeln(iif,'vent_hightemp=',mventhightemp);
     writeln(iif,'');
     close(iif);
   except
