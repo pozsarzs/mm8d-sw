@@ -103,19 +103,19 @@ source/_config/install-sh                       READY
 source/configure                                READY
 source/configure.in                             READY
 source/editenvirconf/config.pas.in              READY
-source/editenvirconf/editenvirconf.pas          READY
-source/editenvirconf/incloadinifile.pas         READY
-source/editenvirconf/incpage1screen.pas         READY
-source/editenvirconf/incpage2screen.pas         READY
-source/editenvirconf/incpage3screen.pas         READY
-source/editenvirconf/incpage4screen.pas         READY
-source/editenvirconf/incpage5screen.pas         READY
-source/editenvirconf/incpage6screen.pas         READY
-source/editenvirconf/incpage7screen.pas         READY
-source/editenvirconf/incpage8screen.pas         READY
-source/editenvirconf/incpage9screen.pas         READY
-source/editenvirconf/incsaveinifile.pas         READY
-source/editenvirconf/Makefile                   READY
+source/editenvirconf/editenvirconf.pas
+source/editenvirconf/incloadinifile.pas
+source/editenvirconf/incpage1screen.pas
+source/editenvirconf/incpage2screen.pas
+source/editenvirconf/incpage3screen.pas
+source/editenvirconf/incpage4screen.pas
+source/editenvirconf/incpage5screen.pas
+source/editenvirconf/incpage6screen.pas
+source/editenvirconf/incpage7screen.pas
+source/editenvirconf/incpage8screen.pas
+source/editenvirconf/incpage9screen.pas
+source/editenvirconf/incsaveinifile.pas
+source/editenvirconf/Makefile
 source/editirrconf/config.pas.in                READY
 source/editirrconf/editirrconf.pas              READY
 source/editirrconf/incloadinifile.pas           READY

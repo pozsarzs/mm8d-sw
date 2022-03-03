@@ -210,6 +210,9 @@ def loadenvirconf(channel,conffile):
     for x in range(24):
       hvent_disablelowtemp[x][channel] = int(config.get(H,'vent_disablelowtemp_' + addzero(x)))
     hvent_lowtemp[channel] = int(config.get(H,'vent_lowtemp'))
+    for x in range(24):
+      hvent_disablehightemp[x][channel] = int(config.get(H,'vent_disablehightemp_' + addzero(x)))
+    hvent_hightemp[channel] = int(config.get(H,'vent_hightemp'))
     mhumidifier_off[channel] = int(config.get(M,'humidifier_off'))
     mhumidity_max[channel] = int(config.get(M,'humidity_max'))
     mhumidity_min[channel] = int(config.get(M,'humidity_min'))
@@ -231,6 +234,9 @@ def loadenvirconf(channel,conffile):
     for x in range(24):
       mvent_disablelowtemp[x][channel] = int(config.get(M,'vent_disablelowtemp_' + addzero(x)))
     mvent_lowtemp[channel] = int(config.get(M,'vent_lowtemp'))
+    for x in range(24):
+      mvent_disablehightemp[x][channel] = int(config.get(M,'vent_disablehightemp_' + addzero(x)))
+    mvent_hightemp[channel] = int(config.get(M,'vent_hightemp'))
     writetodebuglog("i","CH"+ str(channel) +": Environment characteristics is loaded.")
   except:
     writetodebuglog("e","ERROR #14: Cannot open "+conffile+"!")
@@ -352,52 +358,49 @@ def analise(section):
       relay_tube2 = 0
       relay_tube3 = 0
       writetodebuglog("w","CH0: External temperature is too low for irrigation! (< " + str(exttemp) + " C)")
-    else
+    else:
       if (exttemp > irtemp_max):
         relay_tube1 = 0
         relay_tube2 = 0
         relay_tube3 = 0
         writetodebuglog("w","CH0: External temperature is too high for irrigation! (< " + str(exttemp) + " C)")
-      else
+      else:
         h1, m1 = irmorning_start[1].split(':')
         h2, m2 = irmorning_stop[1].split(':')
         h3, m3 = irevening_start[1].split(':')
         h4, m4 = irevening_stop[1].split(':')
-        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2))  or
-           ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2)) or ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
           relay_tube1 = 1
         h1, m1 = irmorning_start[2].split(':')
         h2, m2 = irmorning_stop[2].split(':')
         h3, m3 = irevening_start[2].split(':')
         h4, m4 = irevening_stop[2].split(':')
-        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2))  or
-           ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2)) or ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
           relay_tube2 = 1
         h1, m1 = irmorning_start[3].split(':')
         h2, m2 = irmorning_stop[3].split(':')
         h3, m3 = irevening_start[3].split(':')
         h4, m4 = irevening_stop[3].split(':')
-        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2))  or
-           ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2)) or ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
           relay_tube3 = 1
     # - messages
-    if relay_tube = 1:
+    if relay_tube1 == 1:
       writetodebuglog("i","CH0: water pump and valve #1 ON")
     else:
       writetodebuglog("i","CH0: water pump and valve #1 OFF")
-    if relay_tube = 2:
+    if relay_tube2 == 1:
       writetodebuglog("i","CH0: water pump and valve #2 ON")
     else:
       writetodebuglog("i","CH0: water pump and valve #2 OFF")
-    if relay_tube = 3:
+    if relay_tube3 == 1:
       writetodebuglog("i","CH0: water pump and valve #3 ON")
     else:
       writetodebuglog("i","CH0: water pump and valve #3 OFF")
     # - bad pressure
-    if ((relay_tube1 = 1) or (relay_tube2 = 1) or (relay_tube3 = 1)) and (waterpressurelow):
+    if ((relay_tube1 == 1) or (relay_tube2 == 1) or (relay_tube3 == 1)) and (waterpressurelow):
       led_waterpumperror = 1
       writetodebuglog("e","Pressure is too low after water pump!")
-    if ((relay_tube1 = 1) or (relay_tube2 = 1) or (relay_tube3 = 1)) and (waterpressurehigh):
+    if ((relay_tube1 == 1) or (relay_tube2 == 1) or (relay_tube3 == 1)) and (waterpressurehigh):
       led_waterpumperror = 1
       writetodebuglog("e","Pressure is too high after water pump!")
     # MM6D
@@ -504,14 +507,16 @@ def analise(section):
           out_vents[channel] = 0
           if (m > hvent_on[channel]) and (m < hvent_off[channel]):
             out_vents[channel] = 1
-          if hvent_disable[h][channel] == 1:
-            out_vents[channel] = 0
           if (in_humidity[channel] > hhumidity_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
           if (in_gasconcentrate[channel] > cgasconcentrate_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
           if (in_temperature[channel] > htemperature_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
+          if hvent_disablelowtemp[h][channel] == 1:
+            out_vents[channel] = 0
+          if hvent_disablehightemp[h][channel] == 1:
+            out_vents[channel] = 0
         # messages
         if out_heaters[channel] == 1:
           writetodebuglog("i","CH" + str(channel) + ": heaters ON")
@@ -767,7 +772,9 @@ global hlight_on2
 global htemperature_max
 global htemperature_min
 global hvent_disable
+global hvent_disablehightemp
 global hvent_disablelowtemp
+global hvent_hightemp
 global hvent_lowtemp
 global hvent_off
 global hvent_on
@@ -803,7 +810,9 @@ global mlight_on2
 global mtemperature_max
 global mtemperature_min
 global mvent_disable
+global mvent_disablehightemp
 global mvent_disablelowtemp
+global mvent_hightemp
 global mvent_lowtemp
 global mvent_off
 global mvent_on
@@ -831,7 +840,9 @@ hlight_on2 = [0 for x in range(9)]
 htemperature_max = [0 for x in range(9)]
 htemperature_min = [0 for x in range(9)]
 hvent_disable = [[0 for x in range(9)] for x in range(24)]
+hvent_disablehightemp = [[0 for x in range(9)] for x in range(24)]
 hvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+hvent_hightemp = [0 for x in range(9)]
 hvent_lowtemp = [0 for x in range(9)]
 hvent_off = [0 for x in range(9)]
 hvent_on = [0 for x in range(9)]
@@ -866,7 +877,9 @@ mlight_on2 = [0 for x in range(9)]
 mtemperature_max = [0 for x in range(9)]
 mtemperature_min = [0 for x in range(9)]
 mvent_disable = [[0 for x in range(9)] for x in range(24)]
+mvent_disablehightemp = [[0 for x in range(9)] for x in range(24)]
 mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+mvent_hightemp = [0 for x in range(9)]
 mvent_lowtemp = [0 for x in range(9)]
 mvent_off = [0 for x in range(9)]
 mvent_on = [0 for x in range(9)]

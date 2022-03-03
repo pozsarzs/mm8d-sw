@@ -78,7 +78,7 @@ writetofile()
     if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
     then
       sudo mkdir --parents $DIR_VAR/$CHANNEL 2>/dev/null
-      sudo echo -n $3 2>/dev/null 1> $DIR_VAR/$CHANNEL"/"$OF
+      echo -n $3 | sudo tee $DIR_VAR/$CHANNEL"/"$OF 1>/dev/null
       if [ $? = 0 ]
       then
         echo "Output '"$2"' of channel #"$CHANNEL" is set to $3."
@@ -104,7 +104,7 @@ writetofile()
     if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
     then
       sudo mkdir --parents $DIR_VAR/$CHANNEL 2>/dev/null
-      sudo echo -n $3 2>/dev/null 1> $DIR_VAR/$CHANNEL"/"$OF
+      echo -n $3 | sudo tee $DIR_VAR/$CHANNEL"/"$OF 1>/dev/null
       if [ $? = 0 ]
       then
         echo "Output '"$2"' of channel #"$CHANNEL" is set to $3."

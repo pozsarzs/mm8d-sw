@@ -27,7 +27,13 @@ else
   CFGDIR="/etc/mm8d"
 fi
 
-read -p "Channel (0-8): " CHANNEL
+if [ $# -eq 0 ]
+then
+  read -p "Channel (0-8): " CHANNEL
+else
+  CHANNEL=$1
+fi
+
 if [[ ! "$CHANNEL" =~ ^[0-9]+$ ]]; then 
   echo "ERROR #2: Specified value is not number!"
   exit 2
