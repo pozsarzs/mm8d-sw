@@ -313,7 +313,7 @@ if ($ch == 0)
   print "        <td align=\"center\"><b><br></b></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg41</i></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg42</i></td>";
-  print "        <td colspan=4 align=\"center\"><i>$msg43</i></td>";
+  print "        <td colspan=6 align=\"center\"><i>$msg43</i></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg44</i></td>";
   print "      </tr>";
   print "      <tr>";
@@ -324,7 +324,8 @@ if ($ch == 0)
   print "        <td align=\"center\">%</td>";
   print "        <td align=\"center\">$config->{$section}{vent_on}<br></td>";
   print "        <td align=\"center\">$msg68<br></td>";
-  print "        <td colspan=2 rowspan=4 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=4 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=4 align=\"center\"><br></td>";
   print "        <td align=\"center\">$config->{$section}{light_on1}<br></td>";
   print "        <td align=\"center\">$msg69<br></td>";
   print "      </tr>";
@@ -341,8 +342,9 @@ if ($ch == 0)
   print "      </tr>";
   print "      <tr>";
   print "        <td align=\"left\"><b>$msg45</b></td>";
-  print "        <td colspan=4 rowspan=2 align=\"center\"><br></td>";
-  print "        <td colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
   print "        <td align=\"center\">$config->{$section}{light_on2}<br></td>";
   print "        <td align=\"center\">$msg69<br></td>";
   print "      </tr>";
@@ -357,8 +359,10 @@ if ($ch == 0)
   print "        <td align=\"center\">°C</td>";
   print "        <td align=\"center\">$config->{$section}{humidity_min}<br></td>";
   print "        <td align=\"center\">%</td>";
-  print "        <td colspan=4 rowspan=2 align=\"center\"><br></td>";
-  print "        <td colspan=2 rowspan=28 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
   print "      </tr>";
   print "      <tr>";
   print "        <td align=\"left\"><b>$msg48</b></td>";
@@ -373,6 +377,8 @@ if ($ch == 0)
   print "        <td colspan=2 align=\"center\"><i>$msg50</i></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg50</i></td>";
   print "        <td colspan=2 align=\"center\"><i>< $config->{$section}{vent_lowtemp} °C</i></td>";
+  print "        <td colspan=2 align=\"center\"><i>> $config->{$section}{vent_hightemp} °C</i></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=25 align=\"center\"><br></td>";
   print "      </tr>";
   my @i = (0..23);
   for (@i)
@@ -382,13 +388,15 @@ if ($ch == 0)
     $v = "heater_disable_" . sprintf ("%02d",$_);
     print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
     print "        <td align=\"center\">$_</td>";
-    $v = "humidifier_disable_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    print "        <td class=\"empty\" align=\"center\">&nbsp;</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disable_" . sprintf ("%02d",$_);
     print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disablelowtemp_" . sprintf ("%02d",$_);
+    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    print "        <td align=\"center\">$_</td>";
+    $v = "vent_disablehightemp_" . sprintf ("%02d",$_);
     print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
     print "      </tr>";
   }
@@ -406,7 +414,7 @@ if ($ch == 0)
   print "        <td align=\"center\"><b><br></b></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg41</i></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg42</i></td>";
-  print "        <td colspan=4 align=\"center\"><i>$msg43</i></td>";
+  print "        <td colspan=6 align=\"center\"><i>$msg43</i></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg44</i></td>";
   print "      </tr>";
   print "      <tr>";
@@ -417,7 +425,8 @@ if ($ch == 0)
   print "        <td align=\"center\">%</td>";
   print "        <td align=\"center\">$config->{$section}{vent_on}<br></td>";
   print "        <td align=\"center\">$msg68<br></td>";
-  print "        <td colspan=2 rowspan=4 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=4 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=4 align=\"center\"><br></td>";
   print "        <td align=\"center\">$config->{$section}{light_on1}<br></td>";
   print "        <td align=\"center\">$msg69<br></td>";
   print "      </tr>";
@@ -434,8 +443,9 @@ if ($ch == 0)
   print "      </tr>";
   print "      <tr>";
   print "        <td align=\"left\"><b>$msg45</b></td>";
-  print "        <td colspan=4 rowspan=2 align=\"center\"><br></td>";
-  print "        <td colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
   print "        <td align=\"center\">$config->{$section}{light_on2}<br></td>";
   print "        <td align=\"center\">$msg69<br></td>";
   print "      </tr>";
@@ -450,8 +460,10 @@ if ($ch == 0)
   print "        <td align=\"center\">°C</td>";
   print "        <td align=\"center\">$config->{$section}{humidity_min}<br></td>";
   print "        <td align=\"center\">%</td>";
-  print "        <td colspan=4 rowspan=2 align=\"center\"><br></td>";
-  print "        <td colspan=2 rowspan=28 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=2 align=\"center\"><br></td>";
   print "      </tr>";
   print "      <tr>";
   print "        <td align=\"left\"><b>$msg48</b></td>";
@@ -466,8 +478,10 @@ if ($ch == 0)
   print "        <td colspan=2 align=\"center\"><i>$msg50</i></td>";
   print "        <td colspan=2 align=\"center\"><i>$msg50</i></td>";
   print "        <td colspan=2 align=\"center\"><i>< $config->{$section}{vent_lowtemp} °C</i></td>";
+  print "        <td colspan=2 align=\"center\"><i>> $config->{$section}{vent_hightemp} °C</i></td>";
+  print "        <td class=\"empty\" colspan=2 rowspan=25 align=\"center\"><br></td>";
   print "      </tr>";
-  @i = (0..23);
+  my @i = (0..23);
   for (@i)
   {
     print "      <tr>";
@@ -475,13 +489,15 @@ if ($ch == 0)
     $v = "heater_disable_" . sprintf ("%02d",$_);
     print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
     print "        <td align=\"center\">$_</td>";
-    $v = "humidifier_disable_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    print "        <td class=\"empty\" align=\"center\">&nbsp;</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disable_" . sprintf ("%02d",$_);
     print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disablelowtemp_" . sprintf ("%02d",$_);
+    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    print "        <td align=\"center\">$_</td>";
+    $v = "vent_disablehightemp_" . sprintf ("%02d",$_);
     print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
     print "      </tr>";
   }
