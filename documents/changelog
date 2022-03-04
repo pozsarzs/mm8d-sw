@@ -1,5 +1,6 @@
  MM8D (0.3) unstable; urgency=low
 
+  * New option is in envir-ch?.ini files.
   * Irrigator control is included.
   * Some bugfix.
   * Buttons for get environment characteristic of growing houses.
