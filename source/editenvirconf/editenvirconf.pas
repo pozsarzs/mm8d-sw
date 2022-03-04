@@ -146,10 +146,19 @@ begin
         '+': if strtoint(s)<0 then s:=inttostr(strtoint(s)*(-1));
       end;
     if isnumber(c) then
-      case block of
-        1: if length(s)<2 then s:=s+c;
-        6: if length(s)<3 then s:=s+c;
-      else if (c='0') or (c='1') then s:=c;
+      if (page=5) or (page=10) then
+      begin
+        case block of
+          3: if length(s)<3 then s:=s+c;
+        else if (c='0') or (c='1') then s:=c;
+        end;
+      end else
+      begin
+        case block of
+          1: if length(s)<2 then s:=s+c;
+          6: if length(s)<3 then s:=s+c;
+        else if (c='0') or (c='1') then s:=c;
+        end;
       end;
     if c=#8 then delete(s,length(s),1);
     gotoxy(1,bottom); clreol; write('>'+s);
@@ -275,8 +284,32 @@ begin
         hventlowtemp:=strtoint(s); write(hventlowtemp);
       end;
     end;
-
-
+    // -- page #5 --
+    if page=5 then
+    begin
+      // page #5 - block #1
+      if block=1 then
+      begin
+        gotoxy(MINPOSX[page,block],posy); textbackground(blue);
+        hventdishightemp[posy-4]:=strtoint(s);
+        write(hventdishightemp[posy-4]);
+      end;
+      // page #5 - block #2
+      if block=2 then
+      begin
+        gotoxy(MINPOSX[page,block],posy); textbackground(blue);
+        hventdishightemp[posy+8]:=strtoint(s);
+        write(hventdishightemp[posy+8]);
+      end;
+      // page #5 - block #3
+      if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block]-2,posy); write('   ');
+        gotoxy(MINPOSX[page,block]-length(s)+1,posy);
+        hventhightemp:=strtoint(s); write(hventhightemp);
+      end;
+    end;
     // -- page #6 --
     if page=6 then
     begin
@@ -393,6 +426,32 @@ begin
         gotoxy(MINPOSX[page,block]-2,posy); write('   ');
         gotoxy(MINPOSX[page,block]-length(s)+1,posy);
         mventlowtemp:=strtoint(s); write(mventlowtemp);
+      end;
+    end;
+    // -- page #10 --
+    if page=10 then
+    begin
+      // page #10 - block #1
+      if block=1 then
+      begin
+        gotoxy(MINPOSX[page,block],posy); textbackground(blue);
+        mventdishightemp[posy-8]:=strtoint(s);
+        write(mventdishightemp[posy-8]);
+      end;
+      // page #10 - block #2
+      if block=2 then
+      begin
+        gotoxy(MINPOSX[page,block],posy); textbackground(blue);
+        mventdishightemp[posy+4]:=strtoint(s);
+        write(mventdishightemp[posy+4]);
+      end;
+      // page #10 - block #3
+      if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block]-2,posy); write('   ');
+        gotoxy(MINPOSX[page,block]-length(s)+1,posy);
+        mventhightemp:=strtoint(s); write(mventhightemp);
       end;
     end;
     // -- page #11 --
