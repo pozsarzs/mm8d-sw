@@ -357,13 +357,13 @@ def analise(section):
       relay_tube1 = 0
       relay_tube2 = 0
       relay_tube3 = 0
-      writetodebuglog("w","CH0: External temperature is too low for irrigation! (< " + str(exttemp) + " C)")
+      writetodebuglog("w","CH0: External temperature is too low for irrigation! (< " + str(irtemp_min) + " C)")
     else:
       if (exttemp > irtemp_max):
         relay_tube1 = 0
         relay_tube2 = 0
         relay_tube3 = 0
-        writetodebuglog("w","CH0: External temperature is too high for irrigation! (< " + str(exttemp) + " C)")
+        writetodebuglog("w","CH0: External temperature is too high for irrigation! (> " + str(irtemp_max) + " C)")
       else:
         h1, m1 = irmorning_start[1].split(':')
         h2, m2 = irmorning_stop[1].split(':')
@@ -568,19 +568,12 @@ def writelocalports():
     GPIO.output(prt_lo3,led_error)
     GPIO.output(prt_lo4,led_waterpumperror)
     GPIO.output(prt_ro1,relay_alarm)
-    GPIO.output(prt_ro2,relay_irrtube1)
-    GPIO.output(prt_ro3,relay_irrtube2)
-    GPIO.output(prt_ro4,relay_irrtube3)
+    GPIO.output(prt_ro2,relay_tube1)
+    GPIO.output(prt_ro3,relay_tube2)
+    GPIO.output(prt_ro4,relay_tube3)
     return 0
   else:
-    outdata = 128 * led_waterpumperror + \
-               64 * led_error + \
-               32 * led_warning + \
-               16 * led_active + \
-                8 * relay_irrtube3 + \
-                4 * relay_irrtube2 + \
-                2 * relay_irrtube1 + \
-                    relay_alarm
+    outdata = 128 * led_waterpumperror +  64 * led_error +  32 * led_warning +  16 * led_active +  8 * relay_tube3 +  4 * relay_tube2 + 2 * relay_tube1 + relay_alarm
     portio.outb(outdata,lptaddresses[lpt_prt])
     if (portio.inb(lptaddresses[lpt_prt]) == outdata):
       return 1
@@ -989,7 +982,7 @@ while True:
         out_vents[channel] = outputoverride(channel,2,out_vents[channel])
         out_heaters[channel] = outputoverride(channel,3,out_heaters[channel])
     # write data to log
-    newdata[0] = str(mainssensor) + str(mainsbreaker1) + str(mainsbreaker2) + str(mainsbreaker3)
+    newdata[0] = str(mainsbreakers) + str(waterpressurelow) + str(waterpressurehigh) + str(unused_local_input)
     if (prevdata[0] != newdata[0]):
       writelog(0,0,0,0,newdata[0])
       prevdata[0] = newdata[0]
