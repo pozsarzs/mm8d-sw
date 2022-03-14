@@ -283,7 +283,9 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
       f.seek(0)
       if (channel == 0):
         s = dt + ',' + \
-            statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + statusdata[3] + '\n'
+            statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + \
+            str(exttemp) + ',' + \
+            statusdata[4] + ',' + statusdata[5] + ',' + statusdata[6] + '\n'
       else:
         s = dt + ',' + \
             str(temperature) + ',' + str(humidity) + ',' + str(gasconcentrate) + ',' + \
@@ -977,10 +979,13 @@ while True:
         out_vents[channel] = outputoverride(channel,2,out_vents[channel])
         out_heaters[channel] = outputoverride(channel,3,out_heaters[channel])
     # write data to log
-    newdata[0] = str(mainsbreakers) + str(waterpressurelow) + str(waterpressurehigh) + str(unused_local_input)
+    newdata[0] = str(mainsbreakers) + str(waterpressurelow) + str(waterpressurehigh) + str(unused_local_input) + \
+                 str(relay_tube1) + str(relay_tube2) + str(relay_tube3)
     if (prevdata[0] != newdata[0]):
       writelog(0,0,0,0,newdata[0])
       prevdata[0] = newdata[0]
+
+
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         newdata[channel] = str(in_opmode[channel]) + str(in_swmanu[channel]) + str(in_ocprot[channel]) + str(in_alarm[channel]) + \
