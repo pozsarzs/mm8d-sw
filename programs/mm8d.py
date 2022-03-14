@@ -181,10 +181,10 @@ def loadirrconf(conffile):
     irtemp_max = int(config.get(C,'temp_max'))
     irtemp_min = int(config.get(C,'temp_min'))
     for i in range(1,4):
-      irevening_start = config.get(T + str(i),'evening_start')
-      irevening_stop = config.get(T + str(i),'evening_stop')
-      irmorning_start = config.get(T + str(i),'morning_start')
-      irmorning_stop = config.get(T + str(i),'morning_stop')
+      irevening_start[i] = config.get(T + str(i),'evening_start')
+      irevening_stop[i] = config.get(T + str(i),'evening_stop')
+      irmorning_start[i] = config.get(T + str(i),'morning_start')
+      irmorning_stop[i] = config.get(T + str(i),'morning_stop')
     writetodebuglog("i","Irrigator configuration is loaded.")
   except:
     writetodebuglog("e","ERROR #20: Cannot open " + conffile + "!")
@@ -195,90 +195,6 @@ def loadenvirconf(channel,conffile):
   C = "common"
   H = "hyphae"
   M = "mushroom"
-  global cgasconcentrate_max
-  global hheater_disable
-  global hheater_off
-  global hheater_on
-  global hhumidifier_disable
-  global hhumidifier_off
-  global hhumidifier_on
-  global hhumidity_max
-  global hhumidity_min
-  global hlight_off1
-  global hlight_off2
-  global hlight_on1
-  global hlight_on2
-  global htemperature_max
-  global htemperature_min
-  global hvent_disable
-  global hvent_disablehightemp
-  global hvent_disablelowtemp
-  global hvent_hightemp
-  global hvent_lowtemp
-  global hvent_off
-  global hvent_on
-  global mheater_disable
-  global mheater_off
-  global mheater_on
-  global mhumidifier_disable
-  global mhumidifier_off
-  global mhumidifier_on
-  global mhumidity_max
-  global mhumidity_min
-  global mlight_off1
-  global mlight_off2
-  global mlight_on1
-  global mlight_on2
-  global mtemperature_max
-  global mtemperature_min
-  global mvent_disable
-  global mvent_disablehightemp
-  global mvent_disablelowtemp
-  global mvent_hightemp
-  global mvent_lowtemp
-  global mvent_off
-  global mvent_on
-  cgasconcentrate_max = [0 for x in range(9)]
-  hheater_disable = [[0 for x in range(9)] for y in range(24)]
-  hheater_off = [0 for x in range(9)]
-  hheater_on = [0 for x in range(9)]
-  hhumidifier_off = [0 for x in range(9)]
-  hhumidifier_on = [0 for x in range(9)]
-  hhumidity_max = [0 for x in range(9)]
-  hhumidity_min = [0 for x in range(9)]
-  hlight_off1 = [0 for x in range(9)]
-  hlight_off2 = [0 for x in range(9)]
-  hlight_on1 = [0 for x in range(9)]
-  hlight_on2 = [0 for x in range(9)]
-  htemperature_max = [0 for x in range(9)]
-  htemperature_min = [0 for x in range(9)]
-  hvent_disable = [[0 for x in range(9)] for x in range(24)]
-  hvent_disablehightemp = [[0 for x in range(9)] for x in range(24)]
-  hvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
-  hvent_hightemp = [0 for x in range(9)]
-  hvent_lowtemp = [0 for x in range(9)]
-  hvent_off = [0 for x in range(9)]
-  hvent_on = [0 for x in range(9)]
-  mheater_disable = [[0 for x in range(9)] for y in range(24)]
-  mheater_off = [0 for x in range(9)]
-  mheater_on = [0 for x in range(9)]
-  mhumidifier_off = [0 for x in range(9)]
-  mhumidifier_on = [0 for x in range(9)]
-  mhumidity_max = [0 for x in range(9)]
-  mhumidity_min = [0 for x in range(9)]
-  mlight_off1 = [0 for x in range(9)]
-  mlight_off2 = [0 for x in range(9)]
-  mlight_on1 = [0 for x in range(9)]
-  mlight_on2 = [0 for x in range(9)]
-  mtemperature_max = [0 for x in range(9)]
-  mtemperature_min = [0 for x in range(9)]
-  mvent_disable = [[0 for x in range(9)] for x in range(24)]
-  mvent_disablehightemp = [[0 for x in range(9)] for x in range(24)]
-  mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
-  mvent_hightemp = [0 for x in range(9)]
-  mvent_lowtemp = [0 for x in range(9)]
-  mvent_off = [0 for x in range(9)]
-  mvent_on = [0 for x in range(9)]
   try:
     with open(conffile) as f:
       envir_config = f.read()
@@ -425,11 +341,6 @@ def getexttemp():
 
 # analise data
 def analise(section):
-  global led_active
-  global led_error
-  global led_warning
-  global led_waterpumperror
-  global relay_alarm
   global relay_tube1
   global relay_tube2
   global relay_tube3
@@ -465,19 +376,19 @@ def analise(section):
         h2, m2 = irmorning_stop[1].split(':')
         h3, m3 = irevening_start[1].split(':')
         h4, m4 = irevening_stop[1].split(':')
-        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2)) or ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+        if ((h >= int(h1)) and (h < int(h2)) and (m >= int(m1)) and (m < int(m2))) or ((h >= int(h3)) and (h < int(h4)) and (m >= int(m3)) and (m < int(m4))):
           relay_tube1 = 1
         h1, m1 = irmorning_start[2].split(':')
         h2, m2 = irmorning_stop[2].split(':')
         h3, m3 = irevening_start[2].split(':')
         h4, m4 = irevening_stop[2].split(':')
-        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2)) or ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+        if ((h >= int(h1)) and (h < int(h2)) and (m >= int(m1)) and (m < int(m2))) or ((h >= int(h3)) and (h < int(h4)) and (m >= int(m3)) and (m < int(m4))):
           relay_tube2 = 1
         h1, m1 = irmorning_start[3].split(':')
         h2, m2 = irmorning_stop[3].split(':')
         h3, m3 = irevening_start[3].split(':')
         h4, m4 = irevening_stop[3].split(':')
-        if ((h >= h1) and (h < h2) and (m >= m1) and (m < m2)) or ((h >= h3) and (h < h4) and (m >= m3) and (m < m4)):
+        if ((h >= int(h1)) and (h < int(h2)) and (m >= int(m1)) and (m < int(m2))) or ((h >= int(h3)) and (h < int(h4)) and (m >= int(m3)) and (m < int(m4))):
           relay_tube3 = 1
     # - messages
     if relay_tube1 == 1:
@@ -532,14 +443,14 @@ def analise(section):
           writetodebuglog("i","CH" + str(channel) + ": operation mode: growing mushroom.")
           # - bad temperature
           if in_temperature[channel] < mtemperature_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (< " + str(mtemperature_min[channel]) + " C)")
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (" + str(in_temperature[channel]) + " C < " + str(mtemperature_min[channel]) + " C)")
           if in_temperature[channel] > mtemperature_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (> " + str(mtemperature_max[channel]) + " C)")
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (" + str(in_temperature[channel]) + " C > " + str(mtemperature_max[channel]) + " C)")
           # - bad humidity
           if in_humidity[channel] < mhumidity_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (< " + str(mhumidity_min[channel]) + "%)")
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (" + str(in_humidity[channel]) + " % < " + str(mhumidity_min[channel]) + "%)")
           if in_humidity[channel] > mhumidity_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (> " + str(mhumidity_max[channel]) + "%)")
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (" + str(in_humidity[channel]) + " % > " + str(mhumidity_max[channel]) + "%)")
           # - bad gas concentrate
           if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (> " + str(cgasconcentrate_max[channel]) + "%)")
@@ -574,17 +485,17 @@ def analise(section):
           writetodebuglog("i","CH" + str(channel) + ": operation mode: growing hyphae.")
           # - bad temperature
           if in_temperature[channel] < htemperature_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (< " + str(htemperature_min[channel]) + " C)")
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (" + str(in_temperature[channel]) + " C < " + str(htemperature_min[channel]) + " C)")
           if in_temperature[channel] > htemperature_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (> " + str(htemperature_max[channel]) + " C)")
+            writetodebuglog("w","CH" + str(channel) + ": Temperature is too high! (" + str(in_temperature[channel]) + " C > " + str(htemperature_max[channel]) + " C)")
           # - bad humidity
           if in_humidity[channel] < hhumidity_min[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (< " + str(hhumidity_min[channel]) + "%)")
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (" + str(in_humidity[channel]) + " % < " + str(hhumidity_min[channel]) + "%)")
           if in_humidity[channel] > hhumidity_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (> " + str(hhumidity_max[channel]) + "%)")
+            writetodebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (" + str(in_humidity[channel]) + " % > " + str(hhumidity_max[channel]) + "%)")
           # - bad gas concentrate
           if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
-            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (> " + str(cgasconcentrate_max[channel]) + "%)")
+            writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (" + str(in_gasconcentrate[channel]) + " % > " + str(cgasconcentrate_max[channel]) + "%)")
           # - heaters
           out_heaters[channel] = 0
           if in_temperature[channel] < hheater_on[channel]:
@@ -844,7 +755,29 @@ def getcontrollerversion(conttype,channel):
   return rc
 
 # main program
+global cgasconcentrate_max
 global exttemp
+global hheater_disable
+global hheater_off
+global hheater_on
+global hhumidifier_disable
+global hhumidifier_off
+global hhumidifier_on
+global hhumidity_max
+global hhumidity_min
+global hlight_off1
+global hlight_off2
+global hlight_on1
+global hlight_on2
+global htemperature_max
+global htemperature_min
+global hvent_disable
+global hvent_disablehightemp
+global hvent_disablelowtemp
+global hvent_hightemp
+global hvent_lowtemp
+global hvent_off
+global hvent_on
 global in_alarm
 global in_gasconcentrate
 global in_humidity
@@ -856,6 +789,27 @@ global led_active
 global led_error
 global led_warning
 global led_waterpumperror
+global mheater_disable
+global mheater_off
+global mheater_on
+global mhumidifier_disable
+global mhumidifier_off
+global mhumidifier_on
+global mhumidity_max
+global mhumidity_min
+global mlight_off1
+global mlight_off2
+global mlight_on1
+global mlight_on2
+global mtemperature_max
+global mtemperature_min
+global mvent_disable
+global mvent_disablehightemp
+global mvent_disablelowtemp
+global mvent_hightemp
+global mvent_lowtemp
+global mvent_off
+global mvent_on
 global out_heaters
 global out_lamps
 global out_vents
@@ -864,7 +818,28 @@ global relay_tube1
 global relay_tube2
 global relay_tube3
 # reset variables
+cgasconcentrate_max = [0 for x in range(9)]
 exttemp = 18
+hheater_disable = [[0 for x in range(9)] for y in range(24)]
+hheater_off = [0 for x in range(9)]
+hheater_on = [0 for x in range(9)]
+hhumidifier_off = [0 for x in range(9)]
+hhumidifier_on = [0 for x in range(9)]
+hhumidity_max = [0 for x in range(9)]
+hhumidity_min = [0 for x in range(9)]
+hlight_off1 = [0 for x in range(9)]
+hlight_off2 = [0 for x in range(9)]
+hlight_on1 = [0 for x in range(9)]
+hlight_on2 = [0 for x in range(9)]
+htemperature_max = [0 for x in range(9)]
+htemperature_min = [0 for x in range(9)]
+hvent_disable = [[0 for x in range(9)] for x in range(24)]
+hvent_disablehightemp = [[0 for x in range(9)] for x in range(24)]
+hvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+hvent_hightemp = [0 for x in range(9)]
+hvent_lowtemp = [0 for x in range(9)]
+hvent_off = [0 for x in range(9)]
+hvent_on = [0 for x in range(9)]
 in_alarm = [0 for channel in range(9)]
 in_gasconcentrate = [0 for channel in range(9)]
 in_humidity = [0 for channel in range(9)]
@@ -876,6 +851,26 @@ led_active = 0
 led_error = 0
 led_warning = 0
 led_waterpumperror = 0
+mheater_disable = [[0 for x in range(9)] for y in range(24)]
+mheater_off = [0 for x in range(9)]
+mheater_on = [0 for x in range(9)]
+mhumidifier_off = [0 for x in range(9)]
+mhumidifier_on = [0 for x in range(9)]
+mhumidity_max = [0 for x in range(9)]
+mhumidity_min = [0 for x in range(9)]
+mlight_off1 = [0 for x in range(9)]
+mlight_off2 = [0 for x in range(9)]
+mlight_on1 = [0 for x in range(9)]
+mlight_on2 = [0 for x in range(9)]
+mtemperature_max = [0 for x in range(9)]
+mtemperature_min = [0 for x in range(9)]
+mvent_disable = [[0 for x in range(9)] for x in range(24)]
+mvent_disablehightemp = [[0 for x in range(9)] for x in range(24)]
+mvent_disablelowtemp = [[0 for x in range(9)] for x in range(24)]
+mvent_hightemp = [0 for x in range(9)]
+mvent_lowtemp = [0 for x in range(9)]
+mvent_off = [0 for x in range(9)]
+mvent_on = [0 for x in range(9)]
 newdata = ["" for x in range(10)]
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
@@ -943,9 +938,9 @@ while True:
     # analise data
     analise(1);
     # override state of outputs
-    relay_tube1 = outputoverride(0,1,relay_tube1)
-    relay_tube2 = outputoverride(0,2,relay_tube2)
-    relay_tube3 = outputoverride(0,3,relay_tube3)
+    relay_tube1 = int(outputoverride(0,1,relay_tube1))
+    relay_tube2 = int(outputoverride(0,2,relay_tube2))
+    relay_tube3 = int(outputoverride(0,3,relay_tube3))
     # write data to local port
     if writelocalports():
       writetodebuglog("i","Write data to local I/O port.")
