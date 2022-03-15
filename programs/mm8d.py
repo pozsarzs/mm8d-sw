@@ -343,6 +343,9 @@ def getexttemp():
 
 # analise data
 def analise(section):
+  global led_error
+  global led_warning
+  global led_waterpumperror
   global relay_tube1
   global relay_tube2
   global relay_tube3
@@ -378,19 +381,19 @@ def analise(section):
         h2, m2 = irmorning_stop[1].split(':')
         h3, m3 = irevening_start[1].split(':')
         h4, m4 = irevening_stop[1].split(':')
-        if ((h >= int(h1)) and (h < int(h2)) and (m >= int(m1)) and (m < int(m2))) or ((h >= int(h3)) and (h < int(h4)) and (m >= int(m3)) and (m < int(m4))):
+        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
           relay_tube1 = 1
         h1, m1 = irmorning_start[2].split(':')
         h2, m2 = irmorning_stop[2].split(':')
         h3, m3 = irevening_start[2].split(':')
         h4, m4 = irevening_stop[2].split(':')
-        if ((h >= int(h1)) and (h < int(h2)) and (m >= int(m1)) and (m < int(m2))) or ((h >= int(h3)) and (h < int(h4)) and (m >= int(m3)) and (m < int(m4))):
+        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
           relay_tube2 = 1
         h1, m1 = irmorning_start[3].split(':')
         h2, m2 = irmorning_stop[3].split(':')
         h3, m3 = irevening_start[3].split(':')
         h4, m4 = irevening_stop[3].split(':')
-        if ((h >= int(h1)) and (h < int(h2)) and (m >= int(m1)) and (m < int(m2))) or ((h >= int(h3)) and (h < int(h4)) and (m >= int(m3)) and (m < int(m4))):
+        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
           relay_tube3 = 1
     # - messages
     if relay_tube1 == 1:
