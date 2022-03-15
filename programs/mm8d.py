@@ -346,6 +346,7 @@ def analise(section):
   global led_error
   global led_warning
   global led_waterpumperror
+  global relay_alarm
   global relay_tube1
   global relay_tube2
   global relay_tube3
