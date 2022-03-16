@@ -984,16 +984,14 @@ while True:
         out_heaters[channel] = outputoverride(channel,3,out_heaters[channel])
     # write data to log
     newdata[0] = str(mainsbreakers) + str(waterpressurelow) + str(waterpressurehigh) + str(unused_local_input) + \
-                 str(relay_tube1) + str(relay_tube2) + str(relay_tube3)
+      str(relay_tube1) + str(relay_tube2) + str(relay_tube3)
     if (prevdata[0] != newdata[0]):
       writelog(0,0,0,0,newdata[0])
       prevdata[0] = newdata[0]
-
-
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         newdata[channel] = str(in_opmode[channel]) + str(in_swmanu[channel]) + str(in_ocprot[channel]) + str(in_alarm[channel]) + \
-                           str(out_lamps[channel]) + str(out_vents[channel]) + str(out_heaters[channel])
+          str(out_lamps[channel]) + str(out_vents[channel]) + str(out_heaters[channel])
         if (prevdata[channel] != newdata[channel]):
           writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
           prevdata[channel] = newdata[channel]
@@ -1014,7 +1012,7 @@ while True:
         else:
           writetodebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D to default state.")
     writetodebuglog("i","Program stopped.")
-    sys.exit(0)
+    sys.exit(19)
 # close local ports
 closelocalports()
 # set outputs of MM6D
