@@ -44,25 +44,40 @@ maintainlogfile()
 {
   DATAFILE=$DIR_LOG"/mm8d-ch$1.log"
   BCKPFILE=$DIR_LOG"/mm8d-ch$1.bak"
-
-  rm --force $BCKPFILE.gz
-  mv $DATAFILE $BCKPFILE
-  touch $DATAFILE
-  NOW=`date +%s`
-  OLDIFS=$IFS
-  IFS=,
-  [ ! -f $BCKPFILE ] && { echo "ERROR #4: Cannot create $BCKPFILE backup file!"; exit 4; }
-  while read C1 C2 C3 C4 C5 C6 C7 C8
-  do
-    XDATE=`date -d $C1 +%s`
-    MAXXDATE=$(($XDATE+$((86400*$DAY_L))))
-    if ! [ $NOW -gt $MAXXDATE ]
-    then
-      echo "$C1,$C2,$C3,$C4,$C5,$C6,$C7,$C8" >> $DATAFILE
+  if [ -f $DATAFILE ]
+  then
+    rm --force $BCKPFILE.gz
+    mv $DATAFILE $BCKPFILE
+    touch $DATAFILE
+    NOW=`date +%s`
+    OLDIFS=$IFS
+    IFS=,
+    [ ! -f $BCKPFILE ] && { echo "ERROR #4: Cannot create $BCKPFILE backup file!"; exit 4; }
+    if [ $1 = 0 ]
+    then 
+      while read C1 C2 C3 C4 C5 C6 C7 C8 C9
+      do
+        XDATE=`date -d $C1 +%s`
+        MAXXDATE=$(($XDATE+$((86400*$DAY_L))))
+        if ! [ $NOW -gt $MAXXDATE ]
+        then
+          echo "$C1,$C2,$C3,$C4,$C5,$C6,$C7,$C8,$C9" >> $DATAFILE
+        fi
+      done < $BCKPFILE
+    else
+      while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11 C12
+      do
+        XDATE=`date -d $C1 +%s`
+        MAXXDATE=$(($XDATE+$((86400*$DAY_L))))
+        if ! [ $NOW -gt $MAXXDATE ]
+        then
+          echo "$C1,$C2,$C3,$C4,$C5,$C6,$C7,$C8,$C9,$C10,$C11,$C12" >> $DATAFILE
+        fi
+      done < $BCKPFILE
     fi
-  done < $BCKPFILE
-  IFS=$OLDIFS
-  gzip -9 $BCKPFILE
+    IFS=$OLDIFS
+    gzip -9 $BCKPFILE
+  fi
 }
 
 # main function
