@@ -329,15 +329,19 @@ def blinkactiveled(on):
 # get external temperature from openweathermap.org
 def getexttemp():
   writetodebuglog("i","Get external temperature from internet.")
-  response=requests.get(base_url + "appid=" + api_key + "&q=" + city_name)
-  x=response.json()
-  if x["cod"] != "404":
-    y = x["main"] 
-    current_temperature = y["temp"]
-    current_temperature = round(current_temperature - 273)
-    writetodebuglog("i","External temperature: " + str(current_temperature) + " degree Celsius")
-    return current_temperature
-  else:
+  try:
+    response=requests.get(base_url + "appid=" + api_key + "&q=" + city_name)
+    x=response.json()
+    if x["cod"] != "404":
+      y = x["main"] 
+      current_temperature = y["temp"]
+      current_temperature = round(current_temperature - 273)
+      writetodebuglog("i","External temperature: " + str(current_temperature) + " degree Celsius")
+      return current_temperature
+    else:
+      writetodebuglog("w","Cannot get external temperature from internet.")
+      return 18
+  except:
     writetodebuglog("w","Cannot get external temperature from internet.")
     return 18
 
@@ -398,17 +402,17 @@ def analise(section):
           relay_tube3 = 1
     # - messages
     if relay_tube1 == 1:
-      writetodebuglog("i","CH0: water pump and valve #1 ON")
+      writetodebuglog("i","CH0: Output water pump and valve #1 ON")
     else:
-      writetodebuglog("i","CH0: water pump and valve #1 OFF")
+      writetodebuglog("i","CH0: Output water pump and valve #1 OFF")
     if relay_tube2 == 1:
-      writetodebuglog("i","CH0: water pump and valve #2 ON")
+      writetodebuglog("i","CH0: Output water pump and valve #2 ON")
     else:
-      writetodebuglog("i","CH0: water pump and valve #2 OFF")
+      writetodebuglog("i","CH0: Output water pump and valve #2 OFF")
     if relay_tube3 == 1:
-      writetodebuglog("i","CH0: water pump and valve #3 ON")
+      writetodebuglog("i","CH0: Output water pump and valve #3 ON")
     else:
-      writetodebuglog("i","CH0: water pump and valve #3 OFF")
+      writetodebuglog("i","CH0: Output water pump and valve #3 OFF")
     # - bad pressure
     if ((relay_tube1 == 1) or (relay_tube2 == 1) or (relay_tube3 == 1)) and (waterpressurelow):
       led_waterpumperror = 1
@@ -441,12 +445,12 @@ def analise(section):
     # Growing environments
     for channel in range(1,9):
       if ena_ch[channel] == 1:
-        writetodebuglog("i","CH" + str(channel) + ": " + str(in_temperature[channel]) + " C")
-        writetodebuglog("i","CH" + str(channel) + ": " + str(in_humidity[channel]) + "%")
-        writetodebuglog("i","CH" + str(channel) + ": " + str(in_gasconcentrate[channel]) + "%")
+        writetodebuglog("i","CH" + str(channel) + ": Measured T is " + str(in_temperature[channel]) + " C")
+        writetodebuglog("i","CH" + str(channel) + ": Measured RH is " + str(in_humidity[channel]) + "%")
+        writetodebuglog("i","CH" + str(channel) + ": Measured RUGC is " + str(in_gasconcentrate[channel]) + "%")
         if in_opmode[channel] == 0:
           # growing mushroom
-          writetodebuglog("i","CH" + str(channel) + ": operation mode: growing mushroom.")
+          writetodebuglog("i","CH" + str(channel) + ": Operation mode: growing mushroom.")
           # - bad temperature
           if in_temperature[channel] < mtemperature_min[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (" + str(in_temperature[channel]) + " C < " + str(mtemperature_min[channel]) + " C)")
@@ -488,7 +492,7 @@ def analise(section):
             out_vents[channel] = 1
         else:
           # growing hyphae
-          writetodebuglog("i","CH" + str(channel) + ": operation mode: growing hyphae.")
+          writetodebuglog("i","CH" + str(channel) + ": Operation mode: growing hyphae.")
           # - bad temperature
           if in_temperature[channel] < htemperature_min[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Temperature is too low! (" + str(in_temperature[channel]) + " C < " + str(htemperature_min[channel]) + " C)")
@@ -532,17 +536,17 @@ def analise(section):
             out_vents[channel] = 0
         # messages
         if out_heaters[channel] == 1:
-          writetodebuglog("i","CH" + str(channel) + ": heaters ON")
+          writetodebuglog("i","CH" + str(channel) + ": Output heaters ON")
         else:
-          writetodebuglog("i","CH" + str(channel) + ": heaters OFF")
+          writetodebuglog("i","CH" + str(channel) + ": Output heaters OFF")
         if out_lamps[channel] == 1:
-          writetodebuglog("i","CH" + str(channel) + ": lamps ON")
+          writetodebuglog("i","CH" + str(channel) + ": Output lamps ON")
         else:
-          writetodebuglog("i","CH" + str(channel) + ": lamps OFF")
+          writetodebuglog("i","CH" + str(channel) + ": Output lamps OFF")
         if out_vents[channel] == 1:
-          writetodebuglog("i","CH" + str(channel) + ": ventilators ON")
+          writetodebuglog("i","CH" + str(channel) + ": Output ventilators ON")
         else:
-          writetodebuglog("i","CH" + str(channel) + ": ventilators OFF")
+          writetodebuglog("i","CH" + str(channel) + ": Output ventilators OFF")
 
 # initialize GPIO/LPT port
 def initializelocalports():
@@ -576,15 +580,18 @@ def initializelocalports():
 # write data from GPIO/LPT port
 def writelocalports():
   if hw == 0:
-    GPIO.output(prt_lo1,led_active)
-    GPIO.output(prt_lo2,led_warning)
-    GPIO.output(prt_lo3,led_error)
-    GPIO.output(prt_lo4,led_waterpumperror)
-    GPIO.output(prt_ro1,relay_alarm)
-    GPIO.output(prt_ro2,relay_tube1)
-    GPIO.output(prt_ro3,relay_tube2)
-    GPIO.output(prt_ro4,relay_tube3)
-    return 0
+    try:
+      GPIO.output(prt_lo1,led_active)
+      GPIO.output(prt_lo2,led_warning)
+      GPIO.output(prt_lo3,led_error)
+      GPIO.output(prt_lo4,led_waterpumperror)
+      GPIO.output(prt_ro1,relay_alarm)
+      GPIO.output(prt_ro2,relay_tube1)
+      GPIO.output(prt_ro3,relay_tube2)
+      GPIO.output(prt_ro4,relay_tube3)
+      return 1
+    except:
+      return 0
   else:
     outdata = 128 * led_waterpumperror +  64 * led_error +  32 * led_warning +  16 * led_active +  8 * relay_tube3 +  4 * relay_tube2 + 2 * relay_tube1 + relay_alarm
     portio.outb(outdata,lptaddresses[lpt_prt])
@@ -600,25 +607,40 @@ def readlocalports():
   global waterpressurehigh
   global unused_local_input
   if hw == 0:
-    GPIO.input(prt_i1,mainsbreakers)
-    GPIO.input(prt_i2,waterpressurelow)
-    GPIO.input(prt_i3,waterpressurehigh)
-    GPIO.input(prt_i4,unused_local_input)
+    try:
+      GPIO.input(prt_i1,mainsbreakers)
+      GPIO.input(prt_i2,waterpressurelow)
+      GPIO.input(prt_i3,waterpressurehigh)
+      GPIO.input(prt_i4,unused_local_input)
+      return 1
+    except:
+      mainsbreakers = 0;
+      waterpressurelow = 0
+      waterpressurehigh = 0
+      unused_local_input = 0
+      return 0
   else:
-    indata = portio.inb(lptaddresses[lpt_prt] + 1)
-    mainsbreakers = indata & 8
-    if mainsbreakers > 1:
-      mainsbreakers = 1
-    waterpressurelow = indata & 16
-    if waterpressurelow > 1:
-      waterpressurelow = 1
-    waterpressurehigh = indata & 32
-    if waterpressurehigh > 1:
-      waterpressurehigh = 1
-    unused_local_input = indata & 64
-    if unused_local_input > 1:
-      unused_local_input = 1
-  return 1
+    try:
+      indata = portio.inb(lptaddresses[lpt_prt] + 1)
+      mainsbreakers = indata & 8
+      if mainsbreakers > 1:
+        mainsbreakers = 1
+      waterpressurelow = indata & 16
+      if waterpressurelow > 1:
+        waterpressurelow = 1
+      waterpressurehigh = indata & 32
+      if waterpressurehigh > 1:
+        waterpressurehigh = 1
+      unused_local_input = indata & 64
+      if unused_local_input > 1:
+        unused_local_input = 1
+      return 1
+    except:
+      mainsbreakers = 0;
+      waterpressurelow = 0
+      waterpressurehigh = 0
+      unused_local_input = 0
+      return 0
 
 # close GPIO/LPT port
 def closelocalports():
@@ -937,8 +959,12 @@ while True:
     blinkactiveled(1);
     # section #1:
     # read data from local port
+    writetodebuglog("i","Read data from local I/O port.")
     if readlocalports():
-      writetodebuglog("i","Read data from local I/O port.")
+      writetodebuglog("i","- input data: " + str(unused_local_input) + \
+                                             str(waterpressurehigh) + \
+                                             str(waterpressurelow) + \
+                                             str(mainsbreakers) +".")
     else:
       writetodebuglog("w","Cannot read data from local I/O port.")
     # analise data
@@ -947,9 +973,29 @@ while True:
     relay_tube1 = int(outputoverride(0,1,relay_tube1))
     relay_tube2 = int(outputoverride(0,2,relay_tube2))
     relay_tube3 = int(outputoverride(0,3,relay_tube3))
+    if relay_tube1 == 1:
+      writetodebuglog("i","CH0: -> water pump and valve #1 ON")
+    else:
+      writetodebuglog("i","CH0: -> water pump and valve #1 OFF")
+    if relay_tube2 == 1:
+      writetodebuglog("i","CH0: -> water pump and valve #2 ON")
+    else:
+      writetodebuglog("i","CH0: -> water pump and valve #2 OFF")
+    if relay_tube3 == 1:
+      writetodebuglog("i","CH0: -> water pump and valve #3 ON")
+    else:
+      writetodebuglog("i","CH0: -> water pump and valve #3 OFF")
     # write data to local port
+    writetodebuglog("i","Write data to local I/O port.")
     if writelocalports():
-      writetodebuglog("i","Write data to local I/O port.")
+      writetodebuglog("i","- output data: " + str(led_waterpumperror) + \
+                                              str(led_error) + \
+                                              str(led_warning) + \
+                                              str(led_active) + \
+                                              str(relay_tube3) + \
+                                              str(relay_tube2) + \
+                                              str(relay_tube1) + \
+                                              str(relay_alarm) +".")
     else:
       writetodebuglog("w","Cannot write data to local I/O port.")
     # set outputs of MM6D
@@ -972,7 +1018,7 @@ while True:
         else:
           writetodebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
     # get external temperature from internet
-    if (int(time.strftime("%M")) == 28):
+    if (int(time.strftime("%M")) == 8):
       exttemp=getexttemp()
     # analise data
     analise(2);
@@ -982,6 +1028,18 @@ while True:
         out_lamps[channel] = outputoverride(channel,1,out_lamps[channel])
         out_vents[channel] = outputoverride(channel,2,out_vents[channel])
         out_heaters[channel] = outputoverride(channel,3,out_heaters[channel])
+        if out_heaters[channel] == 1:
+          writetodebuglog("i","CH" + str(channel) + ": -> heaters ON")
+        else:
+          writetodebuglog("i","CH" + str(channel) + ": -> heaters OFF")
+        if out_lamps[channel] == 1:
+          writetodebuglog("i","CH" + str(channel) + ": -> lamps ON")
+        else:
+          writetodebuglog("i","CH" + str(channel) + ": -> lamps OFF")
+        if out_vents[channel] == 1:
+          writetodebuglog("i","CH" + str(channel) + ": -> ventilators ON")
+        else:
+          writetodebuglog("i","CH" + str(channel) + ": -> ventilators OFF")
     # write data to log
     newdata[0] = str(mainsbreakers) + str(waterpressurelow) + str(waterpressurehigh) + str(unused_local_input) + \
       str(relay_tube1) + str(relay_tube2) + str(relay_tube3)
