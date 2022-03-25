@@ -11,4 +11,3 @@ PATH=/usr/local/bin:/usr/bin
 8,38 * * * *			root	mm8d-getsnapshot 6 > /dev/null 2>&1
 9,39 * * * *			root	mm8d-getsnapshot 7 > /dev/null 2>&1
 10,40 * * * *			root	mm8d-getsnapshot 8 > /dev/null 2>&1
-0 1 * * *			root	mm8d-updatestartpage > /dev/null 2>&1
