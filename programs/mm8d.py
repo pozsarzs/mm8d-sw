@@ -32,7 +32,7 @@ import platform
 import requests
 import sys
 import time
-from time import gmtime, strftime
+from time import localtime, strftime
 
 arch=platform.machine()
 if arch.find("86") > -1:
@@ -76,7 +76,7 @@ def writetodebuglog(level,text):
     if level == "e":
       lv = "ERROR  "
     debugfile = dir_log + '/' + time.strftime("debug-%Y%m%d.log")
-    dt = (strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+    dt = (strftime("%Y-%m-%d %H:%M:%S",localtime()))
     try:
       with open(debugfile,"a") as d:
         d.write(dt + '  ' + lv + ' ' + text + '\n')
@@ -270,7 +270,7 @@ def lckfile(mode):
 # write data to log with timestamp
 def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
   logfile = dir_log + '/mm8d-ch' + str(channel) + '.log'
-  dt = (strftime("%Y-%m-%d,%H:%M",gmtime()))
+  dt = (strftime("%Y-%m-%d,%H:%M",localtime()))
   lckfile(1)
   writetodebuglog("i","CH" + str(channel) + ": Writing data to logfile.")
   if not os.path.isfile(logfile):
@@ -386,19 +386,22 @@ def analise(section):
         h2, m2 = irmorning_stop[1].split(':')
         h3, m3 = irevening_start[1].split(':')
         h4, m4 = irevening_stop[1].split(':')
-        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
+        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or \
+           ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
           relay_tube1 = 1
         h1, m1 = irmorning_start[2].split(':')
         h2, m2 = irmorning_stop[2].split(':')
         h3, m3 = irevening_start[2].split(':')
         h4, m4 = irevening_stop[2].split(':')
-        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
+        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or \
+           ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
           relay_tube2 = 1
         h1, m1 = irmorning_start[3].split(':')
         h2, m2 = irmorning_stop[3].split(':')
         h3, m3 = irevening_start[3].split(':')
         h4, m4 = irevening_stop[3].split(':')
-        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
+        if ((h >= int(h1)) and (h <= int(h2)) and (m >= int(m1)) and (m <= int(m2))) or \
+           ((h >= int(h3)) and (h <= int(h4)) and (m >= int(m3)) and (m <= int(m4))):
           relay_tube3 = 1
     # - messages
     if relay_tube1 == 1:
