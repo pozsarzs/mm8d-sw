@@ -98,7 +98,7 @@ writetofile()
       "heater") OF="out3";;
       *)\
         echo "ERROR #6: Wrong output name!"; \
-        echo "Valid values: heater, lamp, ventilator"; \
+        echo "Valid values: lamp, ventilator, heater"; \
         exit 6;;
     esac
     if [ $3 = "neutral" ] || [ $3 = "on" ] || [ $3 = "off" ]
@@ -186,7 +186,7 @@ usage()
   echo    "       $0 channel"
   echo -e "       $0 channel output state"
   echo    "       $0 0 tube1|tube2|tube3 neutral|on|off"
-  echo -e "       $0 [1-8] heater|lamp|ventilator neutral|on|off\n"
+  echo -e "       $0 [1-8] lamp|ventilator|heater neutral|on|off\n"
   exit 0
 }
 
