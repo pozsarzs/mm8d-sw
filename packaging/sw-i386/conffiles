@@ -8,6 +8,7 @@
 /etc/mm8d/envir-ch6.ini
 /etc/mm8d/envir-ch7.ini
 /etc/mm8d/envir-ch8.ini
+/etc/mm8d/irrigator.ini
 /etc/mm8d/mm8d.ini
 /etc/motd
 /etc/systemd/system/mm8d.service
