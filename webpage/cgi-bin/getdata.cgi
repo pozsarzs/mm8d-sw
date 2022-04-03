@@ -259,7 +259,7 @@ if ( $uid eq $usr_uid )
           }
           if ( $ch > 0 )
           {
-            my @b = (10..11);
+            my @b = (9..11);
             for (@b)
             {
               print "$columns[$_]\n";
