@@ -10,7 +10,8 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
  - version:            v0.3
  - language:           en (hu)
  - licence:            EUPL v1.1
- - user interface:     TUI, CLI and webpage
+ - user interface:     CLI, TUI, WUI
+ - remote access:      HTTP, SSH
 
 **External libraries in package**
 
