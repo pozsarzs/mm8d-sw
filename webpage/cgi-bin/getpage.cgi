@@ -101,9 +101,9 @@ sub writetable()
     if ($columns[2] eq 1) { $columns[2] = $red } else { $columns[2] = $dark };
     if ($columns[3] eq 1) { $columns[3] = $red } else { $columns[3] = $dark };
     if ($columns[4] eq 1) { $columns[4] = $red } else { $columns[4] = $dark };
-    if ($columns[6] eq 1) { $columns[6] = $red } else { $columns[6] = $dark };
-    if ($columns[7] eq 1) { $columns[7] = $red } else { $columns[7] = $dark };
-    if ($columns[8] eq 1) { $columns[8] = $red } else { $columns[8] = $dark };
+    if ($columns[6] eq 1) { $columns[6] = $green } else { $columns[6] = $dark };
+    if ($columns[7] eq 1) { $columns[7] = $green } else { $columns[7] = $dark };
+    if ($columns[8] eq 1) { $columns[8] = $green } else { $columns[8] = $dark };
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
