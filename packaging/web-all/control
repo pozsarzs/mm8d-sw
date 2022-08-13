@@ -5,7 +5,7 @@ Priority: optional
 Architecture: all
 Installed-Size: 292 kB
 Maintainer: Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
-Depends: mm8d-sw, apache2, gnuplot, wget, libswitch-perl
+Depends: mm8d-sw, apache2, gnuplot, wget, libswitch-perl, liconfig-tiny-perl
 Description: Web interface
  This is a part of operating program of MM8D growing house and
  irrigation controlling and remote monitoring device.

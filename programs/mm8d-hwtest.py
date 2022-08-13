@@ -79,8 +79,8 @@ def loadconfiguration(conffile):
       prt_lo4=int(config.get('GPIOports','prt_lo4'))
     else:
       lpt_prt=int(config.get('LPTport','lpt_prt'))
-    if (lpt_prt < 0) or (lpt_prt > 2):
-      lpt_prt=0
+      if (lpt_prt < 0) or (lpt_prt > 2):
+        lpt_prt=0
   except:
     print("ERROR #1: Cannot open configuration file!");
     sys.exit(1);
