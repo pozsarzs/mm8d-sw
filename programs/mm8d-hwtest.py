@@ -139,27 +139,27 @@ while True:
     print(" * Check I1-4 inputs")
     if hw == 0:
       print("   used GPIO ports:")
-      print("     I1: GPIO", prt_i0,sep = '')
-      print("     I2: GPIO", prt_i1,sep = '')
-      print("     I3: GPIO", prt_i2,sep = '')
-      print("     I4: GPIO", prt_i3,sep = '')
+      print("     I1: GPIO", prt_i1,sep = '')
+      print("     I2: GPIO", prt_i2,sep = '')
+      print("     I3: GPIO", prt_i3,sep = '')
+      print("     I4: GPIO", prt_i4,sep = '')
       print("   Press ^C to stop!")
       try:
         while True:
           s = ""
-          if GPIO.input(prt_i3):
+          if GPIO.input(prt_i4):
             s = "1"
           else:
             s = "0"
+          if GPIO.input(prt_i3):
+            s = s + "1"
+          else:
+            s = s + "0"
           if GPIO.input(prt_i2):
             s = s + "1"
           else:
             s = s + "0"
           if GPIO.input(prt_i1):
-            s = s + "1"
-          else:
-            s = s + "0"
-          if GPIO.input(prt_i0):
             s = s + "1"
           else:
             s = s + "0"
