@@ -1,3 +1,9 @@
+ MM8D (0.3.1) unstable; urgency=low
+
+  * Some bugfix.
+
+ -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Fri, 19 Aug 2022 15:44:00
+
  MM8D (0.3) unstable; urgency=low
 
   * New option is in envir-ch?.ini files.

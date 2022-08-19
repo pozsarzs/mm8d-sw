@@ -1,5 +1,5 @@
 Package: mm8d-sw
-Version: 0.3
+Version: 0.3.1
 Section: misc
 Priority: optional
 Architecture: amd64

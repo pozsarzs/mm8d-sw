@@ -7,7 +7,7 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
 
  - architecture:       amd64, armhf, i386
  - operation system:   Raspbian OS, Debian GNU/Linux
- - version:            v0.3
+ - version:            v0.3.1
  - language:           en (hu)
  - licence:            EUPL v1.1
  - user interface:     CLI, TUI, WUI

@@ -7,7 +7,7 @@ and enable SPI module.
 
 Installation
 ~~~~~~~~~~~~
-  $ tar -xzf mm8d-sw-0.3-armhf.tar.gz
+  $ tar -xzf mm8d-sw-0.3.1-armhf.tar.gz
   $ cd mm8d-sw
   $ sudo raspi-config
   $ ./prepare

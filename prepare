@@ -51,7 +51,7 @@ sudo apt-get install apache2 \
                      libconfig-tiny-perl \
                      sudo \
                      wget
-if [ $ARCH = 'armhf' ]
+if [ "$ARCH" = "armhf" ]
 then
   sudo apt-get install python3-rpi.gpio
 else

@@ -4,8 +4,8 @@ ce661abcc6a565f2a4805a2318b60a33  etc/cron.d/mm8d-web
 2a14a7fdefcf214355b70646f4997a8c  usr/bin/mm8d-updatestartpage
 17cd844007a6d2931e5e8853ec2a6478  usr/lib/cgi-bin/getdata.cgi
 49b37979a01d991c62210ac43bd08c7a  usr/lib/cgi-bin/getenvirconf.cgi
-b5e59132e9653a86942ef11cee96db10  usr/lib/cgi-bin/getpage.cgi
-87a27995f527d22f805b39214d8501b2  usr/share/doc/mm8d-web/changelog.gz
+4efb30b823a8fe7ac8102e73d37ec48e  usr/lib/cgi-bin/getpage.cgi
+b1e3dccc5617ace5653eef2fcef0b234  usr/share/doc/mm8d-web/changelog.gz
 40a29a5ec427fc848370a7b2ee2f3aaf  usr/share/doc/mm8d-web/copyright
 eb7c62051e17e8fbc5539958e2ad7630  usr/share/locale/hu/mm8d.msg
 ae688af0fa4a86c41bfe153a0e8eef2b  usr/share/man/man1/mm8d-creatediagrams.1.gz

@@ -17,7 +17,7 @@ it with SSH client.
 Requirements:
 
   Hardware: Raspberry Pi 3 Model B.
-  Software: Raspbian OS Lite,
+  Software: Raspberry Pi OS Lite,
             Apache webserver,
             GNUPlot,
             Perl,
@@ -34,20 +34,20 @@ Requirements:
 ------------------------------------------
 a. Visit homepage (see later) to download installer packages:
 
-  Raspbian OS:      mm8d-sw-0.3-armhf.tar.gz
+  Raspberry Pi OS:  mm8d-sw-0.3.1-armhf.tar.gz
 
-                    mm8d-eec_0.3-1_armhf.deb
-                    mm8d-sw_0.3-1_armhf.deb
-                    mm8d-web_0.3-1_all.deb
+                    mm8d-eec_0.3.1-1_armhf.deb
+                    mm8d-sw_0.3.1-1_armhf.deb
+                    mm8d-web_0.3.1-1_all.deb
 
-  Debian GNU/Linux: mm8d-sw-0.3-i386.tar.gz
-                    mm8d-sw-0.3-amd64.tar.gz
+  Debian GNU/Linux: mm8d-sw-0.3.1-i386.tar.gz
+                    mm8d-sw-0.3.1-amd64.tar.gz
 
-                    mm8d-eec_0.3-1_i386.deb
-                    mm8d-sw_0.3-1_i386.deb
-                    mm8d-eec_0.3-1_amd64.deb
-                    mm8d-sw_0.3-1_amd64.deb
-                    mm8d-web_0.3-1_all.deb
+                    mm8d-eec_0.3.1-1_i386.deb
+                    mm8d-sw_0.3.1-1_i386.deb
+                    mm8d-eec_0.3.1-1_amd64.deb
+                    mm8d-sw_0.3.1-1_amd64.deb
+                    mm8d-web_0.3.1-1_all.deb
 
 b. Download from Github
 
