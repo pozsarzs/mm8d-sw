@@ -1,3 +1,10 @@
+ MM8D (0.4) unstable; urgency=low
+
+  * Add mini serial console support. See miniserialconsole.txt for
+    details.
+
+ -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Tue, 13 Dec 2022 14:05:12
+
  MM8D (0.3.1) unstable; urgency=low
 
   * Some bugfix.

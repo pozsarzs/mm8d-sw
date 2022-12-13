@@ -1,5 +1,5 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.3 * Growing house and irrigation controlling and monitoring sys. | }
+{ | MM8D v0.4 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
 { | incpage8screen.pas                                                       | }
 { | Show screen content of page #8                                           | }

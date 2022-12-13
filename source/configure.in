@@ -1,5 +1,5 @@
 dnl +--------------------------------------------------------------------------+
-dnl | MM8D v0.3 * Growing house and irrigation controlling and monitoring sys. |
+dnl | MM8D v0.4 * Growing house and irrigation controlling and monitoring sys. |
 dnl | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     |
 dnl | configure.in                                                             |
 dnl | Autoconf input file for unix-like systems                                |

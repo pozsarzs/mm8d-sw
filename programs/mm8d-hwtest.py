@@ -22,6 +22,7 @@ import configparser
 import io
 import os
 import platform
+import serial
 import sys
 import time
 
@@ -39,11 +40,16 @@ if (USRLOCALDIR == 1):
 else:
   conffile = '/etc/mm8d/mm8d.ini'
 
+global eol
 global lptaddresses
+eol = "\r"
 lptaddresses = [0x378,0x278,0x3bc]
 
 # load configuration
 def loadconfiguration(conffile):
+  global com
+  global com_device
+  global com_speed
   if hw == 0:
     global prt_i1
     global prt_i2
@@ -64,6 +70,8 @@ def loadconfiguration(conffile):
       mm8d_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mm8d_config))
+    com_device=config.get('COMport','com_device')
+    com_speed=int(config.get('COMport','com_speed'))
     if hw == 0:
       prt_i1=int(config.get('GPIOports','prt_i1'))
       prt_i2=int(config.get('GPIOports','prt_i2'))
@@ -86,14 +94,15 @@ def loadconfiguration(conffile):
     sys.exit(1);
 
 # main function
-print("\nMM8D hardware test utility * (C)2020-2022 Pozsar Zsolt")
-print("======================================================")
+print("\nMM8D hardware test utility * (C) 2020-2022 Pozsar Zsolt")
+print("-------------------------------------------------------")
 if os.getuid():
   print(" * You need to be root!")
   sys.exit(0)
 print(" * load configuration: %s..." % conffile)
 loadconfiguration(conffile)
 print(" * setting ports...")
+com = serial.Serial(com_device, com_speed)
 if hw == 0:
   GPIO.setwarnings(False)
   GPIO.setmode(GPIO.BCM)
@@ -126,6 +135,7 @@ while True:
    1: Check I1-4 inputs\n \
    2: Check RO1-4 relay contact outputs\n \
    3: Check LO1-4 open collector outputs\n \
+   4: Write text to the mini serial console\n \
    q: Quit\n")
   if selection is "Q" or selection is "q":
     print(" * Quitting.")
@@ -286,5 +296,19 @@ while True:
       except KeyboardInterrupt:
           portio.outb(0,lptaddresses[lpt_prt])
           print()
+
+  if selection is "4":
+    print(" * Write text to the mini serial console")
+    print("   used COM port:")
+    print("     device: ", com_device)
+    print("     speed:  ", com_speed)
+    print("   Press ^C to stop!")
+    try:
+      while True:
+        com.open
+        com.write(str.encode(input() + eol))
+        com.close
+    except KeyboardInterrupt:
+        print()
 
 sys.exit(0)

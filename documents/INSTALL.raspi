@@ -2,12 +2,11 @@ Installation instruction for tar.gz package
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Before install this program please install Raspbian Lite OS to SD-CARD
-(X Window System is not needed). Do not forget to set hostname and network
-and enable SPI module.
+(X Window System is not needed). Do not forget to set hostname and network.
 
 Installation
 ~~~~~~~~~~~~
-  $ tar -xzf mm8d-sw-0.3.1-armhf.tar.gz
+  $ tar -xzf mm8d-sw-0.4-armhf.tar.gz
   $ cd mm8d-sw
   $ sudo raspi-config
   $ ./prepare

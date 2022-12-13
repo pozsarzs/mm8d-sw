@@ -11,19 +11,21 @@ Raspberry Pi. MM6Ds and MM7Ds connects via wireles LAN, MM9A and others
 (auxiliary contact of overcurrent breakers, rain sensor and LEDs) via MM8D
 interface board.
 
-  You can view actual status with a browser application and administrate
-it with SSH client.
+  You can view actual status on connected Mini serial console or with a browser
+application and administrate it with SSH client.
+
+
 
 Requirements:
 
-  Hardware: Raspberry Pi 3 Model B.
+  Hardware: Raspberry Pi 2 Model B.
   Software: Raspberry Pi OS Lite,
             Apache webserver,
             GNUPlot,
             Perl,
             Python3.
 
-  Hardware: PC with a paralel port.
+  Hardware: PC with a paralel and a serial port.
   Software: Debian GNU/Linux operation system,
             Apache webserver,
             GNUPlot,
@@ -34,20 +36,20 @@ Requirements:
 ------------------------------------------
 a. Visit homepage (see later) to download installer packages:
 
-  Raspberry Pi OS:  mm8d-sw-0.3.1-armhf.tar.gz
+  Raspberry Pi OS:  mm8d-sw-0.4-armhf.tar.gz
 
-                    mm8d-eec_0.3.1-1_armhf.deb
-                    mm8d-sw_0.3.1-1_armhf.deb
-                    mm8d-web_0.3.1-1_all.deb
+                    mm8d-eec_0.4-1_armhf.deb
+                    mm8d-sw_0.4-1_armhf.deb
+                    mm8d-web_0.4-1_all.deb
 
-  Debian GNU/Linux: mm8d-sw-0.3.1-i386.tar.gz
-                    mm8d-sw-0.3.1-amd64.tar.gz
+  Debian GNU/Linux: mm8d-sw-0.4-i386.tar.gz
+                    mm8d-sw-0.4-amd64.tar.gz
 
-                    mm8d-eec_0.3.1-1_i386.deb
-                    mm8d-sw_0.3.1-1_i386.deb
-                    mm8d-eec_0.3.1-1_amd64.deb
-                    mm8d-sw_0.3.1-1_amd64.deb
-                    mm8d-web_0.3.1-1_all.deb
+                    mm8d-eec_0.4-1_i386.deb
+                    mm8d-sw_0.4-1_i386.deb
+                    mm8d-eec_0.4-1_amd64.deb
+                    mm8d-sw_0.4-1_amd64.deb
+                    mm8d-web_0.4-1_all.deb
 
 b. Download from Github
 
