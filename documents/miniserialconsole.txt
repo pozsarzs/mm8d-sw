@@ -14,21 +14,20 @@ About this device
   external level shifter circuit.
 
 
-  Homepage:              <http://www.pozsarzs.hu/hardwares/msc_en.html>
-  On Hackster.io:        <https://www.hackster.io/pozsarzs/mini-serial-console-with-three-different-serial-ports-f57d2d>
+  Homepage:       <http://www.pozsarzs.hu/hardwares/msc_en.html>
+  On Hackster.io: <https://www.hackster.io/pozsarzs/mini-serial-console-with-three-different-serial-ports-f57d2d>
   On Github:
-    - hardware:          <https://github.com/pozsarzs/mini_serial_console-hw>
-    - original software: <https://github.com/pozsarzs/mini_serial_console-sw>
-    - software for MM8D: <https://github.com/pozsarzs/mini_serial_console-sw/tree/for_mm8d>
+    - hardware:   <https://github.com/pozsarzs/mini_serial_console-hw>
+    - software:   <https://github.com/pozsarzs/mini_serial_console-sw>
 
 Display
 
   Starting screens
 
     +--------------------+
-    |Mini serial console |
-    |------------------- |
-    |sw.: v0.1-mm8d      |
+    |    MM8D console    |
+    |--------------------|
+    |sw.: v0.1           |
     |(C)2022 Pozsar Zsolt|
     +--------------------+
     +--------------------+
