@@ -1,6 +1,6 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.3 * Growing house and irrigation controlling and monitoring system |
+# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | install                                                                    |
 # | Installer script                                                           |
@@ -79,10 +79,6 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.\n"
 sleep 3
 
-#if ! [ -x "$(command -v apache2)" ]; then
-#  echo 'ERROR: Run prepare script firstly!';
-#  exit;
-#fi
 echo -e "\nChecking binaries:"
 if [ $ARCH = 'x86_64' ]
 then

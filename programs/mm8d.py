@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.3 * Growing house and irrigation controlling and monitoring system |
+# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2022 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d.py                                                                    |
 # | Main program                                                               |
@@ -30,6 +30,7 @@ import json
 import os
 import platform
 import requests
+import serial
 import sys
 import time
 from time import localtime, strftime
@@ -54,7 +55,9 @@ COMPMV7=0
 COMPSV7=3
 DELAY=10
 
+global eol
 global lptaddresses
+eol = "\r"
 lptaddresses = [0x378,0x278,0x3bc]
 
 # add a zero char
@@ -68,6 +71,7 @@ def addzero(num):
 
 # write a line to debug logfile
 def writetodebuglog(level,text):
+  writedebuglogtocomport(level,text)
   if dbg_log == "1":
     if level == "i":
       lv = "INFO   "
@@ -84,6 +88,27 @@ def writetodebuglog(level,text):
     except:
       print ("")
 
+# write a debug log line to serial port
+def writedebuglogtocomport(level,text):
+  if com_enable == "1":
+    dt = (strftime("%y%m%d %H%M%S",localtime()))
+    try:
+      com.open
+      com.write(str.encode(dt + ' ' + str.upper(level) + ' ' + text + eol))
+      com.close
+    except:
+      print("")
+
+# write a line to serial port
+def writetexttocomport(text):
+  if com_enable == "1":
+    try:
+      com.open
+      com.write(str.encode(text + eol))
+      com.close
+    except:
+      print("")
+
 # load configuration
 def loadconfiguration(conffile):
   global adr_mm6dch
@@ -94,6 +119,9 @@ def loadconfiguration(conffile):
   global dbg_log
   global dir_log
   global dir_var
+  global com_enable
+  global com_device
+  global com_speed
   global ena_ch
   global lockfile
   global logfile
@@ -132,6 +160,12 @@ def loadconfiguration(conffile):
     dbg_log = config.get('log','dbg_log')
     dir_log = config.get('directories','dir_log')
     dir_var = config.get('directories','dir_var')
+    com_enable = '0'
+    com_enable = config.get('COMport','com_enable')
+    com_device = '/dev/ttyS0'
+    com_device = config.get('COMport','com_device')
+    com_speed = '9600'
+    com_speed = config.get('COMport','com_speed')
     ena_ch = [0 for x in range(9)]
     for i in range(1,9):
       ena_ch[i] = int(config.get('enable','ena_ch' + str(i)))
@@ -333,7 +367,7 @@ def getexttemp():
     response=requests.get(base_url + "appid=" + api_key + "&q=" + city_name)
     x=response.json()
     if x["cod"] != "404":
-      y = x["main"] 
+      y = x["main"]
       current_temperature = y["temp"]
       current_temperature = round(current_temperature - 273)
       writetodebuglog("i","External temperature: " + str(current_temperature) + " degree Celsius")
@@ -555,6 +589,7 @@ def analise(section):
 def initializelocalports():
   writetodebuglog("i","Initializing local I/O ports.")
   if hw == 0:
+  # GPIO ports
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(prt_i1,GPIO.IN)
@@ -570,13 +605,14 @@ def initializelocalports():
     GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
     GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
   else:
+  # paralel (LPT) port
     status = portio.ioperm(lptaddresses[lpt_prt],1,1)
     if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port:" + str(hex(lptaddresses[lpt_prt])) + "!")
+      writetodebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lptaddresses[lpt_prt])) + "!")
       sys.exit(17)
     status = portio.ioperm(lptaddresses[lpt_prt] + 1,1,1)
     if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port:" + str(hex(lptaddresses[lpt_prt] + 1)) + "!")
+      writetodebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lptaddresses[lpt_prt] + 1)) + "!")
       sys.exit(17)
     portio.outb(0,lptaddresses[lpt_prt])
 
@@ -787,6 +823,7 @@ def getcontrollerversion(conttype,channel):
 
 # main program
 global cgasconcentrate_max
+global com
 global exttemp
 global hheater_disable
 global hheater_off
@@ -913,6 +950,9 @@ relay_tube2 = 0
 relay_tube3 = 0
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
+# intialize serial port
+if com_enable == "1":
+  com = serial.Serial(com_device, com_speed)
 # load irrigator settings
 loadirrconf(confdir + "irrigator.ini")
 # checking version of remote devices
@@ -1056,6 +1096,28 @@ while True:
         if (prevdata[channel] != newdata[channel]):
           writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
           prevdata[channel] = newdata[channel]
+    # send channels' data to display via serial port
+    line = "CH0|" + str(mainsbreakers) + "|" + \
+      str(waterpressurelow) +  "|" + \
+      str(waterpressurehigh) +  "|" + \
+      str(unused_local_input) +  "|" + \
+      str(relay_tube1) +  "|" + \
+      str(relay_tube2) +  "|" + \
+      str(relay_tube3)
+    writetexttocomport(line)
+    for channel in range(1,9):
+      if ena_ch[channel] == 1:
+        line = str(channel)+ "|" + \
+        str(in_opmode[channel]) + "|" + \
+        str(in_swmanu[channel]) + "|" + \
+        str(in_ocprot[channel]) + "|" + \
+        str(in_alarm[channel]) + "|" + \
+        str(out_lamps[channel]) + "|" + \
+        str(out_vents[channel]) + "|" + \
+        str(out_heaters[channel])
+      else:
+        line = str(channel)+ "|DISABLED"
+      writetexttocomport(line)
     # waiting
     blinkactiveled(0);
     writetodebuglog("i","Waiting " + str(DELAY) + " seconds.")

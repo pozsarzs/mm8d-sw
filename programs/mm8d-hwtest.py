@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.3 * Growing house and irrigation controlling and monitoring system |
+# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2022 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d-hwtest.py                                                             |
 # | Hardware test program                                                      |
