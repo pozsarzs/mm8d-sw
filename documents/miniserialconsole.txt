@@ -1,0 +1,110 @@
+Mini serial console
+~~~~~~~~~~~~~~~~~~~
+About
+  blablabla
+
+
+
+
+Download latest version from Github:
+  Hardware:          <https://github.com/pozsarzs/mini_serial_console-sw>
+  Original software: <https://github.com/pozsarzs/mini_serial_console-sw>
+  Software for MM8D: <https://github.com/pozsarzs/mini_serial_console-sw/tree/for_mm8d>
+
+Display
+
+  Starting screens
+
+    +--------------------+
+    |                    |
+    |                    |
+    |                    |
+    |                    |
+    +--------------------+
+    +--------------------+
+    |                    |
+    |                    |
+    |                    |
+    |                    |
+    +--------------------+
+    +--------------------+
+    |                    |
+    |                    |
+    |                    |
+    |                    |
+    +--------------------+
+    +--------------------+
+    |                    |
+    |                    |
+    |                    |
+    |                    |
+    +--------------------+
+
+  Status screens
+
+    Press F1 to see status screen.
+    You can page up and down with up and down buttons.
+
+    +--------------------+
+    |CH #0  (12-08 20:31)|
+    |val:         T: 00°C|
+    |in:   BE:0 LP:0 HP:0|
+    |out   T1:0 T2:0 T3:0|
+    +--------------------+
+    +--------------------+
+    |CH #1  (12-08 20:31)|
+    |val: T: 00°C RH: 00%|
+    |in:   OM:H CM:A BE:0|
+    |out:  LA:0 VE:0 HE:0|
+    +--------------------+
+    +--------------------+
+    |CH #3               |
+    |                    |
+    |  disabled channel  |
+    |                    |
+    +--------------------+
+             ...
+    +--------------------+
+    |CH #8               |
+    |                    |
+    |  disabled channel  |
+    |                    |
+    +--------------------+
+
+
+  Debug log screen
+
+    Press F2 to see debug log screen.
+    You can move up, down, right and left with buttons.
+
+    +--------------------+
+    |200919 210133 I Init|
+    |200919 210136 E Over|
+    |200919 210249 W Cann|
+    |                    |
+    +--------------------+
+    +--------------------+
+    |0133 I Initializing |
+    |0136 E Overcurrent b|
+    |0249 W Cannot get ex|
+    |                    |
+    +--------------------+
+    +--------------------+
+    |ializing I/O ports. |
+    |current breaker is o|
+    |ot get external temp|
+    |                    |
+    +--------------------+
+
+
+  Example line: "200919 210133 I Initializing I/O ports."
+
+  Columns:
+    1:  date in yymmdd format
+    2:  time in hhmmss format
+    3:  level of record: I | W | E - information | warning | error
+    4:  short description
+
+--------------------------------------------------------------------------------------
+  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+
