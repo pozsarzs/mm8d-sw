@@ -43,36 +43,54 @@ Display
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |CH #0  (12-08 20:31)|
-    |val:         T: 00°C|
+    |CH #0         status|
+    |val:  T:00°C        |
     |in:   BE:0 LP:0 HP:0|
     |out   T1:0 T2:0 T3:0|
     +--------------------+
     +--------------------+
-    |CH #1  (12-08 20:31)|
-    |val: T: 00°C RH: 00%|
-    |in:   OM:H CM:A BE:0|
-    |out:  LA:0 VE:0 HE:0|
+    |CH #1         status|
+    |Val   T:00°C RH:100%|
+    |In    OM:H CM:A BE:0|
+    |Out   LA:0 VE:0 HE:0|
     +--------------------+
     +--------------------+
-    |CH #3               |
+    |CH #3         status|
     |                    |
     |  disabled channel  |
     |                    |
     +--------------------+
              ...
     +--------------------+
-    |CH #8               |
+    |CH #8         status|
     |                    |
     |  disabled channel  |
     |                    |
     +--------------------+
 
+  Overide screens
+
+    Press F1 to see override screen.
+    You can page up and down with up and down buttons.
+
+    +--------------------+
+    |CH #0       override|
+    |tube #1:    neutral |
+    |tube #2:    neutral |
+    |tube #3:    off     |
+    +--------------------+
+    +--------------------+
+    |CH #1       override|
+    |lamp:       on      |
+    |ventilator: neutral |
+    |heater:     off     |
+    +--------------------+
 
   Debug log screen
 
-    Press F2 to see debug log screen.
+    Press F1 to see debug log screen.
     You can move up, down, right and left with buttons.
+    Press F2 to lock autoscroll of lines.
 
     +--------------------+
     |200919 210133 I Init|
