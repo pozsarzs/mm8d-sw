@@ -34,7 +34,7 @@ Display
     |#0: 115200 b/s      |
     |#1: 9600 b/s        |
     |#2: 9600 b/s        |
-    |Operation mode: #3  |
+    |operation mode: #3  |
     +--------------------+
 
   Status screens
@@ -43,26 +43,19 @@ Display
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |CH #0         status|
-    |val:  T:00°C        |
-    |in:   BE:0 LP:0 HP:0|
+    |CH #0         STATUS|
+    |val   T:00°C        |
+    |in    BE:0 LP:0 HP:0|
     |out   T1:0 T2:0 T3:0|
     +--------------------+
     +--------------------+
-    |CH #1         status|
-    |Val   T:00°C RH:100%|
-    |In    OM:H CM:A BE:0|
-    |Out   LA:0 VE:0 HE:0|
+    |CH #1         STATUS|
+    |val   T:00°C RH:100%|
+    |in    OM:H CM:A BE:0|
+    |out   LA:0 VE:0 HE:0|
     +--------------------+
     +--------------------+
-    |CH #3         status|
-    |                    |
-    |  disabled channel  |
-    |                    |
-    +--------------------+
-             ...
-    +--------------------+
-    |CH #8         status|
+    |CH #3         STATUS|
     |                    |
     |  disabled channel  |
     |                    |
@@ -74,13 +67,13 @@ Display
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |CH #0       override|
+    |CH #0       OVERRIDE|
     |tube #1:    neutral |
     |tube #2:    neutral |
     |tube #3:    off     |
     +--------------------+
     +--------------------+
-    |CH #1       override|
+    |CH #1       OVERRIDE|
     |lamp:       on      |
     |ventilator: neutral |
     |heater:     off     |
