@@ -90,6 +90,7 @@ def writetodebuglog(level,text):
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):
+  # Example: "221213 114421 I Configuration is loaded."
   if com_enable == "1":
     dt = (strftime("%y%m%d %H%M%S",localtime()))
     try:
@@ -98,6 +99,76 @@ def writedebuglogtocomport(level,text):
       com.close
     except:
       print("")
+
+# send channels' data to display via serial port
+def writechannelstatustocomport(channel):
+  if com_enable == "1":
+    if channel == 0:
+      # Example: "CH0|0|0|0|31|0|0|0|0|0|0"
+      line = "CH" + \
+        str(channel) + "|" + \
+        str(mainsbreakers) + "|" + \
+        str(waterpressurelow) +  "|" + \
+        str(waterpressurehigh) +  "|" + \
+        str(unused_local_input) +  "|"
+      if outputoverride[channel][0] == "neutral":
+        line = line + str(relay_tube1) +  "|"
+      else:
+        if outputoverride[channel][0] == "on":
+          line = line + "!|"
+        else:
+          line = line + "x|"
+      if outputoverride[channel][1] == "neutral":
+        line = line + str(relay_tube2) +  "|"
+      else:
+        if outputoverride[channel][1] == "on":
+          line = line + "!|"
+        else:
+          line = line + "x|"
+      if outputoverride[channel][2] == "neutral":
+          line = line + str(relay_tube3) +  "|"
+      else:
+        if outputoverride[channel][2] == "on":
+          line = line + "!|"
+        else:
+          line = line + "x|"
+      writetexttocomport(line)
+    else:
+      # Example: "CH1|11|21|31|0|1|0|0|1|0|1"
+      if ena_ch[channel] == 1:
+        line = str(channel)+ "|" + \
+          str(in_opmode[channel]) + "|" + \
+          str(in_swmanu[channel]) + "|" + \
+          str(in_ocprot[channel]) + "|" + \
+          str(in_alarm[channel]) + "|" + \
+          str(out_lamps[channel]) + "|" + \
+          str(out_vents[channel]) + "|" + \
+          str(out_heaters[channel])
+        if outputoverride[channel][0] == "neutral":
+          line = line + str(out_lamps[channel]) +  "|"
+        else:
+          if outputoverride[channel][0] == "on":
+            line = line + "!|"
+          else:
+            line = line + "x|"
+        if outputoverride[channel][1] == "neutral":
+          line = line + str(out_vents[channel]) +  "|"
+        else:
+          if outputoverride[channel][1] == "on":
+            line = line + "!|"
+          else:
+            line = line + "x|"
+        if outputoverride[channel][2] == "neutral":
+          line = line + str(out_heaters[channel]) +  "|"
+        else:
+          if outputoverride[channel][2] == "on":
+            line = line + "!|"
+          else:
+            line = line + "x|"
+      else:
+        # Example: "CH8|D|D|D|D|D|D|D|D|D|D"
+        line = str(channel) + "|D|D|D|D|D|D|D|D|D|D|"
+      writetexttocomport(line)
 
 # write a line to serial port
 def writetexttocomport(text):
@@ -347,6 +418,7 @@ def outputoverride(channel,output,status):
       if v == "neutral": s = status
       if v == "off": s = "0"
       if v == "on": s = "1"
+      override[channel][output] = v
     except:
       s = status
   else:
@@ -881,6 +953,7 @@ global mvent_on
 global out_heaters
 global out_lamps
 global out_vents
+global override
 global relay_alarm
 global relay_tube1
 global relay_tube2
@@ -943,6 +1016,7 @@ newdata = ["" for x in range(10)]
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
+override = [["" for x in range(9)] for x in range(3)]
 prevdata = ["" for x in range(10)]
 relay_alarm = 0
 relay_tube1 = 0
@@ -1097,27 +1171,8 @@ while True:
           writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
           prevdata[channel] = newdata[channel]
     # send channels' data to display via serial port
-    line = "CH0|" + str(mainsbreakers) + "|" + \
-      str(waterpressurelow) +  "|" + \
-      str(waterpressurehigh) +  "|" + \
-      str(unused_local_input) +  "|" + \
-      str(relay_tube1) +  "|" + \
-      str(relay_tube2) +  "|" + \
-      str(relay_tube3)
-    writetexttocomport(line)
-    for channel in range(1,9):
-      if ena_ch[channel] == 1:
-        line = str(channel)+ "|" + \
-        str(in_opmode[channel]) + "|" + \
-        str(in_swmanu[channel]) + "|" + \
-        str(in_ocprot[channel]) + "|" + \
-        str(in_alarm[channel]) + "|" + \
-        str(out_lamps[channel]) + "|" + \
-        str(out_vents[channel]) + "|" + \
-        str(out_heaters[channel])
-      else:
-        line = str(channel)+ "|DISABLED"
-      writetexttocomport(line)
+    for channel in range(0,9):
+      writechannelstatustocomport(channel)
     # waiting
     blinkactiveled(0);
     writetodebuglog("i","Waiting " + str(DELAY) + " seconds.")

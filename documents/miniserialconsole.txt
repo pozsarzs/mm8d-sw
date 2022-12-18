@@ -68,15 +68,15 @@ Display
 
     +--------------------+
     |CH #0       OVERRIDE|
-    |tube #1:    neutral |
-    |tube #2:    neutral |
-    |tube #3:    off     |
+    |tube #1:     neutral|
+    |tube #2:     neutral|
+    |tube #3:     off    |
     +--------------------+
     +--------------------+
     |CH #1       OVERRIDE|
-    |lamp:       on      |
-    |ventilator: neutral |
-    |heater:     off     |
+    |lamp:        on     |
+    |ventilator:  neutral|
+    |heater:      off    |
     +--------------------+
 
   Debug log screen
