@@ -90,7 +90,6 @@ def writetodebuglog(level,text):
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):
-  # Example: "221213 114421 I Configuration is loaded."
   if com_enable == "1":
     dt = (strftime("%y%m%d %H%M%S",localtime()))
     try:
@@ -102,73 +101,66 @@ def writedebuglogtocomport(level,text):
 
 # send channels' data to display via serial port
 def writechannelstatustocomport(channel):
+  transmitbuffer = [0x00 for x in range(13)]
+  line = ""
   if com_enable == "1":
     if channel == 0:
-      # Example: "CH0|0|0|0|31|0|0|0|0|0|0"
-      line = "CH" + \
-        str(channel) + "|" + \
-        str(mainsbreakers) + "|" + \
-        str(waterpressurelow) +  "|" + \
-        str(waterpressurehigh) +  "|" + \
-        str(unused_local_input) +  "|"
-      if outputoverride[channel][0] == "neutral":
-        line = line + str(relay_tube1) +  "|"
-      else:
-        if outputoverride[channel][0] == "on":
-          line = line + "!|"
-        else:
-          line = line + "x|"
-      if outputoverride[channel][1] == "neutral":
-        line = line + str(relay_tube2) +  "|"
-      else:
-        if outputoverride[channel][1] == "on":
-          line = line + "!|"
-        else:
-          line = line + "x|"
-      if outputoverride[channel][2] == "neutral":
-          line = line + str(relay_tube3) +  "|"
-      else:
-        if outputoverride[channel][2] == "on":
-          line = line + "!|"
-        else:
-          line = line + "x|"
-      writetexttocomport(line)
+      transmitbuffer[0x00] = ord("C")
+      transmitbuffer[0x01] = ord("H")
+      transmitbuffer[0x02] = channel
+      transmitbuffer[0x03] = mainsbreakers
+      transmitbuffer[0x04] = waterpressurelow
+      transmitbuffer[0x05] = waterpressurehigh
+      transmitbuffer[0x06] = exttemp
+      transmitbuffer[0x07] = relay_tube1
+      transmitbuffer[0x08] = relay_tube2
+      transmitbuffer[0x09] = relay_tube3
+      transmitbuffer[0x0A] = 0x0F
+      transmitbuffer[0x0B] = 0x0F
+      transmitbuffer[0x0C] = 0x0F
+      if outputoverride[channel][0] == "on":
+        transmitbuffer[0x07] = 0x03
+      if outputoverride[channel][0] == "off":
+        transmitbuffer[0x07] = 0x02
+      if outputoverride[channel][1] == "on":
+        transmitbuffer[0x08] = 0x03
+      if outputoverride[channel][1] == "off":
+        transmitbuffer[0x08] = 0x02
+      if outputoverride[channel][2] == "on":
+          transmitbuffer[0x09] = 0x03
+      if outputoverride[channel][2] == "off":
+          transmitbuffer[0x09] = 0x02
     else:
-      # Example: "CH1|11|21|31|0|1|0|0|1|0|1"
-      if ena_ch[channel] == 1:
-        line = str(channel)+ "|" + \
-          str(in_opmode[channel]) + "|" + \
-          str(in_swmanu[channel]) + "|" + \
-          str(in_ocprot[channel]) + "|" + \
-          str(in_alarm[channel]) + "|" + \
-          str(out_lamps[channel]) + "|" + \
-          str(out_vents[channel]) + "|" + \
-          str(out_heaters[channel])
-        if outputoverride[channel][0] == "neutral":
-          line = line + str(out_lamps[channel]) +  "|"
-        else:
-          if outputoverride[channel][0] == "on":
-            line = line + "!|"
-          else:
-            line = line + "x|"
-        if outputoverride[channel][1] == "neutral":
-          line = line + str(out_vents[channel]) +  "|"
-        else:
-          if outputoverride[channel][1] == "on":
-            line = line + "!|"
-          else:
-            line = line + "x|"
-        if outputoverride[channel][2] == "neutral":
-          line = line + str(out_heaters[channel]) +  "|"
-        else:
-          if outputoverride[channel][2] == "on":
-            line = line + "!|"
-          else:
-            line = line + "x|"
-      else:
-        # Example: "CH8|D|D|D|D|D|D|D|D|D|D"
-        line = str(channel) + "|D|D|D|D|D|D|D|D|D|D|"
-      writetexttocomport(line)
+      transmitbuffer[0x00] = ord("C")
+      transmitbuffer[0x01] = ord("H")
+      transmitbuffer[0x02] = channel
+      transmitbuffer[0x03] = in_temperature[channel]
+      transmitbuffer[0x04] = in_humidity
+      transmitbuffer[0x05] = in_gasconcentrate
+      transmitbuffer[0x06] = in_opmode
+      transmitbuffer[0x07] = in_swmanu
+      transmitbuffer[0x08] = in_ocprot
+      transmitbuffer[0x09] = in_alarm[channel]
+      transmitbuffer[0x0A] = out_lamps[channel]
+      transmitbuffer[0x0B] = out_vents[channel]
+      transmitbuffer[0x0C] = out_heaters[channel]
+      if outputoverride[channel][0] == "on":
+        transmitbuffer[0x0A] = 0x03
+      if outputoverride[channel][0] == "off":
+        transmitbuffer[0x0A] = 0x02
+      if outputoverride[channel][1] == "on":
+        transmitbuffer[0x0B] = 0x03
+      if outputoverride[channel][1] == "off":
+        transmitbuffer[0x0B] = 0x02
+      if outputoverride[channel][2] == "on":
+          transmitbuffer[0x0C] = 0x03
+      if outputoverride[channel][2] == "off":
+          transmitbuffer[0x0C] = 0x02
+      if ena_ch[channel] == 0:
+        transmitbuffer[0x06] = 0xFF
+  for x in range(0,13):
+    line = line + chr(transmitbuffer[x]+70)
+  writetexttocomport(line)
 
 # write a line to serial port
 def writetexttocomport(text):
