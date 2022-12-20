@@ -118,17 +118,17 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x0A] = 0x0F
       transmitbuffer[0x0B] = 0x0F
       transmitbuffer[0x0C] = 0x0F
-      if outputoverride[channel][0] == "on":
+      if override[channel][0] == "on":
         transmitbuffer[0x07] = 0x03
-      if outputoverride[channel][0] == "off":
+      if override[channel][0] == "off":
         transmitbuffer[0x07] = 0x02
-      if outputoverride[channel][1] == "on":
+      if override[channel][1] == "on":
         transmitbuffer[0x08] = 0x03
-      if outputoverride[channel][1] == "off":
+      if override[channel][1] == "off":
         transmitbuffer[0x08] = 0x02
-      if outputoverride[channel][2] == "on":
+      if override[channel][2] == "on":
           transmitbuffer[0x09] = 0x03
-      if outputoverride[channel][2] == "off":
+      if override[channel][2] == "off":
           transmitbuffer[0x09] = 0x02
     else:
       transmitbuffer[0x00] = ord("C")
@@ -144,33 +144,28 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x0A] = out_lamps[channel]
       transmitbuffer[0x0B] = out_vents[channel]
       transmitbuffer[0x0C] = out_heaters[channel]
-      if outputoverride[channel][0] == "on":
+      if override[channel][0] == "on":
         transmitbuffer[0x0A] = 0x03
-      if outputoverride[channel][0] == "off":
+      if override[channel][0] == "off":
         transmitbuffer[0x0A] = 0x02
-      if outputoverride[channel][1] == "on":
+      if override[channel][1] == "on":
         transmitbuffer[0x0B] = 0x03
-      if outputoverride[channel][1] == "off":
+      if override[channel][1] == "off":
         transmitbuffer[0x0B] = 0x02
-      if outputoverride[channel][2] == "on":
+      if override[channel][2] == "on":
           transmitbuffer[0x0C] = 0x03
-      if outputoverride[channel][2] == "off":
+      if override[channel][2] == "off":
           transmitbuffer[0x0C] = 0x02
       if ena_ch[channel] == 0:
         transmitbuffer[0x06] = 0xFF
   for x in range(0,13):
     line = line + chr(transmitbuffer[x]+70)
-  writetexttocomport(line)
-
-# write a line to serial port
-def writetexttocomport(text):
-  if com_enable == "1":
-    try:
-      com.open
-      com.write(str.encode(text + eol))
-      com.close
-    except:
-      print("")
+  try:
+    com.open
+    com.write(str.encode(line + eol))
+    com.close
+  except:
+    print("")
 
 # load configuration
 def loadconfiguration(conffile):

@@ -20,6 +20,71 @@ About this device
     - hardware:   <https://github.com/pozsarzs/mini_serial_console-hw>
     - software:   <https://github.com/pozsarzs/mini_serial_console-sw>
 
+
+Button functions
+
+  Button  Mode #0     Mode #1     Mode #2     Mode #3/0   Mode #3/1   Mode #3/2
+  -------------------------------------------------------------------------------
+   PB0    move left   move left   move left                           move left
+   PB1    move right  move right  move right                          move right
+   PB2                move up     move up     page up     page up     scroll up
+   PB3                move down   move down   page down   pahe down   scroll down
+   PB4                                        submode     submode     submode
+   PB5                                                                lock scroll
+
+
+Serial ports
+
+  Serial0:  via USB port
+  Serial1:  UART0  TTL    0/3.3V
+  Serial2:  UART1  RS232  +/-12V
+
+
+Incoming (binary) data lines in Mode #3
+
+  0123456789ABC
+  "CH..........."
+
+    0:   'C'                                  0x43
+    1:   'H'                                  0x48
+    2:   number of channel                    0x00
+    3:   overcurrent breaker error            0x00: closed 0x01: opened
+    4:   water pump pressure error (no water) 0x00: good   0x01: bad
+    5:   water pump pressure error (clogging) 0x00: good   0x01: bad
+    6:   external temperature in °C          (0x00-0x80)
+    7:   status of water pump and tube #1     0x00: off    0x01: on     0x02: always off 0x03: always on
+    8:   status of water pump and tube #2     0x00: off    0x01: on     0x02: always off 0x03: always on
+    9:   status of water pump and tube #3     0x00: off    0x01: on     0x02: always off 0x03: always on
+    A-C: unused                               0x0F
+
+    0:   'C'                                  0x43
+    1:   'H'                                  0x48
+    2:   number of channel                    0x01-0x08
+    3:   temperature in °C                   (0x00-0x80)
+    4:   relative humidity                   (0x00-0x80)
+    5:   relative unwanted gas concentrate   (0x00-0x80)
+    6:   operation mode                       0x00: hyphae 0x01: mushr. 0xFF: disabled channel
+    7:   manual mode                          0x00: auto   0x01: manual
+    8:   overcurrent breaker error            0x00: closed 0x01: opened
+    9:   status of door (alarm)               0x00: closed 0x01: opened
+    A:   status of lamp output                0x00: off    0x01: on     0x02: always off 0x03: always on
+    B:   status of ventilator output          0x00: off    0x01: on     0x02: always off 0x03: always on
+    C:   status of heater output              0x00: off    0x01: on     0x02: always off 0x03: always on
+
+
+Example incoming (text) log lines in Mode #3
+
+     0      1    2           3
+  "221213 114421 I Configuration is loaded."
+  "221213 114427 W CH2: MM6D is not accessible."
+  "221213 114427 E ERROR #18: There is not enabled channel!"
+
+    0:   date in yymmdd format
+    1:   time in hhmmss format
+    2:   level (information, warning, error)
+    3:   short description
+
+
 Display
 
   Starting screens
@@ -43,19 +108,19 @@ Display
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |CH #0         STATUS|
+    |CH #0         STATUS|  CH #0
     |val   T:00°C        |
     |in    BE:0 LP:0 HP:0|
     |out   T1:0 T2:0 T3:0|
     +--------------------+
     +--------------------+
-    |CH #1         STATUS|
+    |CH #1         STATUS|  CH #1-8
     |val   T:00°C RH:100%|
     |in    OM:H CM:A BE:0|
     |out   LA:0 VE:0 HE:0|
     +--------------------+
     +--------------------+
-    |CH #3         STATUS|
+    |CH #3         STATUS|  CH #1-8
     |                    |
     |  disabled channel  |
     |                    |
@@ -67,13 +132,13 @@ Display
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |CH #0       OVERRIDE|
+    |CH #0       OVERRIDE|  CH #0
     |tube #1:     neutral|
     |tube #2:     neutral|
     |tube #3:     off    |
     +--------------------+
     +--------------------+
-    |CH #1       OVERRIDE|
+    |CH #1       OVERRIDE|  CH #1-8
     |lamp:        on     |
     |ventilator:  neutral|
     |heater:      off    |
