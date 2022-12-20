@@ -159,7 +159,7 @@ def writechannelstatustocomport(channel):
       if ena_ch[channel] == 0:
         transmitbuffer[0x06] = 0xFF
   for x in range(0,13):
-    line = line + chr(transmitbuffer[x]+70)
+    line = line + chr(transmitbuffer[x])
   try:
     com.open
     com.write(str.encode(line + eol))
