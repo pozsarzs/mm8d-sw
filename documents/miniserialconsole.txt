@@ -13,6 +13,8 @@ About this device
   serial port. Serial #1 can be connected to a 5V TTL serial port with an
   external level shifter circuit.
 
+  You can check the mini serial console with 'mm8d-msctest.py' program, it is
+  emulates operation of the MM8D daemon.
 
   Homepage:       <http://www.pozsarzs.hu/hardwares/msc_en.html>
   On Hackster.io: <https://www.hackster.io/pozsarzs/mini-serial-console-with-three-different-serial-ports-f57d2d>
@@ -126,7 +128,7 @@ Display
     |                    |
     +--------------------+
 
-  Overide screens
+  Override screens
 
     Press F1 to see override screen.
     You can page up and down with up and down buttons.
