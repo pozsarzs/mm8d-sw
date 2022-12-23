@@ -61,49 +61,49 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x0A] = 0x0F
       transmitbuffer[0x0B] = 0x0F
       transmitbuffer[0x0C] = 0x0F
-      if override[channel][0] == "on":
+      if override[channel][0] == 2:
         transmitbuffer[0x07] = 0x03
-      if override[channel][0] == "off":
+      if override[channel][0] == 1:
         transmitbuffer[0x07] = 0x02
-      if override[channel][1] == "on":
+      if override[channel][1] == 2:
         transmitbuffer[0x08] = 0x03
-      if override[channel][1] == "off":
+      if override[channel][1] == 1:
         transmitbuffer[0x08] = 0x02
-      if override[channel][2] == "on":
+      if override[channel][2] == 2:
           transmitbuffer[0x09] = 0x03
-      if override[channel][2] == "off":
+      if override[channel][2] == 1:
           transmitbuffer[0x09] = 0x02
     else:
       transmitbuffer[0x00] = ord("C")
       transmitbuffer[0x01] = ord("H")
       transmitbuffer[0x02] = channel
       transmitbuffer[0x03] = in_temperature[channel]
-      transmitbuffer[0x04] = in_humidity
-      transmitbuffer[0x05] = in_gasconcentrate
-      transmitbuffer[0x06] = in_opmode
-      transmitbuffer[0x07] = in_swmanu
-      transmitbuffer[0x08] = in_ocprot
+      transmitbuffer[0x04] = in_humidity[channel]
+      transmitbuffer[0x05] = in_gasconcentrate[channel]
+      transmitbuffer[0x06] = in_opmode[channel]
+      transmitbuffer[0x07] = in_swmanu[channel]
+      transmitbuffer[0x08] = in_ocprot[channel]
       transmitbuffer[0x09] = in_alarm[channel]
       transmitbuffer[0x0A] = out_lamps[channel]
       transmitbuffer[0x0B] = out_vents[channel]
       transmitbuffer[0x0C] = out_heaters[channel]
-      if override[channel][0] == "on":
+      if override[channel][0] == 2:
         transmitbuffer[0x0A] = 0x03
-      if override[channel][0] == "off":
+      if override[channel][0] == 1:
         transmitbuffer[0x0A] = 0x02
-      if override[channel][1] == "on":
+      if override[channel][1] == 2:
         transmitbuffer[0x0B] = 0x03
-      if override[channel][1] == "off":
+      if override[channel][1] == 1:
         transmitbuffer[0x0B] = 0x02
-      if override[channel][2] == "on":
+      if override[channel][2] == 2:
           transmitbuffer[0x0C] = 0x03
-      if override[channel][2] == "off":
+      if override[channel][2] == 1:
           transmitbuffer[0x0C] = 0x02
   for x in range(0,13):
     line = line + chr(transmitbuffer[x])
   try:
     com.open
-    com.write(str.encode(line + eol))
+    com.write(str.encode(line))
     com.close
   except:
     print("")
@@ -154,12 +154,12 @@ ena_ch = [1 for channel in range(9)]
 eol = "\r"
 exttemp = 23
 in_alarm = [0 for channel in range(9)]
-in_gasconcentrate = [0 for channel in range(9)]
-in_humidity = [0 for channel in range(9)]
+in_gasconcentrate = [3 for channel in range(9)]
+in_humidity = [75 for channel in range(9)]
 in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
 in_swmanu = [0 for channel in range(9)]
-in_temperature = [0 for channel in range(9)]
+in_temperature = [18 for channel in range(9)]
 mainsbreakers = 0
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
@@ -303,22 +303,23 @@ while True:
         in_gasconcentrate[channel] = int(input("Enter new value (0-100): "))
         writedebuglogtocomport("i","CH" + str(channel) + ": Measured RUGC is " + str(in_gasconcentrate[channel]) + "%")
       if submenuitem is "4":
-        in_opmode[channel] = int(not in_opmode[channel])
-        if in_opmode[channel] == 1:
-          writedebuglogtocomport("i","CH" + str(channel) + ": Operation mode: growing hyphae.")
-        else:
-          writetodebuglog("i","CH" + str(channel) + ": Operation mode: growing mushroom.")
+        if in_opmode[channel] < 2:
+          in_opmode[channel] = int(not in_opmode[channel])
+          if in_opmode[channel] == 1:
+            writedebuglogtocomport("i","CH" + str(channel) + ": Operation mode: growing hyphae.")
+          else:
+            writedebuglogtocomport("i","CH" + str(channel) + ": Operation mode: growing mushroom.")
       if submenuitem is "5":
         in_swmanu[channel] = int(not in_swmanu[channel])
         if in_swmanu[channel] == 1:
-          writetodebuglog("w","CH"+ str(channel) +": Manual mode switch is on position.")
+          writedebuglogtocomport("w","CH"+ str(channel) +": Manual mode switch is on position.")
       if submenuitem is "6":
         in_ocprot[channel] = int(not in_ocprot[channel])
         if in_ocprot[channel] == 1:
           writedebuglogtocomport("e","CH"+ str(channel) +": Overcurrent breaker of MM6D is opened!")
       if submenuitem is "7":
-        in_alarm = int(not in_alarm)
-        if in_alarm == 1:
+        in_alarm[channel] = int(not in_alarm[channel])
+        if in_alarm[channel] == 1:
           writedebuglogtocomport("i","CH"+ str(channel) +": Alarm input of MM6D device is active.")
       if submenuitem is "8":
          out_lamps[channel] = int(not out_lamps[channel])
@@ -333,7 +334,7 @@ while True:
          else:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output ventilators OFF")
       if submenuitem is "a":
-         outheaters[channel] = int(not out_heaters[channel])
+         out_heaters[channel] = int(not out_heaters[channel])
          if out_heaters[channel] == 1:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output heaters ON")
          else:
@@ -364,6 +365,10 @@ while True:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> heaters OFF")
       if submenuitem is "y":
         ena_ch[channel] = int(not ena_ch[channel])
+        if ena_ch[channel] == 0:
+          in_opmode[channel] = 255
+        else:
+          in_opmode[channel] = 0
       if submenuitem is "x":
         writechannelstatustocomport(channel)
       if submenuitem is "Q" or submenuitem is "q":

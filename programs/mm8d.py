@@ -162,7 +162,7 @@ def writechannelstatustocomport(channel):
     line = line + chr(transmitbuffer[x])
   try:
     com.open
-    com.write(str.encode(line + eol))
+    com.write(str.encode(line))
     com.close
   except:
     print("")
