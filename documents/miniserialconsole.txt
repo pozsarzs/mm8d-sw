@@ -110,19 +110,19 @@ Display
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |CH #0         STATUS|  CH #0
+    |CH #0  [  ]   STATUS|  CH #0
     |val   T:00°C        |
     |in    BE:0 LP:0 HP:0|
     |out   T1:0 T2:0 T3:0|
     +--------------------+
     +--------------------+
-    |CH #1         STATUS|  CH #1-8
+    |CH #1  [  ]   STATUS|  CH #1-8
     |val   T:00°C RH:100%|
     |in    OM:H CM:A BE:0|
     |out   LA:0 VE:0 HE:0|
     +--------------------+
     +--------------------+
-    |CH #3         STATUS|  CH #1-8
+    |CH #3  [  ]   STATUS|  CH #1-8
     |                    |
     |  disabled channel  |
     |                    |
@@ -134,13 +134,13 @@ Display
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |CH #0       OVERRIDE|  CH #0
+    |CH #0  [  ] OVERRIDE|  CH #0
     |tube #1:     neutral|
     |tube #2:     neutral|
     |tube #3:         off|
     +--------------------+
     +--------------------+
-    |CH #1       OVERRIDE|  CH #1-8
+    |CH #1  [  ] OVERRIDE|  CH #1-8
     |lamp:             on|
     |ventilator:  neutral|
     |heater:          off|

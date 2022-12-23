@@ -115,9 +115,9 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x07] = relay_tube1
       transmitbuffer[0x08] = relay_tube2
       transmitbuffer[0x09] = relay_tube3
-      transmitbuffer[0x0A] = 0x0F
-      transmitbuffer[0x0B] = 0x0F
-      transmitbuffer[0x0C] = 0x0F
+      transmitbuffer[0x0A] = 0x00
+      transmitbuffer[0x0B] = 0x00
+      transmitbuffer[0x0C] = 0x00
       if override[channel][0] == "on":
         transmitbuffer[0x07] = 0x03
       if override[channel][0] == "off":
@@ -157,7 +157,7 @@ def writechannelstatustocomport(channel):
       if override[channel][2] == "off":
           transmitbuffer[0x0C] = 0x02
       if ena_ch[channel] == 0:
-        transmitbuffer[0x06] = 0xFF
+        transmitbuffer[0x06] = 0x7F
   for x in range(0,13):
     line = line + chr(transmitbuffer[x])
   try:

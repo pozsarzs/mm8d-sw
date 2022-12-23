@@ -58,9 +58,9 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x07] = relay_tube1
       transmitbuffer[0x08] = relay_tube2
       transmitbuffer[0x09] = relay_tube3
-      transmitbuffer[0x0A] = 0x0F
-      transmitbuffer[0x0B] = 0x0F
-      transmitbuffer[0x0C] = 0x0F
+      transmitbuffer[0x0A] = 0x00
+      transmitbuffer[0x0B] = 0x00
+      transmitbuffer[0x0C] = 0x00
       if override[channel][0] == 2:
         transmitbuffer[0x07] = 0x03
       if override[channel][0] == 1:
@@ -366,7 +366,7 @@ while True:
       if submenuitem is "y":
         ena_ch[channel] = int(not ena_ch[channel])
         if ena_ch[channel] == 0:
-          in_opmode[channel] = 255
+          in_opmode[channel] = 127
         else:
           in_opmode[channel] = 0
       if submenuitem is "x":
