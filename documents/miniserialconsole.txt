@@ -137,13 +137,13 @@ Display
     |CH #0       OVERRIDE|  CH #0
     |tube #1:     neutral|
     |tube #2:     neutral|
-    |tube #3:     off    |
+    |tube #3:         off|
     +--------------------+
     +--------------------+
     |CH #1       OVERRIDE|  CH #1-8
-    |lamp:        on     |
+    |lamp:             on|
     |ventilator:  neutral|
-    |heater:      off    |
+    |heater:          off|
     +--------------------+
 
   Debug log screen
