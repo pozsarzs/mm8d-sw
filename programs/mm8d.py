@@ -71,7 +71,15 @@ def addzero(num):
 
 # write a line to debug logfile
 def writetodebuglog(level,text):
-  writedebuglogtocomport(level,text)
+  if level == "i":
+    if com_verbose > 2:
+      writedebuglogtocomport(level,text)
+  if level == "w":
+    if com_verbose > 1:
+      writedebuglogtocomport(level,text)
+  if level == "e":
+    if com_verbose > 0:
+      writedebuglogtocomport(level,text)
   if dbg_log == "1":
     if level == "i":
       lv = "INFO   "
@@ -96,6 +104,7 @@ def writedebuglogtocomport(level,text):
       com.open
       com.write(str.encode(dt + ' ' + str.upper(level) + ' ' + text + eol))
       com.close
+      sleep.delay(0.1)
     except:
       print("")
 
@@ -111,7 +120,10 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x03] = mainsbreakers
       transmitbuffer[0x04] = waterpressurelow
       transmitbuffer[0x05] = waterpressurehigh
-      transmitbuffer[0x06] = exttemp
+      if exttemp > 0:
+        transmitbuffer[0x06] = exttemp
+      else:
+        transmitbuffer[0x06] = 0x00
       transmitbuffer[0x07] = relay_tube1
       transmitbuffer[0x08] = relay_tube2
       transmitbuffer[0x09] = relay_tube3
@@ -127,19 +139,19 @@ def writechannelstatustocomport(channel):
       if override[channel][1] == "off":
         transmitbuffer[0x08] = 0x02
       if override[channel][2] == "on":
-          transmitbuffer[0x09] = 0x03
+        transmitbuffer[0x09] = 0x03
       if override[channel][2] == "off":
-          transmitbuffer[0x09] = 0x02
+        transmitbuffer[0x09] = 0x02
     else:
       transmitbuffer[0x00] = ord("C")
       transmitbuffer[0x01] = ord("H")
       transmitbuffer[0x02] = channel
       transmitbuffer[0x03] = in_temperature[channel]
-      transmitbuffer[0x04] = in_humidity
-      transmitbuffer[0x05] = in_gasconcentrate
-      transmitbuffer[0x06] = in_opmode
-      transmitbuffer[0x07] = in_swmanu
-      transmitbuffer[0x08] = in_ocprot
+      transmitbuffer[0x04] = in_humidity[channel]
+      transmitbuffer[0x05] = in_gasconcentrate[channel]
+      transmitbuffer[0x06] = in_opmode[channel]
+      transmitbuffer[0x07] = in_swmanu[channel]
+      transmitbuffer[0x08] = in_ocprot[channel]
       transmitbuffer[0x09] = in_alarm[channel]
       transmitbuffer[0x0A] = out_lamps[channel]
       transmitbuffer[0x0B] = out_vents[channel]
@@ -153,19 +165,20 @@ def writechannelstatustocomport(channel):
       if override[channel][1] == "off":
         transmitbuffer[0x0B] = 0x02
       if override[channel][2] == "on":
-          transmitbuffer[0x0C] = 0x03
+        transmitbuffer[0x0C] = 0x03
       if override[channel][2] == "off":
-          transmitbuffer[0x0C] = 0x02
+        transmitbuffer[0x0C] = 0x02
       if ena_ch[channel] == 0:
         transmitbuffer[0x06] = 0x7F
-  for x in range(0,13):
-    line = line + chr(transmitbuffer[x])
-  try:
-    com.open
-    com.write(str.encode(line))
-    com.close
-  except:
-    print("")
+    for x in range(0,13):
+      line = line + chr(transmitbuffer[x])
+    try:
+      com.open
+      com.write(str.encode(line))
+      com.close
+      sleep.delay(0.1)
+    except:
+      print("")
 
 # load configuration
 def loadconfiguration(conffile):
@@ -180,6 +193,7 @@ def loadconfiguration(conffile):
   global com_enable
   global com_device
   global com_speed
+  global com_verbose
   global ena_ch
   global lockfile
   global logfile
@@ -224,6 +238,8 @@ def loadconfiguration(conffile):
     com_device = config.get('COMport','com_device')
     com_speed = '9600'
     com_speed = config.get('COMport','com_speed')
+    com_verbose = 0
+    com_verbose = int(config.get('COMport','com_verbose'))
     ena_ch = [0 for x in range(9)]
     for i in range(1,9):
       ena_ch[i] = int(config.get('enable','ena_ch' + str(i)))
@@ -1003,7 +1019,7 @@ newdata = ["" for x in range(10)]
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
-override = [["" for x in range(9)] for x in range(3)]
+override = [["neutral" for x in range(3)] for x in range(9)]
 prevdata = ["" for x in range(10)]
 relay_alarm = 0
 relay_tube1 = 0
