@@ -53,7 +53,7 @@ COMPMV6=0
 COMPSV6=3
 COMPMV7=0
 COMPSV7=3
-DELAY=10
+DELAY=0
 
 global eol
 global lptaddresses
@@ -104,7 +104,7 @@ def writedebuglogtocomport(level,text):
       com.open
       com.write(str.encode(dt + ' ' + str.upper(level) + ' ' + text + eol))
       com.close
-      sleep.delay(0.1)
+      time.sleep(0.1)
     except:
       print("")
 
@@ -149,7 +149,7 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x03] = in_temperature[channel]
       transmitbuffer[0x04] = in_humidity[channel]
       transmitbuffer[0x05] = in_gasconcentrate[channel]
-      transmitbuffer[0x06] = in_opmode[channel]
+      transmitbuffer[0x06] = not in_opmode[channel]
       transmitbuffer[0x07] = in_swmanu[channel]
       transmitbuffer[0x08] = in_ocprot[channel]
       transmitbuffer[0x09] = in_alarm[channel]
@@ -176,7 +176,7 @@ def writechannelstatustocomport(channel):
       com.open
       com.write(str.encode(line))
       com.close
-      sleep.delay(0.1)
+      time.sleep(0.1)
     except:
       print("")
 
@@ -932,6 +932,7 @@ global led_active
 global led_error
 global led_warning
 global led_waterpumperror
+global loop
 global mheater_disable
 global mheater_off
 global mheater_on
@@ -995,6 +996,7 @@ led_active = 0
 led_error = 0
 led_warning = 0
 led_waterpumperror = 0
+loop = 0
 mheater_disable = [[0 for x in range(9)] for y in range(24)]
 mheater_off = [0 for x in range(9)]
 mheater_on = [0 for x in range(9)]
@@ -1174,8 +1176,11 @@ while True:
           writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
           prevdata[channel] = newdata[channel]
     # send channels' data to display via serial port
-    for channel in range(0,9):
-      writechannelstatustocomport(channel)
+    writechannelstatustocomport(loop)
+    if loop == 8:
+      loop = 0
+    else:
+      loop = loop + 1
     # waiting
     blinkactiveled(0);
     writetodebuglog("i","Waiting " + str(DELAY) + " seconds.")

@@ -1,6 +1,6 @@
-15240e9b2145b018a11c8bb567d79855  usr/bin/mm8d-editenvirconf
-db7efb2dcdb5e2a7631c8502492a07ce  usr/bin/mm8d-editenvirconf.bin
-d77b7a4c723130bc0ec2fa440a335c77  usr/bin/mm8d-editirrconf.bin
-b1e3dccc5617ace5653eef2fcef0b234  usr/share/doc/mm8d-eec/changelog.gz
+fbaa4d0b46e3da3190b68319e8b87182  usr/bin/mm8d-editenvirconf
+3b87cb934a9a8bb6bdfa50353880a2f0  usr/bin/mm8d-editenvirconf.bin
+99bbc98eee5fe492b0299ccf94bc4afd  usr/bin/mm8d-editirrconf.bin
+b4f5748b7ea658d779eaa3a333ac965a  usr/share/doc/mm8d-eec/changelog.gz
 40a29a5ec427fc848370a7b2ee2f3aaf  usr/share/doc/mm8d-eec/copyright
-1bb6ed72868793b39f8155d427fb0caf  usr/share/man/man1/mm8d-editenvirconf.1.gz
+035d44b24658108fe28f021b78101e64  usr/share/man/man1/mm8d-editenvirconf.1.gz
