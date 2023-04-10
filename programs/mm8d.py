@@ -53,7 +53,7 @@ COMPMV6=0
 COMPSV6=3
 COMPMV7=0
 COMPSV7=3
-DELAY=0
+DELAY=2
 
 global eol
 global lptaddresses
@@ -106,7 +106,7 @@ def writedebuglogtocomport(level,text):
       com.close
       time.sleep(0.1)
     except:
-      print("")
+      print("COM!")
 
 # send channels' data to display via serial port
 def writechannelstatustocomport(channel):
@@ -130,17 +130,17 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x0A] = 0x00
       transmitbuffer[0x0B] = 0x00
       transmitbuffer[0x0C] = 0x00
-      if override[channel][0] == "on":
-        transmitbuffer[0x07] = 0x03
-      if override[channel][0] == "off":
-        transmitbuffer[0x07] = 0x02
       if override[channel][1] == "on":
-        transmitbuffer[0x08] = 0x03
+        transmitbuffer[0x07] = 0x03
       if override[channel][1] == "off":
-        transmitbuffer[0x08] = 0x02
+        transmitbuffer[0x07] = 0x02
       if override[channel][2] == "on":
-        transmitbuffer[0x09] = 0x03
+        transmitbuffer[0x08] = 0x03
       if override[channel][2] == "off":
+        transmitbuffer[0x08] = 0x02
+      if override[channel][3] == "on":
+        transmitbuffer[0x09] = 0x03
+      if override[channel][3] == "off":
         transmitbuffer[0x09] = 0x02
     else:
       transmitbuffer[0x00] = ord("C")
@@ -156,17 +156,17 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x0A] = out_lamps[channel]
       transmitbuffer[0x0B] = out_vents[channel]
       transmitbuffer[0x0C] = out_heaters[channel]
-      if override[channel][0] == "on":
-        transmitbuffer[0x0A] = 0x03
-      if override[channel][0] == "off":
-        transmitbuffer[0x0A] = 0x02
       if override[channel][1] == "on":
-        transmitbuffer[0x0B] = 0x03
+        transmitbuffer[0x0A] = 0x03
       if override[channel][1] == "off":
-        transmitbuffer[0x0B] = 0x02
+        transmitbuffer[0x0A] = 0x02
       if override[channel][2] == "on":
-        transmitbuffer[0x0C] = 0x03
+        transmitbuffer[0x0B] = 0x03
       if override[channel][2] == "off":
+        transmitbuffer[0x0B] = 0x02
+      if override[channel][3] == "on":
+        transmitbuffer[0x0C] = 0x03
+      if override[channel][3] == "off":
         transmitbuffer[0x0C] = 0x02
       if ena_ch[channel] == 0:
         transmitbuffer[0x06] = 0x7F
@@ -664,7 +664,7 @@ def analise(section):
 def initializelocalports():
   writetodebuglog("i","Initializing local I/O ports.")
   if hw == 0:
-  # GPIO ports
+    # GPIO ports
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(prt_i1,GPIO.IN)
@@ -680,7 +680,7 @@ def initializelocalports():
     GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
     GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
   else:
-  # paralel (LPT) port
+    # paralel (LPT) port
     status = portio.ioperm(lptaddresses[lpt_prt],1,1)
     if status:
       writetodebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lptaddresses[lpt_prt])) + "!")
@@ -694,6 +694,7 @@ def initializelocalports():
 # write data from GPIO/LPT port
 def writelocalports():
   if hw == 0:
+    # GPIO ports
     try:
       GPIO.output(prt_lo1,led_active)
       GPIO.output(prt_lo2,led_warning)
@@ -707,6 +708,7 @@ def writelocalports():
     except:
       return 0
   else:
+    # paralel (LPT) port
     outdata = 128 * led_waterpumperror +  64 * led_error +  32 * led_warning +  16 * led_active +  8 * relay_tube3 +  4 * relay_tube2 + 2 * relay_tube1 + relay_alarm
     portio.outb(outdata,lptaddresses[lpt_prt])
     if (portio.inb(lptaddresses[lpt_prt]) == outdata):
@@ -721,11 +723,12 @@ def readlocalports():
   global waterpressurehigh
   global unused_local_input
   if hw == 0:
+    # GPIO ports
     try:
-      GPIO.input(prt_i1,mainsbreakers)
-      GPIO.input(prt_i2,waterpressurelow)
-      GPIO.input(prt_i3,waterpressurehigh)
-      GPIO.input(prt_i4,unused_local_input)
+      mainsbreakers = GPIO.input(prt_i1)
+      waterpressurelow = GPIO.input(prt_i2)
+      waterpressurehigh = GPIO.input(prt_i3)
+      unused_local_input = GPIO.input(prt_i4)
       return 1
     except:
       mainsbreakers = 0;
@@ -734,6 +737,7 @@ def readlocalports():
       unused_local_input = 0
       return 0
   else:
+    # paralel (LPT) port
     try:
       indata = portio.inb(lptaddresses[lpt_prt] + 1)
       mainsbreakers = indata & 8
@@ -1021,7 +1025,7 @@ newdata = ["" for x in range(10)]
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
-override = [["neutral" for x in range(3)] for x in range(9)]
+override = [["neutral" for x in range(4)] for x in range(9)]
 prevdata = ["" for x in range(10)]
 relay_alarm = 0
 relay_tube1 = 0
