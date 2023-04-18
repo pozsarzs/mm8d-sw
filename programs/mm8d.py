@@ -463,8 +463,8 @@ def analise(section):
   global relay_tube1
   global relay_tube2
   global relay_tube3
-  h=int(time.strftime("%H"))
-  m=int(time.strftime("%M"))
+  h = int(time.strftime("%H"))
+  m = int(time.strftime("%M"))
   if section == 1:
     # Local inputs/outputs
     led_error = 0
@@ -557,9 +557,12 @@ def analise(section):
     # Growing environments
     for channel in range(1,9):
       if ena_ch[channel] == 1:
+        wrongdata = in_temperature[channel] + in_humidity[channel] + in_gasconcentrate[channel]
         writetodebuglog("i","CH" + str(channel) + ": Measured T is " + str(in_temperature[channel]) + " C")
         writetodebuglog("i","CH" + str(channel) + ": Measured RH is " + str(in_humidity[channel]) + "%")
         writetodebuglog("i","CH" + str(channel) + ": Measured RUGC is " + str(in_gasconcentrate[channel]) + "%")
+        if wrongdata == 0:
+          writetodebuglog("e","CH" + str(channel) + ": Measured data are wrong!")
         if in_opmode[channel] == 0:
           # growing mushroom
           writetodebuglog("i","CH" + str(channel) + ": Operation mode: growing mushroom.")
@@ -577,13 +580,14 @@ def analise(section):
           if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (> " + str(cgasconcentrate_max[channel]) + "%)")
           # - heaters
-          out_heaters[channel] = 0
-          if in_temperature[channel] < mheater_on[channel]:
-            out_heaters[channel] = 1
-          if in_temperature[channel] > mheater_off[channel]:
+          if wrongdata > 0:
             out_heaters[channel] = 0
-          if mheater_disable[h][channel] == 1:
-            out_heaters[channel] = 0
+            if in_temperature[channel] < mheater_on[channel]:
+              out_heaters[channel] = 1
+            if in_temperature[channel] > mheater_off[channel]:
+              out_heaters[channel] = 0
+            if mheater_disable[h][channel] == 1:
+              out_heaters[channel] = 0
           # - lights
           out_lamps[channel] = 0
           if (h >= mlight_on1[channel]) and (h < mlight_off1[channel]):
@@ -619,13 +623,14 @@ def analise(section):
           if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
             writetodebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (" + str(in_gasconcentrate[channel]) + " % > " + str(cgasconcentrate_max[channel]) + "%)")
           # - heaters
-          out_heaters[channel] = 0
-          if in_temperature[channel] < hheater_on[channel]:
-            out_heaters[channel] = 1
-          if in_temperature[channel] > hheater_off[channel]:
+          if wrongdata > 0:
             out_heaters[channel] = 0
-          if hheater_disable[h][channel] == 1:
-            out_heaters[channel] = 0
+            if in_temperature[channel] < hheater_on[channel]:
+              out_heaters[channel] = 1
+            if in_temperature[channel] > hheater_off[channel]:
+              out_heaters[channel] = 0
+            if hheater_disable[h][channel] == 1:
+              out_heaters[channel] = 0
           # - lights
           out_lamps[channel] = 0
           if (h >= hlight_on1[channel]) and (h < hlight_off1[channel]):
@@ -1077,6 +1082,7 @@ for channel in range(1,9):
       writetodebuglog("i","CH"+ str(channel) +": Set auto mode of MM7D.")
     else:
       writetodebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
+exttemp = getexttemp()
 # *** start loop ***
 writetodebuglog("i","Starting program as daemon.")
 while True:
@@ -1144,8 +1150,8 @@ while True:
         else:
           writetodebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
     # get external temperature from internet
-    if (int(time.strftime("%M")) == 8):
-      exttemp=getexttemp()
+    if int(time.strftime("%M")) == 30:
+      exttemp = getexttemp()
     # analise data
     analise(2);
     # override state of outputs

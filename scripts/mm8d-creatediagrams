@@ -70,7 +70,7 @@ creatediagrams()
 
   EMPTYPIC=$DIR_HTM"/pics/temperature-empty.png"
   PNGFILE=$DIR_HTM"/diagrams/temperature-ch$CHANNEL.png"
-  head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' > $TMPFILE 2> /dev/null
+  head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' | tac > $TMPFILE 2> /dev/null
   gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
 set rmargin at screen 0.90
