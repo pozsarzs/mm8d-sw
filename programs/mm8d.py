@@ -390,16 +390,24 @@ def writelog(channel,temperature,humidity,gasconcentrate,statusdata):
       lines = f.readlines()
       f.seek(0)
       if (channel == 0):
-        s = dt + ',' + \
-            statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + \
-            str(exttemp) + ',' + \
-            statusdata[4] + ',' + statusdata[5] + ',' + statusdata[6] + '\n'
+        s = dt + ',' + statusdata[0] + ',' + \
+                       statusdata[1] + ',' + \
+                       statusdata[2] + ',' + \
+                       str(temperature) + ',' + \
+                       statusdata[4] + ',' + \
+                       statusdata[5] + ',' + \
+                       statusdata[6] + '\n'
       else:
-        s = dt + ',' + \
-            str(temperature) + ',' + str(humidity) + ',' + str(gasconcentrate) + ',' + \
-              statusdata[0] + ',' + statusdata[1] + ',' + statusdata[2] + ',' + \
-              statusdata[3] + ',' + statusdata[4] + ',' + statusdata[5] + ',' + \
-              statusdata[6] + '\n'
+        s = dt + ',' + str(temperature) + ',' + \
+                       str(humidity) + ',' + \
+                       str(gasconcentrate) + ',' + \
+                       statusdata[0] + ',' + \
+                       statusdata[1] + ',' + \
+                       statusdata[2] + ',' + \
+                       statusdata[3] + ',' + \
+                       statusdata[4] + ',' + \
+                       statusdata[5] + ',' + \
+                       statusdata[6] + '\n'
       f.write(s)
       f.write(first_line)
       f.writelines(lines)
@@ -1173,18 +1181,29 @@ while True:
         else:
           writetodebuglog("i","CH" + str(channel) + ": -> ventilators OFF")
     # write data to log
-    newdata[0] = str(mainsbreakers) + str(waterpressurelow) + str(waterpressurehigh) + str(unused_local_input) + \
-      str(relay_tube1) + str(relay_tube2) + str(relay_tube3)
-    if (prevdata[0] != newdata[0]):
-      writelog(0,0,0,0,newdata[0])
-      prevdata[0] = newdata[0]
+    newdata[0] = str(mainsbreakers) + \
+                 str(waterpressurelow) + \
+                 str(waterpressurehigh) + \
+                 str(unused_local_input) + \
+                 str(relay_tube1) + \
+                 str(relay_tube2) + \
+                 str(relay_tube3)
+    if (prevdata[0] != str(exttemp) + newdata[0]):
+      writelog(exttemp,0,0,0,newdata[0])
+      prevdata[0] = str(exttemp) + newdata[0]
     for channel in range(1,9):
       if ena_ch[channel] == 1:
-        newdata[channel] = str(in_opmode[channel]) + str(in_swmanu[channel]) + str(in_ocprot[channel]) + str(in_alarm[channel]) + \
-          str(out_lamps[channel]) + str(out_vents[channel]) + str(out_heaters[channel])
-        if (prevdata[channel] != newdata[channel]):
-          writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
-          prevdata[channel] = newdata[channel]
+        if in_temperature[channel] + in_humidity[channel] + in_gasconcentrate[channel] > 0:
+          newdata[channel] = str(in_opmode[channel]) + \
+                             str(in_swmanu[channel]) + \
+                             str(in_ocprot[channel]) + \
+                             str(in_alarm[channel]) + \
+                             str(out_lamps[channel]) + \
+                             str(out_vents[channel]) + \
+                             str(out_heaters[channel])
+          if (prevdata[channel] != str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata[channel]):
+            writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
+            prevdata[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata[channel]
     # send channels' data to display via serial port
     writechannelstatustocomport(loop)
     if loop == 8:

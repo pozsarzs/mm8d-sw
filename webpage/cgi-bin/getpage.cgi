@@ -296,6 +296,7 @@ while(<MSG>)
     case "msg31" { $msg31 = $columns[1]; }
     case "msg32" { $msg32 = $columns[1]; }
     case "msg33" { $msg33 = $columns[1]; }
+    case "msg34" { $msg34 = $columns[1]; }
     case "msg35" { $msg35 = $columns[1]; }
     case "msg36" { $msg36 = $columns[1]; }
     case "msg52" { $msg52 = $columns[1]; }
@@ -515,6 +516,14 @@ if ($ch > 0)
   print "        <tr><td><img src=\"/diagrams/temperature-ch$ch.png\" width=\"100%\"></td></tr>";
   print "        <tr><td><img src=\"/diagrams/humidity-ch$ch.png\" width=\"100%\"></td></tr>";
   print "        <tr><td><img src=\"/diagrams/gasconcentrate-ch$ch.png\" width=\"100%\"></td></tr>";
+  print "      </tbody>";
+  print "    </table>";
+  print "    <br>";
+} else
+{
+  print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
+  print "      <tbody>";
+  print "        <tr><td><img src=\"/diagrams/temperature-ch$ch.png\" width=\"100%\"></td></tr>";
   print "      </tbody>";
   print "    </table>";
   print "    <br>";
