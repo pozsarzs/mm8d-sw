@@ -722,7 +722,14 @@ def writelocalports():
       return 0
   else:
     # paralel (LPT) port
-    outdata = 128 * led_waterpumperror +  64 * led_error +  32 * led_warning +  16 * led_active +  8 * relay_tube3 +  4 * relay_tube2 + 2 * relay_tube1 + relay_alarm
+    outdata = 128 * led_waterpumperror + \
+               64 * led_error + \
+               32 * led_warning + \
+               16 * led_active + \
+                8 * relay_tube3 + \
+                4 * relay_tube2 + \
+                2 * relay_tube1 + \
+                    relay_alarm
     portio.outb(outdata,lptaddresses[lpt_prt])
     if (portio.inb(lptaddresses[lpt_prt]) == outdata):
       return 1
