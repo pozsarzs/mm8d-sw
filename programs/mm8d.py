@@ -1051,6 +1051,7 @@ relay_alarm = 0
 relay_tube1 = 0
 relay_tube2 = 0
 relay_tube3 = 0
+done = 0
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # intialize serial port
@@ -1165,8 +1166,12 @@ while True:
         else:
           writetodebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
     # get external temperature from internet
-    if int(time.strftime("%M")) == 30:
-      exttemp = getexttemp()
+    if (int(time.strftime("%M")) == 0) or (int(time.strftime("%M")) == 1):
+      if done == 0:
+        exttemp = getexttemp()
+        done = 1
+    if (int(time.strftime("%M")) == 30) or (int(time.strftime("%M")) == 31):
+      done = 0
     # analise data
     analise(2);
     # override state of outputs
@@ -1196,7 +1201,7 @@ while True:
                  str(relay_tube2) + \
                  str(relay_tube3)
     if (prevdata[0] != str(exttemp) + newdata[0]):
-      writelog(exttemp,0,0,0,newdata[0])
+      writelog(0,exttemp,0,0,newdata[0])
       prevdata[0] = str(exttemp) + newdata[0]
     for channel in range(1,9):
       if ena_ch[channel] == 1:

@@ -328,7 +328,7 @@ $out2file = $dir_var . "/" . $ch . "/out2";
 $out3file = $dir_var . "/" . $ch . "/out3";
 $logfile = $logfile . $ch . ".log";
 # create diagram pictures
-if ($ch > 0) { system("$creatediagprog $ch"); }
+system("$creatediagprog $ch");
 # create output
 print "Content-type:text/html\r\n\r\n";
 writeheader();
