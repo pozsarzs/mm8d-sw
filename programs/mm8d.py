@@ -98,7 +98,7 @@ def writetodebuglog(level,text):
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):
-  if com_enable == "1":
+  if ena_console == "1":
     dt = (strftime("%y%m%d %H%M%S",localtime()))
     try:
       com.open
@@ -112,7 +112,7 @@ def writedebuglogtocomport(level,text):
 def writechannelstatustocomport(channel):
   transmitbuffer = [0x00 for x in range(13)]
   line = ""
-  if com_enable == "1":
+  if ena_console == "1":
     if channel == 0:
       transmitbuffer[0x00] = ord("C")
       transmitbuffer[0x01] = ord("H")
@@ -190,7 +190,7 @@ def loadconfiguration(conffile):
   global dbg_log
   global dir_log
   global dir_var
-  global com_enable
+  global ena_console
   global com_device
   global com_speed
   global com_verbose
@@ -232,8 +232,8 @@ def loadconfiguration(conffile):
     dbg_log = config.get('log','dbg_log')
     dir_log = config.get('directories','dir_log')
     dir_var = config.get('directories','dir_var')
-    com_enable = '0'
-    com_enable = config.get('COMport','com_enable')
+    ena_console = '0'
+    ena_console = config.get('COMport','ena_console')
     com_device = '/dev/ttyS0'
     com_device = config.get('COMport','com_device')
     com_speed = '9600'
@@ -503,22 +503,22 @@ def analise(section):
         h2, m2 = irmorning_stop[1].split(':')
         h3, m3 = irevening_start[1].split(':')
         h4, m4 = irevening_stop[1].split(':')
-        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m <= int(h2)*100+int(m2))) or \
-           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m <= int(h4)*100+int(m4))):
+        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m < int(h2)*100+int(m2))) or \
+           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m < int(h4)*100+int(m4))):
           relay_tube1 = 1
         h1, m1 = irmorning_start[2].split(':')
         h2, m2 = irmorning_stop[2].split(':')
         h3, m3 = irevening_start[2].split(':')
         h4, m4 = irevening_stop[2].split(':')
-        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m <= int(h2)*100+int(m2))) or \
-           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m <= int(h4)*100+int(m4))):
+        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m < int(h2)*100+int(m2))) or \
+           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m < int(h4)*100+int(m4))):
           relay_tube2 = 1
         h1, m1 = irmorning_start[3].split(':')
         h2, m2 = irmorning_stop[3].split(':')
         h3, m3 = irevening_start[3].split(':')
         h4, m4 = irevening_stop[3].split(':')
-        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m <= int(h2)*100+int(m2))) or \
-           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m <= int(h4)*100+int(m4))):
+        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m < int(h2)*100+int(m2))) or \
+           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m < int(h4)*100+int(m4))):
           relay_tube3 = 1
     # - messages
     if relay_tube1 == 1:
@@ -1055,7 +1055,7 @@ done = 0
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # intialize serial port
-if com_enable == "1":
+if ena_console == "1":
   com = serial.Serial(com_device, com_speed)
 # load irrigator settings
 loadirrconf(confdir + "irrigator.ini")
