@@ -1,3 +1,9 @@
+ MM8D (0.5) unstable; urgency=low
+  * Some bugfix.
+  * Add electric power meter support.
+
+ -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  XXX, 00 YYY 2023 00:00:00
+
  MM8D (0.4) unstable; urgency=low
 
   * Add mini serial console support. See miniserialconsole.txt for
