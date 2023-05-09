@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | getdata.cgi                                                                |
-# | Get data in plain text format                                              |
+# | Get data in several format                                                 |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it

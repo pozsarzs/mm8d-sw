@@ -9,9 +9,11 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
  - operation system:   Raspberry Pi OS, Debian GNU/Linux
  - version:            v0.5
  - language:           en (hu)
- - licence:            EUPL v1.1
+ - licence:            EUPL v1.2
  - user interface:     CLI, TUI, WUI
  - remote access:      HTTP, SSH
+ - data export:        txt, xml (via HTTP)
+
 
 **External libraries in package**
 

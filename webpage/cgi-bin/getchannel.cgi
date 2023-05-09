@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
-# | getpage.cgi                                                                |
-# | Get data in HTML format                                                    |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | getchannel.cgi                                                             |
+# | Get channel's data in HTML format                                          |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it
@@ -159,7 +159,7 @@ if ($channel eq '')
 {
   print "Content-type:text/plain\r\n\r\n";
   print "ERROR #9\n";
-  print "Usage: getpage.cgi?channel=...\n";
+  print "Usage: getchannel.cgi?channel=...\n";
   exit 9;
 }
 
@@ -422,7 +422,7 @@ print "    </table>";
 print "    <br>";
 print "    <center>";
 print "      <a href=/index.html><input value=\"$msg31\" type=\"submit\"></a>";
-print "      <a href=/cgi-bin/getpage.cgi?channel=$ch><input value=\"$msg27\" type=\"submit\"></a>";
+print "      <a href=/cgi-bin/getchannel.cgi?channel=$ch><input value=\"$msg27\" type=\"submit\"></a>";
 print "    </center>";
 print "    <br>";
 print "    $msg36";

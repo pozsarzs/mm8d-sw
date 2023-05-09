@@ -68,10 +68,12 @@ loadmessages()
   MSG04="Name"
   MSG05="Address"
   MSG06="Tents"
-  MSG07="Channels"
+  MSG07="Pages"
   MSG08="Channel"
   MSG09="Details"
   MSG37="Environment"
+  MSG70="Outdoor cameras"
+  MSG71="Electric power"
 
   MSGFILE="$DIR_MSG/$LNG/mm8d.msg"
   if [ -f "$MSGFILE" ]
@@ -86,6 +88,8 @@ loadmessages()
     MSG08=`cat $MSGFILE | grep msg08 | sed 's/msg08=//'`
     MSG09=`cat $MSGFILE | grep msg09 | sed 's/msg09=//'`
     MSG37=`cat $MSGFILE | grep msg37 | sed 's/msg37=//'`
+    MSG70=`cat $MSGFILE | grep msg70 | sed 's/msg70=//'`
+    MSG71=`cat $MSGFILE | grep msg71 | sed 's/msg71=//'`
   fi
 }
 
@@ -133,10 +137,23 @@ makehomepage()
     <table border="0" cellpadding="3" cellspacing="0" width="100%">
       <tbody>
         <tr>
+          <td><b>$MSG70:</b></td><td>&nbsp;</td>
+          <td align="right">
+            <a href="cgi-bin/getcameras.cgi"><button type="button">$MSG09</button></a>
+          </td>
+        </tr>
+        <tr>
+          <td><b>$MSG71:</b></td><td>&nbsp;</td>
+          <td align="right">
+            <a href="cgi-bin/getelectricpower.cgi"><button type="button">$MSG09</button></a>
+          </td>
+        </tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
           <td><b>$MSG08 #0:</b></td><td>$NAM_CH0</td>
           <td align="right">
             <a href="cgi-bin/getenvirconf.cgi?channel=0"><button type="button">$MSG37</button></a>&nbsp;
-            <a href="cgi-bin/getpage.cgi?channel=0"><button type="button">$MSG09</button></a>
+            <a href="cgi-bin/getchannel.cgi?channel=0"><button type="button">$MSG09</button></a>
           </td>
         </tr>
 EOF
@@ -151,10 +168,10 @@ EOF
     if [ ${!ENAB} = 1 ]
     then
       echo "<a href=\"cgi-bin/getenvirconf.cgi?channel=$i\"><button type=\"button\">$MSG37</button></a>&nbsp;" >> $DIR_TMP/index.html
-      echo "            <a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\">$MSG09</button></a></td>" >> $DIR_TMP/index.html
+      echo "            <a href=\"cgi-bin/getchannel.cgi?channel=$i\"><button type=\"button\">$MSG09</button></a></td>" >> $DIR_TMP/index.html
     else
       echo "<a href=\"cgi-bin/getenvirconf.cgi?channel=$i\"><button type=\"button\" disabled>$MSG37</button></a>&nbsp;" >> $DIR_TMP/index.html
-      echo "            <a href=\"cgi-bin/getpage.cgi?channel=$i\"><button type=\"button\" disabled>$MSG09</button></a></td>" >> $DIR_TMP/index.html
+      echo "            <a href=\"cgi-bin/getchannel.cgi?channel=$i\"><button type=\"button\" disabled>$MSG09</button></a></td>" >> $DIR_TMP/index.html
     fi
     echo "        </tr>" >> $DIR_TMP/index.html
   done
