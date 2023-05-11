@@ -15,9 +15,9 @@ binary/x86_64/mm8d-override.bin
 documents/AUTHORS                               DONE
 documents/cgiprogs.txt                          DONE
 documents/changelog
-documents/connecting.txt
-documents/copyright
-documents/exitcodes.txt
+documents/connecting.txt                        DONE
+documents/copyright                             DONE
+documents/exitcodes.txt                         DONE
 documents/INSTALL.pc
 documents/INSTALL.raspi
 documents/logfiles.txt                          DONE
@@ -40,6 +40,7 @@ manuals/mm8d-maintainlog.1.gz
 manuals/mm8d-msctest.py.1.gz
 manuals/mm8d-override.1.gz
 manuals/mm8d.py.8.gz
+manuals/mm8d-restartdaemon.1.gz
 manuals/mm8d-startdaemon.1.gz
 manuals/mm8d-statusofdaemon.1.gz
 manuals/mm8d-stopdaemon.1.gz
@@ -82,15 +83,16 @@ packaging/web-all/prerm
 programs/mm8d-hwtest.py
 programs/mm8d-msctest.py
 programs/mm8d.py
-scripts/mm8d-creatediagrams
+scripts/mm8d-creatediagrams                     DONE
 scripts/mm8d-editenvirconf
 scripts/mm8d-editmainconf
 scripts/mm8d-getsnapshots
 scripts/mm8d-maintainlog
 scripts/mm8d-override
-scripts/mm8d-startdaemon
-scripts/mm8d-statusofdaemon
-scripts/mm8d-stopdaemon
+scripts/mm8d-restartdaemon                      DONE
+scripts/mm8d-startdaemon                        DONE
+scripts/mm8d-statusofdaemon                     DONE
+scripts/mm8d-stopdaemon                         DONE
 scripts/mm8d-updatestartpage                    DONE
 scripts/mm8d-viewlog
 scripts/mm8d-webpage
@@ -162,10 +164,10 @@ source/override/Makefile
 source/override/override.pas
 source/untcommon.pas
 webpage/cgi-bin/getcameras.cgi
-webpage/cgi-bin/getchannel.cgi
+webpage/cgi-bin/getchannel.cgi                  DONE
 webpage/cgi-bin/getdata.cgi                     DONE
 webpage/cgi-bin/getenvirconf.cgi                DONE
-webpage/cgi-bin/getsupply.cgi
+webpage/cgi-bin/getsupply.cgi                   DONE
 webpage/footer_en.html                          DONE
 webpage/footer_hu.html                          DONE
 webpage/header_en.html                          DONE

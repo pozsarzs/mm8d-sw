@@ -7,7 +7,7 @@
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it
-# under the terms of the European Union Public License 1.1 version.
+# under the terms of the European Union Public License 1.2 version.
 #
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -172,9 +172,7 @@ my $dir_msg;
 my $dir_shr;
 my $dir_var;
 my $lang;
-my $usr_dt1;
 my $web_lines;
-my @nam_ch;
 if (-e $conffile)
 {
   open CONF, "< $conffile";
@@ -200,16 +198,7 @@ if (-e $conffile)
       case "dir_shr" { $dir_shr = $columns[1]; }
       case "dir_var" { $dir_var = $columns[1]; }
       case "lng" { $lang = $columns[1]; }
-      case "usr_dt1" { $usr_dt1 = $columns[1]; }
       case "web_lines" { $web_lines = $columns[1]; }
-    }
-    my @b = (0..8);
-    for (@b)
-    {
-      if ($columns[0] eq "nam_ch" . $_)
-      {
-        $nam_ch[$_] = $columns[1];
-      }
     }
   }
   close CONF;
@@ -244,13 +233,13 @@ my $msg26 = "Latest status";
 my $msg27 = "Refresh";
 my $msg28 = "Camera";
 my $msg29 = "Log";
-my $msg30 = "Login via SSH and run <i>mm8d-viewlog</i> to see full log.";
+my $msg30 = "Log in with SSH and use <i>mm8d-viewlog</i> to see full log.";
 my $msg31 = "Start page";
 my $msg32 = "water pump pressure error (no water)";
 my $msg33 = "water pump pressure error (clogging)";
 my $msg34 = "Override outputs";
-my $msg35 = "To set override, please login into unit via SSH, and use <i>mm8d-override</i> command!";
-my $msg36 = "To set environment characteristic, please login into unit via SSH, and use <i>mm8d-editenvirconf</i> command!";
+my $msg35 = "Log in with SSH and use <i>mm8d-override</i> to set override.";
+my $msg36 = "Log in with SSH and use the <i>mm8d-editenvirconf</i> to set values.";
 my $msg52 = "external temperature in &deg;C";
 my $msg53 = "status of water pump and tube #";
 my $msg54 = "irrigator tube #";
@@ -425,7 +414,7 @@ print "      <a href=/index.html><input value=\"$msg31\" type=\"submit\"></a>";
 print "      <a href=/cgi-bin/getchannel.cgi?channel=$ch><input value=\"$msg27\" type=\"submit\"></a>";
 print "    </center>";
 print "    <br>";
-print "    $msg36";
+print "    <small>$msg36</small>";
 print "    <hr>";
 print "    <br>";
 # override
@@ -487,7 +476,7 @@ print "        </tr>";
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
-print "    $msg35";
+print "    <small>$msg35</small>";
 print "    <hr>";
 print "    <br>";
 # camera
@@ -565,7 +554,7 @@ if (-e $logfile)
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
-print "    $msg30";
+print "    <small>$msg30</small>";
 print "    <br>";
 writefooter();
 exit 0;

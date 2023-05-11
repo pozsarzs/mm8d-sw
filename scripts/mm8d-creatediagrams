@@ -1,13 +1,13 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d-creatediagrams                                                        |
 # | Create diagrams for webpage                                                |
 # +----------------------------------------------------------------------------+
 #
 #   This program is free software: you can redistribute it and/or modify it
-# under the terms of the European Union Public License 1.1 version.
+# under the terms of the European Union Public License 1.2 version.
 #
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -29,23 +29,23 @@ fi
 
 checkparameter()
 {
-  if [[ ! $1 =~ ^[0-9]+$ ]]; then 
-    echo "ERROR #2: Specified value is not number!"
-    exit 2
-  fi
-  if [ $1 -ge "0" ]
+#  if [[ ! $1 =~ ^[0-9]+$ ]]; then 
+#    echo "ERROR #2: Specified value is not number!"
+#    exit 2
+#  fi
+  if [ $1 -ge "-1" ]
   then
     if [ $1 -le "8" ]
     then
       CHANNEL=$1
     else
       echo "ERROR #3: Wrong channel number!"
-      echo "Valid values: 0..8"
+      echo "Valid values: -1..8"
       exit 3
     fi
   else
     echo "ERROR #3: Wrong channel number!"
-    echo "Valid values: 0..8"
+    echo "Valid values: -1..8"
     exit 3
   fi
 }
@@ -66,9 +66,91 @@ loadconfiguration()
 creatediagrams()
 {
   TMPFILE=$DIR_HTM"/diagrams/mm8d-creatediagrams.tmp"
-  LOGFILE=$DIR_LOG"/mm8d-ch"$CHANNEL".log"
+  # power supply
+  if [ $CHANNEL -eq -1 ]
+  then
+    LOGFILE=$DIR_LOG"/mm8d-supply.log"
+    # mains voltage
+    EMPTYPIC=$DIR_HTM"/pics/voltage-empty.png"
+    PNGFILE=$DIR_HTM"/diagrams/voltage.png"
+    head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' | tac > $TMPFILE 2> /dev/null
+    gnuplot 2> /dev/null << EOF
+set lmargin at screen 0.10
+set rmargin at screen 0.90
+set bmargin at screen 0.20
+set tmargin at screen 0.90
+set datafile separator ","
+set title ""
+set ylabel ""
+set yrange [200:250]
+set xlabel ""
+set xtics rotate 90
+set style fill solid 1.00 noborder
+set boxwidth 2 relative
+set terminal png
+set output "$PNGFILE"
+plot "$TMPFILE" using 3:xticlabels(stringcolumn(2)) with lines title "Urms [V]" linecolor rgb '#666699'
+EOF
+    if [ $? -ne 0 ]
+    then
+      cp $EMPTYPIC $PNGFILE
+    fi
+    # mains current
+    EMPTYPIC=$DIR_HTM"/pics/current-empty.png"
+    PNGFILE=$DIR_HTM"/diagrams/current.png"
+    head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' | tac > $TMPFILE 2> /dev/null
+    gnuplot 2> /dev/null << EOF
+set lmargin at screen 0.10
+set rmargin at screen 0.90
+set bmargin at screen 0.20
+set tmargin at screen 0.90
+set datafile separator ","
+set title ""
+set ylabel ""
+set yrange [0:35]
+set xlabel ""
+set xtics rotate 90
+set style fill solid 1.00 noborder
+set boxwidth 2 relative
+set terminal png
+set output "$PNGFILE"
+plot "$TMPFILE" using 4:xticlabels(stringcolumn(2)) with lines title "Irms [A]" linecolor rgb '#666699'
+EOF
+    if [ $? -ne 0 ]
+    then
+      cp $EMPTYPIC $PNGFILE
+    fi
+    # power
+    EMPTYPIC=$DIR_HTM"/pics/power-empty.png"
+    PNGFILE=$DIR_HTM"/diagrams/power.png"
+    head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' | tac > $TMPFILE 2> /dev/null
+    gnuplot 2> /dev/null << EOF
+set lmargin at screen 0.10
+set rmargin at screen 0.90
+set bmargin at screen 0.20
+set tmargin at screen 0.90
+set datafile separator ","
+set title ""
+set ylabel ""
+set yrange [0:8000]
+set xlabel ""
+set xtics rotate 90
+set style fill solid 1.00 noborder
+set boxwidth 2 relative
+set terminal png
+set output "$PNGFILE"
+plot "$TMPFILE" using 5:xticlabels(stringcolumn(2)) with lines title "P [W]" linecolor rgb '#666699', "$TMPFILE" using 6:xticlabels(stringcolumn(2)) with lines title "Q [VAR]" linecolor rgb 'red',"$TMPFILE"  using 7:xticlabels(stringcolumn(2)) with lines title "S [VA]" linecolor 'blue'
+EOF
+    if [ $? -ne 0 ]
+    then
+      cp $EMPTYPIC $PNGFILE
+    fi
+  fi
+  # channel #0
   if [ $CHANNEL == 0 ]
   then
+    LOGFILE=$DIR_LOG"/mm8d-ch"$CHANNEL".log"
+    # external temperature
     EMPTYPIC=$DIR_HTM"/pics/temperature-empty.png"
     PNGFILE=$DIR_HTM"/diagrams/temperature-ch$CHANNEL.png"
     head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' | tac > $TMPFILE 2> /dev/null
@@ -89,11 +171,16 @@ set terminal png
 set output "$PNGFILE"
 plot "$TMPFILE" using 6:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb '#666699'
 EOF
-  if [ $? -ne 0 ]
-  then
-    cp $EMPTYPIC $PNGFILE
+    if [ $? -ne 0 ]
+    then
+      cp $EMPTYPIC $PNGFILE
+    fi
   fi
-  else
+  # channel #1-8
+  if [ $CHANNEL -ge 0 ]
+  then
+    LOGFILE=$DIR_LOG"/mm8d-ch"$CHANNEL".log"
+    # internal temperature
     EMPTYPIC=$DIR_HTM"/pics/temperature-empty.png"
     PNGFILE=$DIR_HTM"/diagrams/temperature-ch$CHANNEL.png"
     head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' | tac > $TMPFILE 2> /dev/null
@@ -114,14 +201,14 @@ set terminal png
 set output "$PNGFILE"
 plot "$TMPFILE" using 3:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb '#666699'
 EOF
-  if [ $? -ne 0 ]
-  then
-    cp $EMPTYPIC $PNGFILE
-  fi
-
-  EMPTYPIC="$DIR_HTM/pics/humidity-empty.png"
-  PNGFILE=$DIR_HTM"/diagrams/humidity-ch$CHANNEL.png"
-  gnuplot 2> /dev/null << EOF
+    if [ $? -ne 0 ]
+    then
+      cp $EMPTYPIC $PNGFILE
+    fi
+    # internal humidity
+    EMPTYPIC="$DIR_HTM/pics/humidity-empty.png"
+    PNGFILE=$DIR_HTM"/diagrams/humidity-ch$CHANNEL.png"
+    gnuplot 2> /dev/null << EOF
 set lmargin at screen 0.10
 set rmargin at screen 0.90
 set bmargin at screen 0.20
@@ -142,7 +229,7 @@ EOF
     then
       cp $EMPTYPIC $PNGFILE
     fi
-
+    # internal gas concentrate
     EMPTYPIC=$DIR_HTM"/pics/gasconcentrate-empty.png"
     PNGFILE=$DIR_HTM"/diagrams/gasconcentrate-ch$CHANNEL.png"
     gnuplot 2> /dev/null << EOF

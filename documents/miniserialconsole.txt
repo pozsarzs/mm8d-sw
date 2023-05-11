@@ -181,4 +181,4 @@ Display
     4:  short description
 
 --------------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
