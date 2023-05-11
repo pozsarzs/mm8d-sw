@@ -1,7 +1,23 @@
 Content of log files
 ~~~~~~~~~~~~~~~~~~~~
 
-  1. mm8d-ch0.log
+  1. mm8d-supply.log
+  ------------------
+
+  Example line: "2020-09-19,13:15,232,12,2760,0,2760,1"
+
+  Columns:
+    1:  date
+    2:  time
+    3:  effectice mains voltage in V
+    4:  effective mains current in A
+    5:  active power in W
+    6:  reactive power in VAR
+    7:  apparend power in VA
+    8:  cos phi
+
+
+  2. mm8d-ch0.log
   ---------------
 
   Example line: "2020-09-19,13:15,0,0,0,31,0,0,0"
@@ -18,7 +34,7 @@ Content of log files
     9:  status of water pump and tube #3      0: off     1: on
 
 
-  2. mm8d-ch[1-8].log
+  3. mm8d-ch[1-8].log
   -------------------
 
   Example line: "2020-09-19,13:59,13,23,33,1,1,1,0,1,1,1"
@@ -38,7 +54,7 @@ Content of log files
    12:  status of heater output               0: off     1: on
 
 
-  3. debug-YYMMDD.log
+  4. debug-YYMMDD.log
   -------------------
 
   Example line: "2020-09-19 21:01:33  INFO Initializing I/O ports."
@@ -50,5 +66,5 @@ Content of log files
     4:  content of record
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+ MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
 

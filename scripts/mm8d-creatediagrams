@@ -80,14 +80,14 @@ set tmargin at screen 0.90
 set datafile separator ","
 set title ""
 set ylabel ""
-set yrange [0:40]
+set yrange [-20:40]
 set xlabel ""
 set xtics rotate 90
 set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
 set output "$PNGFILE"
-plot "$TMPFILE" using 6:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb 'red'
+plot "$TMPFILE" using 6:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb '#666699'
 EOF
   if [ $? -ne 0 ]
   then
@@ -112,7 +112,7 @@ set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
 set output "$PNGFILE"
-plot "$TMPFILE" using 3:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb 'red'
+plot "$TMPFILE" using 3:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb '#666699'
 EOF
   if [ $? -ne 0 ]
   then
@@ -136,7 +136,7 @@ set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
 set output "$PNGFILE"
-plot "$TMPFILE" using 4:xticlabels(stringcolumn(2)) with lines title "RH [%]" linecolor rgb 'blue'
+plot "$TMPFILE" using 4:xticlabels(stringcolumn(2)) with lines title "RH [%]" linecolor rgb '#666699'
 EOF
     if [ $? -ne 0 ]
     then
@@ -160,7 +160,7 @@ set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
 set output "$PNGFILE"
-plot "$TMPFILE" using 5:xticlabels(stringcolumn(2)) with lines title "Gas concentrate [%]" linecolor rgb 'green'
+plot "$TMPFILE" using 5:xticlabels(stringcolumn(2)) with lines title "Gas concentrate [%]" linecolor rgb '#666699'
 EOF
     if [ $? -ne 0 ]
     then

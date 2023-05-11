@@ -7,7 +7,7 @@
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it
-# under the terms of the European Union Public License 1.1 version.
+# under the terms of the European Union Public License 1.2 version.
 #
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -26,19 +26,19 @@ use lib 'cgi-bin';
 use Scalar::Util qw(looks_like_number);
 use Switch;
 use strict;
-use warnings;
+# use warnings;
 use 5.010;
 use Config::Tiny;
 use Data::Dumper qw(Dumper);
 
 my $ch;
 my $channel;
-my $conffile;
 my $confdir;
-my $row;
+my $conffile;
 my $dir_msg;
 my $dir_shr;
 my $lang;
+my $row;
 
 # get data
 my $buffer;
@@ -112,9 +112,8 @@ if (-e $conffile)
 }
 
 # load messages
-my $msg01 = "MM8D - controlling and monitoring system";
 my $msg08 = "Channel";
-my $msg36 = "To set environment characteristic, please login into unit via SSH, and use <i>mm8d-editenvirconf</i> command!";
+my $msg36 = "Log in with SSH and use the <i>mm8d-editenvirconf</i> to set values.";
 my $msg38 = "Environment characteristic";
 my $msg39 = "Growing hyphae";
 my $msg40 = "Growing mushroom";
@@ -128,17 +127,17 @@ my $msg47 = "minimum";
 my $msg48 = "maximum";
 my $msg49 = "disable power on";
 my $msg50 = "timed";
-my $msg54 ="irrigator tube #";
-my $msg55 ="Irrigator settings";
-my $msg58 ="minimal temperature";
-my $msg59 ="maximal temperature";
-my $msg63 ="name";
-my $msg64 ="start of morning irrigation";
-my $msg65 ="end of morning irrigation";
-my $msg66 ="start of evening irrigation";
-my $msg67 ="end of evening irrigation";
-my $msg68 ="m";
-my $msg69 ="h";
+my $msg54 = "irrigator tube #";
+my $msg55 = "Irrigator settings";
+my $msg58 = "minimal temperature";
+my $msg59 = "maximal temperature";
+my $msg63 = "name";
+my $msg64 = "start of morning irrigation";
+my $msg65 = "end of morning irrigation";
+my $msg66 = "start of evening irrigation";
+my $msg67 = "end of evening irrigation";
+my $msg68 = "m";
+my $msg69 = "h";
 my $msgfile = $dir_msg . "/" . $lang . "/mm8d.msg";
 open MSG, "< $msgfile";
 while(<MSG>)
@@ -155,7 +154,6 @@ while(<MSG>)
   my($datarownum) = $#datarow;
   switch ($columns[0])
   {
-    case "msg01" { $msg01 = $columns[1]; }
     case "msg08" { $msg08 = $columns[1]; }
     case "msg36" { $msg36 = $columns[1]; }
     case "msg38" { $msg38 = $columns[1]; }
@@ -203,6 +201,7 @@ my $footerfile = $dir_shr . "/footer_" . $lang . ".html";
 my $headerfile = $dir_shr . "/header_" . $lang . ".html";
 my $envirconffile;
 print "Content-type:text/html\r\n\r\n";
+# write header
 open HEADER, $headerfile;
 while (<HEADER>)
 {
@@ -220,8 +219,10 @@ if ($ch == 0)
 my $config = Config::Tiny->read( $envirconffile, 'utf8' );
 my $section;
 my $v;
+# write body
 if ($ch == 0)
 {
+  # irrigation
   $section="common";
   print "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
   print "      <tbody>";
@@ -249,13 +250,11 @@ if ($ch == 0)
   print "      </tr>";
   print "      <tr>";
   print "        <td  align=\"left\"><b>$msg58</b></td>";
-  print "        <td colspan=2 align=\"center\">$config->{$section}{temp_min}</td>";
-  print "        <td align=\"center\">°C</td>";
+  print "        <td colspan=3 align=\"center\">$config->{$section}{temp_min} °C</td>";
   print "      </tr>";
   print "      <tr>";
   print "        <td  align=\"left\"><b>$msg59</b></td>";
-  print "        <td colspan=2 align=\"center\">$config->{$section}{temp_max}</td>";
-  print "        <td align=\"center\">°C</td>";
+  print "        <td colspan=3 align=\"center\">$config->{$section}{temp_max} °C</td>";
   print "      </tr>";
   print "      <tr>";
   print "        <td align=\"left\"><b>$msg63</b></td>";
@@ -504,7 +503,7 @@ if ($ch == 0)
 }
 print "    </table>";
 print "    <br>";
-print "    $msg36";
+print "    <small>$msg36</small>";
 print "    <br>";
 # write footer
 open FOOTER, $footerfile;

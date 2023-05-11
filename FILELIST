@@ -20,7 +20,7 @@ documents/copyright
 documents/exitcodes.txt
 documents/INSTALL.pc
 documents/INSTALL.raspi
-documents/logfiles.txt
+documents/logfiles.txt                          DONE
 documents/miniserialconsole.txt
 documents/README
 documents/VERSION                               DONE
@@ -91,7 +91,7 @@ scripts/mm8d-override
 scripts/mm8d-startdaemon
 scripts/mm8d-statusofdaemon
 scripts/mm8d-stopdaemon
-scripts/mm8d-updatestartpage
+scripts/mm8d-updatestartpage                    DONE
 scripts/mm8d-viewlog
 scripts/mm8d-webpage
 settings/cron.d/mm8d-sw
@@ -162,8 +162,8 @@ source/override/Makefile
 source/override/override.pas
 source/untcommon.pas
 webpage/cgi-bin/getcameras.cgi
-webpage/cgi-bin/getchannel.cgi                  DONE
-webpage/cgi-bin/getdata.cgi                     DONE
+webpage/cgi-bin/getchannel.cgi
+webpage/cgi-bin/getdata.cgi
 webpage/cgi-bin/getenvirconf.cgi                DONE
 webpage/cgi-bin/getsupply.cgi
 webpage/footer_en.html                          DONE
@@ -171,13 +171,13 @@ webpage/footer_hu.html                          DONE
 webpage/header_en.html                          DONE
 webpage/header_hu.html                          DONE
 webpage/pics/ants.jpg                           DONE
-webpage/pics/current-empty.png                  DONE
-webpage/pics/gasconcentrate-empty.png           DONE
-webpage/pics/humidity-empty.png                 DONE
-webpage/pics/power-empty.png                    DONE
+webpage/pics/current-empty.png
+webpage/pics/gasconcentrate-empty.png
+webpage/pics/humidity-empty.png
+webpage/pics/power-empty.png
 webpage/pics/szerafin.ico                       DONE
-webpage/pics/temperature-empty.png              DONE
-webpage/pics/voltage-empty.png                  DONE
+webpage/pics/temperature-empty.png
+webpage/pics/voltage-empty.png
 webpage/styles.css                              DONE
 install                                         DONE
 LICENCE                                         DONE

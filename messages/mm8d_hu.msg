@@ -6,12 +6,12 @@
 # +----------------------------------------------------------------------------+
 
 msg01=MM8D
-msg02=Telephely
+msg02=
 msg03=Felhasználó
-msg04=Név
-msg05=Cím
-msg06=Sátrak
-msg07=Oldalak
+msg04=
+msg05=
+msg06=
+msg07=
 msg08=Csatorna
 msg09=Részletek
 msg10=Elnevezések
@@ -40,7 +40,7 @@ msg32=szivattyú víznyomás hiba (nincs víz)
 msg33=szivattyú víznyomás hiba (dugulás)
 msg34=Kimenetek felülbírálása
 msg35=A felülbírálás módosításához jelentkezzen be az egységbe SSH-val és használja a <i>mm8d-override</i> parancsot!
-msg36=A környezeti jellemzők beállításához jelentkezzen be az egységbe SSH-val és használja a <i>mm8d-editenvirconf</i> parancsot!
+msg36=A beállításhoz jelentkezzen be SSH-val és használja a <i>mm8d-editenvirconf</i>-t.
 msg37=Környezet
 msg38=Környezeti változók
 msg39=Átszövetés
@@ -74,5 +74,5 @@ msg66=esti öntözés kezde
 msg67=esti öntözés vége
 msg68=hó
 msg69=ó
-msg69=Kültéri kamerák
-msg70=Elektromos táplálás
+msg70=Biztonsági kamerák
+msg71=Elektromos táplálás

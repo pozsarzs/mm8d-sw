@@ -22,6 +22,7 @@ line()
   echo ""
 }
 
+# erase a file
 erase()
 {
   sudo rm --force $1 2> /dev/null
