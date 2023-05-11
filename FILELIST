@@ -13,7 +13,7 @@ binary/x86_64/mm8d-editirrconf.bin
 binary/x86_64/mm8d-editmainconf.bin
 binary/x86_64/mm8d-override.bin
 documents/AUTHORS                               DONE
-documents/cgiprogs.txt
+documents/cgiprogs.txt                          DONE
 documents/changelog
 documents/connecting.txt
 documents/copyright
@@ -163,7 +163,7 @@ source/override/override.pas
 source/untcommon.pas
 webpage/cgi-bin/getcameras.cgi
 webpage/cgi-bin/getchannel.cgi
-webpage/cgi-bin/getdata.cgi
+webpage/cgi-bin/getdata.cgi                     DONE
 webpage/cgi-bin/getenvirconf.cgi                DONE
 webpage/cgi-bin/getsupply.cgi
 webpage/footer_en.html                          DONE

@@ -27,7 +27,7 @@ use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
 use strict;
-use warnings;
+# use warnings;
 
 my $contname = 'MM8D';
 my $contversion = 'v0.3';
@@ -82,9 +82,6 @@ my $row;
 my $dir_lck;
 my $dir_log;
 my $dir_var;
-my $usr_dt1;
-my $usr_dt2;
-my $usr_dt3;
 my $usr_nam;
 my $usr_uid;
 my @nam_ch;
@@ -108,9 +105,6 @@ if (-e $conffile)
       case "dir_lck" { $dir_lck = $columns[1]; }
       case "dir_log" { $dir_log = $columns[1]; }
       case "dir_var" { $dir_var = $columns[1]; }
-      case "usr_dt1" { $usr_dt1 = $columns[1]; }
-      case "usr_dt2" { $usr_dt2 = $columns[1]; }
-      case "usr_dt3" { $usr_dt3 = $columns[1]; }
       case "usr_nam" { $usr_nam = $columns[1]; }
       case "usr_uid" { $usr_uid = $columns[1]; }
     }
@@ -144,13 +138,68 @@ if ( looks_like_number($channel) && $channel >=0  &&  $channel <= 8 )
   print "Bad channel value!\n";
   exit 10;
 }
-$logfile = $logfile . $ch . ".log";
+# check UID
 if ( $uid eq $usr_uid )
 {
   while (-e $lockfile)
   {
     sleep 1;
   }
+  # power supply
+  if ( $value eq '-1' )
+  {
+    $logfile = $dir_log . "/mm8d-supply.log";
+    if (-e $logfile)
+    {
+      open DATA, "< $logfile";
+      while (<DATA>)
+      {
+        chop;
+        my(@columns)= split(",");
+        my($colnum)=$#columns;
+        $row = "";
+        foreach $colnum (@columns)
+        {
+          $row = $row . $colnum;
+        }
+        my(@datarow) = split("\"\"",$row);
+        my($datarownum) = $#datarow;
+        if ( $format eq 'xml' )
+        {
+          print "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+          print "<xml>\n";
+          print "  <supply>\n";
+          print "    <electricity>\n";
+          print "      <date>$columns[0]</date>\n";
+          print "      <time>$columns[1]</time>\n";
+          print "      <urms>$columns[2]</urms>\n";
+          print "      <irms>$columns[3]</irms>\n";
+          print "      <p>$columns[4]</p>\n";
+          print "      <q>$columns[5]</q>\n";
+          print "      <s>$columns[6]</s>\n";
+          print "      <cosfi>$columns[7]</cosfi>\n";
+          print "    </electricity>\n";
+          print "  </supply>\n";
+          print "</xml>\n";
+        } else
+        {
+          my @b = (0..7);
+          for (@b)
+          {
+            print "$columns[$_]\n";
+          }
+        }
+        last;
+      }
+      close DATA;
+    } else
+    {
+      print "ERROR #5\n";
+      print "Cannot open ",$logfile," log file!\n";
+      exit 5;
+    }
+  }
+  # device
   if ( $value eq '0' )
   {
     if ( $format eq 'xml' )
@@ -170,6 +219,7 @@ if ( $uid eq $usr_uid )
       exit 0;
     }
   }
+  # user
   if ( $value eq '1' )
   {
     if ( $format eq 'xml' )
@@ -178,23 +228,19 @@ if ( $uid eq $usr_uid )
       print "<xml>\n";
       print "  <user>\n";
       print "    <name>$usr_nam</name>\n";
-      print "    <data1>$usr_dt1</data1>\n";
-      print "    <data2>$usr_dt2</data2>\n";
-      print "    <data3>$usr_dt3</data3>\n";
       print "  </user>\n";
       print "</xml>\n";
       exit 0;
     } else
     {
       print "$usr_nam\n";
-      print "$usr_dt1\n";
-      print "$usr_dt2\n";
-      print "$usr_dt3\n";
       exit 0;
     }
   }
+  # status
   if ( $value eq '2' )
   {
+    $logfile = $logfile . $ch . ".log";
     if (-e $logfile)
     {
       open DATA, "< $logfile";
@@ -276,6 +322,7 @@ if ( $uid eq $usr_uid )
       exit 5;
     }
   }
+  # override
   if ( $FORM{value} eq '3' )
   {
     my $out1;
