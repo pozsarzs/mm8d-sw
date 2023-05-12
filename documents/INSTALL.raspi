@@ -6,7 +6,7 @@ Before install this program please install Raspbian Lite OS to SD-CARD
 
 Installation
 ~~~~~~~~~~~~
-  $ tar -xzf mm8d-sw-0.4-armhf.tar.gz
+  $ tar -xzf mm8d-sw-0.5-armhf.tar.gz
   $ cd mm8d-sw
   $ sudo raspi-config
   $ ./prepare
@@ -32,4 +32,4 @@ Removing
   $ ./uninstall
 
 --------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

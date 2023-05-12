@@ -4,8 +4,8 @@ binary/armhf/mm8d-editenvirconf.bin
 binary/armhf/mm8d-editirrconf.bin
 binary/armhf/mm8d-editmainconf.bin
 binary/armhf/mm8d-override.bin
-binary/i386/mm8d-editenvirconf.bin
-binary/i386/mm8d-editirrconf.bin
+binary/i386/mm8d-editenvirconf.bin              DONE
+binary/i386/mm8d-editirrconf.bin                DONE
 binary/i386/mm8d-editmainconf.bin
 binary/i386/mm8d-override.bin
 binary/x86_64/mm8d-editenvirconf.bin
@@ -18,69 +18,69 @@ documents/changelog
 documents/connecting.txt                        DONE
 documents/copyright                             DONE
 documents/exitcodes.txt                         DONE
-documents/INSTALL.pc
-documents/INSTALL.raspi
+documents/INSTALL.pc                            DONE
+documents/INSTALL.raspi                         DONE
 documents/logfiles.txt                          DONE
 documents/miniserialconsole.txt
-documents/README
+documents/README                                DONE
 documents/VERSION                               DONE
 libraries/get                                   DONE
 libraries/portio-0.5.tar.gz                     DONE
 manuals/getcameras.cgi.7.gz
-manuals/getchannel.cgi.7.gz
-manuals/getdata.cgi.7.gz
-manuals/getenvirconf.cgi.7.gz
+manuals/getchannel.cgi.7.gz                     DONE
+manuals/getdata.cgi.7.gz                        DONE
+manuals/getenvirconf.cgi.7.gz                   DONE
 manuals/getsupply.cgi.7.gz
-manuals/mm8d-creatediagrams.1.gz
-manuals/mm8d-editenvirconf.1.gz
-manuals/mm8d-editmainconf.1.gz
-manuals/mm8d-getsnapshots-tentcam.1.gz
-manuals/mm8d-getsnapshots-seccam.1.gz
-manuals/mm8d-hwtest.py.1.gz
-manuals/mm8d-maintainlog.1.gz
-manuals/mm8d-msctest.py.1.gz
-manuals/mm8d-override.1.gz
-manuals/mm8d.py.8.gz
-manuals/mm8d-restartdaemon.1.gz
-manuals/mm8d-startdaemon.1.gz
-manuals/mm8d-statusofdaemon.1.gz
-manuals/mm8d-stopdaemon.1.gz
-manuals/mm8d-updatestartpage.1.gz
-manuals/mm8d-viewlog.1.gz
-manuals/mm8d-webpage.1.gz
-messages/mm8d_hu.msg
+manuals/mm8d-creatediagrams.1.gz                DONE
+manuals/mm8d-editenvirconf.1.gz                 DONE
+manuals/mm8d-editmainconf.1.gz                  DONE
+manuals/mm8d-getsnapshots-tentcam.1.gz          DONE
+manuals/mm8d-getsnapshots-seccam.1.gz           DONE
+manuals/mm8d-hwtest.py.1.gz                     DONE
+manuals/mm8d-maintainlog.1.gz                   DONE
+manuals/mm8d-msctest.py.1.gz                    DONE
+manuals/mm8d-override.1.gz                      DONE
+manuals/mm8d.py.8.gz                            DONE
+manuals/mm8d-restartdaemon.1.gz                 DONE
+manuals/mm8d-startdaemon.1.gz                   DONE
+manuals/mm8d-statusofdaemon.1.gz                DONE
+manuals/mm8d-stopdaemon.1.gz                    DONE
+manuals/mm8d-updatestartpage.1.gz               DONE
+manuals/mm8d-viewlog.1.gz                       DONE
+manuals/mm8d-webpage.1.gz                       DONE
+messages/mm8d_hu.msg                            DONE
 packaging/eec-amd64/control
 packaging/eec-amd64/md5sums
-packaging/eec-amd64/postinst
-packaging/eec-amd64/prerm
+packaging/eec-amd64/postinst                    DONE
+packaging/eec-amd64/prerm                       DONE
 packaging/eec-armhf/control
 packaging/eec-armhf/md5sums
-packaging/eec-armhf/postinst
-packaging/eec-armhf/prerm
+packaging/eec-armhf/postinst                    DONE
+packaging/eec-armhf/prerm                       DONE
 packaging/eec-i386/control
 packaging/eec-i386/md5sums
-packaging/eec-i386/postinst
-packaging/eec-i386/prerm
+packaging/eec-i386/postinst                     DONE
+packaging/eec-i386/prerm                        DONE
 packaging/sw-amd64/conffiles
 packaging/sw-amd64/control
 packaging/sw-amd64/md5sums
-packaging/sw-amd64/postinst
-packaging/sw-amd64/prerm
+packaging/sw-amd64/postinst                     DONE
+packaging/sw-amd64/prerm                        DONE
 packaging/sw-armhf/conffiles
 packaging/sw-armhf/control
 packaging/sw-armhf/md5sums
-packaging/sw-armhf/postinst
-packaging/sw-armhf/prerm
+packaging/sw-armhf/postinst                     DONE
+packaging/sw-armhf/prerm                        DONE
 packaging/sw-i386/conffiles
 packaging/sw-i386/control
 packaging/sw-i386/md5sums
-packaging/sw-i386/postinst
-packaging/sw-i386/prerm
+packaging/sw-i386/postinst                      DONE
+packaging/sw-i386/prerm                         DONE
 packaging/web-all/conffiles
 packaging/web-all/control
 packaging/web-all/md5sums
-packaging/web-all/postinst
-packaging/web-all/prerm
+packaging/web-all/postinst                      DONE
+packaging/web-all/prerm                         DONE
 programs/mm8d-hwtest.py
 programs/mm8d-msctest.py
 programs/mm8d.py
@@ -116,32 +116,32 @@ settings/systemd/system/mm8d.service            DONE
 source/_config/config.guess                     DONE
 source/_config/config.sub                       DONE
 source/_config/install-sh                       DONE
-source/configure
-source/configure.in
-source/editenvirconf/config.pas.in
-source/editenvirconf/editenvirconf.pas
-source/editenvirconf/incloadinifile.pas
-source/editenvirconf/incpage10screen.pas
-source/editenvirconf/incpage11screen.pas
-source/editenvirconf/incpage1screen.pas
-source/editenvirconf/incpage2screen.pas
-source/editenvirconf/incpage3screen.pas
-source/editenvirconf/incpage4screen.pas
-source/editenvirconf/incpage5screen.pas
-source/editenvirconf/incpage6screen.pas
-source/editenvirconf/incpage7screen.pas
-source/editenvirconf/incpage8screen.pas
-source/editenvirconf/incpage9screen.pas
-source/editenvirconf/incsaveinifile.pas
-source/editenvirconf/Makefile
-source/editirrconf/config.pas.in
-source/editirrconf/editirrconf.pas
-source/editirrconf/incloadinifile.pas
-source/editirrconf/incpage1screen.pas
-source/editirrconf/incpage2screen.pas
-source/editirrconf/incsaveinifile.pas
-source/editirrconf/Makefile
-source/editmainconf/config.pas.in
+source/configure                                DONE
+source/configure.in                             DONE
+source/editenvirconf/config.pas.in              DONE
+source/editenvirconf/editenvirconf.pas          DONE
+source/editenvirconf/incloadinifile.pas         DONE
+source/editenvirconf/incpage10screen.pas        DONE
+source/editenvirconf/incpage11screen.pas        DONE
+source/editenvirconf/incpage1screen.pas         DONE
+source/editenvirconf/incpage2screen.pas         DONE
+source/editenvirconf/incpage3screen.pas         DONE
+source/editenvirconf/incpage4screen.pas         DONE
+source/editenvirconf/incpage5screen.pas         DONE
+source/editenvirconf/incpage6screen.pas         DONE
+source/editenvirconf/incpage7screen.pas         DONE
+source/editenvirconf/incpage8screen.pas         DONE
+source/editenvirconf/incpage9screen.pas         DONE
+source/editenvirconf/incsaveinifile.pas         DONE
+source/editenvirconf/Makefile                   DONE
+source/editirrconf/config.pas.in                DONE
+source/editirrconf/editirrconf.pas              DONE
+source/editirrconf/incloadinifile.pas           DONE
+source/editirrconf/incpage1screen.pas           DONE
+source/editirrconf/incpage2screen.pas           DONE
+source/editirrconf/incsaveinifile.pas           DONE
+source/editirrconf/Makefile                     DONE
+source/editmainconf/config.pas.in               DONE
 source/editmainconf/editmainconf.pas
 source/editmainconf/incloadinifile.pas
 source/editmainconf/incpage10screen.pas
@@ -155,16 +155,16 @@ source/editmainconf/incpage7screen.pas
 source/editmainconf/incpage8screen.pas
 source/editmainconf/incpage9screen.pas
 source/editmainconf/incsaveinifile.pas
-source/editmainconf/Makefile
-source/Makefile
-source/Makefile.global.in
-source/override/config.pas.in
+source/editmainconf/Makefile                    DONE
+source/Makefile                                 DONE
+source/Makefile.global.in                       DONE
+source/override/config.pas.in                   DONE
 source/override/incloadoutfiles.pas
 source/override/incpage1screen.pas
 source/override/incsaveoutfiles.pas
-source/override/Makefile
+source/override/Makefile                        DONE
 source/override/override.pas
-source/untcommon.pas
+source/untcommon.pas                            DONE
 webpage/cgi-bin/getcameras.cgi                  DONE
 webpage/cgi-bin/getchannel.cgi                  DONE
 webpage/cgi-bin/getdata.cgi                     DONE

@@ -5,15 +5,14 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
 
 **Software**
 
- - architecture:       amd64, armhf, i386
- - operation system:   Raspberry Pi OS, Debian GNU/Linux
- - version:            v0.5
- - language:           en (hu)
- - licence:            EUPL v1.2
- - user interface:     CLI, TUI, WUI
- - remote access:      HTTP, SSH
- - data export:        txt, xml (via HTTP)
-
+ - architecture:          amd64, armhf, i386
+ - operation system:      Raspberry Pi OS, Debian GNU/Linux
+ - version:               v0.5
+ - language:              en (hu)
+ - licence:               EUPL v1.2
+ - user interface:        CLI, TUI, WUI
+ - remote access:         HTTP (html, txt, xml), SSH
+ - slave device acces:    HTTP or ModBUS
 
 **External libraries in package**
 

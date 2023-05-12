@@ -1,6 +1,6 @@
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d_hu.msg                                                                |
 # | message file                                                               |
 # +----------------------------------------------------------------------------+
@@ -34,13 +34,13 @@ msg26=Utolsó állapot
 msg27=Frissít
 msg28=Kamera
 msg29=Napló
-msg30=A teljes naplóért jelentkezzen be SSH-val és futtassa a <i>mm8d-viewlog</i>-ot!
+msg30=A teljes napló megtekintéséhez jelentkezzen be SSH-val és használja az <i>mm8d-viewlog</i>-ot.
 msg31=Kezdő oldal
 msg32=szivattyú víznyomás hiba (nincs víz)
 msg33=szivattyú víznyomás hiba (dugulás)
 msg34=Kimenetek felülbírálása
-msg35=A módosításához jelentkezzen be SSH-val és használja a <i>mm8d-override</i> parancsot!
-msg36=A beállításhoz jelentkezzen be SSH-val és használja a <i>mm8d-editenvirconf</i>-t.
+msg35=A módosításához jelentkezzen be SSH-val és használja az <i>mm8d-override</i>-ot.
+msg36=A beállításhoz jelentkezzen be SSH-val és használja az <i>mm8d-editenvirconf</i>-t.
 msg37=Környezet
 msg38=Környezeti változók
 msg39=Átszövetés

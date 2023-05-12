@@ -6,15 +6,14 @@ MM8D - Growing house and irrigation controlling and remote monitoring system
 
   It is a contoller software for MM8D system. MM8D system contents up to eight
 MM6D remote controlled switching devices, eight MM7D air quality measuring
-device, one MM9A irrigation controller, one MM8D interface board and a PC or
-Raspberry Pi. MM6Ds and MM7Ds connects via wireles LAN, MM9A and others
-(auxiliary contact of overcurrent breakers, rain sensor and LEDs) via MM8D
-interface board.
+device, one MM9A irrigation controller, one MM10D electric power meter, one MM8D
+interface board and a PC or Raspberry Pi. You can view actual status on connected
+Mini serial console or with a browser application and administrate it with SSH
+client.
 
-  You can view actual status on connected Mini serial console or with a browser
-application and administrate it with SSH client.
-
-
+  MM6Ds, MM7Ds and MM10D connects via wireles LAN (HTTP or ModBUS protocol), MM9A
+and others (auxiliary contact of overcurrent breakers and LEDs) via MM8D
+interface board. Serial console connects via RS-232 with unique protocol.
 
 Requirements:
 
@@ -36,20 +35,20 @@ Requirements:
 ------------------------------------------
 a. Visit homepage (see later) to download installer packages:
 
-  Raspberry Pi OS:  mm8d-sw-0.4-armhf.tar.gz
+  Raspberry Pi OS:  mm8d-sw-0.5-armhf.tar.gz
 
-                    mm8d-eec_0.4-1_armhf.deb
-                    mm8d-sw_0.4-1_armhf.deb
-                    mm8d-web_0.4-1_all.deb
+                    mm8d-eec_0.5-1_armhf.deb
+                    mm8d-sw_0.5-1_armhf.deb
+                    mm8d-web_0.5-1_all.deb
 
-  Debian GNU/Linux: mm8d-sw-0.4-i386.tar.gz
-                    mm8d-sw-0.4-amd64.tar.gz
+  Debian GNU/Linux: mm8d-sw-0.5-i386.tar.gz
+                    mm8d-sw-0.5-amd64.tar.gz
 
-                    mm8d-eec_0.4-1_i386.deb
-                    mm8d-sw_0.4-1_i386.deb
-                    mm8d-eec_0.4-1_amd64.deb
-                    mm8d-sw_0.4-1_amd64.deb
-                    mm8d-web_0.4-1_all.deb
+                    mm8d-eec_0.5-1_i386.deb
+                    mm8d-sw_0.5-1_i386.deb
+                    mm8d-eec_0.5-1_amd64.deb
+                    mm8d-sw_0.5-1_amd64.deb
+                    mm8d-web_0.5-1_all.deb
 
 b. Download from Github
 
@@ -72,10 +71,6 @@ c. Download from Debian repository
    E-mail:               <pozsar.zsolt@szerafingomba.hu>
    Phone:                +36 56/470-272
    Mobile:               +36 30/249-5030
-   Postal address:       Pozsár Zsolt
-                         Kurázsi Fő út 1.
-                         HU-5430 Tiszaföldvár
-                         Hungary
 
 --------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

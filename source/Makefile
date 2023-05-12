@@ -1,6 +1,6 @@
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | Makefile                                                                   |
 # | Make file for source code                                                  |
 # +----------------------------------------------------------------------------+
@@ -21,6 +21,9 @@ clean:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir clean; fi; \
 	done
+	@$(rm) Makefile.global
+	@$(rm) config.log
+	@$(rm) config.status
 	@echo "Source code is cleaned."
 
 install:
