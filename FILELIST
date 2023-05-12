@@ -95,20 +95,20 @@ scripts/mm8d-statusofdaemon                     DONE
 scripts/mm8d-stopdaemon                         DONE
 scripts/mm8d-updatestartpage                    DONE
 scripts/mm8d-viewlog
-scripts/mm8d-webpage
-settings/cron.d/mm8d-sw
-settings/cron.d/mm8d-web
-settings/init.d/mm8d.sh
-settings/mm8d/envir-ch1.ini
-settings/mm8d/envir-ch2.ini
-settings/mm8d/envir-ch3.ini
-settings/mm8d/envir-ch4.ini
-settings/mm8d/envir-ch5.ini
-settings/mm8d/envir-ch6.ini
-settings/mm8d/envir-ch7.ini
-settings/mm8d/envir-ch8.ini
-settings/mm8d/irrigator.ini
-settings/mm8d/mm8d.ini
+scripts/mm8d-webpage                            DONE
+settings/cron.d/mm8d-sw                         DONE
+settings/cron.d/mm8d-web                        DONE
+settings/init.d/mm8d.sh                         DONE
+settings/mm8d/envir-ch1.ini                     DONE
+settings/mm8d/envir-ch2.ini                     DONE
+settings/mm8d/envir-ch3.ini                     DONE
+settings/mm8d/envir-ch4.ini                     DONE
+settings/mm8d/envir-ch5.ini                     DONE
+settings/mm8d/envir-ch6.ini                     DONE
+settings/mm8d/envir-ch7.ini                     DONE
+settings/mm8d/envir-ch8.ini                     DONE
+settings/mm8d/irrigator.ini                     DONE
+settings/mm8d/mm8d.ini                          DONE
 settings/motd                                   DONE
 settings/systemd/system/mm8d.service            DONE
 source/_config/config.guess                     DONE
@@ -173,13 +173,13 @@ webpage/footer_hu.html                          DONE
 webpage/header_en.html                          DONE
 webpage/header_hu.html                          DONE
 webpage/pics/ants.jpg                           DONE
-webpage/pics/current-empty.png
-webpage/pics/gasconcentrate-empty.png
-webpage/pics/humidity-empty.png
-webpage/pics/power-empty.png
+webpage/pics/current-empty.png                  DONE
+webpage/pics/gasconcentrate-empty.png           DONE
+webpage/pics/humidity-empty.png                 DONE
+webpage/pics/power-empty.png                    DONE
 webpage/pics/szerafin.ico                       DONE
-webpage/pics/temperature-empty.png
-webpage/pics/voltage-empty.png
+webpage/pics/temperature-empty.png              DONE
+webpage/pics/voltage-empty.png                  DONE
 webpage/styles.css                              DONE
 install                                         DONE
 LICENCE                                         DONE
