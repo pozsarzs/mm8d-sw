@@ -34,7 +34,8 @@ manuals/getsupply.cgi.7.gz
 manuals/mm8d-creatediagrams.1.gz
 manuals/mm8d-editenvirconf.1.gz
 manuals/mm8d-editmainconf.1.gz
-manuals/mm8d-getsnapshots.1.gz
+manuals/mm8d-getsnapshots-tentcam.1.gz
+manuals/mm8d-getsnapshots-seccam.1.gz
 manuals/mm8d-hwtest.py.1.gz
 manuals/mm8d-maintainlog.1.gz
 manuals/mm8d-msctest.py.1.gz
@@ -84,11 +85,12 @@ programs/mm8d-hwtest.py
 programs/mm8d-msctest.py
 programs/mm8d.py
 scripts/mm8d-creatediagrams                     DONE
-scripts/mm8d-editenvirconf
-scripts/mm8d-editmainconf
-scripts/mm8d-getsnapshots
-scripts/mm8d-maintainlog
-scripts/mm8d-override
+scripts/mm8d-editenvirconf                      DONE
+scripts/mm8d-editmainconf                       DONE
+scripts/mm8d-getsnapshots-tentcam               DONE
+scripts/mm8d-getsnapshots-seccam                DONE
+scripts/mm8d-maintainlog                        DONE
+scripts/mm8d-override                           DONE
 scripts/mm8d-restartdaemon                      DONE
 scripts/mm8d-startdaemon                        DONE
 scripts/mm8d-statusofdaemon                     DONE

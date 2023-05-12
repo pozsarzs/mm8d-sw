@@ -1,0 +1,68 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | mm8d-getsnapshots                                                          |
+# | Get snapshot from security IP cameras                                      |
+# +----------------------------------------------------------------------------+
+#
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.2 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+# Exit codes:
+#   0: normal exit
+#   1: cannot open configuration file
+#   2: specified value is not number
+#   3: wrong channel number
+
+USRLOCALDIR="1"
+if [ $USRLOCALDIR -eq "1" ]
+then
+  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
+else
+  CFGFILE="/etc/mm8d/mm8d.ini"
+fi
+
+loadconfiguration()
+{
+  if [ ! -f $CFGFILE ]
+  then
+    echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+    exit 1
+  fi
+  CAM_SC1=`cat $CFGFILE | grep cam_sc1= | sed 's/cam_sc1=//'`
+  CAM_SC2=`cat $CFGFILE | grep cam_sc2= | sed 's/cam_sc2=//'`
+  CAM_SC3=`cat $CFGFILE | grep cam_sc3= | sed 's/cam_sc3=//'`
+  CAM_SC4=`cat $CFGFILE | grep cam_sc4= | sed 's/cam_sc4=//'`
+  DIR_HTM=`cat $CFGFILE | grep dir_htm= | sed 's/dir_htm=//'`
+}
+
+getsnapshots()
+{
+  NAME=CAM_SC$1
+  URL=${!NAME}
+  ANTSPIC="$DIR_HTM/pics/ants.jpg"
+  JPGPIC="$DIR_HTM/snapshots/camera-$1.jpg"
+  if [ -z $URL ]
+  then
+    cp "$ANTSPIC" "$JPGPIC"
+  else
+    wget "$URL" -O "$JPGPIC"
+    if [ ! $? -eq "0" ]
+    then
+      cp "$ANTSPIC" "$JPGPIC"
+    fi
+  fi
+}
+
+loadconfiguration
+
+for i in {1..4}
+do
+  getsnapshots $i
+done
+exit 0

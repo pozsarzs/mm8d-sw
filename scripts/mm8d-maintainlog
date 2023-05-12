@@ -42,8 +42,8 @@ loadconfiguration()
 
 maintainlogfile()
 {
-  DATAFILE=$DIR_LOG"/mm8d-ch$1.log"
-  BCKPFILE=$DIR_LOG"/mm8d-ch$1.bak"
+  DATAFILE=$DIR_LOG"/$1.log"
+  BCKPFILE=$DIR_LOG"/$1.bak"
   if [ -f $DATAFILE ]
   then
     rm --force $BCKPFILE.gz
@@ -84,6 +84,7 @@ maintainlogfile()
 loadconfiguration
 for i in {0..8}
 do
-  maintainlogfile "$i"
+  maintainlogfile "mm8d-ch$i"
 done
+maintainlog "mm8d-supply"
 exit 0

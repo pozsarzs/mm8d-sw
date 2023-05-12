@@ -107,7 +107,7 @@ else
   CHANNEL=$1
 fi
 
-if [[ ! "$CHANNEL" =~ ^[0-9]+$ ]]; then 
+if [[ ! "$CHANNEL" =~ ^-?[0-9]+$ ]]; then 
   echo "ERROR #2: Specified value is not number!"
   exit 2
 fi
