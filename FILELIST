@@ -165,7 +165,7 @@ source/override/incsaveoutfiles.pas
 source/override/Makefile
 source/override/override.pas
 source/untcommon.pas
-webpage/cgi-bin/getcameras.cgi
+webpage/cgi-bin/getcameras.cgi                  DONE
 webpage/cgi-bin/getchannel.cgi                  DONE
 webpage/cgi-bin/getdata.cgi                     DONE
 webpage/cgi-bin/getenvirconf.cgi                DONE

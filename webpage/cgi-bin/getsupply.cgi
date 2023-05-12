@@ -120,7 +120,6 @@ foreach $pair (@pairs)
 }
 
 # load configuration
-my $ena_cameras;
 my $dir_htm;
 my $dir_lck;
 my $dir_log;
@@ -128,7 +127,6 @@ my $dir_msg;
 my $dir_shr;
 my $dir_var;
 my $lang;
-my $usr_dt1;
 my $web_lines;
 if (-e $conffile)
 {
