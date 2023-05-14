@@ -34,6 +34,7 @@ manuals/getsupply.cgi.7.gz                      DONE
 manuals/mm8d-creatediagrams.1.gz                DONE
 manuals/mm8d-editenvirconf.1.gz                 DONE
 manuals/mm8d-editmainconf.1.gz                  DONE
+manuals/mm8d-exportlog2csv.1.gz                 DONE
 manuals/mm8d-getsnapshots-tentcam.1.gz          DONE
 manuals/mm8d-getsnapshots-seccam.1.gz           DONE
 manuals/mm8d-hwtest.py.1.gz                     DONE
@@ -87,6 +88,7 @@ programs/mm8d.py
 scripts/mm8d-creatediagrams                     DONE
 scripts/mm8d-editenvirconf                      DONE
 scripts/mm8d-editmainconf                       DONE
+scripts/mm8d-exportlog2csv                      DONE
 scripts/mm8d-getsnapshots-tentcam               DONE
 scripts/mm8d-getsnapshots-seccam                DONE
 scripts/mm8d-maintainlog                        DONE

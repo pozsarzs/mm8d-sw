@@ -46,7 +46,7 @@ Content of log files
   Columns:
     1:  date
     2:  time
-    3:  effectice mains voltage in V
+    3:  effective mains voltage in V
     4:  effective mains current in A
     5:  active power in W
     6:  reactive power in VAR
