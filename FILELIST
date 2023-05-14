@@ -21,16 +21,16 @@ documents/exitcodes.txt                         DONE
 documents/INSTALL.pc                            DONE
 documents/INSTALL.raspi                         DONE
 documents/logfiles.txt                          DONE
-documents/miniserialconsole.txt
+documents/miniserialconsole.txt                 DONE
 documents/README                                DONE
 documents/VERSION                               DONE
 libraries/get                                   DONE
 libraries/portio-0.5.tar.gz                     DONE
-manuals/getcameras.cgi.7.gz
+manuals/getcameras.cgi.7.gz                     DONE
 manuals/getchannel.cgi.7.gz                     DONE
 manuals/getdata.cgi.7.gz                        DONE
 manuals/getenvirconf.cgi.7.gz                   DONE
-manuals/getsupply.cgi.7.gz
+manuals/getsupply.cgi.7.gz                      DONE
 manuals/mm8d-creatediagrams.1.gz                DONE
 manuals/mm8d-editenvirconf.1.gz                 DONE
 manuals/mm8d-editmainconf.1.gz                  DONE
@@ -96,7 +96,7 @@ scripts/mm8d-startdaemon                        DONE
 scripts/mm8d-statusofdaemon                     DONE
 scripts/mm8d-stopdaemon                         DONE
 scripts/mm8d-updatestartpage                    DONE
-scripts/mm8d-viewlog
+scripts/mm8d-viewlog                            DONE
 scripts/mm8d-webpage                            DONE
 settings/cron.d/mm8d-sw                         DONE
 settings/cron.d/mm8d-web                        DONE

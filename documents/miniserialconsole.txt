@@ -1,7 +1,7 @@
 Mini serial console
-
+~~~~~~~~~~~~~~~~~~~
 About this device
-
+-----------------
   This is a Raspberry Pi Pico-based device. The display is 20x4 character-sized
   liquid crystal display, which displays 20x4 size area of the larger size
   virtual screen. This area is a can be moved with buttons. The default size of
@@ -43,9 +43,9 @@ Serial ports
 
 
 Incoming (binary) data lines in Mode #3
-
-  0123456789ABC
-  "CH..........."
+---------------------------------------
+   0123456789ABCDE
+  "CH............."
 
     0:   'C'                                  0x43
     1:   'H'                                  0x48
@@ -72,6 +72,22 @@ Incoming (binary) data lines in Mode #3
     A:   status of lamp output                0x00: off    0x01: on     0x02: always off 0x03: always on
     B:   status of ventilator output          0x00: off    0x01: on     0x02: always off 0x03: always on
     C:   status of heater output              0x00: off    0x01: on     0x02: always off 0x03: always on
+
+    0:   'C'                                  0x43
+    1:   'H'                                  0x48
+    2:   number of channel                    0xFF
+    3:   effective mains voltage in V / 10   (0x00-0xFF) upper byte
+    4:   effective mains voltage in V / 10   (0x00-0xFF) lower byte
+    5:   effective mains current in A / 100  (0x00-0xFF) upper byte
+    6:   effective mains current in A / 100  (0x00-0xFF) lower byte
+    7:   active power in W                   (0x00-0xFF) upper byte
+    8:   active power in W                   (0x00-0xFF) lower byte
+    9:   reactive power in VAR               (0x00-0xFF) upper byte
+    A:   reactive power in VAR               (0x00-0xFF) lower byte
+    B:   apparent power in VA                (0x00-0xFF) upper byte
+    C:   apparent power in VA                (0x00-0xFF) lower byte
+    D:   cos phi / 1000                      (0x00-0x03) upper byte
+    E:   cos phi / 1000                      (0x00-0xFF) lower byte
 
 
 Example incoming (text) log lines in Mode #3
@@ -179,6 +195,24 @@ Display
     2:  time in hhmmss format
     3:  level of record: I | W | E - information | warning | error
     4:  short description
+
+  Power supply screens
+
+    Press F1 to see power supply screen.
+    You can page up and down with up and down buttons.
+
+    +--------------------+
+    |SUPPLY  [  ]        |
+    |Urms:   234 V       |
+    |Irms:   16.0 A      |
+    |Cos Fi: 1.00        |
+    +--------------------+
+    +--------------------+
+    |SUPPLY  [  ]        |
+    |P:      3746 W      |
+    |Q:      0000 VAR    |
+    |S:      3746 VA     |
+    +--------------------+
 
 --------------------------------------------------------------------------------------
   MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

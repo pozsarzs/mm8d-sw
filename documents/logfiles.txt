@@ -52,7 +52,7 @@ Content of log files
     6:  reactive power in VAR
     7:  apparend power in VA
     8:  cos phi
-   
+
 
   4. debug-YYMMDD.log
   -------------------

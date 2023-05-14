@@ -40,35 +40,47 @@ loadconfiguration()
 
 viewlogfile()
 {
-  if [ $CHANNEL -eq "00" ]
+  if [ $CHANNEL -eq "-1" ]
   then
-    echo ""
-    echo "Log file of Channel #"$CHANNEL":"
-    echo ""
+    echo -e "\nLog file of power supply:\n"
+    echo "1:  Urms - effectice mains voltage in V"
+    echo "2:  Irms - effective mains current in A"
+    echo "3:  P - active power in W"
+    echo "4:  Q - reactive power in VAR"
+    echo "5:  S - apparend power in VA"
+    echo -e "6:  cos phi\n"
+    echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\n"
+    OLDIFS=$IFS
+    IFS=,
+    while read C1 C2 C3 C4 C5 C6 C7 C8
+    do
+      echo -e " $C1\t$C2\t"$C3"V\t"$C4"A\t"$C5"W\t"$C6"VAR\t"$C7"VA\t$C8"
+    done < $LOGFILE
+    IFS=$OLDIFS
+  fi
+  if [ $CHANNEL -eq "0" ]
+  then
+    echo -e "\nLog file of Channel #"$CHANNEL":\n"
     echo "1:  overcurrent breaker error            0: closed  1: opened"
     echo "2:  water pump pressure error (no water) 0: good    1: bad"
     echo "3:  water pump pressure error (clogging) 0: good    1: bad"
     echo "4:  external temperature"
     echo "5:  status of water pump and tube #1     0: off     1: on"
     echo "6:  status of water pump and tube #2     0: off     1: on"
-    echo "7:  status of water pump and tube #3     0: off     1: on"
-    echo ""
-    echo "+------------+-------+------------------+"
-    echo "|    Date    | Time  | 1 2 3  4   5 6 7 |"
-    echo "+------------+-------+------------------+"
+    echo -e "7:  status of water pump and tube #3     0: off     1: on\n"
+    echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\t7\n"
     OLDIFS=$IFS
     IFS=,
-    while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9
     do
       if [ ${#C6} -eq "1" ]; then C6=" $C6"; fi
-      echo "| $C1 | $C2 | $C3 $C4 $C5 $C6°C $C7 $C8 $C9 |"
+      echo -e " $C1\t$C2\t$C3\t$C4\t$C5\t$C6°C\t$C7\t$C8\t$C9"
     done < $LOGFILE
-    echo "+------------+-------+------------------+"
     IFS=$OLDIFS
-  else
-    echo ""
-    echo "Log file of Channel #"$CHANNEL":"
-    echo ""
+  fi
+  if [ $CHANNEL -ge "1" ]
+  then
+    echo -e "\nLog file of Channel #"$CHANNEL":\n"
     echo " 1: temperature"
     echo " 2: relative humidity"
     echo " 3: relative unwanted gas concentrate"
@@ -78,11 +90,8 @@ viewlogfile()
     echo " 7: status of door (alarm)                0: closed  1: opened"
     echo " 8: status of lamp output                 0: off     1: on"
     echo " 9: status of ventilator output           0: off     1: on"
-    echo "10: status of heater output               0: off     1: on"
-    echo ""
-    echo "+------------+-------+------------------------------+"
-    echo "|    Date    | Time  |  1    2     3  4 5 6 7 8 9 10|"
-    echo "+------------+-------+------------------------------+"
+    echo -e "10: status of heater output               0: off     1: on\n"
+    echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\n"
     OLDIFS=$IFS
     IFS=,
     while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11 C12
@@ -92,9 +101,8 @@ viewlogfile()
       if [ ${#C4} -eq "2" ]; then C4=" $C4"; fi
       if [ ${#C5} -eq "1" ]; then C5="  $C5"; fi
       if [ ${#C5} -eq "2" ]; then C5=" $C5"; fi
-      echo "| $C1 | $C2 | $C3°C $C4% $C5% $C6 $C7 $C8 $C9 $C10 $C11 $C12 |"
+      echo -e " $C1\t$C2\t$C3°C\t$C4%\t$C5%\t$C6\t$C7\t$C8\t$C9\t$C10\t$C11\t$C12"
     done < $LOGFILE
-    echo "+------------+-------+------------------------------+"
     IFS=$OLDIFS
   fi
 }
@@ -112,12 +120,17 @@ if [[ ! "$CHANNEL" =~ ^-?[0-9]+$ ]]; then
   exit 2
 fi
 loadconfiguration
-if [ $CHANNEL -ge "0" ]
+if [ $CHANNEL -ge "-1" ]
 then
   if [ $CHANNEL -le "8" ]
   then
-    LOGFILE=$DIR_LOG"/mm8d-ch"
-    LOGFILE=$LOGFILE$CHANNEL".log"
+    if [ $CHANNEL == "-1" ]
+    then
+      LOGFILE=$DIR_LOG"/mm8d-supply.log"
+    else
+      LOGFILE=$DIR_LOG"/mm8d-ch"
+      LOGFILE=$LOGFILE$CHANNEL".log"
+    fi
     if [ ! -f $LOGFILE ]
     then
       echo "ERROR #5: Cannot open $LOGFILE log file!"
