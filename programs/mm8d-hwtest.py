@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d-hwtest.py                                                             |
 # | Hardware test program                                                      |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it
-# under the terms of the European Union Public License 1.1 version.
+# under the terms of the European Union Public License 1.2 version.
 #
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -48,7 +48,7 @@ lptaddresses = [0x378,0x278,0x3bc]
 # load configuration
 def loadconfiguration(conffile):
   global com
-  global com_device
+  global prt_com
   global com_speed
   if hw == 0:
     global prt_i1
@@ -64,37 +64,37 @@ def loadconfiguration(conffile):
     global prt_lo3
     global prt_lo4
   else:
-    global lpt_prt
+    global prt_lpt
   try:
     with open(conffile) as f:
       mm8d_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mm8d_config))
-    com_device=config.get('COMport','com_device')
+    prt_com=config.get('COMport','prt_com')
     com_speed=int(config.get('COMport','com_speed'))
     if hw == 0:
-      prt_i1=int(config.get('GPIOports','prt_i1'))
-      prt_i2=int(config.get('GPIOports','prt_i2'))
-      prt_i3=int(config.get('GPIOports','prt_i3'))
-      prt_i4=int(config.get('GPIOports','prt_i4'))
-      prt_ro1=int(config.get('GPIOports','prt_ro1'))
-      prt_ro2=int(config.get('GPIOports','prt_ro2'))
-      prt_ro3=int(config.get('GPIOports','prt_ro3'))
-      prt_ro4=int(config.get('GPIOports','prt_ro4'))
-      prt_lo1=int(config.get('GPIOports','prt_lo1'))
-      prt_lo2=int(config.get('GPIOports','prt_lo2'))
-      prt_lo3=int(config.get('GPIOports','prt_lo3'))
-      prt_lo4=int(config.get('GPIOports','prt_lo4'))
+      prt_i1=int(config.get('GPIOport','prt_i1'))
+      prt_i2=int(config.get('GPIOport','prt_i2'))
+      prt_i3=int(config.get('GPIOport','prt_i3'))
+      prt_i4=int(config.get('GPIOport','prt_i4'))
+      prt_ro1=int(config.get('GPIOport','prt_ro1'))
+      prt_ro2=int(config.get('GPIOport','prt_ro2'))
+      prt_ro3=int(config.get('GPIOport','prt_ro3'))
+      prt_ro4=int(config.get('GPIOport','prt_ro4'))
+      prt_lo1=int(config.get('GPIOport','prt_lo1'))
+      prt_lo2=int(config.get('GPIOport','prt_lo2'))
+      prt_lo3=int(config.get('GPIOport','prt_lo3'))
+      prt_lo4=int(config.get('GPIOport','prt_lo4'))
     else:
-      lpt_prt=int(config.get('LPTport','lpt_prt'))
-      if (lpt_prt < 0) or (lpt_prt > 2):
-        lpt_prt=0
+      prt_lpt=int(config.get('LPTport','prt_lpt'))
+      if (prt_lpt < 0) or (prt_lpt > 2):
+        prt_lpt=0
   except:
     print("ERROR #1: Cannot open configuration file!");
     sys.exit(1);
 
 # main function
-print("\nMM8D hardware test utility * (C) 2020-2022 Pozsar Zsolt")
+print("\nMM8D hardware test utility * (C) 2020-2023 Pozsar Zsolt")
 print("-------------------------------------------------------")
 if os.getuid():
   print(" * You need to be root!")
@@ -102,7 +102,7 @@ if os.getuid():
 print(" * load configuration: %s..." % conffile)
 loadconfiguration(conffile)
 print(" * setting ports...")
-com = serial.Serial(com_device, com_speed)
+com = serial.Serial(prt_com, com_speed)
 if hw == 0:
   GPIO.setwarnings(False)
   GPIO.setmode(GPIO.BCM)
@@ -119,15 +119,15 @@ if hw == 0:
   GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
   GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
 else:
-  status = portio.ioperm(lptaddresses[lpt_prt],1,1)
+  status = portio.ioperm(lptaddresses[prt_lpt],1,1)
   if status:
-    print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt]));
+    print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[prt_lpt]));
     sys.exit(17)
-  status = portio.ioperm(lptaddresses[lpt_prt] + 1, 1, 1)
+  status = portio.ioperm(lptaddresses[prt_lpt] + 1, 1, 1)
   if status:
-    print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[lpt_prt] + 1));
+    print("ERROR #17: Cannot access I/O port:",hex(lptaddresses[prt_lpt] + 1));
     sys.exit(17)
-  portio.outb(0,lptaddresses[lpt_prt])
+  portio.outb(0,lptaddresses[prt_lpt])
 
 while True:
   print(" * What do you like?")
@@ -142,7 +142,7 @@ while True:
     if hw == 0:
       GPIO.cleanup()
     else:
-      portio.outb(0,lptaddresses[lpt_prt])
+      portio.outb(0,lptaddresses[prt_lpt])
     sys.exit(0)
 
   if selection is "1":
@@ -179,7 +179,7 @@ while True:
         print()
     else:
       print("   used lines of LPT port:")
-      print('     LPT #',lpt_prt + 1,sep = '')
+      print('     LPT #',prt_lpt + 1,sep = '')
       print("     I1: -ERROR")
       print("     I2: SELECT")
       print("     I3: PE")
@@ -187,7 +187,7 @@ while True:
       print("   Press ^C to stop!")
       try:
         while True:
-          indata = portio.inb(lptaddresses[lpt_prt] + 1)
+          indata = portio.inb(lptaddresses[prt_lpt] + 1)
           indata = indata << 1
           indata = indata >> 4
           print("    ",format(indata,'04b'))
@@ -226,7 +226,7 @@ while True:
         print()
     else:
       print("   used lines of LPT port:")
-      print('     LPT #',lpt_prt + 1,sep = '')
+      print('     LPT #',prt_lpt + 1,sep = '')
       print("     RO1: D0")
       print("     RO2: D1")
       print("     RO3: D2")
@@ -234,16 +234,16 @@ while True:
       print("   Press ^C to stop!")
       try:
         while True:
-          portio.outb(1,lptaddresses[lpt_prt])
+          portio.outb(1,lptaddresses[prt_lpt])
           time.sleep(1)
-          portio.outb(2,lptaddresses[lpt_prt])
+          portio.outb(2,lptaddresses[prt_lpt])
           time.sleep(1)
-          portio.outb(4,lptaddresses[lpt_prt])
+          portio.outb(4,lptaddresses[prt_lpt])
           time.sleep(1)
-          portio.outb(8,lptaddresses[lpt_prt])
+          portio.outb(8,lptaddresses[prt_lpt])
           time.sleep(1)
       except KeyboardInterrupt:
-          portio.outb(0,lptaddresses[lpt_prt])
+          portio.outb(0,lptaddresses[prt_lpt])
           print()
 
   if selection is "3":
@@ -277,7 +277,7 @@ while True:
         print()
     else:
       print("   used lines of LPT port:")
-      print('     LPT #',lpt_prt + 1,sep = '')
+      print('     LPT #',prt_lpt + 1,sep = '')
       print("     LO1: D4")
       print("     LO2: D5")
       print("     LO3: D6")
@@ -285,22 +285,22 @@ while True:
       print("   Press ^C to stop!")
       try:
         while True:
-          portio.outb(16,lptaddresses[lpt_prt])
+          portio.outb(16,lptaddresses[prt_lpt])
           time.sleep(1)
-          portio.outb(32,lptaddresses[lpt_prt])
+          portio.outb(32,lptaddresses[prt_lpt])
           time.sleep(1)
-          portio.outb(64,lptaddresses[lpt_prt])
+          portio.outb(64,lptaddresses[prt_lpt])
           time.sleep(1)
-          portio.outb(128,lptaddresses[lpt_prt])
+          portio.outb(128,lptaddresses[prt_lpt])
           time.sleep(1)
       except KeyboardInterrupt:
-          portio.outb(0,lptaddresses[lpt_prt])
+          portio.outb(0,lptaddresses[prt_lpt])
           print()
 
   if selection is "4":
     print(" * Write text to the mini serial console")
     print("   used COM port:")
-    print("     device: ", com_device)
+    print("     device: ", prt_com)
     print("     speed:  ", com_speed)
     print("   Press ^C to stop!")
     try:

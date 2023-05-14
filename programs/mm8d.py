@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d.py                                                                    |
 # | Main program                                                               |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it
-# under the terms of the European Union Public License 1.1 version.
+# under the terms of the European Union Public License 1.2 version.
 #
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -191,7 +191,7 @@ def loadconfiguration(conffile):
   global dir_log
   global dir_var
   global ena_console
-  global com_device
+  global prt_com
   global com_speed
   global com_verbose
   global ena_ch
@@ -212,7 +212,7 @@ def loadconfiguration(conffile):
     global prt_lo3
     global prt_lo4
   else:
-    global lpt_prt
+    global prt_lpt
 
   try:
     with open(conffile) as f:
@@ -234,8 +234,8 @@ def loadconfiguration(conffile):
     dir_var = config.get('directories','dir_var')
     ena_console = '0'
     ena_console = config.get('COMport','ena_console')
-    com_device = '/dev/ttyS0'
-    com_device = config.get('COMport','com_device')
+    prt_com = '/dev/ttyS0'
+    prt_com = config.get('COMport','prt_com')
     com_speed = '9600'
     com_speed = config.get('COMport','com_speed')
     com_verbose = 0
@@ -259,7 +259,7 @@ def loadconfiguration(conffile):
       prt_lo3 = int(config.get('GPIOports','prt_lo3'))
       prt_lo4 = int(config.get('GPIOports','prt_lo4'))
     else:
-      lpt_prt = int(config.get('LPTport','lpt_prt'))
+      prt_lpt = int(config.get('LPTport','prt_lpt'))
     writetodebuglog("i","Configuration is loaded.")
   except:
     writetodebuglog("e","ERROR #01: Cannot open " + conffile + "!")
@@ -694,15 +694,15 @@ def initializelocalports():
     GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
   else:
     # paralel (LPT) port
-    status = portio.ioperm(lptaddresses[lpt_prt],1,1)
+    status = portio.ioperm(lptaddresses[prt_lpt],1,1)
     if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lptaddresses[lpt_prt])) + "!")
+      writetodebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lptaddresses[prt_lpt])) + "!")
       sys.exit(17)
-    status = portio.ioperm(lptaddresses[lpt_prt] + 1,1,1)
+    status = portio.ioperm(lptaddresses[prt_lpt] + 1,1,1)
     if status:
-      writetodebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lptaddresses[lpt_prt] + 1)) + "!")
+      writetodebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lptaddresses[prt_lpt] + 1)) + "!")
       sys.exit(17)
-    portio.outb(0,lptaddresses[lpt_prt])
+    portio.outb(0,lptaddresses[prt_lpt])
 
 # write data from GPIO/LPT port
 def writelocalports():
@@ -730,8 +730,8 @@ def writelocalports():
                 4 * relay_tube2 + \
                 2 * relay_tube1 + \
                     relay_alarm
-    portio.outb(outdata,lptaddresses[lpt_prt])
-    if (portio.inb(lptaddresses[lpt_prt]) == outdata):
+    portio.outb(outdata,lptaddresses[prt_lpt])
+    if (portio.inb(lptaddresses[prt_lpt]) == outdata):
       return 1
     else:
       return 0
@@ -759,7 +759,7 @@ def readlocalports():
   else:
     # paralel (LPT) port
     try:
-      indata = portio.inb(lptaddresses[lpt_prt] + 1)
+      indata = portio.inb(lptaddresses[prt_lpt] + 1)
       mainsbreakers = indata & 8
       if mainsbreakers > 1:
         mainsbreakers = 1
@@ -786,7 +786,7 @@ def closelocalports():
   if hw == 0:
     GPIO.cleanup
   else:
-    portio.outb(0,lptaddresses[lpt_prt])
+    portio.outb(0,lptaddresses[prt_lpt])
 
 # read and write remote MM7D device
 def readwriteMM7Ddevice(channel):
@@ -1056,7 +1056,7 @@ done = 0
 loadconfiguration(confdir + "mm8d.ini")
 # intialize serial port
 if ena_console == "1":
-  com = serial.Serial(com_device, com_speed)
+  com = serial.Serial(prt_com, com_speed)
 # load irrigator settings
 loadirrconf(confdir + "irrigator.ini")
 # checking version of remote devices

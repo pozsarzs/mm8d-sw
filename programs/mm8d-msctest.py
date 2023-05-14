@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d-msctest.py                                                            |
 # | Mini serial console test program                                           |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it
-# under the terms of the European Union Public License 1.1 version.
+# under the terms of the European Union Public License 1.2 version.
 #
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -111,7 +111,7 @@ def writechannelstatustocomport(channel):
 # load configuration
 def loadconfiguration(conffile):
   global com
-  global com_device
+  global prt_com
   global com_speed
   global com_enable
   com_enable = "1"
@@ -120,7 +120,7 @@ def loadconfiguration(conffile):
       mm8d_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mm8d_config))
-    com_device=config.get('COMport','com_device')
+    prt_com=config.get('COMport','prt_com')
     com_speed=int(config.get('COMport','com_speed'))
   except:
     print("ERROR #1: Cannot open configuration file!");
@@ -172,12 +172,12 @@ relay_tube3 = 0
 waterpressurehigh = 0
 waterpressurelow = 0
 
-print("\nMM8D Mini serial console test utility * (C) 2020-2022 Pozsar Zsolt")
+print("\nMM8D Mini serial console test utility * (C) 2020-2023 Pozsar Zsolt")
 print("--------------------------------------------------------------------")
 print(" * load configuration: %s..." % conffile)
 loadconfiguration(conffile)
 print(" * setting ports...")
-com = serial.Serial(com_device, com_speed)
+com = serial.Serial(prt_com, com_speed)
 
 while True:
   print(" * What do you like?")

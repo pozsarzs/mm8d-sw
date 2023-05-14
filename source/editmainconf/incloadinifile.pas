@@ -41,7 +41,7 @@ begin
       prt_ro[b]:=strtoint(iif.ReadString(G,'prt_ro'+inttostr(b),''));
       prt_lo[b]:=strtoint(iif.ReadString(G,'prt_lo'+inttostr(b),''));
     end;
-    lpt_prt:=strtoint(iif.ReadString(L,'lpt_prt',''));
+    lpt_prt:=strtoint(iif.ReadString(L,'prt_lpt',''));
 
     dir_htm:=iif.ReadString(D,'dir_htm','/var/www/html/');
     dir_tmp:=iif.ReadString(D,'dir_tmp','/var/tmp/');

@@ -3,7 +3,7 @@ FILENAME                                        STATUS
 binary/armhf/mm8d-editenvirconf.bin
 binary/armhf/mm8d-editirrconf.bin
 binary/armhf/mm8d-editmainconf.bin
-binary/armhf/mm8d-override.bin
+binary/armhf/mm8d-override.bin                  DONE
 binary/i386/mm8d-editenvirconf.bin              DONE
 binary/i386/mm8d-editirrconf.bin                DONE
 binary/i386/mm8d-editmainconf.bin
@@ -82,7 +82,7 @@ packaging/web-all/control
 packaging/web-all/md5sums
 packaging/web-all/postinst                      DONE
 packaging/web-all/prerm                         DONE
-programs/mm8d-hwtest.py
+programs/mm8d-hwtest.py                         DONE
 programs/mm8d-msctest.py
 programs/mm8d.py
 scripts/mm8d-creatediagrams                     DONE
@@ -161,11 +161,11 @@ source/editmainconf/Makefile                    DONE
 source/Makefile                                 DONE
 source/Makefile.global.in                       DONE
 source/override/config.pas.in                   DONE
-source/override/incloadoutfiles.pas
-source/override/incpage1screen.pas
-source/override/incsaveoutfiles.pas
+source/override/incloadoutfiles.pas             DONE
+source/override/incpage1screen.pas              DONE
+source/override/incsaveoutfiles.pas             DONE
 source/override/Makefile                        DONE
-source/override/override.pas
+source/override/override.pas                    DONE
 source/untcommon.pas                            DONE
 webpage/cgi-bin/getcameras.cgi                  DONE
 webpage/cgi-bin/getchannel.cgi                  DONE

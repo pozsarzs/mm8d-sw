@@ -536,8 +536,8 @@ begin
     quit(0,false,'Usage:'+#10+'    '+paramstr(0)+' /path/mm8d.ini');
   if not terminalsize
     then quit(12,false,'ERROR #12: Minimal terminal size is 80x25!');
-  if not loadinifile(paramstr(1))
-    then quit(3,false,'ERROR #1: Cannot open '+paramstr(1)+' configuration file!');
+//  if not loadinifile(paramstr(1))
+//    then quit(3,false,'ERROR #1: Cannot open '+paramstr(1)+' configuration file!');
   if not setvalues
     then quit(0,true,'File '+paramstr(1)+' is not saved.');
   if not saveinifile(paramstr(1))

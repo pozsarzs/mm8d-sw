@@ -17,3 +17,6 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
 **External libraries in package**
 
  - portio v0.5 by Fabrizio Pollastri
+
+Note: It is prepared to use the ModBUS protocol,
+      but this will not be included until the next release.
