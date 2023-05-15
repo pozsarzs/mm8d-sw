@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | config.pas(.in)                                                          | }
-{ | Setting for source code                                                  | }
+{ | incpage03screen.pas                                                      | }
+{ | Show screen content of page #3                                           | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -12,7 +12,28 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
-const
-  VERSION:   string='v@version@';
-  PRGNAME:   string='MM8D-EditMainConf';
-  COPYRIGHT: string='Copyright (C) 2020-2023 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>';
+{
+  Relevant settings file section:
+
+  [enable]
+  ena_ch?=1
+}
+
+// write options to screen
+procedure page03screen;
+var
+  b: byte;
+begin
+  header(PRGNAME+' '+VERSION+' * Page 3/12: Enable/disable channels');
+  textcolor(white);
+  for b:=1 to 8 do
+  begin
+    gotoxy(4,b+2);
+    write('Channel #'+inttostr(b)+':');
+  end;
+  for b:=1 to 8 do
+  begin
+    gotoxy(MINPOSX[3,1],b+2);
+    writeln(ena_ch[b]);
+  end;
+end;

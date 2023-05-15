@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage10screen.pas                                                      | }
-{ | Show screen content of page #10                                          | }
+{ | incpage05screen.pas                                                      | }
+{ | Show screen content of page #5                                           | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -15,31 +15,21 @@
 {
   Relevant settings file section:
 
-  [MM6D]
-  uid_mm6dch?=11
-
-  [MM7D]
-  uid_mm7dch?=21
-
-  [MM10D]
-  uid_mm10d=30
+  [log]
+  day_log=7
+  dbg_log=0
+  web_lines=30
 }
 
 // write options to screen
-procedure page10screen;
-var
-  b: byte;
+procedure page05screen;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 10/12: ModBUS unitID of controllers');
+  header(PRGNAME+' '+VERSION+' * Page 5/12: Logging');
   textcolor(white);
-  for b:=1 to 8 do
-  begin
-    gotoxy(4,b+2); write('MM6D on channel #'+inttostr(b)+':');
-    gotoxy(4,b+2+9); write('MM7D on channel #'+inttostr(b)+':');
-  end;
-  for b:=1 to 8 do
-  begin
-    gotoxy(MINPOSX[10,1],b+2); writeln(adr_mm6dch[b]);
-    gotoxy(MINPOSX[10,2],b+2+9); writeln(adr_mm7dch[b]);
-  end;
+  gotoxy(4,3); writeln('Storing time of log records in days:');
+  gotoxy(4,4); writeln('Enable debug log (0: disable):');
+  gotoxy(4,5); writeln('Number of log lines on web interface:');
+  gotoxy(MINPOSX[5,1],3); writeln(day_log);
+  gotoxy(MINPOSX[5,1],4); writeln(dbg_log);
+  gotoxy(MINPOSX[5,1],5); writeln(web_lines);
 end;

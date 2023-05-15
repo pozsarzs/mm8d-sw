@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage10screen.pas                                                      | }
-{ | Show screen content of page #10                                          | }
+{ | incpage09screen.pas                                                      | }
+{ | Show screen content of page #9                                           | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -16,21 +16,22 @@
   Relevant settings file section:
 
   [MM6D]
-  uid_mm6dch?=11
+  pro_mm6dch1=http
 
   [MM7D]
-  uid_mm7dch?=21
+  pro_mm7dch1=http
 
   [MM10D]
-  uid_mm10d=30
+  ena_mm10d=0
+  pro_mmd10=http
 }
 
 // write options to screen
-procedure page10screen;
+procedure page09screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 10/12: ModBUS unitID of controllers');
+  header(PRGNAME+' '+VERSION+' * Page 9/12: Communication protocol of controllers');
   textcolor(white);
   for b:=1 to 8 do
   begin
@@ -39,7 +40,7 @@ begin
   end;
   for b:=1 to 8 do
   begin
-    gotoxy(MINPOSX[10,1],b+2); writeln(adr_mm6dch[b]);
-    gotoxy(MINPOSX[10,2],b+2+9); writeln(adr_mm7dch[b]);
+    gotoxy(MINPOSX[9,1],b+2); writeln(adr_mm6dch[b]);
+    gotoxy(MINPOSX[9,2],b+2+9); writeln(adr_mm7dch[b]);
   end;
 end;
