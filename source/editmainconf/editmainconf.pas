@@ -82,10 +82,10 @@ const
   O:           string='log';
   U:           string='user';
   W:           string='openweathermap.org';
-  BLOCKS:      array[1..12] of byte=(1,1,1,1,1,1,1,5,3,3,3,3);
+  BLOCKS:      array[1..12] of byte=(1,1,2,1,1,1,1,5,3,3,3,3);
   MINPOSX:     array[1..12,1..6] of byte=((18,0,0,0,0,0),
                                           (17,0,0,0,0,0),
-                                          (17,0,0,0,0,0),
+                                          (17,17,0,0,0,0),
                                           (15,0,0,0,0,0),
                                           (43,0,0,0,0,0),
                                           (31,0,0,0,0,0),
@@ -97,7 +97,7 @@ const
                                           (28,28,28,0,0,0));
   MINPOSY:     array[1..12,1..6] of byte=((3,0,0,0,0,0),
                                           (3,0,0,0,0,0),
-                                          (3,0,0,0,0,0),
+                                          (3,12,0,0,0,0),
                                           (3,0,0,0,0,0),
                                           (3,0,0,0,0,0),
                                           (3,0,0,0,0,0),
@@ -109,7 +109,7 @@ const
                                           (3,12,14,0,0,0));
   MAXPOSY:     array[1..12,1..6] of byte=((4,0,0,0,0,0),
                                           (11,0,0,0,0,0),
-                                          (10,0,0,0,0,0),
+                                          (10,12,0,0,0,0),
                                           (4,0,0,0,0,0),
                                           (5,0,0,0,0,0),
                                           (9,0,0,0,0,0),
@@ -204,9 +204,41 @@ begin
     // page #9 - block #1
     if block=1 then
     begin
-{
-    !!!
-}
+      if pro_mm6dch[posy-2]=PROTOCOL[1]
+      then
+        pro_mm6dch[posy-2]:=PROTOCOL[2]
+      else
+        pro_mm6dch[posy-2]:=PROTOCOL[1];
+      textbackground(blue);
+      gotoxy(MINPOSX[page,block],posy); clreol;
+      gotoxy(MINPOSX[page,block],posy);
+      write(pro_mm6dch[posy-2]);
+    end;
+    // page #9 - block #2
+    if block=2 then
+    begin
+      if pro_mm7dch[posy-2-9]=PROTOCOL[1]
+      then
+        pro_mm7dch[posy-2-9]:=PROTOCOL[2]
+      else
+        pro_mm7dch[posy-2-9]:=PROTOCOL[1];
+      textbackground(blue);
+      gotoxy(MINPOSX[page,block],posy); clreol;
+      gotoxy(MINPOSX[page,block],posy);
+      write(pro_mm7dch[posy-2-9]);
+    end;
+    // page #9 - block #3
+    if block=3 then
+    begin
+      if pro_mm10d=PROTOCOL[1]
+      then
+        pro_mm10d:=PROTOCOL[2]
+      else
+        pro_mm10d:=PROTOCOL[1];
+      textbackground(blue);
+      gotoxy(MINPOSX[page,block],posy); clreol;
+      gotoxy(MINPOSX[page,block],posy);
+      write(pro_mm10d);
     end;
   end;
 end;
@@ -367,6 +399,15 @@ begin
         gotoxy(MINPOSX[page,block],posy);
         ena_ch[posy-2]:=strtoint(s);
         write(ena_ch[posy-2]);
+      end;
+      // page #3 - block #2
+      if block=2 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        ena_mm10d:=strtoint(s);
+        write(ena_mm10d);
       end;
     end;
     // -- page #5 --

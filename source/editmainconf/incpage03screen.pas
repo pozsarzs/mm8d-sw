@@ -34,9 +34,11 @@ begin
     gotoxy(4,b+2);
     write('Channel #'+inttostr(b)+':');
   end;
+  gotoxy(4,12); write('MM10D:');
   for b:=1 to 8 do
   begin
     gotoxy(MINPOSX[3,1],b+2);
     writeln(ena_ch[b]);
   end;
+  gotoxy(MINPOSX[3,1],12); write(ena_mm10d);
 end;
