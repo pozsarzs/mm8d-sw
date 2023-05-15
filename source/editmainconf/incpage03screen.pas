@@ -17,6 +17,9 @@
 
   [enable]
   ena_ch?=1
+
+  [MM10D]
+  ena_mm10d=0
 }
 
 // write options to screen

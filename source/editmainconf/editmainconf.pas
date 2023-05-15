@@ -82,7 +82,7 @@ const
   O:           string='log';
   U:           string='user';
   W:           string='openweathermap.org';
-  BLOCKS:      array[1..12] of byte=(1,1,1,1,1,1,1,5,1,1,1,3);
+  BLOCKS:      array[1..12] of byte=(1,1,1,1,1,1,1,5,3,3,3,3);
   MINPOSX:     array[1..12,1..6] of byte=((18,0,0,0,0,0),
                                           (17,0,0,0,0,0),
                                           (17,0,0,0,0,0),
@@ -91,9 +91,9 @@ const
                                           (31,0,0,0,0,0),
                                           (19,0,0,0,0,0),
                                           (15,15,15,26,28,0),
-                                          (15,0,0,0,0,0),
-                                          (43,0,0,0,0,0),
-                                          (43,0,0,0,0,0),
+                                          (25,25,25,0,0,0),
+                                          (25,25,25,0,0,0),
+                                          (25,25,25,0,0,0),
                                           (28,28,28,0,0,0));
   MINPOSY:     array[1..12,1..6] of byte=((3,0,0,0,0,0),
                                           (3,0,0,0,0,0),
@@ -103,9 +103,9 @@ const
                                           (3,0,0,0,0,0),
                                           (3,0,0,0,0,0),
                                           (3,8,13,18,23,0),
-                                          (3,0,0,0,0,0),
-                                          (3,0,0,0,0,0),
-                                          (3,0,0,0,0,0),
+                                          (3,12,21,0,0,0),
+                                          (3,12,21,0,0,0),
+                                          (3,12,21,0,0,0),
                                           (3,12,14,0,0,0));
   MAXPOSY:     array[1..12,1..6] of byte=((4,0,0,0,0,0),
                                           (11,0,0,0,0,0),
@@ -115,18 +115,19 @@ const
                                           (9,0,0,0,0,0),
                                           (5,0,0,0,0,0),
                                           (6,11,16,18,26,0),
-                                          (4,0,0,0,0,0),
-                                          (5,8,0,0,0,0),
-                                          (5,8,0,0,0,0),
+                                          (10,19,21,0,0,0),
+                                          (10,19,21,0,0,0),
+                                          (10,19,21,0,0,0),
                                           (10,12,17,0,0,0));
   FOOTERS:     array[1..7] of string=('<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                       '<Enter> accept  <Esc> cancel',
-                                      '',
+                                      '<Space> change <Tab>/<Up>/<Down> move  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                       '<Esc> cancel',
                                       '<Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                       '<Space> select  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                       '<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit');
   CODE:        array[3..4] of string=('en','hu');
+  PROTOCOL:    array[1..2] of string=('http','modbus');
 
 {$I config.pas}
 {$I incpage01screen.pas}
@@ -165,10 +166,10 @@ begin
   case page of
     4: footer(bottom-1,FOOTERS[6]);
     8: footer(bottom-1,FOOTERS[7]);
+    9: footer(bottom-1,FOOTERS[3]);
+    10: footer(bottom-1,FOOTERS[7]);
+    11: footer(bottom-1,FOOTERS[7]);
     12: footer(bottom-1,FOOTERS[7]);
-
-{    9: footer(bottom-1,FOOTERS[7]);
-    6: footer(bottom-1,FOOTERS[7]);}
     else footer(bottom-1,FOOTERS[1]);
   end;
   textbackground(black);
@@ -195,6 +196,17 @@ begin
         gotoxy(MINPOSX[page,block],posy);
         write('<<');
         lng:=code[posy];
+    end;
+  end;
+  // -- page #9 --
+  if page=9 then
+  begin
+    // page #9 - block #1
+    if block=1 then
+    begin
+{
+    !!!
+}
     end;
   end;
 end;
@@ -275,11 +287,26 @@ begin
              end;
            end;
          end;
+     // -- page #9 --
+      9: begin
+         end;
+     // -- page #10 --
+     10: begin
+           if isnumber(c) then
+             if length(s)<3 then s:=s+c;
+           if c=#8 then delete(s,length(s),1);
+         end;
+     // -- page #11 --
+     11: begin
+           if (isnumber(c)) or (c='.') then
+             if length(s)<15 then s:=s+c;
+           if c=#8 then delete(s,length(s),1);
+         end;
      // -- page #12 --
      12: begin
            if (block=1) or (block=3) then
            begin
-             if (length(s)<50) and (c<>#0) and (c<>#8) and
+            if (length(s)<50) and (c<>#0) and (c<>#8) and
              (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
              if c=#8 then delete(s,length(s),1);
            end;
@@ -447,13 +474,72 @@ begin
           26: begin com_verbose:=strtoint(s); write(com_verbose); end;
         end;
       end;
-
-
-{
     // -- page #9 --
     if page=9 then
     begin
-      // page #4 - block #1
+      // page #9 - block #1
+      if block=1 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        pro_mm6dch[posy-2]:=s;
+        write(pro_mm6dch[posy-2]);
+      end;
+      // page #9 - block #2
+      if block=2 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        pro_mm7dch[posy-2-9]:=s;
+        write(pro_mm7dch[posy-2-9]);
+      end;
+      // page #9 - block #2
+      if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        pro_mm10d:=s;
+        write(pro_mm10d);
+      end;
+    end;
+    // -- page #10 --
+    if page=10 then
+    begin
+      // page #10 - block #1
+      if block=1 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        uid_mm6dch[posy-2]:=s;
+        write(uid_mm6dch[posy-2]);
+      end;
+      // page #10 - block #2
+      if block=2 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        uid_mm7dch[posy-2-9]:=s;
+        write(uid_mm7dch[posy-2-9]);
+      end;
+      // page #10 - block #2
+      if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        uid_mm10d:=s;
+        write(uid_mm10d);
+      end;
+    end;
+    // -- page #11 --
+    if page=11 then
+    begin
+      // page #11 - block #1
       if block=1 then
       begin
         textbackground(blue);
@@ -462,20 +548,26 @@ begin
         adr_mm6dch[posy-2]:=s;
         write(adr_mm6dch[posy-2]);
       end;
-      // page #4 - block #2
+      // page #11 - block #2
       if block=2 then
       begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        adr_mm7dch[posy-2-10]:=s;
-        write(adr_mm7dch[posy-2-10]);
+        adr_mm7dch[posy-2-9]:=s;
+        write(adr_mm7dch[posy-2-9]);
+      end;
+      // page #11 - block #2
+      if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        adr_mm10d:=s;
+        write(adr_mm10d);
       end;
     end;
-}
-
-
-
+    // -- page #12 --
     if page=12 then
     begin
       // page #12 - block #1
@@ -508,10 +600,11 @@ begin
     end;
   end;
   case page of
-    4: footer(bottom-1,FOOTERS[6]);
-    8: footer(bottom-1,FOOTERS[7]);
+     4: footer(bottom-1,FOOTERS[6]);
+     8: footer(bottom-1,FOOTERS[7]);
+    10: footer(bottom-1,FOOTERS[7]);
+    11: footer(bottom-1,FOOTERS[7]);
     12: footer(bottom-1,FOOTERS[7]);
-{    9: footer(bottom-1,FOOTERS[7]);    }
   else footer(bottom-1,FOOTERS[1]);
   end;
   gotoxy(1,bottom); clreol;
@@ -532,7 +625,10 @@ begin
   gotoxy(1,bottom); clreol;
   case page of
     6: footer(bottom-1,FOOTERS[6]);
-//    9: footer(bottom-1,FOOTERS[5]);
+    9: footer(bottom-1,FOOTERS[3]);
+    10: footer(bottom-1,FOOTERS[5]);
+    11: footer(bottom-1,FOOTERS[5]);
+    12: footer(bottom-1,FOOTERS[5]);
     else footer(bottom-1,FOOTERS[1]);
   end;
   posy:=MINPOSY[page,block];
@@ -595,16 +691,23 @@ begin
              gotoxy(MINPOSX[page,block],posy);
             end;
        // select and edit item
-       #13: if (page<>4) then
+       #13: if (page<>4) and (page<>9) then
             begin
               getvalue(page,block,posy);
               gotoxy(MINPOSX[page,block],posy);
             end;
        // select item
-       #32: if (page=4) then
-            begin
-              selectitem(page,block,posy);
-              gotoxy(MINPOSX[page,block],posy);
+       #32: begin
+              if (page=4) then
+              begin
+                selectitem(page,block,posy);
+                gotoxy(MINPOSX[page,block],posy);
+              end;
+              if (page=9) then
+              begin
+                selectitem(page,block,posy);
+                gotoxy(MINPOSX[page,block],posy);
+              end;
             end;
         end;
   // exit

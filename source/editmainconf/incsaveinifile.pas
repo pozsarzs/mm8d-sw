@@ -165,7 +165,7 @@ begin
     writeln(iif,'pro_mm10d='+pro_mm10d);
     writeln(iif,'; IP address');
     writeln(iif,'adr_mm10d='+adr_mm10d);
-    writeln(iif,'; unitID');
+    writeln(iif,'; ModBUS unitID');
     writeln(iif,'uid_mm10d='+uid_mm10d);
     writeln(iif,'');
     writeln(iif,'['+I+']');
@@ -177,7 +177,6 @@ begin
     writeln(iif,'; snapshot url of the security cameras');
     for b:=1 to 4 do
       writeln(iif,'cam_sc'+inttostr(b)+'='+cam_sc[b]);
-    writeln(iif,'');
     close(iif);
   except
     saveinifile:=false;

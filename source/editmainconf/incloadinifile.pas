@@ -31,10 +31,10 @@ begin
       ena_ch[b]:=strtoint(iif.ReadString(E,'ena_ch'+inttostr(b),'0'));
       adr_mm6dch[b]:=iif.ReadString(M6,'adr_mm6dch'+inttostr(b),'');
       adr_mm7dch[b]:=iif.ReadString(M7,'adr_mm7dch'+inttostr(b),'');
-      pro_mm6dch[b]:=iif.ReadString(M6,'adr_mm6dch'+inttostr(b),'http');
-      pro_mm7dch[b]:=iif.ReadString(M7,'adr_mm7dch'+inttostr(b),'http');
-      uid_mm6dch[b]:=iif.ReadString(M6,'adr_mm6dch'+inttostr(b),'1');
-      uid_mm7dch[b]:=iif.ReadString(M7,'adr_mm7dch'+inttostr(b),'1');
+      pro_mm6dch[b]:=iif.ReadString(M6,'pro_mm6dch'+inttostr(b),'http');
+      pro_mm7dch[b]:=iif.ReadString(M7,'pro_mm7dch'+inttostr(b),'http');
+      uid_mm6dch[b]:=iif.ReadString(M6,'uid_mm6dch'+inttostr(b),'1');
+      uid_mm7dch[b]:=iif.ReadString(M7,'uid_mm7dch'+inttostr(b),'1');
       cam_ch[b]:=iif.ReadString(I,'cam_ch'+inttostr(b),'');
       if b<5 then
         cam_sc[b]:=iif.ReadString(I,'cam_sc'+inttostr(b),'');
@@ -74,8 +74,8 @@ begin
     ena_cameras:=strtoint(iif.ReadString(I,'ena_cameras','0'));
     ena_mm10d:=strtoint(iif.ReadString(M10,'ena_mm10d','1'));
     lng:=iif.ReadString('language','lng','en');
-    pro_mm10d:=iif.ReadString(M10,'adr_mm10d','http');
-    uid_mm10d:=iif.ReadString(M10,'adr_mm10d','1');
+    pro_mm10d:=iif.ReadString(M10,'pro_mm10d','http');
+    uid_mm10d:=iif.ReadString(M10,'uid_mm10d','1');
     web_lines:=strtoint(iif.ReadString(O,'web_lines','30'));
   except
     loadinifile:=false;

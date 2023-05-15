@@ -22,7 +22,6 @@
   pro_mm7dch1=http
 
   [MM10D]
-  ena_mm10d=0
   pro_mmd10=http
 }
 
@@ -30,6 +29,7 @@
 procedure page09screen;
 var
   b: byte;
+
 begin
   header(PRGNAME+' '+VERSION+' * Page 9/12: Communication protocol of controllers');
   textcolor(white);
@@ -38,9 +38,14 @@ begin
     gotoxy(4,b+2); write('MM6D on channel #'+inttostr(b)+':');
     gotoxy(4,b+2+9); write('MM7D on channel #'+inttostr(b)+':');
   end;
+  gotoxy(4,21); write('MM10D:');
   for b:=1 to 8 do
   begin
-    gotoxy(MINPOSX[9,1],b+2); writeln(adr_mm6dch[b]);
-    gotoxy(MINPOSX[9,2],b+2+9); writeln(adr_mm7dch[b]);
+    if (pro_mm6dch[b]<>PROTOCOL[1]) and (pro_mm6dch[b]<>PROTOCOL[2]) then pro_mm6dch[b]:=PROTOCOL[1];
+    gotoxy(MINPOSX[9,1],b+2); writeln(pro_mm6dch[b]);
+    if (pro_mm7dch[b]<>PROTOCOL[1]) and (pro_mm7dch[b]<>PROTOCOL[2]) then pro_mm7dch[b]:=PROTOCOL[1];
+    gotoxy(MINPOSX[9,2],b+2+9); writeln(pro_mm7dch[b]);
   end;
+  if (pro_mm10d<>PROTOCOL[1]) and (pro_mm10d<>PROTOCOL[2]) then pro_mm10d:=PROTOCOL[1];
+  gotoxy(MINPOSX[9,3],21); writeln(pro_mm10d);
 end;

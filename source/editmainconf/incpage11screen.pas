@@ -37,9 +37,11 @@ begin
     gotoxy(4,b+2); write('MM6D on channel #'+inttostr(b)+':');
     gotoxy(4,b+2+9); write('MM7D on channel #'+inttostr(b)+':');
   end;
+  gotoxy(4,21); write('MM10D:');
   for b:=1 to 8 do
   begin
     gotoxy(MINPOSX[11,1],b+2); writeln(adr_mm6dch[b]);
     gotoxy(MINPOSX[11,2],b+2+9); writeln(adr_mm7dch[b]);
   end;
+  gotoxy(MINPOSX[11,3],21); writeln(adr_mm10d);
 end;
