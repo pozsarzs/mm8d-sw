@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage1screen.pas                                                       | }
+{ | incpage01screen.pas                                                      | }
 { | Show screen content of page #1                                           | }
 { +--------------------------------------------------------------------------+ }
 
@@ -12,8 +12,16 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [common]
+  temp_min=10
+  temp_max=35
+}
+
 // write options to screen
-procedure page1screen;
+procedure page01screen;
 var
   b: byte;
   x: byte;

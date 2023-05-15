@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage7screen.pas                                                       | }
+{ | incpage07screen.pas                                                      | }
 { | Show screen content of page #7                                           | }
 { +--------------------------------------------------------------------------+ }
 
@@ -12,8 +12,19 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [mushroom]
+  temperature_min=8
+  heater_on=15
+  heater_off=17
+  temperature_max=25
+  heater_disable_??=0
+}
+
 // write options to screen
-procedure page7screen;
+procedure page07screen;
 var
   b: byte;
 begin

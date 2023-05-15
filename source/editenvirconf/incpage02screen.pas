@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage2screen.pas                                                       | }
+{ | incpage02screen.pas                                                      | }
 { | Show screen content of page #2                                           | }
 { +--------------------------------------------------------------------------+ }
 
@@ -12,8 +12,19 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [hyphae]
+  temperature_min=22
+  heater_on=24
+  heater_off=26
+  temperature_max=27
+  heater_disable_??=0
+}
+
 // write options to screen
-procedure page2screen;
+procedure page02screen;
 var
   b: byte;
 begin

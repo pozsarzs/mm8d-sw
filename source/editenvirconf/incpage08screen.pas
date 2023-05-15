@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage8screen.pas                                                       | }
+{ | incpage08screen.pas                                                      | }
 { | Show screen content of page #8                                           | }
 { +--------------------------------------------------------------------------+ }
 
@@ -12,8 +12,18 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [mushroom]
+  light_on1=6
+  light_off1=12
+  light_on2=16
+  light_off2=22
+}
+
 // write options to screen
-procedure page8screen;
+procedure page08screen;
 begin
   header(PRGNAME+' '+VERSION+' * Page 8/11: Growing mushroom - lighting');
   textcolor(white);

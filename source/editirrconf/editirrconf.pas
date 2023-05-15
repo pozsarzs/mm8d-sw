@@ -45,18 +45,18 @@ const
                                   '<Esc> cancel');
 
 {$I config.pas}
-{$I incpage1screen.pas}
-{$I incpage2screen.pas}
+{$I incpage01screen.pas}
+{$I incpage02screen.pas}
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
-// draw base screen
+// base screen
 procedure screen(page: byte);
 begin
   background;
   case page of
-    1: page1screen;
-    2: page2screen;
+    1: page01screen;
+    2: page02screen;
   end;
   footer(bottom-1,FOOTERS[1]);
   textbackground(black);

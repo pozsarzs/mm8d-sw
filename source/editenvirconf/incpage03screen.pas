@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage3screen.pas                                                       | }
+{ | incpage03screen.pas                                                      | }
 { | Show screen content of page #3                                           | }
 { +--------------------------------------------------------------------------+ }
 
@@ -12,8 +12,18 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [hyphae]
+  light_on1=0
+  light_off1=0
+  light_on2=0
+  light_off2=0
+}
+
 // write options to screen
-procedure page3screen;
+procedure page03screen;
 begin
   header(PRGNAME+' '+VERSION+' * Page 3/11: Growing hyphae - lighting');
   textcolor(white);

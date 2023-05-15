@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage2screen.pas                                                       | }
+{ | incpage02screen.pas                                                      | }
 { | Show screen content of page #2                                           | }
 { +--------------------------------------------------------------------------+ }
 
@@ -12,8 +12,19 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [tube-?]
+  name=Tomato and eggplant
+  morning_start=05:00
+  morning_stop=05:30
+  evening_start=19:00
+  evening_stop=19:30
+}
+
 // write options to screen
-procedure page2screen;
+procedure page02screen;
 var
   b: byte;
   x: byte;

@@ -1,7 +1,7 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
-{ | incpage5screen.pas                                                       | }
+{ | incpage05screen.pas                                                      | }
 { | Show screen content of page #5                                           | }
 { +--------------------------------------------------------------------------+ }
 
@@ -12,8 +12,16 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [hyphae]
+  vent_hightemp=26
+  vent_disablehightemp_??=1
+}
+
 // write options to screen
-procedure page5screen;
+procedure page05screen;
 var
   b: byte;
 begin

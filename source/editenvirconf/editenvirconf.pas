@@ -90,15 +90,15 @@ const
                                                                  (3,0,0,0,0,0));
 
 {$I config.pas}
-{$I incpage1screen.pas}
-{$I incpage2screen.pas}
-{$I incpage3screen.pas}
-{$I incpage4screen.pas}
-{$I incpage5screen.pas}
-{$I incpage6screen.pas}
-{$I incpage7screen.pas}
-{$I incpage8screen.pas}
-{$I incpage9screen.pas}
+{$I incpage01screen.pas}
+{$I incpage02screen.pas}
+{$I incpage03screen.pas}
+{$I incpage04screen.pas}
+{$I incpage05screen.pas}
+{$I incpage06screen.pas}
+{$I incpage07screen.pas}
+{$I incpage08screen.pas}
+{$I incpage09screen.pas}
 {$I incpage10screen.pas}
 {$I incpage11screen.pas}
 {$I incloadinifile.pas}
@@ -109,15 +109,15 @@ procedure screen(page: byte);
 begin
   background;
   case page of
-    1: page1screen;
-    2: page2screen;
-    3: page3screen;
-    4: page4screen;
-    5: page5screen;
-    6: page6screen;
-    7: page7screen;
-    8: page8screen;
-    9: page9screen;
+    1: page01screen;
+    2: page02screen;
+    3: page03screen;
+    4: page04screen;
+    5: page05screen;
+    6: page06screen;
+    7: page07screen;
+    8: page08screen;
+    9: page09screen;
     10: page10screen;
     11: page11screen;
   end;

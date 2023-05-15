@@ -12,6 +12,14 @@
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
 
+{
+  Relevant settings file section:
+
+  [mushroom]
+  vent_hightemp=25
+  vent_disablehightemp_??=0
+}
+
 // write options to screen
 procedure page10screen;
 var
