@@ -99,14 +99,51 @@ def writechannelstatustocomport(channel):
           transmitbuffer[0x0C] = 0x03
       if override[channel][2] == 1:
           transmitbuffer[0x0C] = 0x02
-  for x in range(0,13):
-    line = line + chr(transmitbuffer[x])
-  try:
-    com.open
-    com.write(str.encode(line))
-    com.close
-  except:
-    print("")
+    for x in range(0,13):
+      line = line + chr(transmitbuffer[x])
+    try:
+      com.open
+      com.write(str.encode(line))
+      com.close
+    except:
+      print("")
+
+# send power supply's data to display via serial port
+def writepowersupplystatustocomport():
+  transmitbuffer = [0x00 for x in range(16)]
+  line = ""
+  if com_enable == "1":
+    transmitbuffer[0x00] = ord("P")
+    transmitbuffer[0x01] = ord("S")
+    c, f = divmod(urms, 1<<8)
+    transmitbuffer[0x02] =c
+    transmitbuffer[0x03] =f
+    c, f = divmod(irms, 1<<8)
+    transmitbuffer[0x04] =c
+    transmitbuffer[0x05] =f
+    c, f = divmod(p, 1<<8)
+    transmitbuffer[0x06] =c
+    transmitbuffer[0x07] =f
+    c, f = divmod(q, 1<<8)
+    transmitbuffer[0x08] =c
+    transmitbuffer[0x09] =f
+    c, f = divmod(s, 1<<8)
+    transmitbuffer[0x0A] =c
+    transmitbuffer[0x0B] =f
+    c, f = divmod(cosfi, 1<<8)
+    transmitbuffer[0x0C] =c
+    transmitbuffer[0x0D] =f
+    c, f = divmod(tpf, 1<<8)
+    transmitbuffer[0x0E] =c
+    transmitbuffer[0x0F] =f
+    for x in range(0,15):
+      line = line + chr(transmitbuffer[x])
+    try:
+      com.open
+      com.write(str.encode(line))
+      com.close
+    except:
+      print("")
 
 # load configuration
 def loadconfiguration(conffile):
@@ -128,6 +165,7 @@ def loadconfiguration(conffile):
 
 # main function
 global channel
+global cosfi
 global ena_ch
 global eol
 global exttemp
@@ -138,18 +176,25 @@ global in_ocprot
 global in_opmode
 global in_swmanu
 global in_temperature
+global irms
 global mainsbreakers
 global out_heaters
 global out_lamps
 global out_vents
 global override
 global ovrstatus
+global p
+global q
 global relay_tube1
 global relay_tube2
 global relay_tube3
+global s
+global tpf
+global urms
 global waterpressurehigh
 global waterpressurelow
 channel = 0
+cosfi = 0
 ena_ch = [1 for channel in range(9)]
 eol = "\r"
 exttemp = 23
@@ -160,18 +205,23 @@ in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
 in_swmanu = [0 for channel in range(9)]
 in_temperature = [18 for channel in range(9)]
+irms = 0
 mainsbreakers = 0
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 override = [[0 for x in range(3)] for x in range(9)]
 ovrstatus = ["neutral","off","on"]
+p = 0
+q = 0
 relay_tube1 = 0
 relay_tube2 = 0
 relay_tube3 = 0
+s = 0
+tpf = 0
+urms = 0
 waterpressurehigh = 0
 waterpressurelow = 0
-
 print("\nMM8D Mini serial console test utility * (C) 2020-2023 Pozsar Zsolt")
 print("--------------------------------------------------------------------")
 print(" * load configuration: %s..." % conffile)
@@ -184,9 +234,12 @@ while True:
   menuitem = input(" \
    1: Set parameters of the Channel #0\n \
    2: Set parameters of the Channel #1-8\n \
+   3: Set power supply data\n \
    q: Quit\n")
+  # exit
   if menuitem is "Q" or menuitem is "q":
     break;
+  # channel #0
   if menuitem is "1":
     channel = 0
     while True:
@@ -267,25 +320,26 @@ while True:
         writechannelstatustocomport(channel)
       if submenuitem is "Q" or submenuitem is "q":
         break
+  # channel #1-8
   if menuitem is "2":
     channel = 1
     while True:
       print(" * Set variables of the Channel #1-8")
-      print("   0: channel             ",channel)
-      print("   1: in_temperature[" + str(channel) + "]   ",in_temperature[channel])
-      print("   2: in_humidity[" + str(channel) + "]      ",in_humidity[channel])
-      print("   3: in_gasconcentrate[" + str(channel) + "]",in_gasconcentrate[channel])
-      print("   4: in_opmode[" + str(channel) + "]        ",in_opmode[channel])
-      print("   5: in_swmanu[" + str(channel) + "]        ",in_swmanu[channel])
-      print("   6: in_ocprot[" + str(channel) + "]        ",in_ocprot[channel])
-      print("   7: in_alarm[" + str(channel) + "]         ",in_alarm[channel])
-      print("   8: out_lamps[" + str(channel) + "]        ",out_lamps[channel])
-      print("   9: out_vents[" + str(channel) + "]        ",out_vents[channel])
-      print("   a: out_heaters[" + str(channel) + "]      ",out_heaters[channel])
-      print("   b: override[" + str(channel) + "][0]      ",ovrstatus[override[channel][0]])
-      print("   c: override[" + str(channel) + "][1]      ",ovrstatus[override[channel][1]])
-      print("   d: override[" + str(channel) + "][2]      ",ovrstatus[override[channel][2]] + "\n")
-      print("   y: Enable/disable CH #" + str(channel) + "",ena_ch[channel])
+      print("   0: channel               ",channel)
+      print("   1: in_temperature[" + str(channel) + "]     ",in_temperature[channel])
+      print("   2: in_humidity[" + str(channel) + "]        ",in_humidity[channel])
+      print("   3: in_gasconcentrate[" + str(channel) + "]  ",in_gasconcentrate[channel])
+      print("   4: in_opmode[" + str(channel) + "]          ",in_opmode[channel])
+      print("   5: in_swmanu[" + str(channel) + "]          ",in_swmanu[channel])
+      print("   6: in_ocprot[" + str(channel) + "]          ",in_ocprot[channel])
+      print("   7: in_alarm[" + str(channel) + "]           ",in_alarm[channel])
+      print("   8: out_lamps[" + str(channel) + "]          ",out_lamps[channel])
+      print("   9: out_vents[" + str(channel) + "]          ",out_vents[channel])
+      print("   a: out_heaters[" + str(channel) + "]        ",out_heaters[channel])
+      print("   b: override[" + str(channel) + "][0]        ",ovrstatus[override[channel][0]])
+      print("   c: override[" + str(channel) + "][1]        ",ovrstatus[override[channel][1]])
+      print("   d: override[" + str(channel) + "][2]        ",ovrstatus[override[channel][2]] + "\n")
+      print("   y: Enable/disable CH #" + str(channel) + "  ",ena_ch[channel])
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
@@ -371,6 +425,39 @@ while True:
           in_opmode[channel] = 0
       if submenuitem is "x":
         writechannelstatustocomport(channel)
+      if submenuitem is "Q" or submenuitem is "q":
+        break
+  # power supply
+  if menuitem is "3":
+    channel = 1
+    while True:
+      print(" * Set power raw power supply data")
+      print("   0: Urms                  ",urms)
+      print("   1: Irms                  ",irms)
+      print("   2: P                     ",p)
+      print("   3: Q                     ",q)
+      print("   4: S                     ",s)
+      print("   5: Cos Fi                ",cosfi)
+      print("   6: TPF                   ",tpf,"\n")
+      print("   x: Send data")
+      print("   q: Back to main menu")
+      submenuitem = input()
+      if submenuitem is "0":
+        urms = int(input("Enter new value (0-32767): "))
+      if submenuitem is "1":
+        irms = int(input("Enter new value (0-32767): "))
+      if submenuitem is "2":
+        p = int(input("Enter new value (0-32767): "))
+      if submenuitem is "3":
+        q = int(input("Enter new value (0-32767): "))
+      if submenuitem is "4":
+        s = int(input("Enter new value (0-32767): "))
+      if submenuitem is "5":
+        cosfi = int(input("Enter new value (0-32767): "))
+      if submenuitem is "6":
+        tpf = int(input("Enter new value (0-32767): "))
+      if submenuitem is "x":
+        writepowersupplystatustocomport()
       if submenuitem is "Q" or submenuitem is "q":
         break
 sys.exit(0)

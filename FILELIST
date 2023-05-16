@@ -6,8 +6,8 @@ binary/armhf/mm8d-editmainconf.bin
 binary/armhf/mm8d-override.bin                  DONE
 binary/i386/mm8d-editenvirconf.bin              DONE
 binary/i386/mm8d-editirrconf.bin                DONE
-binary/i386/mm8d-editmainconf.bin
-binary/i386/mm8d-override.bin
+binary/i386/mm8d-editmainconf.bin               DONE
+binary/i386/mm8d-override.bin                   DONE
 binary/x86_64/mm8d-editenvirconf.bin
 binary/x86_64/mm8d-editirrconf.bin
 binary/x86_64/mm8d-editmainconf.bin
@@ -67,23 +67,23 @@ packaging/sw-amd64/control
 packaging/sw-amd64/md5sums
 packaging/sw-amd64/postinst                     DONE
 packaging/sw-amd64/prerm                        DONE
-packaging/sw-armhf/conffiles
+packaging/sw-armhf/conffiles                    DONE
 packaging/sw-armhf/control
 packaging/sw-armhf/md5sums
 packaging/sw-armhf/postinst                     DONE
 packaging/sw-armhf/prerm                        DONE
-packaging/sw-i386/conffiles
+packaging/sw-i386/conffiles                     DONE
 packaging/sw-i386/control
 packaging/sw-i386/md5sums
 packaging/sw-i386/postinst                      DONE
 packaging/sw-i386/prerm                         DONE
-packaging/web-all/conffiles
+packaging/web-all/conffiles                     DONE
 packaging/web-all/control
 packaging/web-all/md5sums
 packaging/web-all/postinst                      DONE
 packaging/web-all/prerm                         DONE
 programs/mm8d-hwtest.py                         DONE
-programs/mm8d-msctest.py
+programs/mm8d-msctest.py                        DONE
 programs/mm8d.py
 scripts/mm8d-creatediagrams                     DONE
 scripts/mm8d-editenvirconf                      DONE
@@ -144,19 +144,19 @@ source/editirrconf/incpage2screen.pas           DONE
 source/editirrconf/incsaveinifile.pas           DONE
 source/editirrconf/Makefile                     DONE
 source/editmainconf/config.pas.in               DONE
-source/editmainconf/editmainconf.pas
-source/editmainconf/incloadinifile.pas
-source/editmainconf/incpage10screen.pas
-source/editmainconf/incpage1screen.pas
-source/editmainconf/incpage2screen.pas
-source/editmainconf/incpage3screen.pas
-source/editmainconf/incpage4screen.pas
-source/editmainconf/incpage5screen.pas
-source/editmainconf/incpage6screen.pas
-source/editmainconf/incpage7screen.pas
-source/editmainconf/incpage8screen.pas
-source/editmainconf/incpage9screen.pas
-source/editmainconf/incsaveinifile.pas
+source/editmainconf/editmainconf.pas            DONE
+source/editmainconf/incloadinifile.pas          DONE
+source/editmainconf/incpage10screen.pas         DONE
+source/editmainconf/incpage1screen.pas          DONE
+source/editmainconf/incpage2screen.pas          DONE
+source/editmainconf/incpage3screen.pas          DONE
+source/editmainconf/incpage4screen.pas          DONE
+source/editmainconf/incpage5screen.pas          DONE
+source/editmainconf/incpage6screen.pas          DONE
+source/editmainconf/incpage7screen.pas          DONE
+source/editmainconf/incpage8screen.pas          DONE
+source/editmainconf/incpage9screen.pas          DONE
+source/editmainconf/incsaveinifile.pas          DONE
 source/editmainconf/Makefile                    DONE
 source/Makefile                                 DONE
 source/Makefile.global.in                       DONE

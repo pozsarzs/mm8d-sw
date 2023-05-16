@@ -139,7 +139,7 @@ set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
 set output "$PNGFILE"
-plot "$TMPFILE" using 5:xticlabels(stringcolumn(2)) with lines title "P [W]" linecolor rgb '#666699', "$TMPFILE" using 6:xticlabels(stringcolumn(2)) with lines title "Q [VAR]" linecolor rgb 'red',"$TMPFILE"  using 7:xticlabels(stringcolumn(2)) with lines title "S [VA]" linecolor 'blue'
+plot "$TMPFILE" using 5:xticlabels(stringcolumn(2)) with lines title "P [W]" linecolor rgb '#666699', "$TMPFILE" using 6:xticlabels(stringcolumn(2)) with lines title "Q [VAr]" linecolor rgb 'red',"$TMPFILE"  using 7:xticlabels(stringcolumn(2)) with lines title "S [VA]" linecolor 'blue'
 EOF
     if [ $? -ne 0 ]
     then

@@ -44,8 +44,9 @@ Serial ports
 
 Incoming (binary) data lines in Mode #3
 ---------------------------------------
-   0123456789ABCDE
-  "CH............."
+
+   0123456789ABC
+  "CH..........."
 
     0:   'C'                                  0x43
     1:   'H'                                  0x48
@@ -73,24 +74,30 @@ Incoming (binary) data lines in Mode #3
     B:   status of ventilator output          0x00: off    0x01: on     0x02: always off 0x03: always on
     C:   status of heater output              0x00: off    0x01: on     0x02: always off 0x03: always on
 
-    0:   'C'                                  0x43
-    1:   'H'                                  0x48
-    2:   number of channel                    0xFF
-    3:   effective mains voltage in V / 10   (0x00-0xFF) upper byte
-    4:   effective mains voltage in V / 10   (0x00-0xFF) lower byte
-    5:   effective mains current in A / 100  (0x00-0xFF) upper byte
-    6:   effective mains current in A / 100  (0x00-0xFF) lower byte
-    7:   active power in W                   (0x00-0xFF) upper byte
-    8:   active power in W                   (0x00-0xFF) lower byte
-    9:   reactive power in VAR               (0x00-0xFF) upper byte
-    A:   reactive power in VAR               (0x00-0xFF) lower byte
-    B:   apparent power in VA                (0x00-0xFF) upper byte
-    C:   apparent power in VA                (0x00-0xFF) lower byte
-    D:   cos phi / 1000                      (0x00-0x03) upper byte
-    E:   cos phi / 1000                      (0x00-0xFF) lower byte
+
+   0123456789ABCDEF
+  "PS.............."
+
+    0:   'P'                                  0x50
+    1:   'S'                                  0x53
+    2:   effective mains voltage (raw data)  (0x00-0xFF) upper byte
+    3:   effective mains voltage (raw data)  (0x00-0xFF) lower byte
+    4:   effective mains current (raw data)  (0x00-0xFF) upper byte
+    5:   effective mains current (raw data)  (0x00-0xFF) lower byte
+    6:   active power (raw data)             (0x00-0xFF) upper byte
+    7:   active power (raw data)             (0x00-0xFF) lower byte
+    8:   reactive power (raw data)           (0x00-0xFF) upper byte
+    9:   reactive power (raw data)           (0x00-0xFF) lower byte
+    A:   apparent power (raw data)           (0x00-0xFF) upper byte
+    B:   apparent power (raw data)           (0x00-0xFF) lower byte
+    C:   cos phi (raw data)                  (0x00-0xFF) upper byte
+    D:   cos phi (raw data)                  (0x00-0xFF) lower byte
+    E:   technical power factor (raw data)   (0x00-0xFF) upper byte
+    F:   technical power factor (raw data)   (0x00-0xFF) lower byte
 
 
 Example incoming (text) log lines in Mode #3
+--------------------------------------------
 
      0      1    2           3
   "221213 114421 I Configuration is loaded."
@@ -104,7 +111,7 @@ Example incoming (text) log lines in Mode #3
 
 
 Display
-
+-------
   Starting screens
 
     +--------------------+
@@ -210,7 +217,7 @@ Display
     +--------------------+
     |SUPPLY  [  ]        |
     |P:      3746 W      |
-    |Q:      0000 VAR    |
+    |Q:      0000 VAr    |
     |S:      3746 VA     |
     +--------------------+
 

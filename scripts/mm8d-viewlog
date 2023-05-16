@@ -46,7 +46,7 @@ viewlogfile()
     echo "1:  Urms - effectice mains voltage in V"
     echo "2:  Irms - effective mains current in A"
     echo "3:  P - active power in W"
-    echo "4:  Q - reactive power in VAR"
+    echo "4:  Q - reactive power in VAr"
     echo "5:  S - apparend power in VA"
     echo -e "6:  cos phi\n"
     echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\n"
@@ -54,7 +54,7 @@ viewlogfile()
     IFS=,
     while read C1 C2 C3 C4 C5 C6 C7 C8
     do
-      echo -e " $C1\t$C2\t"$C3"V\t"$C4"A\t"$C5"W\t"$C6"VAR\t"$C7"VA\t$C8"
+      echo -e " $C1\t$C2\t"$C3"V\t"$C4"A\t"$C5"W\t"$C6"VAr\t"$C7"VA\t$C8"
     done < $LOGFILE
     IFS=$OLDIFS
   fi
@@ -110,7 +110,7 @@ viewlogfile()
 # main function
 if [ $# -eq 0 ]
 then
-  read -p "Channel (0-8): " CHANNEL
+  read -p "Channel (-1..8): " CHANNEL
 else
   CHANNEL=$1
 fi
@@ -139,12 +139,12 @@ then
     viewlogfile
   else
     echo "ERROR #3: Wrong channel number!"
-    echo "Valid values: 0..8"
+    echo "Valid values: -1..8"
     exit 3
   fi
 else
   echo "ERROR #3: Wrong channel number!"
-  echo "Valid values: 0..8"
+  echo "Valid values: -1..8"
   exit 3
 fi
 exit 0
