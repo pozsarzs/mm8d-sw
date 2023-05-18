@@ -33,7 +33,7 @@ else:
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):
-  if com_enable == "1":
+  if ena_console == "1":
     dt = (strftime("%y%m%d %H%M%S",localtime()))
     try:
       com.open
@@ -46,7 +46,7 @@ def writedebuglogtocomport(level,text):
 def writechannelstatustocomport(channel):
   transmitbuffer = [0x00 for x in range(13)]
   line = ""
-  if com_enable == "1":
+  if ena_console == "1":
     if channel == 0:
       transmitbuffer[0x00] = ord("C")
       transmitbuffer[0x01] = ord("H")
@@ -112,30 +112,30 @@ def writechannelstatustocomport(channel):
 def writepowersupplystatustocomport():
   transmitbuffer = [0x00 for x in range(16)]
   line = ""
-  if com_enable == "1":
+  if ena_console == "1":
     transmitbuffer[0x00] = ord("P")
     transmitbuffer[0x01] = ord("S")
     c, f = divmod(urms, 1<<8)
-    transmitbuffer[0x02] =c
-    transmitbuffer[0x03] =f
+    transmitbuffer[0x02] = c
+    transmitbuffer[0x03] = f
     c, f = divmod(irms, 1<<8)
-    transmitbuffer[0x04] =c
-    transmitbuffer[0x05] =f
+    transmitbuffer[0x04] = c
+    transmitbuffer[0x05] = f
     c, f = divmod(p, 1<<8)
-    transmitbuffer[0x06] =c
-    transmitbuffer[0x07] =f
+    transmitbuffer[0x06] = c
+    transmitbuffer[0x07] = f
     c, f = divmod(q, 1<<8)
-    transmitbuffer[0x08] =c
-    transmitbuffer[0x09] =f
+    transmitbuffer[0x08] = c
+    transmitbuffer[0x09] = f
     c, f = divmod(s, 1<<8)
-    transmitbuffer[0x0A] =c
-    transmitbuffer[0x0B] =f
+    transmitbuffer[0x0A] = c
+    transmitbuffer[0x0B] = f
     c, f = divmod(cosfi, 1<<8)
-    transmitbuffer[0x0C] =c
-    transmitbuffer[0x0D] =f
+    transmitbuffer[0x0C] = c
+    transmitbuffer[0x0D] = f
     c, f = divmod(tpf, 1<<8)
-    transmitbuffer[0x0E] =c
-    transmitbuffer[0x0F] =f
+    transmitbuffer[0x0E] = c
+    transmitbuffer[0x0F] = f
     for x in range(0,15):
       line = line + chr(transmitbuffer[x])
     try:
@@ -150,15 +150,21 @@ def loadconfiguration(conffile):
   global com
   global prt_com
   global com_speed
-  global com_enable
-  com_enable = "1"
+  global ena_console
+  C = 'COMport'
   try:
     with open(conffile) as f:
       mm8d_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mm8d_config))
-    prt_com=config.get('COMport','prt_com')
-    com_speed=int(config.get('COMport','com_speed'))
+    # enable/disable external serial display (0/1)
+    ena_console = '1'
+    ena_console = config.get(C,'ena_console')
+    # port name
+    prt_com = config.get(C,'prt_com')
+    # port speed
+    com_speed = '9600'
+    com_speed = int(config.get(C,'com_speed'))
   except:
     print("ERROR #1: Cannot open configuration file!");
     sys.exit(1);

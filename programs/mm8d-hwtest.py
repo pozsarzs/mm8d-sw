@@ -50,6 +50,9 @@ def loadconfiguration(conffile):
   global com
   global prt_com
   global com_speed
+  C = 'COMport'
+  G = 'GPIOport'
+  L = 'LPTport'
   if hw == 0:
     global prt_i1
     global prt_i2
@@ -67,28 +70,33 @@ def loadconfiguration(conffile):
     global prt_lpt
   try:
     with open(conffile) as f:
-      mm8d_config=f.read()
-    config=configparser.RawConfigParser(allow_no_value=True)
-    config.read_file(io.StringIO(mm8d_config))
-    prt_com=config.get('COMport','prt_com')
-    com_speed=int(config.get('COMport','com_speed'))
+      mm8d_config = f.read()
+    # number of the used GPIO ports
     if hw == 0:
-      prt_i1=int(config.get('GPIOport','prt_i1'))
-      prt_i2=int(config.get('GPIOport','prt_i2'))
-      prt_i3=int(config.get('GPIOport','prt_i3'))
-      prt_i4=int(config.get('GPIOport','prt_i4'))
-      prt_ro1=int(config.get('GPIOport','prt_ro1'))
-      prt_ro2=int(config.get('GPIOport','prt_ro2'))
-      prt_ro3=int(config.get('GPIOport','prt_ro3'))
-      prt_ro4=int(config.get('GPIOport','prt_ro4'))
-      prt_lo1=int(config.get('GPIOport','prt_lo1'))
-      prt_lo2=int(config.get('GPIOport','prt_lo2'))
-      prt_lo3=int(config.get('GPIOport','prt_lo3'))
-      prt_lo4=int(config.get('GPIOport','prt_lo4'))
+      prt_i1 = int(config.get(G,'prt_i1'))
+      prt_i2 = int(config.get(G,'prt_i2'))
+      prt_i3 = int(config.get(G,'prt_i3'))
+      prt_i4 = int(config.get(G,'prt_i4'))
+      prt_ro1 = int(config.get(G,'prt_ro1'))
+      prt_ro2 = int(config.get(G,'prt_ro2'))
+      prt_ro3 = int(config.get(G,'prt_ro3'))
+      prt_ro4 = int(config.get(G,'prt_ro4'))
+      prt_lo1 = int(config.get(G,'prt_lo1'))
+      prt_lo2 = int(config.get(G,'prt_lo2'))
+      prt_lo3 = int(config.get(G,'prt_lo3'))
+      prt_lo4 = int(config.get(G,'prt_lo4'))
     else:
-      prt_lpt=int(config.get('LPTport','prt_lpt'))
+      # address of the used LPT port (0x378: 0, 0x278: 1, 0x3BC: 2)
+      prt_lpt = int(config.get(L,'prt_lpt'))
       if (prt_lpt < 0) or (prt_lpt > 2):
-        prt_lpt=0
+        prt_lpt = 0
+    config = configparser.RawConfigParser(allow_no_value=True)
+    config.read_file(io.StringIO(mm8d_config))
+    # port name
+    prt_com = config.get(C,'prt_com')
+    # port speed
+    com_speed = 9600
+    com_speed = int(config.get(C,'com_speed'))
   except:
     print("ERROR #1: Cannot open configuration file!");
     sys.exit(1);

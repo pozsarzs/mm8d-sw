@@ -182,21 +182,29 @@ def writechannelstatustocomport(channel):
 
 # load configuration
 def loadconfiguration(conffile):
+  global adr_mm10d
   global adr_mm6dch
   global adr_mm7dch
   global api_key
   global base_url
   global city_name
+  global com_speed
+  global com_verbose
   global dbg_log
   global dir_log
   global dir_var
-  global ena_console
-  global prt_com
-  global com_speed
-  global com_verbose
   global ena_ch
+  global ena_console
+  global ena_mmd10
   global lockfile
   global logfile
+  global pro_mm10d
+  global pro_mm6dch
+  global pro_mm7dch
+  global prt_com
+  global uid_mm10d
+  global uid_mm6dch
+  global uid_mm7dch
   global usr_uid
   if (hw == 0):
     global prt_i1
@@ -213,53 +221,100 @@ def loadconfiguration(conffile):
     global prt_lo4
   else:
     global prt_lpt
-
+  C = 'COMport'
+  D = 'directories'
+  E = 'enable'
+  G = 'GPIOport'
+  L = 'log'
+  LP = 'LPTport'
+  M10 = 'MM10D'
+  M6 = 'MM6D'
+  M7 = 'MM7D'
+  O = 'openweathermap.org'
+  U = 'user'
+  global HP
+  HP = 'http'
   try:
     with open(conffile) as f:
       mainconfig = f.read()
     config = configparser.RawConfigParser(allow_no_value = True)
     config.read_file(io.StringIO(mainconfig))
-    adr_mm6dch = [0 for x in range(9)]
-    for i in range(1,9):
-      adr_mm6dch[i] = config.get('MM6D','adr_mm6dch' + str(i))
-    adr_mm7dch = [0 for x in range(9)]
-    for i in range(1,9):
-      adr_mm7dch[i] = config.get('MM7D','adr_mm7dch' + str(i))
-    api_key = config.get('openweathermap.org','api_key')
-    base_url = config.get('openweathermap.org','base_url')
-    city_name = config.get('openweathermap.org','city_name')
-    dbg_log = '0'
-    dbg_log = config.get('log','dbg_log')
-    dir_log = config.get('directories','dir_log')
-    dir_var = config.get('directories','dir_var')
-    ena_console = '0'
-    ena_console = config.get('COMport','ena_console')
-    prt_com = '/dev/ttyS0'
-    prt_com = config.get('COMport','prt_com')
-    com_speed = '9600'
-    com_speed = config.get('COMport','com_speed')
-    com_verbose = 0
-    com_verbose = int(config.get('COMport','com_verbose'))
+    # user's data
+    usr_uid = config.get(U,'usr_uid')
+    # enable/disable channels (0/1)
     ena_ch = [0 for x in range(9)]
     for i in range(1,9):
-      ena_ch[i] = int(config.get('enable','ena_ch' + str(i)))
-    lockfile = config.get('directories','dir_lck') + 'mm8d.lck'
-    usr_uid = config.get('user','usr_uid')
+      ena_ch[i] = int(config.get(E,'ena_ch' + str(i)))
+    # create verbose debug log file
+    dbg_log = '0'
+    dbg_log = config.get(L,'dbg_log')
+    # directories of program
+    dir_log = config.get(D,'dir_log')
+    dir_var = config.get(D,'dir_var')
+    lockfile = config.get(D,'dir_lck') + 'mm8d.lck'
+    # access data
+    api_key = config.get(O,'api_key')
+    base_url = config.get(O,'base_url')
+    city_name = config.get(O,'city_name')
+    # number of the used GPIO ports
     if hw == 0:
-      prt_i1 = int(config.get('GPIOports','prt_i1'))
-      prt_i2 = int(config.get('GPIOports','prt_i2'))
-      prt_i3 = int(config.get('GPIOports','prt_i3'))
-      prt_i4 = int(config.get('GPIOports','prt_i4'))
-      prt_ro1 = int(config.get('GPIOports','prt_ro1'))
-      prt_ro2 = int(config.get('GPIOports','prt_ro2'))
-      prt_ro3 = int(config.get('GPIOports','prt_ro3'))
-      prt_ro4 = int(config.get('GPIOports','prt_ro4'))
-      prt_lo1 = int(config.get('GPIOports','prt_lo1'))
-      prt_lo2 = int(config.get('GPIOports','prt_lo2'))
-      prt_lo3 = int(config.get('GPIOports','prt_lo3'))
-      prt_lo4 = int(config.get('GPIOports','prt_lo4'))
+      prt_i1 = int(config.get(G,'prt_i1'))
+      prt_i2 = int(config.get(G,'prt_i2'))
+      prt_i3 = int(config.get(G,'prt_i3'))
+      prt_i4 = int(config.get(G,'prt_i4'))
+      prt_ro1 = int(config.get(G,'prt_ro1'))
+      prt_ro2 = int(config.get(G,'prt_ro2'))
+      prt_ro3 = int(config.get(G,'prt_ro3'))
+      prt_ro4 = int(config.get(G,'prt_ro4'))
+      prt_lo1 = int(config.get(G,'prt_lo1'))
+      prt_lo2 = int(config.get(G,'prt_lo2'))
+      prt_lo3 = int(config.get(G,'prt_lo3'))
+      prt_lo4 = int(config.get(G,'prt_lo4'))
     else:
-      prt_lpt = int(config.get('LPTport','prt_lpt'))
+      # address of the used LPT port (0x378: 0, 0x278: 1, 0x3BC: 2)
+      prt_lpt = int(config.get(LP,'prt_lpt'))
+    # enable/disable external serial display (0/1)
+    ena_console = '0'
+    ena_console = config.get(C,'ena_console')
+    # port name
+    prt_com = '/dev/ttyS0'
+    prt_com = config.get(C,'prt_com')
+    # port speed
+    com_speed = '9600'
+    com_speed = config.get(C,'com_speed')
+    # level of verbosity of the log on console
+    com_verbose = 0
+    com_verbose = int(config.get(C,'com_verbose'))
+    # protocol (http/modbus)
+    pro_mm6dch = [HP for x in range(9)]
+    pro_mm7dch = [HP for x in range(9)]
+    # IP address
+    adr_mm6dch = [0 for x in range(9)]
+    adr_mm7dch = [0 for x in range(9)]
+    # ModBUS unitID
+    uid_mm6dch = [0 for x in range(9)]
+    uid_mm7dch = [0 for x in range(9)]
+    for i in range(1,9):
+      # protocol (http/modbus)
+      pro_mm6dch[i] = config.get(M6,'pro_mm6dch' + str(i))
+      pro_mm7dch[i] = config.get(M7,'pro_mm7dch' + str(i))
+      adr_mm6dch[i] = config.get(M6,'adr_mm6dch' + str(i))
+      adr_mm7dch[i] = config.get(M7,'adr_mm7dch' + str(i))
+      ena_ch[i] = int(config.get(E,'ena_ch' + str(i)))
+      uid_mm6dch[i] = config.get(M6,'uid_mm6dch' + str(i))
+      uid_mm7dch[i] = config.get(M7,'uid_mm7dch' + str(i))
+    # enable/disable handling (0/1)
+    ena_mm10d = '0'
+    ena_mm10d = int(config.get(M10,'ena_mmd10'))
+    # protocol (http/modbus)
+    pro_mm10d = HP
+    pro_mm10d = config.get(M10,'pro_mm10d')
+    # IP address
+    adr_mm10d = 0
+    adr_mm10d = config.get(M10,'adr_mm10d')
+    # ModBUS unitID
+    uid_mm10d = 0
+    uid_mm10d = config.get(M10,'uid_mm10d')
     writetodebuglog("i","Configuration is loaded.")
   except:
     writetodebuglog("e","ERROR #01: Cannot open " + conffile + "!")
@@ -788,9 +843,26 @@ def closelocalports():
   else:
     portio.outb(0,lptaddresses[prt_lpt])
 
+# read remote MM10D device
+def readMM10Ddevice():
+  rc = 0
+  protocol = pro_mm10d
+  try:
+    if protocol == HP:
+      rc = 0
+    else:
+      # The location of the ModBUS communication procedure, this will be
+      # included in the next release. Its return value now indicates a
+      # failed connection.
+      rc = 0
+  except:
+    rc = 0
+  return rc
+
 # read and write remote MM7D device
 def readwriteMM7Ddevice(channel):
   rc = 0
+  protocol = pro_mm7dch[channel]
   if in_opmode[channel] == 0:
     url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
       "&h1=" + str(mhumidity_min[channel]) + "&h2=" + str(mhumidifier_on[channel]) + \
@@ -806,19 +878,25 @@ def readwriteMM7Ddevice(channel):
       "&t3=" + str(hheater_off[channel]) + "&t4=" + str(htemperature_max[channel]) + \
       "&g=" + str(cgasconcentrate_max[channel])
   try:
-    r = requests.get(url,timeout = 3)
-    if r.status_code == 200:
-      rc = 1
-      l = 0
-      for line in r.text.splitlines():
-        l = l + 1
-        if l == 1:
-          in_gasconcentrate[channel] = int(line)
-        if l == 2:
-          in_humidity[channel] = int(line)
-        if l == 3:
-          in_temperature[channel] = int(line)
+    if protocol == HP:
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+        l = 0
+        for line in r.text.splitlines():
+          l = l + 1
+          if l == 1:
+            in_gasconcentrate[channel] = int(line)
+          if l == 2:
+            in_humidity[channel] = int(line)
+          if l == 3:
+            in_temperature[channel] = int(line)
+      else:
+        rc = 0
     else:
+      # The location of the ModBUS communication procedure, this will be
+      # included in the next release. Its return value now indicates a
+      # failed connection.
       rc = 0
   except:
     rc = 0
@@ -827,12 +905,19 @@ def readwriteMM7Ddevice(channel):
 # set automatic mode of remote MM7D device
 def setautomodeMM7Ddevice(channel):
   rc = 0
+  protocol = pro_mm7dch[channel]
   url = "http://" + adr_mm7dch[channel] + "/mode/auto?uid=" + usr_uid
   try:
-    r = requests.get(url,timeout = 3)
-    if r.status_code == 200:
-      rc = 1
+    if protocol == HP:
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+      else:
+        rc = 0
     else:
+      # The location of the ModBUS communication procedure, this will be
+      # included in the next release. Its return value now indicates a
+      # failed connection.
       rc = 0
   except:
     rc = 0
@@ -841,24 +926,31 @@ def setautomodeMM7Ddevice(channel):
 # read and write remote MM6D device
 def readwriteMM6Ddevice(channel):
   rc = 0
+  protocol = pro_mm6dch[channel]
   url = "http://" + adr_mm6dch[channel] + "/operation?uid=" + usr_uid + \
     "&a=0&h=" + str(out_heaters[channel]) + "&l=" + str(out_lamps[channel]) + "&v=" + str(out_vents[channel])
   try:
-    r = requests.get(url,timeout = 3)
-    if r.status_code == 200:
-      rc = 1
-      l = 0
-      for line in r.text.splitlines():
-        l = l + 1
-        if l == 1:
-          in_alarm[channel] = int(line)
-        if l == 2:
-          in_opmode[channel] = int(line)
-        if l == 3:
-          in_swmanu[channel] = int(line)
-        if l == 4:
-          in_ocprot[channel] = int(line)
+    if protocol == HP:
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+        l = 0
+        for line in r.text.splitlines():
+          l = l + 1
+          if l == 1:
+            in_alarm[channel] = int(line)
+          if l == 2:
+            in_opmode[channel] = int(line)
+          if l == 3:
+            in_swmanu[channel] = int(line)
+          if l == 4:
+            in_ocprot[channel] = int(line)
+      else:
+        rc = 0
     else:
+      # The location of the ModBUS communication procedure, this will be
+      # included in the next release. Its return value now indicates a
+      # failed connection.
       rc = 0
   except:
     rc = 0
@@ -867,12 +959,19 @@ def readwriteMM6Ddevice(channel):
 # set default state of remote MM6D device
 def resetMM6Ddevice(channel):
   rc = 0
+  protocol = pro_mm6dch[channel]
   url = "http://" + adr_mm6dch[channel] + "/set/all/off?uid=" + usr_uid
   try:
-    r = requests.get(url,timeout = 3)
-    if r.status_code == 200:
-      rc = 1
+    if protocol == HP:
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+      else:
+        rc = 0
     else:
+      # The location of the ModBUS communication procedure, this will be
+      # included in the next release. Its return value now indicates a
+      # failed connection.
       rc = 0
   except:
     rc = 0
@@ -881,18 +980,25 @@ def resetMM6Ddevice(channel):
 # restore alarm input of remote MM6D device
 def restoreMM6Dalarm(channel):
   rc=0
+  protocol = pro_mm6dch[channel]
   url="http://"+adr_mm6dch[channel]+"/set/alarm/off?uid="+usr_uid
   try:
-    r=requests.get(url,timeout=3)
-    if (r.status_code==200):
-      rc=1
+    if protocol == HP:
+      r=requests.get(url,timeout=3)
+      if (r.status_code==200):
+        rc=1
+      else:
+        rc=0
     else:
-      rc=0
+      # The location of the ModBUS communication procedure, this will be
+      # included in the next release. Its return value now indicates a
+      # failed connection.
+      rc = 0
   except:
-    rc=0
+      rc=0
   return rc
 
-# get version of remote MM6D and MM7D device
+# get version of remote MM6D, MM7D and MM10D device
 def getcontrollerversion(conttype,channel):
   global mv
   global sv
@@ -900,21 +1006,32 @@ def getcontrollerversion(conttype,channel):
   sv = 0
   rc = 0
   if conttype == 6:
+    protocol = pro_mm6dch[channel]
     url = "http://" + adr_mm6dch[channel] + "/version"
-  else:
+  if conttype == 7:
+    protocol = pro_mm7dch[channel]
     url = "http://" + adr_mm7dch[channel] + "/version"
+  if conttype == 10:
+    protocol = pro_mm10d
+    url = "http://" + adr_mm10 + "/version"
   try:
-    r = requests.get(url,timeout = 3)
-    if r.status_code == 200:
-      rc = 1
-      l = 0
-      for line in r.text.splitlines():
-        l = l + 1
-        if l == 2:
-          mv = int(line[0])
-          sv = int(line[2])
-          break
+    if protocol == HP:
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+        l = 0
+        for line in r.text.splitlines():
+          l = l + 1
+          if l == 2:
+            mv = int(line[0])
+            sv = int(line[2])
+            break
+      else:
+        rc = 0
     else:
+      # The location of the ModBUS communication procedure, this will be
+      # included in the next release. Its return value now indicates a
+      # failed connection.
       rc = 0
   except:
     rc = 0

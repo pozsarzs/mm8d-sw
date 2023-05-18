@@ -1,8 +1,13 @@
  MM8D (0.5) unstable; urgency=low
-  * Some bugfix.
-  * Add electric power meter support.
-
- -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  XXX, 00 YYY 2023 00:00:00
+ * Some bug fixes.
+ * Electric power meter support (MM10D).
+ * Improved web interface.
+ * Modified main configuration file and configuration programs.
+ * Modified log file reader.
+ * Export log file to CSV.
+ * Take and display security camera snapshots on the web interface (this is not the marquee camera on the channel side).
+ * Preparation of ModBUS support.
+ -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  XXX, 00 May 2023 00:00:00
 
  MM8D (0.4) unstable; urgency=low
 
