@@ -53,6 +53,8 @@ COMPMV6=0
 COMPSV6=3
 COMPMV7=0
 COMPSV7=3
+COMPMV10=0
+COMPSV10=1
 DELAY=2
 
 global eol
@@ -107,6 +109,20 @@ def writedebuglogtocomport(level,text):
       time.sleep(0.1)
     except:
       print("COM!")
+
+# send power supply data to display via serial port
+def writepowersupplydatatocomport():
+  # transmitbuffer = [0x00 for x in range(13)]
+  line = ""
+  if ena_console == "1":
+    # !!! !!!
+    try:
+      com.open
+      com.write(str.encode(line))
+      com.close
+      time.sleep(0.1)
+    except:
+      print("")
 
 # send channels' data to display via serial port
 def writechannelstatustocomport(channel):
@@ -846,10 +862,46 @@ def closelocalports():
 # read remote MM10D device
 def readMM10Ddevice():
   rc = 0
-  protocol = pro_mm10d
+  # * * * Attention! These are device dependent values! * * *
+  #
+  # Used ModBUS registers of the DATCON DT510 device:
+  #
+  #   100  active power
+  #   101  reactive power
+  #   102  apparant power
+  #   103  effective voltage
+  #   104  effective current
+  #   105  power factor (cosFi)
+  #
+  modbus_fc = 3
+  modbus_reg = 100
+  modbus_regs = 6
+  #
+  # * * * Attention! These are device dependent values! * * *
   try:
-    if protocol == HP:
-      rc = 0
+    if pro_mm10d == HP:
+      url = "http://" + adr_mm10d + "/operation/?uid=" + str(uid_mm10d) + \
+            "&fc=" + str(modbus_fc) + "&reg=" + str(modbus_reg) + "&regs=" + str(modbus_regs)
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+        l = 0
+        for line in r.text.splitlines():
+          l = l + 1
+          if l == 1:
+            raw_p = int(line)
+          if l == 2:
+            raw_q = int(line)
+          if l == 3:
+            raw_s = int(line)
+          if l == 4:
+            raw_urms = int(line)
+          if l == 5:
+            raw_irms = int(line)
+          if l == 6:
+            raw_cosfi = int(line)
+      else:
+        rc = 0
     else:
       # The location of the ModBUS communication procedure, this will be
       # included in the next release. Its return value now indicates a
@@ -857,28 +909,49 @@ def readMM10Ddevice():
       rc = 0
   except:
     rc = 0
+  if rc > 0:
+    # * * * Attention! These are device dependent values! * * *
+    #
+    # Raw and real value pairs of the DATCON DT510 device:
+    #
+    #   P:     32767 = 3000 W
+    #   Q:     32767 = 3000 VAr
+    #   S:     32767 = 3000 VA
+    #   U:     32767 = 367.7 V
+    #   Irms:  32767 = 8.16 A
+    #   cosFi: 32767 = 1.0000
+    #
+    # Ratio of the current transformer: 10:1
+    CT_RATIO = 10
+    #
+    # * * * Attention! These are device dependent values! * * *
+    real_urms = str((raw_urms * 367.7) / 32767)
+    real_irms = str((raw_irms * 8.16 * CT_RATIO) / 32767)
+    real_cosfi = str((raw_cosfi * 1) / 32767)
+    real_p = str((raw_p * 3000 * CT_RATIO) / 32767)
+    real_q = str((raw_q * 3000 * CT_RATIO) / 32767)
+    real_s = str((raw_s * 3000 * CT_RATIO) / 32767)
   return rc
 
 # read and write remote MM7D device
 def readwriteMM7Ddevice(channel):
   rc = 0
-  protocol = pro_mm7dch[channel]
-  if in_opmode[channel] == 0:
-    url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
-      "&h1=" + str(mhumidity_min[channel]) + "&h2=" + str(mhumidifier_on[channel]) + \
-      "&h3=" + str(mhumidifier_off[channel]) + "&h4=" + str(mhumidity_max[channel]) + \
-      "&t1=" + str(mtemperature_min[channel]) + "&t2=" + str(mheater_on[channel]) + \
-      "&t3=" + str(mheater_off[channel]) + "&t4=" + str(mtemperature_max[channel]) + \
-      "&g=" + str(cgasconcentrate_max[channel])
-  else:
-    url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
-      "&h1=" + str(hhumidity_min[channel]) + "&h2=" + str(hhumidifier_on[channel]) + \
-      "&h3=" + str(hhumidifier_off[channel]) + "&h4=" + str(hhumidity_max[channel]) + \
-      "&t1=" + str(htemperature_min[channel]) + "&t2=" + str(hheater_on[channel]) + \
-      "&t3=" + str(hheater_off[channel]) + "&t4=" + str(htemperature_max[channel]) + \
-      "&g=" + str(cgasconcentrate_max[channel])
   try:
-    if protocol == HP:
+    if pro_mm7dch[channel] == HP:
+      if in_opmode[channel] == 0:
+        url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
+              "&h1=" + str(mhumidity_min[channel]) + "&h2=" + str(mhumidifier_on[channel]) + \
+              "&h3=" + str(mhumidifier_off[channel]) + "&h4=" + str(mhumidity_max[channel]) + \
+              "&t1=" + str(mtemperature_min[channel]) + "&t2=" + str(mheater_on[channel]) + \
+              "&t3=" + str(mheater_off[channel]) + "&t4=" + str(mtemperature_max[channel]) + \
+              "&g=" + str(cgasconcentrate_max[channel])
+      else:
+        url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
+              "&h1=" + str(hhumidity_min[channel]) + "&h2=" + str(hhumidifier_on[channel]) + \
+              "&h3=" + str(hhumidifier_off[channel]) + "&h4=" + str(hhumidity_max[channel]) + \
+              "&t1=" + str(htemperature_min[channel]) + "&t2=" + str(hheater_on[channel]) + \
+              "&t3=" + str(hheater_off[channel]) + "&t4=" + str(htemperature_max[channel]) + \
+              "&g=" + str(cgasconcentrate_max[channel])
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
@@ -905,10 +978,9 @@ def readwriteMM7Ddevice(channel):
 # set automatic mode of remote MM7D device
 def setautomodeMM7Ddevice(channel):
   rc = 0
-  protocol = pro_mm7dch[channel]
-  url = "http://" + adr_mm7dch[channel] + "/mode/auto?uid=" + usr_uid
   try:
-    if protocol == HP:
+    if pro_mm7dch[channel] == HP:
+      url = "http://" + adr_mm7dch[channel] + "/mode/auto?uid=" + usr_uid
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
@@ -926,11 +998,10 @@ def setautomodeMM7Ddevice(channel):
 # read and write remote MM6D device
 def readwriteMM6Ddevice(channel):
   rc = 0
-  protocol = pro_mm6dch[channel]
-  url = "http://" + adr_mm6dch[channel] + "/operation?uid=" + usr_uid + \
-    "&a=0&h=" + str(out_heaters[channel]) + "&l=" + str(out_lamps[channel]) + "&v=" + str(out_vents[channel])
   try:
-    if protocol == HP:
+    if pro_mm6dch[channel] == HP:
+      url = "http://" + adr_mm6dch[channel] + "/operation?uid=" + usr_uid + \
+            "&a=0&h=" + str(out_heaters[channel]) + "&l=" + str(out_lamps[channel]) + "&v=" + str(out_vents[channel])
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
@@ -959,10 +1030,9 @@ def readwriteMM6Ddevice(channel):
 # set default state of remote MM6D device
 def resetMM6Ddevice(channel):
   rc = 0
-  protocol = pro_mm6dch[channel]
-  url = "http://" + adr_mm6dch[channel] + "/set/all/off?uid=" + usr_uid
   try:
-    if protocol == HP:
+    if pro_mm6dch[channel] == HP:
+      url = "http://" + adr_mm6dch[channel] + "/set/all/off?uid=" + usr_uid
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
@@ -980,10 +1050,9 @@ def resetMM6Ddevice(channel):
 # restore alarm input of remote MM6D device
 def restoreMM6Dalarm(channel):
   rc=0
-  protocol = pro_mm6dch[channel]
-  url="http://"+adr_mm6dch[channel]+"/set/alarm/off?uid="+usr_uid
   try:
-    if protocol == HP:
+    if pro_mm6dch[channel] == HP:
+      url="http://"+adr_mm6dch[channel]+"/set/alarm/off?uid="+usr_uid
       r=requests.get(url,timeout=3)
       if (r.status_code==200):
         rc=1
@@ -1099,12 +1168,25 @@ global out_heaters
 global out_lamps
 global out_vents
 global override
+global raw_cosfi
+global raw_irms
+global raw_p
+global raw_q
+global raw_s
+global raw_urms
+global real_cosfi
+global real_irms
+global real_p
+global real_q
+global real_s
+global real_urms
 global relay_alarm
 global relay_tube1
 global relay_tube2
 global relay_tube3
 # reset variables
 cgasconcentrate_max = [0 for x in range(9)]
+done = 0
 exttemp = 18
 hheater_disable = [[0 for x in range(9)] for y in range(24)]
 hheater_off = [0 for x in range(9)]
@@ -1158,17 +1240,30 @@ mvent_hightemp = [0 for x in range(9)]
 mvent_lowtemp = [0 for x in range(9)]
 mvent_off = [0 for x in range(9)]
 mvent_on = [0 for x in range(9)]
-newdata = ["" for x in range(10)]
+newdata_ch = ["" for x in range(10)]
+newdata_ps = ""
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 override = [["neutral" for x in range(4)] for x in range(9)]
-prevdata = ["" for x in range(10)]
+prevdata_ch = ["" for x in range(10)]
+prevdata_ps = ""
+raw_cosfi = 0
+raw_irms = 0
+raw_p = 0
+raw_q = 0
+raw_s = 0
+raw_urms = 0
+real_cosfi = "1"
+real_irms = "0"
+real_p = "0"
+real_q = "0"
+real_s = "0"
+real_urms = "0"
 relay_alarm = 0
 relay_tube1 = 0
 relay_tube2 = 0
 relay_tube3 = 0
-done = 0
 # load main settings
 loadconfiguration(confdir + "mm8d.ini")
 # intialize serial port
@@ -1195,6 +1290,14 @@ for channel in range(1,9):
     else:
       ena_ch[channel] = 0;
       writetodebuglog("w","CH"+ str(channel) +": MM7D is not accessible.")
+if ena_mm10d > 0:
+  if getcontrollerversion(10,1):
+    if (mv * 10 + sv) < (COMPMV6 * 10 + COMPSV6):
+      ena_mm10d = 0;
+      writetodebuglog("w","Version of MM10D is not compatible.")
+  else:
+    ena_mm10d = 0;
+    writetodebuglog("w","MM10D is not accessible.")
 # check number of enabled channels
 ii = 0;
 for channel in range(1,9):
@@ -1271,6 +1374,12 @@ while True:
         else:
           writetodebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D.")
     # section #2:
+    # get power supply data from MM10D
+    if ena_mm10d == 1:
+      if readwriteMM10Ddevice():
+        writetodebuglog("i","Get power supply data from MM10D.")
+      else:
+        writetodebuglog("w","Cannot get power supply data from MM10D.")
     # get parameters of air from MM7Ds
     for channel in range(1,9):
       if ena_ch[channel] == 1:
@@ -1309,30 +1418,39 @@ while True:
           writetodebuglog("i","CH" + str(channel) + ": -> ventilators ON")
         else:
           writetodebuglog("i","CH" + str(channel) + ": -> ventilators OFF")
-    # write data to log
-    newdata[0] = str(mainsbreakers) + \
+    # write data to mm8d-supply.log
+    newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi
+    if (prevdata_ps != newdata_ps:
+      # !!!! writelog(0,0,0,0,newdata_ch[0]) !!!
+      prevdata_ps = newdata_ps
+    # write data to mm8d-ch0.log
+    newdata_ch[0] = str(mainsbreakers) + \
                  str(waterpressurelow) + \
                  str(waterpressurehigh) + \
                  str(unused_local_input) + \
                  str(relay_tube1) + \
                  str(relay_tube2) + \
                  str(relay_tube3)
-    if (prevdata[0] != str(exttemp) + newdata[0]):
-      writelog(0,exttemp,0,0,newdata[0])
-      prevdata[0] = str(exttemp) + newdata[0]
+    if (prevdata_ch[0] != str(exttemp) + newdata_ch[0]):
+      writelog(0,exttemp,0,0,newdata_ch[0])
+      prevdata_ch[0] = str(exttemp) + newdata_ch[0]
+    # write data to mm8d-ch[1-8].log
     for channel in range(1,9):
       if ena_ch[channel] == 1:
         if in_temperature[channel] + in_humidity[channel] + in_gasconcentrate[channel] > 0:
-          newdata[channel] = str(in_opmode[channel]) + \
+          newdata_ch[channel] = str(in_opmode[channel]) + \
                              str(in_swmanu[channel]) + \
                              str(in_ocprot[channel]) + \
                              str(in_alarm[channel]) + \
                              str(out_lamps[channel]) + \
                              str(out_vents[channel]) + \
                              str(out_heaters[channel])
-          if (prevdata[channel] != str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata[channel]):
-            writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata[channel])
-            prevdata[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata[channel]
+          if (prevdata_ch[channel] != str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]):
+            writelog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata_ch[channel])
+            prevdata_ch[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]
+    # send power supply data to display via serial port
+    writepowersupplydatatocomport()
+    delay(0.5)
     # send channels' data to display via serial port
     writechannelstatustocomport(loop)
     if loop == 8:
