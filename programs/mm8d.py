@@ -914,26 +914,9 @@ def closelocalports():
 # read remote MM10D device
 def readMM10Ddevice():
   rc = 0
-  # * * * Attention! These are device dependent values! * * *
-  #
-  # Used ModBUS registers of the DATCON DT510 device:
-  #
-  #   100  active power
-  #   101  reactive power
-  #   102  apparant power
-  #   103  effective voltage
-  #   104  effective current
-  #   105  power factor (cosFi)
-  #
-  modbus_fc = 3
-  modbus_reg = 100
-  modbus_regs = 6
-  #
-  # * * * Attention! These are device dependent values! * * *
   try:
     if pro_mm10d == HP:
-      url = "http://" + adr_mm10d + "/operation/?uid=" + str(uid_mm10d) + \
-            "&fc=" + str(modbus_fc) + "&reg=" + str(modbus_reg) + "&regs=" + str(modbus_regs)
+      url = "http://" + adr_mm10d + "/raw/"
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
@@ -955,6 +938,18 @@ def readMM10Ddevice():
       else:
         rc = 0
     else:
+      # Used registers of the DATCON DT510 device:
+      #   100  active power
+      #   101  reactive power
+      #   102  apparant power
+      #   103  effective voltage
+      #   104  effective current
+      #   105  power factor (cosFi)
+
+      modbus_fc = 3
+      modbus_reg = 100
+      modbus_regs = 6
+
       # The location of the ModBUS communication procedure, this will be
       # included in the next release. Its return value now indicates a
       # failed connection.
@@ -962,8 +957,9 @@ def readMM10Ddevice():
   except:
     rc = 0
   if rc > 0:
-    # * * * Attention! These are device dependent values! * * *
-    #
+    # current transformer ratio:
+    CT_RATIO = 10
+
     # Raw and real value pairs of the DATCON DT510 device:
     #
     #   P:     32767 = 3000 W
@@ -972,11 +968,7 @@ def readMM10Ddevice():
     #   U:     32767 = 367.7 V
     #   Irms:  32767 = 8.16 A
     #   cosFi: 32767 = 1.0000
-    #
-    # Ratio of the current transformer: 10:1
-    CT_RATIO = 10
-    #
-    # * * * Attention! These are device dependent values! * * *
+
     real_urms = str((raw_urms * 367.7) / 32767)
     real_irms = str((raw_irms * 8.16 * CT_RATIO) / 32767)
     real_cosfi = str((raw_cosfi * 1) / 32767)

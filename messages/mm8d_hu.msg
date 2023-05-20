@@ -79,6 +79,6 @@ msg71=Elektromos táplálás
 msg72=Effektív hálózati feszültség [V]
 msg73=Effektív hálózati áramerősség [A]
 msg74=Hatásos teljesítmény [W]
-msg75=Meddő teljesítmény [VAR]
+msg75=Meddő teljesítmény [VAr]
 msg76=Látszólagos teljesítmény [VA]
 msg77=cos &phi;
