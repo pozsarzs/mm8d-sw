@@ -17,7 +17,4 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
 **External libraries in package**
 
  - portio v0.5 by Fabrizio Pollastri (GNU GPL)
- - pyModbusTCP v0.2.1 by l.lefebvre (MIT)
-
-Note: It is prepared to use the ModBUS protocol,
-      but this will not be included until the next release.
+ - pyModbusTCP v0.1.10 by l.lefebvre (MIT)

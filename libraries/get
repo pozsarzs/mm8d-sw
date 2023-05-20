@@ -7,4 +7,5 @@
 # +----------------------------------------------------------------------------+
 
 wget http://portio.inrim.it/portio-0.5.tar.gz
-wget https://github.com/sourceperl/pyModbusTCP/archive/refs/heads/master.zip
+wget https://github.com/sourceperl/pyModbusTCP/archive/refs/tags/v0.1.10.tar.gz
+mv v0.1.10.tar.gz pyModbusTCP-0.1.10.tar.gz

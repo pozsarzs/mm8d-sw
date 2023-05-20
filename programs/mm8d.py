@@ -33,6 +33,7 @@ import requests
 import serial
 import sys
 import time
+from pyModbusTCP.client import ModbusClient
 from time import localtime, strftime
 
 # constants
@@ -946,14 +947,28 @@ def readMM10Ddevice():
       #   104  effective current
       #   105  power factor (cosFi)
 
-      modbus_fc = 3
-      modbus_reg = 100
-      modbus_regs = 6
-
-      # The location of the ModBUS communication procedure, this will be
-      # included in the next release. Its return value now indicates a
-      # failed connection.
-      rc = 0
+      MB_PORT = 502
+      mb_fc = 3
+      mb_reg = 100
+      mb_regs = 6
+      mbc = ModbusClient()
+      mbc.host(adr_mm10d)
+      mbc.port(MB_PORT)
+      if not mbc.is_open():
+        if not mbc.open():
+          rc = 0
+      if mbc.is_open():
+        # read 10 registers at address 0, store result in regs list
+        regs = mbc.read_holding_registers(100, 6)
+        # if success display registers
+        if regs:
+          raw_p = regs[0]
+          raw_q = regs[1]
+          raw_s = regs[2]
+          raw_urms = regs[3]
+          raw_irms = regs[4]
+          raw_cosfi = regs[5]
+      rc = 1
   except:
     rc = 0
   if rc > 0:
@@ -1374,9 +1389,9 @@ while True:
     writedebuglog("i","Read data from local I/O port.")
     if readlocalports():
       writedebuglog("i","- input data: " + str(unused_local_input) + \
-                                             str(waterpressurehigh) + \
-                                             str(waterpressurelow) + \
-                                             str(mainsbreakers) +".")
+                                           str(waterpressurehigh) + \
+                                           str(waterpressurelow) + \
+                                           str(mainsbreakers) +".")
     else:
       writedebuglog("w","Cannot read data from local I/O port.")
     # analise data
@@ -1401,13 +1416,13 @@ while True:
     writedebuglog("i","Write data to local I/O port.")
     if writelocalports():
       writedebuglog("i","- output data: " + str(led_waterpumperror) + \
-                                              str(led_error) + \
-                                              str(led_warning) + \
-                                              str(led_active) + \
-                                              str(relay_tube3) + \
-                                              str(relay_tube2) + \
-                                              str(relay_tube1) + \
-                                              str(relay_alarm) +".")
+                                            str(led_error) + \
+                                            str(led_warning) + \
+                                            str(led_active) + \
+                                            str(relay_tube3) + \
+                                            str(relay_tube2) + \
+                                            str(relay_tube1) + \
+                                            str(relay_alarm) +".")
     else:
       writedebuglog("w","Cannot write data to local I/O port.")
     # set outputs of MM6D
@@ -1464,8 +1479,8 @@ while True:
           writedebuglog("i","CH" + str(channel) + ": -> ventilators OFF")
     # write data to mm8d-supply.log
     newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi
-    if (prevdata_ps != newdata_ps:
-      writepowersupplydatatolog(newdata_ps])
+    if (prevdata_ps != newdata_ps):
+      writepowersupplydatatolog(newdata_ps)
       prevdata_ps = newdata_ps
     # write data to mm8d-ch0.log
     newdata_ch[0] = str(mainsbreakers) + \
@@ -1483,12 +1498,12 @@ while True:
       if ena_ch[channel] == 1:
         if in_temperature[channel] + in_humidity[channel] + in_gasconcentrate[channel] > 0:
           newdata_ch[channel] = str(in_opmode[channel]) + \
-                             str(in_swmanu[channel]) + \
-                             str(in_ocprot[channel]) + \
-                             str(in_alarm[channel]) + \
-                             str(out_lamps[channel]) + \
-                             str(out_vents[channel]) + \
-                             str(out_heaters[channel])
+                                str(in_swmanu[channel]) + \
+                                str(in_ocprot[channel]) + \
+                                str(in_alarm[channel]) + \
+                                str(out_lamps[channel]) + \
+                                str(out_vents[channel]) + \
+                                str(out_heaters[channel])
           if (prevdata_ch[channel] != str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]):
             writechannelstatustolog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata_ch[channel])
             prevdata_ch[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]
