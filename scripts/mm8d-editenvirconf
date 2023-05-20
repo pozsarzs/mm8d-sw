@@ -19,6 +19,7 @@
 #   2: specified value is not number
 #   3: wrong channel number
 
+# constants
 USRLOCALDIR="1"
 if [ $USRLOCALDIR -eq "1" ]
 then

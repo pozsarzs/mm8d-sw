@@ -75,8 +75,8 @@ Incoming (binary) data lines in Mode #3
     C:   status of heater output              0x00: off    0x01: on     0x02: always off 0x03: always on
 
 
-   0123456789ABCDEF
-  "PS.............."
+   0123456789ABCD
+  "PS............"
 
     0:   'P'                                  0x50
     1:   'S'                                  0x53
@@ -92,8 +92,6 @@ Incoming (binary) data lines in Mode #3
     B:   apparent power (raw data)           (0x00-0xFF) lower byte
     C:   cos phi (raw data)                  (0x00-0xFF) upper byte
     D:   cos phi (raw data)                  (0x00-0xFF) lower byte
-    E:   technical power factor (raw data)   (0x00-0xFF) upper byte
-    F:   technical power factor (raw data)   (0x00-0xFF) lower byte
 
 
 Example incoming (text) log lines in Mode #3

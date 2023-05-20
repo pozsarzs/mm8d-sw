@@ -17,6 +17,7 @@
 #   0: normal exit
 #   1: cannot open configuration file
 
+# constants
 USRLOCALDIR="1"
 if [ $USRLOCALDIR -eq "1" ]
 then

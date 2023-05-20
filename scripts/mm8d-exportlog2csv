@@ -20,6 +20,7 @@
 #   3: wrong channel number
 #   5: cannot open log file
 
+# constants
 S=","
 
 USRLOCALDIR="1"

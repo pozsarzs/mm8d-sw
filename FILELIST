@@ -84,7 +84,7 @@ packaging/web-all/postinst                      DONE
 packaging/web-all/prerm                         DONE
 programs/mm8d-hwtest.py                         DONE
 programs/mm8d-msctest.py                        DONE
-programs/mm8d.py
+programs/mm8d.py                                DONE
 scripts/mm8d-creatediagrams                     DONE
 scripts/mm8d-editenvirconf                      DONE
 scripts/mm8d-editmainconf                       DONE

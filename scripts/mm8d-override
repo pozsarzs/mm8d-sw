@@ -21,6 +21,7 @@
 #   7: wrong output state
 #   8: cannot write output file
 
+# constants
 USRLOCALDIR="1"
 if [ $USRLOCALDIR -eq "1" ]
 then

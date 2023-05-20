@@ -25,11 +25,12 @@ import sys
 import time
 from time import localtime, strftime
 
+# constants
 USRLOCALDIR = 1
 if (USRLOCALDIR == 1):
-  conffile = '/usr/local/etc/mm8d/mm8d.ini'
+  CONFFILE = '/usr/local/etc/mm8d/mm8d.ini'
 else:
-  conffile = '/etc/mm8d/mm8d.ini'
+  CONFFILE = '/etc/mm8d/mm8d.ini'
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):
@@ -110,7 +111,7 @@ def writechannelstatustocomport(channel):
 
 # send power supply's data to display via serial port
 def writepowersupplystatustocomport():
-  transmitbuffer = [0x00 for x in range(16)]
+  transmitbuffer = [0x00 for x in range(14)]
   line = ""
   if ena_console == "1":
     transmitbuffer[0x00] = ord("P")
@@ -133,10 +134,7 @@ def writepowersupplystatustocomport():
     c, f = divmod(cosfi, 1<<8)
     transmitbuffer[0x0C] = c
     transmitbuffer[0x0D] = f
-    c, f = divmod(tpf, 1<<8)
-    transmitbuffer[0x0E] = c
-    transmitbuffer[0x0F] = f
-    for x in range(0,15):
+    for x in range(0,13):
       line = line + chr(transmitbuffer[x])
     try:
       com.open
@@ -146,14 +144,14 @@ def writepowersupplystatustocomport():
       print("")
 
 # load configuration
-def loadconfiguration(conffile):
+def loadconfiguration(CONFFILE):
   global com
   global prt_com
   global com_speed
   global ena_console
   C = 'COMport'
   try:
-    with open(conffile) as f:
+    with open(CONFFILE) as f:
       mm8d_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mm8d_config))
@@ -195,7 +193,6 @@ global relay_tube1
 global relay_tube2
 global relay_tube3
 global s
-global tpf
 global urms
 global waterpressurehigh
 global waterpressurelow
@@ -230,8 +227,8 @@ waterpressurehigh = 0
 waterpressurelow = 0
 print("\nMM8D Mini serial console test utility * (C) 2020-2023 Pozsar Zsolt")
 print("--------------------------------------------------------------------")
-print(" * load configuration: %s..." % conffile)
-loadconfiguration(conffile)
+print(" * load configuration: %s..." % CONFFILE)
+loadconfiguration(CONFFILE)
 print(" * setting ports...")
 com = serial.Serial(prt_com, com_speed)
 
@@ -443,8 +440,7 @@ while True:
       print("   2: P                     ",p)
       print("   3: Q                     ",q)
       print("   4: S                     ",s)
-      print("   5: Cos Fi                ",cosfi)
-      print("   6: TPF                   ",tpf,"\n")
+      print("   5: Cos Fi                ",cosfi,"\n")
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
@@ -460,8 +456,6 @@ while True:
         s = int(input("Enter new value (0-32767): "))
       if submenuitem is "5":
         cosfi = int(input("Enter new value (0-32767): "))
-      if submenuitem is "6":
-        tpf = int(input("Enter new value (0-32767): "))
       if submenuitem is "x":
         writepowersupplystatustocomport()
       if submenuitem is "Q" or submenuitem is "q":
