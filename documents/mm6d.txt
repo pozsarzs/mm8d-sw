@@ -1,0 +1,51 @@
+Data access of the MM6D device
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++----------------------------------------------------------------------------+-----------------------------------------+
+|                                    HTTP                                    |                ModBUS                   |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+|           function           |        link                          |format|  coil | input |i. reg.|h. reg.|  type   |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| Information                                                                                                          |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| help page                    | http://.../                          | html |       |       |       |       |         |
+| log                          | http://.../log                       | html |       |       |       |       |         |
+| summary                      | http://.../summary                   | html |       |       |       |       |         |
+| version                      | http://.../version                   | txt  |       |       |       |       |         |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| Get data                                                                                                             |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| all status                   | http://.../get/all?uid=...           | txt  |       |       |       |       |         |
+| alarm status                 | http://.../get/alarm?uid=...         | txt  |       | 10001 |       |       |   bit   |
+| status of heater output      | http://.../get/heater?uid=...        | txt  |       | 10002 |       |       |   bit   |
+| status of lamp output        | http://.../get/lamp?uid=...          | txt  |       | 10003 |       |       |   bit   |
+| status of man. mode switches | http://.../get/manualswitch?uid=...  | txt  |       | 10004 |       |       |   bit   |
+| status of oc. protection     | http://.../get/protection?uid=...    | txt  |       | 10005 |       |       |   bit   |
+| status of op. mode switch    | http://.../get/operationmode?uid=... | txt  |       | 10006 |       |       |   bit   |
+| status of ventilator         | http://.../get/ventilator?uid=...    | txt  |       | 10007 |       |       |   bit   |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| Set data                                                                                                             |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| restore alarm                | http://.../set/alarm/off?uid=...     | txt  | 00001 |       |       |       |   bit   |
+| switch off all outputs       | http://.../set/all/off?uid=...       | txt  |       |       |       |       |         |
+| switch off heater            | http://.../set/heater/off?uid=...    | txt  | 00002 |       |       |       |   bit   |
+| switch off lamp              | http://.../set/lamp/off?uid=...      | txt  | 00003 |       |       |       |   bit   |
+| switch off ventilator        | http://.../set/ventilator/off?uid=...| txt  | 00004 |       |       |       |   bit   |
+| switch on heater             | http://.../set/heater/on?uid=...     | txt  | 00002 |       |       |       |   bit   |
+| switch on lamp               | http://.../set/lamp/on?uid=...       | txt  | 00003 |       |       |       |   bit   |
+| switch on ventilator         | http://.../set/ventilator/on?uid=... | txt  | 00004 |       |       |       |   bit   |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| Get and set data                                                                                                     |
++------------------------------+--------------------------------------+------+-------+-------+-------+-------+---------+
+| get all data and             | http://.../operation?uid=...&        | txt  |       |       |       |       |         |
+|   set status of outputs      |   a=0&h=0&l=0&v=0                    |  -   |   -   |   -   |   -   |   -   |    -    |
++---------------------------------------------------------------------+------+-------+-------+-------+-------+---------+
+
+Notes:
+  coils:             00001-09999   1 bit  read/write
+  discrete inputs:   10001-19999   1 bit  read only
+  input registers:   30001-29999  16 bit  read only
+  holding registers: 40001-39999  16 bit  read/write
+
+------------------------------------------------------------------------------------------------------------------------
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>

@@ -1,0 +1,56 @@
+Data access of the MM7D device
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++----------------------------------------------------------------------------+-----------------------------------------+
+|                                    HTTP                                    |                  ModBUS                 |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+|           function         |        link                            |format|  coil | input |i. reg.|h. reg.|  type   |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| Information                                                                                                          |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| log                        | http://.../log                         | html |       |       |       |       |         |
+| startpage                  | http://.../                            | html |       |       |       |       |         |
+| summary                    | http://.../summary                     | html |       |       |       |       |         |
+| version                    | http://.../version                     | txt  |       |       |       |       |         |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| Set operation mode                                                                                                   |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| automatic mode             | http://.../mode/auto?uid=...           | txt  | 00004 |       |       |       |   bit   |
+| manual mode                | http://.../mode/manual?uid=...         | txt  | 00004 |       |       |       |   bit   |
+| get operation mode         | http://.../mode/?uid=...               | txt  |       | 10004 |       |       |   bit   |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| Get data                                                                                                             |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| all measured data          | http://.../get/all?uid=...             | txt  |       |       |       |       |         |
+| status of green LED        | http://.../get/greenled?uid=...        | txt  |       | 10001 |       |       |   bit   |
+| relative humidity [%]      | http://.../get/humidity?uid=...        | txt  |       |       | 30001 |       | integer |
+| status of red LED          | http://.../get/redled?uid=...          | txt  |       | 10002 |       |       |   bit   |
+| temperature in [°C]        | http://.../get/temperature?uid=...     | txt  |       |       | 30002 |       | integer |
+| relative gas level [%]     | http://.../get/unwantedgaslevel?uid=...| txt  |       |       | 30003 |       | integer |
+| status of yellow LED       | http://.../get/yellowled?uid=...       | txt  |       | 10003 |       |       |   bit   |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| Set data                                                                                                             |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| switch off all LEDs        | http://.../set/all/off?uid=...         | txt  |       |       |       |       |         |
+| switch off green LED       | http://.../set/greenled/off?uid=...    | txt  | 00001 |       |       |       |   bit   |
+| switch off red LED         | http://.../set/redled/off?uid=...      | txt  | 00002 |       |       |       |   bit   |
+| switch off yellow LED      | http://.../set/yellowled/off?uid=...   | txt  | 00003 |       |       |       |   bit   |
+| switch on green LED        | http://.../set/greenled/on?uid=...     | txt  | 00001 |       |       |       |   bit   |
+| switch on red LED          | http://.../set/redled/on?uid=...       | txt  | 00002 |       |       |       |   bit   |
+| switch on yellow LED       | http://.../set/yellowled/on?uid=...    | txt  | 00003 |       |       |       |   bit   |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| Get and set data                                                                                                     |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+| Get all measured data and  | http://.../operation?uid=...&g=20&     | txt  |       |       |       |       |         |
+|   set limit values         | h1=65&h2=70&h3=80&h4=85&t1=13&t2=150&  |  -   |   -   |   -   |   -   |   -   |    -    |
+|                            | t3=20&t4=22                            |  -   |   -   |   -   |   -   |   -   |    -    |
++----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
+
+Notes:
+  coils:             00001-09999   1 bit  read/write
+  discrete inputs:   10001-19999   1 bit  read only
+  input registers:   30001-29999  16 bit  read only
+  holding registers: 40001-39999  16 bit  read/write
+
+------------------------------------------------------------------------------------------------------------------------
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
