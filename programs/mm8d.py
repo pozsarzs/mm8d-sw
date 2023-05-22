@@ -63,6 +63,7 @@ global EOL
 global LPTADDRESSES
 EOL = "\r"
 LPTADDRESSES = [0x378,0x278,0x3bc]
+MB_PORT = 502
 
 # add a zero char
 def addzero(num):
@@ -110,7 +111,7 @@ def writedebuglogtocomport(level,text):
       com.close
       time.sleep(0.1)
     except:
-      print("COM!")
+      print("")
 
 # send power supply data to serial console
 def writepowersupplydatatocomport():
@@ -915,6 +916,7 @@ def closelocalports():
 # read remote MM10D device
 def readMM10Ddevice():
   rc = 0
+  # See documents/mmd10.txt for URLs and ModBUS registers.
   try:
     if pro_mm10d == HP:
       url = "http://" + adr_mm10d + "/raw/"
@@ -939,17 +941,8 @@ def readMM10Ddevice():
       else:
         rc = 0
     else:
-      # Used registers of the DATCON DT510 device:
-      #   100  active power
-      #   101  reactive power
-      #   102  apparant power
-      #   103  effective voltage
-      #   104  effective current
-      #   105  power factor (cosFi)
-
-      MB_PORT = 502
       mb_fc = 3
-      mb_reg = 100
+      mb_reg = 0
       mb_regs = 6
       mbc = ModbusClient()
       mbc.host(adr_mm10d)
@@ -959,7 +952,7 @@ def readMM10Ddevice():
           rc = 0
       if mbc.is_open():
         # read 10 registers at address 0, store result in regs list
-        regs = mbc.read_holding_registers(100, 6)
+        regs = mbc.read_holding_registers(mb_reg, mb_regs)
         # if success display registers
         if regs:
           raw_p = regs[0]
@@ -974,16 +967,7 @@ def readMM10Ddevice():
   if rc > 0:
     # current transformer ratio:
     CT_RATIO = 10
-
-    # Raw and real value pairs of the DATCON DT510 device:
-    #
-    #   P:     32767 = 3000 W
-    #   Q:     32767 = 3000 VAr
-    #   S:     32767 = 3000 VA
-    #   U:     32767 = 367.7 V
-    #   Irms:  32767 = 8.16 A
-    #   cosFi: 32767 = 1.0000
-
+    # See documents/mmd10.txt for real and raw value pairs.
     real_urms = str((raw_urms * 367.7) / 32767)
     real_irms = str((raw_irms * 8.16 * CT_RATIO) / 32767)
     real_cosfi = str((raw_cosfi * 1) / 32767)
@@ -1026,9 +1010,8 @@ def readwriteMM7Ddevice(channel):
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure, this will be
-      # included in the next release. Its return value now indicates a
-      # failed connection.
+      # The location of the ModBUS communication procedure.
+      # This will be included if the slave device supports the ModBUS protocol.
       rc = 0
   except:
     rc = 0
@@ -1046,9 +1029,8 @@ def setautomodeMM7Ddevice(channel):
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure, this will be
-      # included in the next release. Its return value now indicates a
-      # failed connection.
+      # The location of the ModBUS communication procedure.
+      # This will be included if the slave device supports the ModBUS protocol.
       rc = 0
   except:
     rc = 0
@@ -1078,9 +1060,8 @@ def readwriteMM6Ddevice(channel):
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure, this will be
-      # included in the next release. Its return value now indicates a
-      # failed connection.
+      # The location of the ModBUS communication procedure.
+      # This will be included if the slave device supports the ModBUS protocol.
       rc = 0
   except:
     rc = 0
@@ -1098,9 +1079,8 @@ def resetMM6Ddevice(channel):
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure, this will be
-      # included in the next release. Its return value now indicates a
-      # failed connection.
+      # The location of the ModBUS communication procedure.
+      # This will be included if the slave device supports the ModBUS protocol.
       rc = 0
   except:
     rc = 0
@@ -1118,9 +1098,8 @@ def restoreMM6Dalarm(channel):
       else:
         rc=0
     else:
-      # The location of the ModBUS communication procedure, this will be
-      # included in the next release. Its return value now indicates a
-      # failed connection.
+      # The location of the ModBUS communication procedure.
+      # This will be included if the slave device supports the ModBUS protocol.
       rc = 0
   except:
       rc=0
@@ -1136,12 +1115,16 @@ def getcontrollerversion(conttype,channel):
   if conttype == 6:
     protocol = pro_mm6dch[channel]
     url = "http://" + adr_mm6dch[channel] + "/version"
+    mbc.host(adr_mm6dch[channel])
   if conttype == 7:
     protocol = pro_mm7dch[channel]
     url = "http://" + adr_mm7dch[channel] + "/version"
+    mbc.host(adr_mm7dch[channel])
   if conttype == 10:
     protocol = pro_mm10d
     url = "http://" + adr_mm10 + "/version"
+    mbc.host(adr_mm10d)
+  # See documents/mmd10.txt for URLs and ModBUS registers.
   try:
     if protocol == HP:
       r = requests.get(url,timeout = 3)
@@ -1157,10 +1140,20 @@ def getcontrollerversion(conttype,channel):
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure, this will be
-      # included in the next release. Its return value now indicates a
-      # failed connection.
-      rc = 0
+      mb_fc = 3
+      mb_reg = 9997
+      mb_regs = 2
+      mbc = ModbusClient()
+      mbc.port(MB_PORT)
+      if not mbc.is_open():
+        if not mbc.open():
+          rc = 0
+      if mbc.is_open():
+        regs = mbc.read_holding_registers(mb_reg, mb_regs)
+        if regs:
+          mv = regs[0]
+          sv = regs[1]
+      rc = 1
   except:
     rc = 0
   return rc

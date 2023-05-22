@@ -1,6 +1,8 @@
 Data access of the MM7D device
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The device does not yet support the ModBUS protocol, the table contains the planned register allocation.
+
 +----------------------------------------------------------------------------+-----------------------------------------+
 |                                    HTTP                                    |                  ModBUS                 |
 +----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
@@ -12,6 +14,8 @@ Data access of the MM7D device
 | startpage                  | http://.../                            | html |       |       |       |       |         |
 | summary                    | http://.../summary                     | html |       |       |       |       |         |
 | version                    | http://.../version                     | txt  |       |       |       |       |         |
+| version                    | http://.../version                     | txt  |       |       | 39998*|       | integer |
+|                            |          -                             |  -   |       |       | 39999*|       | integer |
 +----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
 | Set operation mode                                                                                                   |
 +----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
@@ -47,10 +51,11 @@ Data access of the MM7D device
 +----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
 
 Notes:
-  coils:             00001-09999   1 bit  read/write
+- coils:             00001-09999   1 bit  read/write
   discrete inputs:   10001-19999   1 bit  read only
-  input registers:   30001-29999  16 bit  read only
+  input registers:   30001-39999  16 bit  read only
   holding registers: 40001-39999  16 bit  read/write
+* 39998: main version, 39999: sub version
 
 ------------------------------------------------------------------------------------------------------------------------
   MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
