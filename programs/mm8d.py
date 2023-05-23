@@ -111,7 +111,7 @@ def writedebuglogtocomport(level,text):
       com.close
       time.sleep(0.1)
     except:
-      print("")
+      print("writedebuglogtocomport")
 
 # send power supply data to serial console
 def writepowersupplydatatocomport():
@@ -146,7 +146,7 @@ def writepowersupplydatatocomport():
       com.close
       time.sleep(0.1)
     except:
-      print("")
+      print("writepowersupplydatatocomport")
 
 # send channels' data to serial console
 def writechannelstatustocomport(channel):
@@ -218,7 +218,7 @@ def writechannelstatustocomport(channel):
       com.close
       time.sleep(0.1)
     except:
-      print("")
+      print("writechannelstatustocomport")
 
 # load configuration
 def loadconfiguration(conffile):
@@ -235,7 +235,7 @@ def loadconfiguration(conffile):
   global dir_var
   global ena_ch
   global ena_console
-  global ena_mmd10
+  global ena_mm10d
   global lockfile
   global logfile
   global pro_mm10d
@@ -344,16 +344,16 @@ def loadconfiguration(conffile):
       uid_mm6dch[i] = config.get(M6,'uid_mm6dch' + str(i))
       uid_mm7dch[i] = config.get(M7,'uid_mm7dch' + str(i))
     # enable/disable handling (0/1)
-    ena_mm10d = '0'
-    ena_mm10d = int(config.get(M10,'ena_mmd10'))
+    ena_mm10d = 0
+    ena_mm10d = int(config.get(M10,'ena_mm10d'))
     # protocol (http/modbus)
     pro_mm10d = HP
     pro_mm10d = config.get(M10,'pro_mm10d')
     # IP address
-    adr_mm10d = 0
+    adr_mm10d = "0"
     adr_mm10d = config.get(M10,'adr_mm10d')
     # ModBUS unitID
-    uid_mm10d = 0
+    uid_mm10d = "0"
     uid_mm10d = config.get(M10,'uid_mm10d')
     writedebuglog("i","Configuration is loaded.")
   except:
@@ -944,15 +944,15 @@ def readMM10Ddevice():
       mb_fc = 3
       mb_reg = 0
       mb_regs = 6
-      mbc = ModbusClient()
-      mbc.host(adr_mm10d)
-      mbc.port(MB_PORT)
-      if not mbc.is_open():
-        if not mbc.open():
+      mb_client = ModbusClient()
+      mb_client.host(adr_mm10d)
+      mb_client.port(MB_PORT)
+      if not mb_client.is_open():
+        if not mb_client.open():
           rc = 0
-      if mbc.is_open():
+      if mb_client.is_open():
         # read 10 registers at address 0, store result in regs list
-        regs = mbc.read_holding_registers(mb_reg, mb_regs)
+        regs = mb_client.read_holding_registers(mb_reg, mb_regs)
         # if success display registers
         if regs:
           raw_p = regs[0]
@@ -1114,18 +1114,18 @@ def getcontrollerversion(conttype,channel):
   rc = 0
   if conttype == 6:
     protocol = pro_mm6dch[channel]
-    url = "http://" + adr_mm6dch[channel] + "/version"
-    mbc.host(adr_mm6dch[channel])
   if conttype == 7:
     protocol = pro_mm7dch[channel]
-    url = "http://" + adr_mm7dch[channel] + "/version"
-    mbc.host(adr_mm7dch[channel])
   if conttype == 10:
     protocol = pro_mm10d
-    url = "http://" + adr_mm10 + "/version"
-    mbc.host(adr_mm10d)
   # See documents/mmd10.txt for URLs and ModBUS registers.
   try:
+    if conttype == 6:
+      url = "http://" + adr_mm6dch[channel] + "/version"
+    if conttype == 7:
+      url = "http://" + adr_mm7dch[channel] + "/version"
+    if conttype == 10:
+      url = "http://" + adr_mm10 + "/version"
     if protocol == HP:
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
@@ -1138,18 +1138,24 @@ def getcontrollerversion(conttype,channel):
             sv = int(line[2])
             break
       else:
-        rc = 0
+          rc = 0
     else:
+      mb_client = ModbusClient()
+      if conttype == 6:
+        mb_client.host(adr_mm6dch[channel])
+      if conttype == 7:
+        mb_client.host(adr_mm7dch[channel])
+      if conttype == 10:
+        mb_client.host(adr_mm10d)
       mb_fc = 3
       mb_reg = 9997
       mb_regs = 2
-      mbc = ModbusClient()
-      mbc.port(MB_PORT)
-      if not mbc.is_open():
-        if not mbc.open():
+      mb_client.port(MB_PORT)
+      if not mb_client.is_open():
+        if not mb_client.open():
           rc = 0
-      if mbc.is_open():
-        regs = mbc.read_holding_registers(mb_reg, mb_regs)
+      if mb_client.is_open():
+        regs = mb_client.read_holding_registers(mb_reg, mb_regs)
         if regs:
           mv = regs[0]
           sv = regs[1]

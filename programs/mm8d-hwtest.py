@@ -37,7 +37,7 @@ else:
 
 USRLOCALDIR = 1
 if (USRLOCALDIR == 1):
-  conffile = '/usr/local/etc/mm8d/mm8d.ini'
+  CONFFILE = '/usr/local/etc/mm8d/mm8d.ini'
 else:
   CONFFILE = '/etc/mm8d/mm8d.ini'
 
@@ -72,6 +72,8 @@ def loadconfiguration(CONFFILE):
   try:
     with open(CONFFILE) as f:
       mm8d_config = f.read()
+    config = configparser.RawConfigParser(allow_no_value=True)
+    config.read_file(io.StringIO(mm8d_config))
     # number of the used GPIO ports
     if HW == 0:
       prt_i1 = int(config.get(G,'prt_i1'))
@@ -91,8 +93,6 @@ def loadconfiguration(CONFFILE):
       prt_lpt = int(config.get(L,'prt_lpt'))
       if (prt_lpt < 0) or (prt_lpt > 2):
         prt_lpt = 0
-    config = configparser.RawConfigParser(allow_no_value=True)
-    config.read_file(io.StringIO(mm8d_config))
     # port name
     prt_com = config.get(C,'prt_com')
     # port speed

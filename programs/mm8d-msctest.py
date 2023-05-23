@@ -116,22 +116,22 @@ def writepowersupplystatustocomport():
   if ena_console == "1":
     transmitbuffer[0x00] = ord("P")
     transmitbuffer[0x01] = ord("S")
-    c, f = divmod(urms, 1<<8)
+    c, f = divmod(raw_urms, 1<<8)
     transmitbuffer[0x02] = c
     transmitbuffer[0x03] = f
-    c, f = divmod(irms, 1<<8)
+    c, f = divmod(raw_irms, 1<<8)
     transmitbuffer[0x04] = c
     transmitbuffer[0x05] = f
-    c, f = divmod(p, 1<<8)
+    c, f = divmod(raw_p, 1<<8)
     transmitbuffer[0x06] = c
     transmitbuffer[0x07] = f
-    c, f = divmod(q, 1<<8)
+    c, f = divmod(raw_q, 1<<8)
     transmitbuffer[0x08] = c
     transmitbuffer[0x09] = f
-    c, f = divmod(s, 1<<8)
+    c, f = divmod(raw_s, 1<<8)
     transmitbuffer[0x0A] = c
     transmitbuffer[0x0B] = f
-    c, f = divmod(cosfi, 1<<8)
+    c, f = divmod(raw_cosfi, 1<<8)
     transmitbuffer[0x0C] = c
     transmitbuffer[0x0D] = f
     for x in range(0,13):
@@ -169,7 +169,6 @@ def loadconfiguration(CONFFILE):
 
 # main function
 global channel
-global cosfi
 global ena_ch
 global eol
 global exttemp
@@ -180,24 +179,24 @@ global in_ocprot
 global in_opmode
 global in_swmanu
 global in_temperature
-global irms
 global mainsbreakers
 global out_heaters
 global out_lamps
 global out_vents
 global override
 global ovrstatus
-global p
-global q
+global raw_cosfi
+global raw_irms
+global raw_p
+global raw_q
+global raw_s
+global raw_urms
 global relay_tube1
 global relay_tube2
 global relay_tube3
-global s
-global urms
 global waterpressurehigh
 global waterpressurelow
 channel = 0
-cosfi = 0
 ena_ch = [1 for channel in range(9)]
 eol = "\r"
 exttemp = 23
@@ -208,21 +207,21 @@ in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
 in_swmanu = [0 for channel in range(9)]
 in_temperature = [18 for channel in range(9)]
-irms = 0
 mainsbreakers = 0
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 override = [[0 for x in range(3)] for x in range(9)]
 ovrstatus = ["neutral","off","on"]
-p = 0
-q = 0
+raw_cosfi = 0
+raw_irms = 0
+raw_p = 0
+raw_q = 0
+raw_s = 0
+raw_urms = 0
 relay_tube1 = 0
 relay_tube2 = 0
 relay_tube3 = 0
-s = 0
-tpf = 0
-urms = 0
 waterpressurehigh = 0
 waterpressurelow = 0
 print("\nMM8D Mini serial console test utility * (C) 2020-2023 Pozsar Zsolt")
@@ -435,27 +434,27 @@ while True:
     channel = 1
     while True:
       print(" * Set power raw power supply data")
-      print("   0: Urms                  ",urms)
-      print("   1: Irms                  ",irms)
-      print("   2: P                     ",p)
-      print("   3: Q                     ",q)
-      print("   4: S                     ",s)
-      print("   5: Cos Fi                ",cosfi,"\n")
+      print("   0: Urms                  ",raw_urms)
+      print("   1: Irms                  ",raw_irms)
+      print("   2: P                     ",raw_p)
+      print("   3: Q                     ",raw_q)
+      print("   4: S                     ",raw_s)
+      print("   5: Cos Fi                ",raw_cosfi,"\n")
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
       if submenuitem is "0":
-        urms = int(input("Enter new value (0-32767): "))
+        raw_urms = int(input("Enter new value (0-32767): "))
       if submenuitem is "1":
-        irms = int(input("Enter new value (0-32767): "))
+        raw_irms = int(input("Enter new value (0-32767): "))
       if submenuitem is "2":
-        p = int(input("Enter new value (0-32767): "))
+        raw_p = int(input("Enter new value (0-32767): "))
       if submenuitem is "3":
-        q = int(input("Enter new value (0-32767): "))
+        raw_q = int(input("Enter new value (0-32767): "))
       if submenuitem is "4":
-        s = int(input("Enter new value (0-32767): "))
+        raw_s = int(input("Enter new value (0-32767): "))
       if submenuitem is "5":
-        cosfi = int(input("Enter new value (0-32767): "))
+        raw_cosfi = int(input("Enter new value (0-32767): "))
       if submenuitem is "x":
         writepowersupplystatustocomport()
       if submenuitem is "Q" or submenuitem is "q":
