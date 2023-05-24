@@ -916,7 +916,7 @@ def closelocalports():
 # read remote MM10D device
 def readMM10Ddevice():
   rc = 0
-  # See documents/mmd10.txt for URLs and ModBUS registers.
+  # See documents/mm10d.txt for URLs and ModBUS registers.
   try:
     if pro_mm10d == HP:
       url = "http://" + adr_mm10d + "/raw/"
@@ -967,7 +967,7 @@ def readMM10Ddevice():
   if rc > 0:
     # current transformer ratio:
     CT_RATIO = 10
-    # See documents/mmd10.txt for real and raw value pairs.
+    # See documents/mm10d.txt for real and raw value pairs.
     real_urms = str((raw_urms * 367.7) / 32767)
     real_irms = str((raw_irms * 8.16 * CT_RATIO) / 32767)
     real_cosfi = str((raw_cosfi * 1) / 32767)
@@ -1088,21 +1088,21 @@ def resetMM6Ddevice(channel):
 
 # restore alarm input of remote MM6D device
 def restoreMM6Dalarm(channel):
-  rc=0
+  rc = 0
   try:
     if pro_mm6dch[channel] == HP:
-      url="http://"+adr_mm6dch[channel]+"/set/alarm/off?uid="+usr_uid
+      url = "http://" + adr_mm6dch[channel] + "/set/alarm/off?uid=" + usr_uid
       r=requests.get(url,timeout=3)
-      if (r.status_code==200):
-        rc=1
+      if (r.status_code == 200):
+        rc = 1
       else:
-        rc=0
+        rc = 0
     else:
       # The location of the ModBUS communication procedure.
       # This will be included if the slave device supports the ModBUS protocol.
       rc = 0
   except:
-      rc=0
+      rc = 0
   return rc
 
 # get version of remote MM6D, MM7D and MM10D device
@@ -1118,14 +1118,14 @@ def getcontrollerversion(conttype,channel):
     protocol = pro_mm7dch[channel]
   if conttype == 10:
     protocol = pro_mm10d
-  # See documents/mmd10.txt for URLs and ModBUS registers.
+  # See documents/mm10d.txt for URLs and ModBUS registers.
   try:
     if conttype == 6:
       url = "http://" + adr_mm6dch[channel] + "/version"
     if conttype == 7:
       url = "http://" + adr_mm7dch[channel] + "/version"
     if conttype == 10:
-      url = "http://" + adr_mm10 + "/version"
+      url = "http://" + adr_mm10d + "/version"
     if protocol == HP:
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
@@ -1139,6 +1139,8 @@ def getcontrollerversion(conttype,channel):
             break
       else:
           rc = 0
+      print(mv)
+      print(sv)
     else:
       mb_client = ModbusClient()
       if conttype == 6:
@@ -1348,9 +1350,9 @@ for channel in range(1,9):
     else:
       ena_ch[channel] = 0;
       writedebuglog("w","CH"+ str(channel) +": MM7D is not accessible.")
-if ena_mm10d > 0:
+if ena_mm10d == 1:
   if getcontrollerversion(10,1):
-    if (mv * 10 + sv) < (COMPMV6 * 10 + COMPSV6):
+    if (mv * 10 + sv) < (COMPMV10 * 10 + COMPSV10):
       ena_mm10d = 0;
       writedebuglog("w","Version of MM10D is not compatible.")
   else:
@@ -1477,10 +1479,11 @@ while True:
         else:
           writedebuglog("i","CH" + str(channel) + ": -> ventilators OFF")
     # write data to mm8d-supply.log
-    newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi
-    if (prevdata_ps != newdata_ps):
-      writepowersupplydatatolog(newdata_ps)
-      prevdata_ps = newdata_ps
+    if ena_mm10d == 1:
+      newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi
+      if (prevdata_ps != newdata_ps):
+        writepowersupplydatatolog(newdata_ps)
+        prevdata_ps = newdata_ps
     # write data to mm8d-ch0.log
     newdata_ch[0] = str(mainsbreakers) + \
                     str(waterpressurelow) + \
@@ -1507,7 +1510,8 @@ while True:
             writechannelstatustolog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata_ch[channel])
             prevdata_ch[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]
     # send power supply data to display via serial port
-    writepowersupplydatatocomport()
+    if ena_mm10d == 1:
+      writepowersupplydatatocomport()
     # send channels' data to display via serial port
     writechannelstatustocomport(loop)
     if loop == 8:

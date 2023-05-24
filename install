@@ -141,7 +141,8 @@ sudo rm --force /var/www/html/diagrams/* 2> /dev/null
 sudo chown root:www-data /var/www/html
 sudo chown root:www-data /var/www/html/snapshots
 sudo chown root:www-data /var/www/html/diagrams
-sudo chmod 775 /var/www/html/diagrams
+sudo chmod 777 /var/www/html/diagrams
+sudo chmod 777 /var/www/html/snapshots
 sudo chmod 775 /var/www/html/pics
 sudo chmod 777 /var/$INSTDIR/lib/$SWN2
 echo "- copying files:"

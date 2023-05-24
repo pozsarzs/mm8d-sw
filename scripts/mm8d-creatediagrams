@@ -148,7 +148,7 @@ EOF
     fi
   fi
   # channel #0
-  if [ $CHANNEL == 0 ]
+  if [ $CHANNEL -eq 0 ]
   then
     LOGFILE=$DIR_LOG"/mm8d-ch"$CHANNEL".log"
     # external temperature
@@ -178,7 +178,7 @@ EOF
     fi
   fi
   # channel #1-8
-  if [ $CHANNEL -ge 0 ]
+  if [ $CHANNEL -ge 1 ]
   then
     LOGFILE=$DIR_LOG"/mm8d-ch"$CHANNEL".log"
     # internal temperature

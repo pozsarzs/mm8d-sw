@@ -46,6 +46,7 @@ loadconfiguration()
   ENA_CH6=`cat $CFGFILE | grep ena_ch6= | sed 's/ena_ch6=//'`
   ENA_CH7=`cat $CFGFILE | grep ena_ch7= | sed 's/ena_ch7=//'`
   ENA_CH8=`cat $CFGFILE | grep ena_ch8= | sed 's/ena_ch8=//'`
+  ENA_MM10D=`cat $CFGFILE | grep ena_mm10d= | sed 's/ena_mm10d=//'`
   NAM_CH0=`cat $CFGFILE | grep nam_ch0= | sed 's/nam_ch0=//'`
   NAM_CH1=`cat $CFGFILE | grep nam_ch1= | sed 's/nam_ch1=//'`
   NAM_CH2=`cat $CFGFILE | grep nam_ch2= | sed 's/nam_ch2=//'`
@@ -119,7 +120,14 @@ makehomepage()
         <tr>
           <td colspan="2"><b>$MSG71</b></td>
           <td align="right">
-            <a href="cgi-bin/getsupply.cgi"><button type="button">$MSG09</button></a>
+EOF
+  if [ $ENA_MM10D == 1 ]
+    then
+      echo "<a href=\"cgi-bin/getsupply.cgi\"><button type=\"button\">$MSG09</button></a>">> $DIR_TMP/index.html
+    else
+      echo "<a href=\"cgi-bin/getsupply.cgi\"><button type=\"button\" disabled>$MSG09</button></a>">> $DIR_TMP/index.html
+    fi
+  cat >> "$DIR_TMP/index.html" << EOF
           </td>
         </tr>
         <tr><td colspan="3">&nbsp;</td></tr>
