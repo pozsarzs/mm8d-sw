@@ -17,7 +17,6 @@ Data access of the MM10D device
 | Get data                                                                                       |
 +------------------------+----------------------+------+-------+-------+-------+-------+---------+
 | all raw data           | http://.../raw/all   | txt  |       |       |       |       |         |
-| all real data          | http://.../get/all   | txt  |       |       |       |       |         |
 | raw cosFi 32767=1      | http://.../raw/cosfi | txt  |       |       | 30006 |       | integer |
 | raw Irms 32767=81.6 A  | http://.../raw/irms  | txt  |       |       | 30005 |       | integer |
 | raw P 32767=30 kW      | http://.../raw/p     | txt  |       |       | 30001 |       | integer |
@@ -25,6 +24,7 @@ Data access of the MM10D device
 | raw S 32767=30 kVA     | http://.../raw/s     | txt  |       |       | 30003 |       | integer |
 | raw TPF 32767=1.0000   | http://.../raw/tpf   | txt  |       |       | 30007 |       | integer |
 | raw Urms 32767=367.7 V | http://.../raw/urms  | txt  |       |       | 30004 |       | integer |
+| all real data          | http://.../get/all   | txt  |       |       |       |       |         |
 | real cosFi             | http://.../get/cosfi | txt  |       |       |       |       |         |
 | real Irms [V]          | http://.../get/irms  | txt  |       |       |       |       |         |
 | real P [W]             | http://.../get/p     | txt  |       |       |       |       |         |

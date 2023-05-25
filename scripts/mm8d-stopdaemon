@@ -3,7 +3,7 @@
 # | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
 # | mm8d-stopdaemon                                                            |
-# | Edit configuration file                                                    |
+# | Stop daemon                                                                |
 # +----------------------------------------------------------------------------+
 
 #   This program is free software: you can redistribute it and/or modify it

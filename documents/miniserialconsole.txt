@@ -88,8 +88,8 @@ Incoming (binary) data lines in Mode #3
     7:   active power (raw data)             (0x00-0xFF) lower byte
     8:   reactive power (raw data)           (0x00-0xFF) upper byte
     9:   reactive power (raw data)           (0x00-0xFF) lower byte
-    A:   apparent power (raw data)           (0x00-0xFF) upper byte
-    B:   apparent power (raw data)           (0x00-0xFF) lower byte
+    A:   apparant power (raw data)           (0x00-0xFF) upper byte
+    B:   apparant power (raw data)           (0x00-0xFF) lower byte
     C:   cos phi (raw data)                  (0x00-0xFF) upper byte
     D:   cos phi (raw data)                  (0x00-0xFF) lower byte
 
