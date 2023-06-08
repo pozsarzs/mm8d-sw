@@ -39,6 +39,7 @@ loadconfiguration()
   CAM_SC2=`cat $CFGFILE | grep cam_sc2= | sed 's/cam_sc2=//'`
   CAM_SC3=`cat $CFGFILE | grep cam_sc3= | sed 's/cam_sc3=//'`
   CAM_SC4=`cat $CFGFILE | grep cam_sc4= | sed 's/cam_sc4=//'`
+  CAM_SC5=`cat $CFGFILE | grep cam_sc5= | sed 's/cam_sc5=//'`
   DIR_HTM=`cat $CFGFILE | grep dir_htm= | sed 's/dir_htm=//'`
 }
 
@@ -62,7 +63,7 @@ getsnapshots()
 
 loadconfiguration
 
-for i in {1..4}
+for i in {1..5}
 do
   getsnapshots $i
 done

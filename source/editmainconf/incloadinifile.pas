@@ -71,7 +71,8 @@ begin
     city_name:=iif.ReadString(W,'city_name','');
     day_log:=strtoint(iif.ReadString(O,'day_log','7'));
     dbg_log:=strtoint(iif.ReadString(O,'dbg_log','0'));
-    ena_cameras:=strtoint(iif.ReadString(I,'ena_cameras','0'));
+    ena_seccams:=strtoint(iif.ReadString(I,'ena_seccams','0'));
+    ena_tentcams:=strtoint(iif.ReadString(I,'ena_tentcams','0'));
     ena_mm10d:=strtoint(iif.ReadString(M10,'ena_mm10d','1'));
     lng:=iif.ReadString('language','lng','en');
     pro_mm10d:=iif.ReadString(M10,'pro_mm10d','http');

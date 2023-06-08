@@ -16,9 +16,10 @@
   Relevant settings file section:
 
   [IPcamera]
-  ena_cameras=0
-  cam_ch?=http://camera11.lan/snapshot.cgi?user=username&pwd=password
-  cam_sc?=http://camera01.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+  ena_tentcams=0
+  ena_seccams=0
+  cam_ch?=http://camera-tc1.lan/snapshot.cgi?user=username&pwd=password
+  cam_sc?=http://camera-sc1.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
 }
 
 // write options to screen
@@ -33,21 +34,23 @@ begin
     gotoxy(4,b+2);
     write('Channel #'+inttostr(b)+':');
   end;
-  for b:=1 to 4 do
+  for b:=1 to 5 do
   begin
     gotoxy(4,b+13);
     write('Security camera #'+inttostr(b)+':');
   end;
-  gotoxy(4,12); write('Show camera snapshots:');
+  gotoxy(4,12); write('Show tent camera snapshots:');
+  gotoxy(4,20); write('Show security camera snapshots:');
   for b:=1 to 8 do
   begin
     gotoxy(MINPOSX[12,1],b+2);
     writeln(cam_ch[b]);
   end;
-  gotoxy(MINPOSX[12,2],12); writeln(ena_cameras);
-  for b:=1 to 4 do
+  gotoxy(MINPOSX[12,2],12); writeln(ena_tentcams);
+  for b:=1 to 5 do
   begin
     gotoxy(MINPOSX[12,3],b+13);
     writeln(cam_sc[b]);
   end;
+  gotoxy(MINPOSX[12,2],20); writeln(ena_tentcams);
 end;

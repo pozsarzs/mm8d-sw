@@ -170,12 +170,13 @@ begin
     writeln(iif,'');
     writeln(iif,'['+I+']');
     writeln(iif,'; show tent camera on the webpage of channel (0/1)');
-    writeln(iif,'ena_cameras='+inttostr(ena_cameras));
+    writeln(iif,'ena_tentcams='+inttostr(ena_tentcams));
     writeln(iif,'; snapshot url of the tent cameras');
     for b:=1 to 8 do
       writeln(iif,'cam_ch'+inttostr(b)+'='+cam_ch[b]);
     writeln(iif,'; snapshot url of the security cameras');
-    for b:=1 to 4 do
+    writeln(iif,'ena_seccams='+inttostr(ena_seccams));
+    for b:=1 to 5 do
       writeln(iif,'cam_sc'+inttostr(b)+'='+cam_sc[b]);
     close(iif);
   except

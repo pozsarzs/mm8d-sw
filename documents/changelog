@@ -8,6 +8,7 @@
   * Export log file to CSV.
   * Take and display security camera snapshots on the web interface (this is not the marquee camera on the channel side).
   * ModBUS/TCP support.
+  * Cannot exits without active channels.
 
  -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  XXX, 00 May 2023 00:00:00
 

@@ -164,7 +164,7 @@ if ($channel eq '')
 }
 
 # load configuration
-my $ena_cameras;
+my $ena_tentcams;
 my $dir_htm;
 my $dir_lck;
 my $dir_log;
@@ -190,7 +190,7 @@ if (-e $conffile)
     my($datarownum) = $#datarow;
     switch ($columns[0])
     {
-      case "ena_cameras" { $ena_cameras = $columns[1]; }
+      case "ena_tentcams" { $ena_tentcams = $columns[1]; }
       case "dir_htm" { $dir_htm = $columns[1]; }
       case "dir_lck" { $dir_lck = $columns[1]; }
       case "dir_log" { $dir_log = $columns[1]; }
@@ -480,7 +480,7 @@ print "    <small>$msg35</small>";
 print "    <hr>";
 print "    <br>";
 # camera
-if (($ena_cameras eq 1) and ($ch > 0))
+if (($ena_tentcams eq 1) and ($ch > 0))
 {
   print "    <b class=\"title1\">$msg28</b><br>";
   print "    <br>";

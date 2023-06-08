@@ -1362,9 +1362,11 @@ if ena_mm10d == 1:
 ii = 0;
 for channel in range(1,9):
   ii=ii+ena_ch[channel];
+# Error #18 -> warning
 if ii == 0:
-  writedebuglog("e","ERROR #18: There is not enabled channel!")
-  exit(18);
+#  writedebuglog("e","ERROR #18: There is not enabled channel!")
+#  exit(18);
+  writedebuglog("w","There is not enabled channel!")
 # load environment parameter settings
 for channel in range(1,9):
   if ena_ch[channel] == 1:
