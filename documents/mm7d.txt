@@ -13,9 +13,8 @@ The device does not yet support the ModBUS protocol, the table contains the plan
 | log                        | http://.../log                         | html |       |       |       |       |         |
 | startpage                  | http://.../                            | html |       |       |       |       |         |
 | summary                    | http://.../summary                     | html |       |       |       |       |         |
-| version                    | http://.../version                     | txt  |       |       |       |       |         |
-| version                    | http://.../version                     | txt  |       |       | 39998*|       | integer |
-|                            |          -                             |  -   |       |       | 39999*|       | integer |
+| version                    | http://.../version                     | txt  |       |       |       | 49998*| integer |
+|                            |          -                             |  -   |       |       |       | 49999*| integer |
 +----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
 | Set operation mode                                                                                                   |
 +----------------------------+----------------------------------------+------+-------+-------+-------+-------+---------+
