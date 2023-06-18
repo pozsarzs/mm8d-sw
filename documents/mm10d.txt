@@ -24,7 +24,7 @@ Data access of the MM10D device
 | raw Irms 32767=81.6 A               | http://.../raw/irms  | txt  | 40005 | integer |
 | raw cosFi 32767=1                   | http://.../raw/cosfi | txt  | 40006 | integer |
 | raw TPF 32767=1.0000                | http://.../raw/tpf   | txt  | 40007 | integer |
-| raw water flow rate 32767=100 l/min | http://.../raw/qv    | txt  | 40101 | integer |
+| raw water flow rate 32767=100 l/min | http://.../raw/qv    | txt  | 40008 | integer |
 | all real data                       | http://.../get/all   | txt  |       |         |
 | real P [W]                          | http://.../get/p     | txt  |       |         |
 | real Q [VAr]                        | http://.../get/q     | txt  |       |         |

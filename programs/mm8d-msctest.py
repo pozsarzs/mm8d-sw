@@ -111,11 +111,11 @@ def writechannelstatustocomport(channel):
 
 # send power supply's data to display via serial port
 def writepowersupplystatustocomport():
-  transmitbuffer = [0x00 for x in range(14)]
+  transmitbuffer = [0x00 for x in range(16)]
   line = ""
   if ena_console == "1":
-    transmitbuffer[0x00] = ord("P")
-    transmitbuffer[0x01] = ord("S")
+    transmitbuffer[0x00] = ord("S")
+    transmitbuffer[0x01] = ord("P")
     c, f = divmod(raw_urms, 1<<8)
     transmitbuffer[0x02] = c
     transmitbuffer[0x03] = f
@@ -134,7 +134,10 @@ def writepowersupplystatustocomport():
     c, f = divmod(raw_cosfi, 1<<8)
     transmitbuffer[0x0C] = c
     transmitbuffer[0x0D] = f
-    for x in range(0,13):
+    c, f = divmod(raw_qv, 1<<8)
+    transmitbuffer[0x0C] = c
+    transmitbuffer[0x0D] = f
+    for x in range(0,15):
       line = line + chr(transmitbuffer[x])
     try:
       com.open
@@ -189,6 +192,7 @@ global raw_cosfi
 global raw_irms
 global raw_p
 global raw_q
+global raw_qv
 global raw_s
 global raw_urms
 global relay_tube1
@@ -217,6 +221,7 @@ raw_cosfi = 0
 raw_irms = 0
 raw_p = 0
 raw_q = 0
+raw_qv = 0
 raw_s = 0
 raw_urms = 0
 relay_tube1 = 0
@@ -236,7 +241,7 @@ while True:
   menuitem = input(" \
    1: Set parameters of the Channel #0\n \
    2: Set parameters of the Channel #1-8\n \
-   3: Set power supply data\n \
+   3: Set electricity or water supply data\n \
    q: Quit\n")
   # exit
   if menuitem is "Q" or menuitem is "q":
@@ -439,7 +444,8 @@ while True:
       print("   2: P                     ",raw_p)
       print("   3: Q                     ",raw_q)
       print("   4: S                     ",raw_s)
-      print("   5: Cos Fi                ",raw_cosfi,"\n")
+      print("   5: Cos Fi                ",raw_cosfi)
+      print("   6: qv                    ",raw_qv,"\n")
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
@@ -455,6 +461,8 @@ while True:
         raw_s = int(input("Enter new value (0-32767): "))
       if submenuitem is "5":
         raw_cosfi = int(input("Enter new value (0-32767): "))
+      if submenuitem is "6":
+        raw_qv = int(input("Enter new value (0-32767): "))
       if submenuitem is "x":
         writepowersupplystatustocomport()
       if submenuitem is "Q" or submenuitem is "q":

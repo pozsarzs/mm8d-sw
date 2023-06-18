@@ -938,12 +938,14 @@ def readMM10Ddevice():
             raw_irms = int(line)
           if l == 6:
             raw_cosfi = int(line)
+          if l == 7:
+            raw_qv = int(line)
       else:
         rc = 0
     else:
       mb_fc = 3
       mb_reg = 0
-      mb_regs = 6
+      mb_regs = 7
       mb_client = ModbusClient()
       mb_client.host(adr_mm10d)
       mb_client.port(MB_PORT)
@@ -961,6 +963,7 @@ def readMM10Ddevice():
           raw_urms = regs[3]
           raw_irms = regs[4]
           raw_cosfi = regs[5]
+          raw_qv = regs[6]
       rc = 1
   except:
     rc = 0
@@ -974,6 +977,7 @@ def readMM10Ddevice():
     real_p = str((raw_p * 3000 * CT_RATIO) / 32767)
     real_q = str((raw_q * 3000 * CT_RATIO) / 32767)
     real_s = str((raw_s * 3000 * CT_RATIO) / 32767)
+    real_qv = str((raw_qv * 50) / 32767)
   return rc
 
 # read and write remote MM7D device
@@ -1232,12 +1236,14 @@ global raw_cosfi
 global raw_irms
 global raw_p
 global raw_q
+global raw_qv
 global raw_s
 global raw_urms
 global real_cosfi
 global real_irms
 global real_p
 global real_q
+global real_qv
 global real_s
 global real_urms
 global relay_alarm
@@ -1312,12 +1318,14 @@ raw_cosfi = 0
 raw_irms = 0
 raw_p = 0
 raw_q = 0
+raw_qv = 0
 raw_s = 0
 raw_urms = 0
 real_cosfi = "1"
 real_irms = "0"
 real_p = "0"
 real_q = "0"
+real_qv = "0"
 real_s = "0"
 real_urms = "0"
 relay_alarm = 0
@@ -1482,7 +1490,7 @@ while True:
           writedebuglog("i","CH" + str(channel) + ": -> ventilators OFF")
     # write data to mm8d-supply.log
     if ena_mm10d == 1:
-      newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi
+      newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi + real_qv
       if (prevdata_ps != newdata_ps):
         writepowersupplydatatolog(newdata_ps)
         prevdata_ps = newdata_ps

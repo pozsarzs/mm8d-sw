@@ -83,4 +83,4 @@ msg75=Meddő teljesítmény [VAr]
 msg76=Látszólagos teljesítmény [VA]
 msg77=cos &phi;
 msg78=Vízellátás
-msg79=fogyasztás
+msg79=vízáramlás [l/min]
