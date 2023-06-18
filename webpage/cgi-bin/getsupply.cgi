@@ -39,6 +39,7 @@ my $logfile;
 my $red="<font color=\"red\">&#9679;</font>";
 my $row;
 my $yellow="<font color=\"yellow\">&#9679;</font>";
+my $type;
 
 if (USRLOCALDIR eq 1)
 {
@@ -88,14 +89,22 @@ sub writetable()
   my($datarownum) = $#datarow;
   print "        <tr align=\"center\">";
   my $shortdate = substr($columns[0],5,5);
-  print "          <td>$shortdate</td>";
-  print "          <td>$columns[1]</td>";
-  print "          <td>$columns[2]</td>";
-  print "          <td>$columns[3]</td>";
-  print "          <td>$columns[4]</td>";
-  print "          <td>$columns[5]</td>";
-  print "          <td>$columns[6]</td>";
-  print "          <td>$columns[7]</td>";
+  if ($type eq 'e')
+  {
+    print "          <td>$shortdate</td>";
+    print "          <td>$columns[1]</td>";
+    print "          <td>$columns[2]</td>";
+    print "          <td>$columns[3]</td>";
+    print "          <td>$columns[4]</td>";
+    print "          <td>$columns[5]</td>";
+    print "          <td>$columns[6]</td>";
+    print "          <td>$columns[7]</td>";
+  } else
+  {
+    print "          <td>$shortdate</td>";
+    print "          <td>$columns[1]</td>";
+    print "          <td>$columns[8]</td>";
+  }
 }
 
 # get data
@@ -117,6 +126,14 @@ foreach $pair (@pairs)
   $value =~ tr/+/ /;
   $value =~ s/%(..)/pack("C", hex(1))/eg;
   $FORM{$name} = $value;
+}
+$type = $FORM{type};
+if ($type eq '')
+{
+  print "Content-type:text/plain\r\n\r\n";
+  print "ERROR #9\n";
+  print "Usage: getsupply.cgi?type=...\n";
+  exit 9;
 }
 
 # load configuration
@@ -180,7 +197,10 @@ my $msg74 = "Actice power [W]";
 my $msg75 = "Reactive power [VAr]";
 my $msg76 = "Apparent power [VA]";
 my $msg77 = "cos &phi;";
+my $msg78 = "Water supply";
+my $msg79 = "water flow rate [l/min]";
 my $msgfile = "$dir_msg/$lang/mm8d.msg";
+
 open MSG, "< $msgfile";
 while(<MSG>)
 {
@@ -211,6 +231,8 @@ while(<MSG>)
     case "msg75" { $msg75 = $columns[1]; }
     case "msg76" { $msg76 = $columns[1]; }
     case "msg77" { $msg77 = $columns[1]; }
+    case "msg78" { $msg78 = $columns[1]; }
+    case "msg79" { $msg79 = $columns[1]; }
   }
 }
 close MSG;
@@ -233,7 +255,13 @@ print "    <table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\
 print "      <tbody>";
 print "        <tr>";
 print "          <td colspan=\"2\" class=\"header\" align=\"center\">";
-print "            <b class=\"title0\">$msg71</b>";
+if ($type eq 'e')
+{
+  print "            <b class=\"title0\">$msg71</b>";
+} else
+{
+  print "            <b class=\"title0\">$msg78</b>";
+}
 print "          </td>";
 print "        </tr>";
 print "      </tbody>";
@@ -244,12 +272,18 @@ print "    <b class=\"title1\">$msg10</b><br>";
 print "    <br>";
 print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 print "      <tbody>";
-print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg72</td></tr>";
-print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg73</td></tr>";
-print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg74</td></tr>";
-print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg75</td></tr>";
-print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg76</td></tr>";
-print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg77</td></tr>";
+if ($type eq 'e')
+{
+  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg72</td></tr>";
+  print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg73</td></tr>";
+  print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg74</td></tr>";
+  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg75</td></tr>";
+  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg76</td></tr>";
+  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg77</td></tr>";
+} else
+{
+  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg79</td></tr>";
+}
 print "      </tbody>";
 print "    </table>";
 print "    <hr>";
@@ -261,7 +295,13 @@ print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\
 print "      <tbody>";
 print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
-print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+if ($type eq 'e')
+{
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+} else
+{
+  print "          <th>1</th>";
+}
 print "        </tr>";
 if (-e $logfile)
 {
@@ -303,9 +343,15 @@ print "    <b class=\"title1\">$msg29</b><br>";
 print "    <br>";
 print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">";
 print "      <tbody>";
-print "        <tr><td><img src=\"/diagrams/voltage.png\" width=\"100%\"></td></tr>";
-print "        <tr><td><img src=\"/diagrams/current.png\" width=\"100%\"></td></tr>";
-print "        <tr><td><img src=\"/diagrams/power.png\" width=\"100%\"></td></tr>";
+if ($type eq 'e')
+{
+  print "        <tr><td><img src=\"/diagrams/voltage.png\" width=\"100%\"></td></tr>";
+  print "        <tr><td><img src=\"/diagrams/current.png\" width=\"100%\"></td></tr>";
+  print "        <tr><td><img src=\"/diagrams/power.png\" width=\"100%\"></td></tr>";
+} else
+{
+  print "        <tr><td><img src=\"/diagrams/flowrate.png\" width=\"100%\"></td></tr>";
+}
 print "      </tbody>";
 print "    </table>";
 print "    <br>";
@@ -313,7 +359,13 @@ print "    <table border=\"1\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\
 print "      <tbody>";
 print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
-print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+if ($type eq 'e')
+{
+  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>";
+} else
+{
+  print "          <th>1</th>";
+}
 print "        </tr>";
 $line = 0;
 if (-e $logfile)

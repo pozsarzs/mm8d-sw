@@ -146,6 +146,31 @@ EOF
     then
       cp $EMPTYPIC $PNGFILE
     fi
+    # water flow rate
+    EMPTYPIC=$DIR_HTM"/pics/flowrate-empty.png"
+    PNGFILE=$DIR_HTM"/diagrams/flowrate.png"
+    head -n $WEB_LINES $LOGFILE | grep -v '[0-9-]\{10\},[0-9:]\{5\},0,0,0,*' | tac > $TMPFILE 2> /dev/null
+    gnuplot 2> /dev/null << EOF
+set lmargin at screen 0.10
+set rmargin at screen 0.90
+set bmargin at screen 0.20
+set tmargin at screen 0.90
+set datafile separator ","
+set title ""
+set ylabel ""
+set yrange [0:50]
+set xlabel ""
+set xtics rotate 90
+set style fill solid 1.00 noborder
+set boxwidth 2 relative
+set terminal png
+set output "$PNGFILE"
+plot "$TMPFILE" using 9:xticlabels(stringcolumn(2)) with lines title "qv [l/min]" linecolor rgb '#666699'
+EOF
+    if [ $? -ne 0 ]
+    then
+      cp $EMPTYPIC $PNGFILE
+    fi
   fi
   # channel #0
   if [ $CHANNEL -eq 0 ]

@@ -1,7 +1,7 @@
  MM8D (0.5) unstable; urgency=low
 
   * Some bug fixes.
-  * Electric power meter support (MM10D).
+  * Combined consumption meter support (MM10D).
   * Improved web interface.
   * Modified main configuration file and configuration programs.
   * Modified log file reader.

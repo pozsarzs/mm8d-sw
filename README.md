@@ -18,3 +18,27 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
 
  - portio v0.5 by Fabrizio Pollastri (GNU GPL)
  - pyModbusTCP v0.1.10 by l.lefebvre (MIT)
+
+**Hardware**
+ - MM8D (Interface board)
+    <https://github.com/pozsarzs/mm8d-sw>
+
+**Used external devices**
+ - MM6D (Remote controlled switching device)
+    <https://github.com/pozsarzs/mm6d-hw>
+    <https://github.com/pozsarzs/mm6d-sw>
+
+ - MM7D (Air quality measuring device)
+     <https://github.com/pozsarzs/mm7d-hw>
+     <https://github.com/pozsarzs/mm7d-sw>
+
+ - MM9A (Irrigation controller)
+     <https://github.com/pozsarzs/mm9a>
+
+ - MM10D (Combined consumption meter)
+     <https://github.com/pozsarzs/mm10d-hw>
+     <https://github.com/pozsarzs/mm10d-sw>
+
+ - Mini serial console
+     <https://github.com/pozsarzs/mini_serial_console-hw>
+     <https://github.com/pozsarzs/mini_serial_console_mm8d-sw>

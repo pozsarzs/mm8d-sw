@@ -49,7 +49,11 @@ Arguments of CGI programs
   5. getsupply.cgi
   ----------------
   Example line:
-    "http://.../cgi-bin/getsupply.cgi"
+    "http://.../cgi-bin/getsupply.cgi?type=e"
+
+  Arguments:
+    type:       e:      electricity supply
+                w:      water supply
 
 
   See manual pages for details.

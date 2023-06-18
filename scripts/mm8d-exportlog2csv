@@ -45,20 +45,21 @@ exportlogfile()
 {
   if [ $CHANNEL -eq "-1" ]
   then
-    echo -e "date"$S"time"$S"Urms [V]"$S"Irms [A]"$S"P [W]"$S"Q [VAr]"$S"S [VA]"$S"cosFi"
+    echo -e "date"$S"time"$S"Urms [V]"$S"Irms [A]"$S"P [W]"$S"Q [VAr]"$S"S [VA]"$S"cosFi"$S"qv [l/min]"
     OLDIFS=$IFS
     IFS=,
     while read C1 C2 C3 C4 C5 C6 C7 C8
     do
-      echo "$C1$S$C2$S$C3$S$C4$S$C5$S$C6$S$C7$S$C8"
+      echo "$C1$S$C2$S$C3$S$C4$S$C5$S$C6$S$C7$S$C8$C9"
     done < $LOGFILE
     IFS=$OLDIFS
-    echo "1: Urms - effective mains voltage in V"$S$S$S$S$S$S$S
-    echo "2: Irms - effective mains current in A"$S$S$S$S$S$S$S
-    echo "3: P - active power in W"$S$S$S$S$S$S$S
-    echo "4: Q - reactive power in VAr"$S$S$S$S$S$S$S
-    echo "5: S - apparend power in VA"$S$S$S$S$S$S$S
-    echo "6: cos Fi"$S$S$S$S$S$S$S
+    echo "1: Urms - effective mains voltage in V"$S$S$S$S$S$S$S$S
+    echo "2: Irms - effective mains current in A"$S$S$S$S$S$S$S$S
+    echo "3: P - active power in W"$S$S$S$S$S$S$S$S
+    echo "4: Q - reactive power in VAr"$S$S$S$S$S$S$S$S
+    echo "5: S - apparend power in VA"$S$S$S$S$S$S$S$S
+    echo "6: cos Fi"$S$S$S$S$S$S$S$S
+    echo "7:  qv - water flow rate in l/min"$S$S$S$S$S$S$S$S
   fi
   if [ $CHANNEL -eq "0" ]
   then

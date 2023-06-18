@@ -49,13 +49,14 @@ viewlogfile()
     echo "3:  P - active power in W"
     echo "4:  Q - reactive power in VAr"
     echo "5:  S - apparend power in VA"
-    echo -e "6:  cos phi\n"
-    echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\n"
+    echo "6:  cos phi\n"
+    echo -e "7:  qv - water flow rate in l/min\n"
+    echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\t7\n"
     OLDIFS=$IFS
     IFS=,
-    while read C1 C2 C3 C4 C5 C6 C7 C8
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9
     do
-      echo -e " $C1\t$C2\t"$C3"V\t"$C4"A\t"$C5"W\t"$C6"VAr\t"$C7"VA\t$C8"
+      echo -e $C1"\t"$C2"\t"$C3"V\t"$C4"A\t"$C5"W\t"$C6"VAr\t"$C7"VA\t"$C8"\t"$C9"l/min"
     done < $LOGFILE
     IFS=$OLDIFS
   fi

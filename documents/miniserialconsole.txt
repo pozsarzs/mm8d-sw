@@ -201,22 +201,34 @@ Display
     3:  level of record: I | W | E - information | warning | error
     4:  short description
 
-  Power supply screens
+  Electricity supply screens
 
     Press F1 to see power supply screen.
     You can page up and down with up and down buttons.
 
     +--------------------+
-    |SUPPLY  [  ]        |
+    |POWER   [  ]  SUPPLY|
     |Urms:   234 V       |
     |Irms:   16.0 A      |
     |Cos Fi: 1.00        |
     +--------------------+
     +--------------------+
-    |SUPPLY  [  ]        |
+    |POWER   [  ]  SUPPLY|
     |P:      3746 W      |
     |Q:      0000 VAr    |
     |S:      3746 VA     |
+    +--------------------+
+
+  Water supply screens
+
+    Press F1 to see water supply screen.
+    You can page up and down with up and down buttons.
+
+    +--------------------+
+    |WATER   [  ]  SUPPLY|
+    |                    |
+    |qv:     34 l/min    |
+    |                    |
     +--------------------+
 
 --------------------------------------------------------------------------------------

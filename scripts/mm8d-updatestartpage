@@ -69,7 +69,8 @@ loadmessages()
   MSG09="Details"
   MSG37="Environment"
   MSG70="Security cameras"
-  MSG71="Power supply"
+  MSG71="Electricity supply"
+  MSG72="Water supply"
 
   MSGFILE="$DIR_MSG/$LNG/mm8d.msg"
   if [ -f "$MSGFILE" ]
@@ -82,6 +83,7 @@ loadmessages()
     MSG37=`cat $MSGFILE | grep msg37 | sed 's/msg37=//'`
     MSG70=`cat $MSGFILE | grep msg70 | sed 's/msg70=//'`
     MSG71=`cat $MSGFILE | grep msg71 | sed 's/msg71=//'`
+    MSG72=`cat $MSGFILE | grep msg72 | sed 's/msg72=//'`
   fi
 }
 
@@ -118,9 +120,9 @@ makehomepage()
 EOF
   if [ $ENA_SECCAMS == 1 ]
     then
-      echo "<a href="cgi-bin/getcameras.cgi"><button type="button">$MSG09</button></a>">> $DIR_TMP/index.html
+      echo "            <a href=\"cgi-bin/getcameras.cgi\"><button type="button">$MSG09</button></a>">> $DIR_TMP/index.html
     else
-      echo "<a href="cgi-bin/getcameras.cgi"><button type="button" disabled>$MSG09</button></a>">> $DIR_TMP/index.html
+      echo "            <a href=\"cgi-bin/getcameras.cgi\"><button type="button" disabled>$MSG09</button></a>">> $DIR_TMP/index.html
     fi
   cat >> "$DIR_TMP/index.html" << EOF
           </td>
@@ -131,9 +133,22 @@ EOF
 EOF
   if [ $ENA_MM10D == 1 ]
     then
-      echo "<a href=\"cgi-bin/getsupply.cgi\"><button type=\"button\">$MSG09</button></a>">> $DIR_TMP/index.html
+      echo "            <a href=\"cgi-bin/getsupply.cgi?type=e\"><button type=\"button\">$MSG09</button></a>">> $DIR_TMP/index.html
     else
-      echo "<a href=\"cgi-bin/getsupply.cgi\"><button type=\"button\" disabled>$MSG09</button></a>">> $DIR_TMP/index.html
+      echo "            <a href=\"cgi-bin/getsupply.cgi?type=e\"><button type=\"button\" disabled>$MSG09</button></a>">> $DIR_TMP/index.html
+    fi
+  cat >> "$DIR_TMP/index.html" << EOF
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"><b>$MSG72</b></td>
+          <td align="right">
+EOF
+  if [ $ENA_MM10D == 1 ]
+    then
+      echo "            <a href=\"cgi-bin/getsupply.cgi?type=w\"><button type=\"button\">$MSG09</button></a>">> $DIR_TMP/index.html
+    else
+      echo "            <a href=\"cgi-bin/getsupply.cgi?type=w\"><button type=\"button\" disabled>$MSG09</button></a>">> $DIR_TMP/index.html
     fi
   cat >> "$DIR_TMP/index.html" << EOF
           </td>
