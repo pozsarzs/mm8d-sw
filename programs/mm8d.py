@@ -138,11 +138,9 @@ def writepowersupplydatatocomport():
     c, f = divmod(raw_cosfi, 1<<8)
     transmitbuffer[0x0C] = c
     transmitbuffer[0x0D] = f
-    for x in range(0,13):
-      line = line + chr(transmitbuffer[x])
     try:
       com.open
-      com.write(str.encode(line))
+      com.write(transmitbuffer)
       com.close
       time.sleep(0.1)
     except:
@@ -210,11 +208,9 @@ def writechannelstatustocomport(channel):
         transmitbuffer[0x0C] = 0x02
       if ena_ch[channel] == 0:
         transmitbuffer[0x06] = 0x7F
-    for x in range(0,13):
-      line = line + chr(transmitbuffer[x])
     try:
       com.open
-      com.write(str.encode(line))
+      com.write(transmitbuffer)
       com.close
       time.sleep(0.1)
     except:

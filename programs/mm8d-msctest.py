@@ -100,11 +100,9 @@ def writechannelstatustocomport(channel):
           transmitbuffer[0x0C] = 0x03
       if override[channel][2] == 1:
           transmitbuffer[0x0C] = 0x02
-    for x in range(0,13):
-      line = line + chr(transmitbuffer[x])
     try:
       com.open
-      com.write(str.encode(line))
+      com.write(transmitbuffer)
       com.close
     except:
       print("")
@@ -135,16 +133,15 @@ def writepowersupplystatustocomport():
     transmitbuffer[0x0C] = c
     transmitbuffer[0x0D] = f
     c, f = divmod(raw_qv, 1<<8)
-    transmitbuffer[0x0C] = c
-    transmitbuffer[0x0D] = f
-    for x in range(0,15):
-      line = line + chr(transmitbuffer[x])
+    transmitbuffer[0x0E] = c
+    transmitbuffer[0x0F] = f
     try:
       com.open
-      com.write(str.encode(line))
+      com.write(transmitbuffer)
       com.close
     except:
       print("")
+
 
 # load configuration
 def loadconfiguration(CONFFILE):
