@@ -115,7 +115,7 @@ def writedebuglogtocomport(level,text):
 
 # send power supply data to serial console
 def writepowersupplydatatocomport():
-  transmitbuffer = [0x00 for x in range(14)]
+  transmitbuffer = [0x00 for x in range(16)]
   line = ""
   if ena_console == "1":
     transmitbuffer[0x00] = ord("P")
@@ -138,6 +138,9 @@ def writepowersupplydatatocomport():
     c, f = divmod(raw_cosfi, 1<<8)
     transmitbuffer[0x0C] = c
     transmitbuffer[0x0D] = f
+    c, f = divmod(raw_qv, 1<<8)
+    transmitbuffer[0x0E] = c
+    transmitbuffer[0x0F] = f
     try:
       com.open
       com.write(transmitbuffer)
@@ -973,7 +976,7 @@ def readMM10Ddevice():
     real_p = str((raw_p * 3000 * CT_RATIO) / 32767)
     real_q = str((raw_q * 3000 * CT_RATIO) / 32767)
     real_s = str((raw_s * 3000 * CT_RATIO) / 32767)
-    real_qv = str((raw_qv * 50) / 32767)
+    real_qv = str((raw_qv * 100) / 32767)
   return rc
 
 # read and write remote MM7D device
