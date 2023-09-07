@@ -1,6 +1,6 @@
 **MM8D * Growing house and irrigation controlling and remote monitoring system**  
-Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  
-Homepage: <http://www.szerafingomba.hu/softwares/>  
+Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>  
+Homepage: <http://www.pozsarzs.hu>  
 GitHub: <https://github.com/pozsarzs/mm8d-sw>
 
 **Software**
