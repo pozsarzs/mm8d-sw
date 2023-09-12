@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
 # | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2023 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | Copyright (C) 2020-2023 Pozsar Zsolt <pozsarzs@gmail.com>                  |
 # | mm8d.py                                                                    |
 # | Main program                                                               |
 # +----------------------------------------------------------------------------+

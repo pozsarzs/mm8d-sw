@@ -43,4 +43,4 @@ Notes:
   holding registers: 40001-39999  16 bit  read/write
 
 ---------------------------------------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>
