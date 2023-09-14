@@ -1,12 +1,12 @@
 dnl +--------------------------------------------------------------------------+
 dnl | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. |
-dnl | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     |
+dnl | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                |
 dnl | configure.in                                                             |
 dnl | Autoconf input file for unix-like systems                                |
 dnl +--------------------------------------------------------------------------+
 
 AC_INIT
-AC_CONFIG_AUX_DIR(_config)
+AC_CONFIG_AUX_DIR(config)
 AC_CANONICAL_SYSTEM
 
 AC_PATH_PROG(rm, rm, no)
@@ -17,34 +17,46 @@ test "$make" = "" && AC_MSG_ERROR(Make not found!)
 AC_CHECK_PROGS(hfpc,fpc,no)
 test x"$hfpc" = xno && AC_MSG_ERROR(FreePascal compiler not found!)
 
-AC_CHECK_FILE(../documents/VERSION,,AC_MSG_ERROR(VERSION file not found!))
-version=`cat ../documents/VERSION`
+AC_CHECK_FILE(documents/VERSION,,AC_MSG_ERROR(VERSION file not found!))
+version=`cat documents/VERSION`
 
-AC_CHECK_FILE(../documents/copyright,,AC_MSG_ERROR(copyright file not found!))
-copyright=`cat ../documents/copyright`
+AC_CHECK_FILE(documents/copyright,,AC_MSG_ERROR(copyright file not found!))
+copyright=`cat documents/copyright`
 
 os=`fpc -iSO`
 architecture=`fpc -iSP`
 
+AC_PREFIX_DEFAULT("/usr/local")
+test x"$prefix" = xNONE && prefix="$ac_default_prefix"
+
 AC_SUBST(architecture)
-AC_SUBST(copyright)
+AC_SUBST(bindir)
+AC_SUBST(bprefix)
+AC_SUBST(datarootdir)
 AC_SUBST(fpflag)
 AC_SUBST(install)
+AC_SUBST(lcldir)
+AC_SUBST(libdir)
 AC_SUBST(make)
+AC_SUBST(mandir)
 AC_SUBST(os)
+AC_SUBST(prefix)
 AC_SUBST(rm)
+AC_SUBST(sysconfdir)
 AC_SUBST(version)
+
 AC_OUTPUT(Makefile.global\
-          editenvirconf/config.pas\
-          editirrconf/config.pas\
-          editmainconf/config.pas\
-          override/config.pas)
+          source/editenvirconf/config.pas\
+          source/editirrconf/config.pas\
+          source/editmainconf/config.pas\
+          source/override/config.pas)
 
 echo "
 Summary
 =======
     Target op. system	$os
     Target processor	$architecture
+    Target directory	$bprefix
 
   Type '${make}' for compilation and then '${make} install'.
 "
