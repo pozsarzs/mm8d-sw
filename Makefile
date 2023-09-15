@@ -7,7 +7,7 @@
 
 include ./Makefile.global
 
-dirs =	binary documents manuals programs scripts
+dirs =	binary documents manuals messages programs scripts
 srcdirs = source
 
 all:
