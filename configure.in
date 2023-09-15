@@ -29,6 +29,15 @@ architecture=`fpc -iSP`
 AC_PREFIX_DEFAULT("/usr/local")
 test x"$prefix" = xNONE && prefix="$ac_default_prefix"
 
+if test $prefix != "/usr" 
+then
+  if test $prefix != "/usr/local" 
+  then
+    echo "WARNING! Only /usr and /usr/local can be used!"
+    prefix="$ac_default_prefix"
+  fi
+fi
+
 AC_SUBST(architecture)
 AC_SUBST(bindir)
 AC_SUBST(bprefix)
@@ -56,7 +65,7 @@ Summary
 =======
     Target op. system	$os
     Target processor	$architecture
-    Target directory	$bprefix
+    Target directory	$prefix
 
   Type '${make}' for compilation and then '${make} install'.
 "
