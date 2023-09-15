@@ -7,10 +7,10 @@
 
 include ../Makefile.global
 
-files= `ls | grep -v Makefile | grep -v ??`
-target=$(datarootdir)/doc/$(name)
-mode=$(txtmode)
-title="documentation"
+files= `ls $(architecture) | grep -v Makefile | grep -v ??`
+target=$(bindir)
+mode=$(binmode)
+title="binary files"
 
 all:
 
@@ -20,20 +20,16 @@ install:
 	@echo -n "- Installing $(title) ["
 	@$(install) --directory $(target)
 	@for x in $(files); do \
-	  if [ -f $$x ]; \
+	  if [ -f $(architecture)/$$x ]; \
 	  then \
-	    $(install) --mode $(mode) $$x $(target); \
+	    $(install) --mode $(mode) $(architecture)/$$x $(target); \
 	    echo -n "#"; \
 	  fi \
 	done
-	@$(install) -m $(txtmode) "../LICENCE" $(target)/	
-	@echo -n "#"
 	@echo "]"
 
 uninstall:
 	@echo -n "- Removing $(title) ["
-	@$(rm) $(target)/LICENCE
-	@echo -n "#"
 	@for x in $(files); do \
 	  $(rm) $(target)/$$x; \
 	  echo -n "#"; \

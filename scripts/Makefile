@@ -2,25 +2,36 @@
 # | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | Makefile                                                                   |
-# | Makefile for scripts                                                       |
+# | Makefile for  many files of the same type                                  |
 # +----------------------------------------------------------------------------+
 
 include ../Makefile.global
 
-scriptfiles= `ls | grep -v Makefile | grep -v ??`
+files= `ls | grep -v Makefile | grep -v ??`
+target=$(bindir)
+mode=$(binmode)
+title="shell scripts"
 
 all:
 
 clean:
 
-
 install:
-	@$(install) --directory $(bindir)
-	@for x in $(scriptfiles); do \
-	  if [ -f $$x ]; then $(install) --mode $(binmode) $$x $(bindir); fi; \
+	@echo -n "- Installing $(title) ["
+	@$(install) --directory $(target)
+	@for x in $(files); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(install) --mode $(mode) $$x $(target); \
+	    echo -n "#"; \
+	  fi \
 	done
-	@echo "Done."
+	@echo "]"
 
 uninstall:
-	@for x in $(scriptfiles); do $(rm) $(bindir)/$$x; done
-	@echo "Done."
+	@echo -n "- Removing $(title) ["
+	@for x in $(files); do \
+	  $(rm) $(target)/$$x; \
+	  echo -n "#"; \
+	done
+	@echo "]"

@@ -38,6 +38,8 @@ then
   fi
 fi
 
+prefix="/home/pozsarzs/testroot"
+
 AC_SUBST(architecture)
 AC_SUBST(bindir)
 AC_SUBST(bprefix)

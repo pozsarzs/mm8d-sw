@@ -7,7 +7,7 @@
 
 include ./Makefile.global
 
-dirs =	documents
+dirs =	binary documents manuals programs scripts
 srcdirs = source
 
 all:
@@ -29,11 +29,11 @@ install:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir install; fi; \
 	done
-	@echo "Application is installed."
+	@echo "Program is installed."
 
 uninstall:
 	@echo Removing $(name):
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir uninstall; fi; \
 	done
-	@echo "Application is removed."
+	@echo "Program is removed."
