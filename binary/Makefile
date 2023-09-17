@@ -7,10 +7,12 @@
 
 include ../Makefile.global
 
-files= `ls $(architecture) | grep -v Makefile | grep -v ??`
-target=$(bindir)
-mode=$(binmode)
 title="binary files"
+removetargetdir=0
+sourcedir=$(architecture)
+targetdir=$(bindir)
+filemode=$(binmode)
+files=`ls $(sourcedir) | grep -v Makefile`
 
 all:
 
@@ -18,11 +20,11 @@ clean:
 
 install:
 	@echo -n "- Installing $(title) ["
-	@$(install) --directory $(target)
+	@$(install) --directory $(targetdir)
 	@for x in $(files); do \
-	  if [ -f $(architecture)/$$x ]; \
+	  if [ -f $(sourcedir)/$$x ]; \
 	  then \
-	    $(install) --mode $(mode) $(architecture)/$$x $(target); \
+	    $(install) --mode $(filemode) $(sourcedir)/$$x $(targetdir); \
 	    echo -n "#"; \
 	  fi \
 	done
@@ -31,7 +33,11 @@ install:
 uninstall:
 	@echo -n "- Removing $(title) ["
 	@for x in $(files); do \
-	  $(rm) $(target)/$$x; \
+	  $(rm) $(targetdir)/$$x; \
 	  echo -n "#"; \
 	done
+	@if [ $(removetargetdir) -eq 1 ]; \
+	then \
+	  $(rmdir) $(targetdir)/$$x ; \
+	fi;
 	@echo "]"

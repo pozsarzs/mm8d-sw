@@ -10,6 +10,7 @@ AC_CONFIG_AUX_DIR(config)
 AC_CANONICAL_SYSTEM
 
 AC_PATH_PROG(rm, rm, no)
+AC_PATH_PROG(rmdir, rmdir, no)
 AC_PATH_PROG(install, install, no)
 
 AC_CHECK_PROGS(make, gmake make)
@@ -46,8 +47,8 @@ AC_SUBST(bprefix)
 AC_SUBST(datarootdir)
 AC_SUBST(fpflag)
 AC_SUBST(install)
-AC_SUBST(lcldir)
 AC_SUBST(libdir)
+AC_SUBST(logdir)
 AC_SUBST(make)
 AC_SUBST(mandir)
 AC_SUBST(os)

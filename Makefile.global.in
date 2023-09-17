@@ -16,17 +16,18 @@ datarootdir	= @datarootdir@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 localedir	= @datarootdir@/locale
+logdir		= @logdir@
 mandir		= @mandir@
 srcdir		= @srcdir@
 sysconfdir	= @sysconfdir@
-lcldir		= @lazdir@
 
 binmode		= 0755
 txtmode		= 0644
 
 install		= @install@
 make		= @make@
-rm		= @rm@ -f
+rm		= @rm@ --force
+rmdir		= @rmdir@ --ignore-fail-on-non-empty
 
 fpflag		= -T@os@ \
                   -MObjFPC \

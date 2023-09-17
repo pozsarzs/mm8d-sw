@@ -7,7 +7,8 @@
 
 include ./Makefile.global
 
-dirs =	binary documents manuals messages programs scripts
+dirs =	binary documents manuals messages programs scripts webpage/cgi-bin \
+        webpage/pics webpage
 srcdirs = source
 
 all:
@@ -25,10 +26,29 @@ clean:
 	@echo "Source code is cleaned."
 
 install:
+
+         /var/$INSTDIR/lib/$SWN2 \
+         /var/$INSTDIR/lib/$SWN2/0 \
+         /var/$INSTDIR/lib/$SWN2/1 \
+         /var/$INSTDIR/lib/$SWN2/2 \
+         /var/$INSTDIR/lib/$SWN2/3 \
+         /var/$INSTDIR/lib/$SWN2/4 \
+         /var/$INSTDIR/lib/$SWN2/5 \
+         /var/$INSTDIR/lib/$SWN2/6 \
+         /var/$INSTDIR/lib/$SWN2/7 \
+         /var/$INSTDIR/lib/$SWN2/8 \
+         /var/$INSTDIR/lock \
+         /var/$INSTDIR/log \
+
+
+
 	@echo Installing $(name):
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir install; fi; \
 	done
+	@echo Creating other directories:
+
+
 	@echo "Program is installed."
 
 uninstall:

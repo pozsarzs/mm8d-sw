@@ -5,14 +5,12 @@
 # | Makefile for many files of the same type                                   |
 # +----------------------------------------------------------------------------+
 
-include ../Makefile.global
+include ../../Makefile.global
 
-title="binary files"
-removetargetdir=0
-sourcedir="."
-targetdir=$(bindir)
-filemode=$(binmode)
-files=`ls $(sourcedir) | grep -v Makefile`
+files= `ls | grep -v Makefile | grep -v ??`
+target=/usr/lib/cgi-bin
+mode=$(txtmode)
+title="CGI programs"
 
 all:
 
@@ -20,11 +18,11 @@ clean:
 
 install:
 	@echo -n "- Installing $(title) ["
-	@$(install) --directory $(targetdir)
+	@$(install) --directory $(target)
 	@for x in $(files); do \
-	  if [ -f $(sourcedir)/$$x ]; \
+	  if [ -f $$x ]; \
 	  then \
-	    $(install) --mode $(filemode) $(sourcedir)/$$x $(targetdir); \
+	    $(install) --mode $(mode) $$x $(target); \
 	    echo -n "#"; \
 	  fi \
 	done
@@ -33,11 +31,7 @@ install:
 uninstall:
 	@echo -n "- Removing $(title) ["
 	@for x in $(files); do \
-	  $(rm) $(targetdir)/$$x; \
+	  $(rm) $(target)/$$x; \
 	  echo -n "#"; \
 	done
-	@if [ $(removetargetdir) -eq 1 ]; \
-	then \
-	  $(rmdir) $(targetdir)/$$x ; \
-	fi;
 	@echo "]"

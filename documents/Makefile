@@ -7,10 +7,12 @@
 
 include ../Makefile.global
 
-files= `ls | grep -v Makefile | grep -v ??`
-target=$(datarootdir)/doc/$(name)
-mode=$(txtmode)
 title="documentation"
+removetargetdir=1
+sourcedir="."
+targetdir=$(datarootdir)/doc/$(name)
+filemode=$(txtmode)
+files=`ls $(sourcedir) | grep -v Makefile`
 
 all:
 
@@ -18,24 +20,28 @@ clean:
 
 install:
 	@echo -n "- Installing $(title) ["
-	@$(install) --directory $(target)
+	@$(install) --directory $(targetdir)
 	@for x in $(files); do \
-	  if [ -f $$x ]; \
+	  if [ -f $(sourcedir)/$$x ]; \
 	  then \
-	    $(install) --mode $(mode) $$x $(target); \
+	    $(install) --mode $(filemode) $(sourcedir)/$$x $(targetdir); \
 	    echo -n "#"; \
 	  fi \
 	done
-	@$(install) -m $(txtmode) "../LICENCE" $(target)/	
+	@$(install) --mode $(filemode) "../LICENCE" $(targetdir)	
 	@echo -n "#"
 	@echo "]"
 
 uninstall:
 	@echo -n "- Removing $(title) ["
-	@$(rm) $(target)/LICENCE
+	@$(rm) $(targetdir)/LICENCE
 	@echo -n "#"
 	@for x in $(files); do \
-	  $(rm) $(target)/$$x; \
+	  $(rm) $(targetdir)/$$x; \
 	  echo -n "#"; \
 	done
+	@if [ $(removetargetdir) -eq 1 ]; \
+	then \
+	  $(rmdir) $(targetdir)/$$x ; \
+	fi;
 	@echo "]"

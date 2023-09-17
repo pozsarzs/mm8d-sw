@@ -1,0 +1,92 @@
+# +----------------------------------------------------------------------------+
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | Makefile                                                                   |
+# | Makefile for files of the web interface                                    |
+# +----------------------------------------------------------------------------+
+
+include ../Makefile.global
+
+cgifiles= `ls cgi | grep -v Makefile | grep -v ??`
+htmlfiles= `ls | grep -v Makefile | grep -v ?? | grep '.html'`
+cssfiles= `ls | grep -v Makefile | grep -v ?? | grep '.css'`
+picfiles= `ls pics | grep -v Makefile | grep -v ??`
+
+cgitarget=/usr/lib/cgi-bin
+htmltarget=$(datarootdir)/$(name)
+wwwtarget=/var/www/html
+mode=$(txtmode)
+title="files of the web interface"
+
+all:
+
+clean:
+
+install:
+	@echo -n "- Installing $(title) ["
+	@$(install) --directory $(wwwtarget)/snapshots
+	@$(install) --directory $(wwwtarget)/diagrams
+	@$(install) --directory $(cgitarget);
+	@for x in $(cgifiles); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(install) --mode $(mode) $$x $(cgitarget); \
+	    echo -n "#"; \
+	    fi; \
+	done
+	@$(install) --directory $(wwwtarget);
+	@for x in $(cssfiles); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(install) --mode $(mode) $$x $(wwwtarget); \
+	    echo -n "#"; \
+	  fi; \
+	done
+	@$(install) --directory $(wwwtarget)/pics;
+	@for x in $(picfiles); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(install) --mode $(mode) $$x $(wwwtarget)/pics/; \
+	    echo -n "#"; \
+	  fi; \
+	done
+
+	@$(install) --directory $(htmlwwwtarget)/pics;
+	@for x in $(picfiles); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(install) --mode $(mode) $$x $(wwwtarget)/pics/; \
+	    echo -n "#"; \
+	  fi; \
+	done
+	@echo "]"
+
+
+
+
+
+
+uninstall:
+	@echo -n "- Removing $(title) ["
+	@for x in $(man1files); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(rm) $(target)/man1/$$x; \
+	    echo -n "#"; \
+	  fi; \
+	done
+	@for x in $(man7files); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(rm) $(target)/man7/$$x; \
+	    echo -n "#"; \
+	  fi; \
+	done
+	@for x in $(man8files); do \
+	  if [ -f $$x ]; \
+	  then \
+	    $(rm) $(target)/man8/$$x; \
+	    echo -n "#"; \
+	  fi; \
+	done
+	@echo "]"
