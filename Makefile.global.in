@@ -25,6 +25,7 @@ binmode		= 0755
 txtmode		= 0644
 
 install		= @install@
+ln		= @ln@ --symbolic --force
 make		= @make@
 rm		= @rm@ --force
 rmdir		= @rmdir@ --ignore-fail-on-non-empty

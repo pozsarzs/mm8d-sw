@@ -9,6 +9,7 @@ AC_INIT
 AC_CONFIG_AUX_DIR(config)
 AC_CANONICAL_SYSTEM
 
+AC_PATH_PROG(ln, ln, no)
 AC_PATH_PROG(rm, rm, no)
 AC_PATH_PROG(rmdir, rmdir, no)
 AC_PATH_PROG(install, install, no)
@@ -39,8 +40,6 @@ then
   fi
 fi
 
-prefix="/home/pozsarzs/testroot"
-
 AC_SUBST(architecture)
 AC_SUBST(bindir)
 AC_SUBST(bprefix)
@@ -48,6 +47,7 @@ AC_SUBST(datarootdir)
 AC_SUBST(fpflag)
 AC_SUBST(install)
 AC_SUBST(libdir)
+AC_SUBST(ln)
 AC_SUBST(logdir)
 AC_SUBST(make)
 AC_SUBST(mandir)
