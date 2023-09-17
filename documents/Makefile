@@ -7,7 +7,7 @@
 
 include ../Makefile.global
 
-title="documentation"
+title="documentation\t"
 removetargetdir=1
 sourcedir="."
 targetdir=$(datarootdir)/doc/$(name)
@@ -19,7 +19,7 @@ all:
 clean:
 
 install:
-	@echo -n "- Installing $(title) ["
+	@echo -n "- Installing "$(title)"["
 	@$(install) --directory $(targetdir)
 	@for x in $(files); do \
 	  if [ -f $(sourcedir)/$$x ]; \
@@ -33,7 +33,7 @@ install:
 	@echo "]"
 
 uninstall:
-	@echo -n "- Removing $(title) ["
+	@echo -n "- Removing "$(title)"["
 	@$(rm) $(targetdir)/LICENCE
 	@echo -n "#"
 	@for x in $(files); do \
@@ -42,6 +42,6 @@ uninstall:
 	done
 	@if [ $(removetargetdir) -eq 1 ]; \
 	then \
-	  $(rmdir) $(targetdir)/$$x ; \
+	  if [ -d $(targetdir) ]; then $(rmdir) $(targetdir); fi; \
 	fi;
 	@echo "]"

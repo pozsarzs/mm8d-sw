@@ -7,66 +7,74 @@
 
 include ../Makefile.global
 
-man1files= `ls | grep -v Makefile | grep -v ?? | grep '.1.gz'`
-man7files= `ls | grep -v Makefile | grep -v ?? | grep '.7.gz'`
-man8files= `ls | grep -v Makefile | grep -v ?? | grep '.8.gz'`
-target=$(mandir)
-mode=$(txtmode)
-title="manuals"
+title="manuals\t\t"
+removetargetdir=1
+sourcedir="."
+targetdir=$(mandir)
+filemode=$(txtmode)
+man1files= `ls *.1.gz | grep -v Makefile`
+man7files= `ls *.7.gz | grep -v Makefile`
+man8files= `ls *.8.gz | grep -v Makefile`
 
 all:
 
 clean:
 
 install:
-	@echo -n "- Installing $(title) ["
-	@$(install) --directory $(target)/man1;
+	@echo -n "- Installing "$(title)"["
+	@$(install) --directory $(targetdir)/man1;
 	@for x in $(man1files); do \
 	  if [ -f $$x ]; \
 	  then \
-	    $(install) --mode $(mode) $$x $(target)/man1/; \
+	    $(install) --mode $(filemode) $(sourcedir)/$$x $(targetdir)/man1/; \
 	    echo -n "#"; \
 	    fi; \
 	done
-	@$(install) --directory $(target)/man7;
+	@$(install) --directory $(targetdir)/man7;
 	@for x in $(man7files); do \
 	  if [ -f $$x ]; \
 	  then \
-	    $(install) --mode $(mode) $$x $(target)/man7/; \
+	    $(install) --mode $(filemode) $(sourcedir)/$$x $(targetdir)/man7/; \
 	    echo -n "#"; \
 	  fi; \
 	done
-	@$(install) --directory $(target)/man8;
+	@$(install) --directory $(targetdir)/man8;
 	@for x in $(man8files); do \
 	  if [ -f $$x ]; \
 	  then \
-	    $(install) --mode $(mode) $$x $(target)/man8/; \
+	    $(install) --mode $(filemode) $(sourcedir)/$$x $(targetdir)/man8/; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@echo "]"
 
 uninstall:
-	@echo -n "- Removing $(title) ["
+	@echo -n "- Removing "$(title)"["
 	@for x in $(man1files); do \
 	  if [ -f $$x ]; \
 	  then \
-	    $(rm) $(target)/man1/$$x; \
+	    $(rm) $(targetdir)/man1/$$x; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@for x in $(man7files); do \
 	  if [ -f $$x ]; \
 	  then \
-	    $(rm) $(target)/man7/$$x; \
+	    $(rm) $(targetdir)/man7/$$x; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@for x in $(man8files); do \
 	  if [ -f $$x ]; \
 	  then \
-	    $(rm) $(target)/man8/$$x; \
+	    $(rm) $(targetdir)/man8/$$x; \
 	    echo -n "#"; \
 	  fi; \
 	done
+	@if [ $(removetargetdir) -eq 1 ]; \
+	then \
+	  if [ -d $(targetdir)/man1 ]; then $(rmdir) $(targetdir)/man1; fi; \
+	  if [ -d $(targetdir)/man7 ]; then $(rmdir) $(targetdir)/man7; fi; \
+	  if [ -d $(targetdir)/man8 ]; then $(rmdir) $(targetdir)/man8; fi; \
+	fi;
 	@echo "]"

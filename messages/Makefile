@@ -7,35 +7,41 @@
 
 include ../Makefile.global
 
+title="message files\t"
+removetargetdir=0
+sourcedir="."
+targetdir=$(localedir)
+filemode=$(txtmode)
 languages = hu
-target=$(localedir)
-mode=$(txtmode)
-title="message files"
 
 all:
 
 clean:
 
 install:
-	@echo -n "- Installing $(title) ["
+	@echo -n "- Installing "$(title)"["
 	@for x in $(languages); do \
 	  if [ -f $(name)_$$x.msg ]; \
 	  then \
-	    $(install) --directory $(target)/$$x; \
-	    $(install) --mode $(mode) $(name)_$$x.msg $(target)/$$x; \
-	    mv $(target)/$$x/$(name)_$$x.msg $(target)/$$x/$(name).msg; \
+	    $(install) --directory $(targetdir)/$$x; \
+	    $(install) --mode $(filemode) $(sourcedir)/$(name)_$$x.msg $(targetdir)/$$x; \
+	    mv $(targetdir)/$$x/$(name)_$$x.msg $(targetdir)/$$x/$(name).msg; \
 	    echo -n "#"; \
 	  fi; \
 	done
 	@echo "]"
 
 uninstall:
-	@echo -n "- Removing $(title) ["
+	@echo -n "- Removing "$(title)"["
 	@for x in $(languages); do \
 	  if [ -f $(name)_$$x.msg ]; \
 	  then \
-	    $(rm) $(localedir)/$$x/$(name).msg; \
+	    $(rm) $(targetdir)/$$x/$(name).msg; \
 	    echo -n "#"; \
+	  fi; \
+	  if [ $(removetargetdir) -eq 1 ]; \
+	  then \
+	    if [ -d $(targetdir)/$$x ]; then $(rmdir) $(targetdir)/$$x; fi; \
 	  fi; \
 	done
 	@echo "]"

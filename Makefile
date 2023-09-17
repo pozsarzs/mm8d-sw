@@ -7,8 +7,8 @@
 
 include ./Makefile.global
 
-dirs =	binary documents manuals messages programs scripts webpage/cgi-bin \
-        webpage/pics webpage
+dirs =	binary documents manuals messages programs scripts
+# webpage/cgi-bin \  webpage/pics webpage
 srcdirs = source
 
 all:
@@ -27,22 +27,13 @@ clean:
 
 install:
 
-         /var/$INSTDIR/lib/$SWN2 \
-         /var/$INSTDIR/lib/$SWN2/0 \
-         /var/$INSTDIR/lib/$SWN2/1 \
-         /var/$INSTDIR/lib/$SWN2/2 \
-         /var/$INSTDIR/lib/$SWN2/3 \
-         /var/$INSTDIR/lib/$SWN2/4 \
-         /var/$INSTDIR/lib/$SWN2/5 \
-         /var/$INSTDIR/lib/$SWN2/6 \
-         /var/$INSTDIR/lib/$SWN2/7 \
-         /var/$INSTDIR/lib/$SWN2/8 \
-         /var/$INSTDIR/lock \
-         /var/$INSTDIR/log \
+#         /var/$INSTDIR/lib/$SWN2/0-8
+#         /var/$INSTDIR/lock \
+#         /var/$INSTDIR/log \
 
 
 
-	@echo Installing $(name):
+	@echo Installing program to $(prefix):
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir install; fi; \
 	done

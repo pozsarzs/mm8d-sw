@@ -7,7 +7,7 @@
 
 include ../Makefile.global
 
-title="binary files"
+title="Python programs\t"
 removetargetdir=0
 sourcedir="."
 targetdir=$(bindir)
@@ -19,7 +19,7 @@ all:
 clean:
 
 install:
-	@echo -n "- Installing $(title) ["
+	@echo -n "- Installing "$(title)"["
 	@$(install) --directory $(targetdir)
 	@for x in $(files); do \
 	  if [ -f $(sourcedir)/$$x ]; \
@@ -31,13 +31,13 @@ install:
 	@echo "]"
 
 uninstall:
-	@echo -n "- Removing $(title) ["
+	@echo -n "- Removing "$(title)"["
 	@for x in $(files); do \
 	  $(rm) $(targetdir)/$$x; \
 	  echo -n "#"; \
 	done
 	@if [ $(removetargetdir) -eq 1 ]; \
 	then \
-	  $(rmdir) $(targetdir)/$$x ; \
-	fi;
+	  if [ -d $(targetdir) ]; then $(rmdir) $(targetdir); fi; \
+	fi
 	@echo "]"
