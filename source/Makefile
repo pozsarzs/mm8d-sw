@@ -5,30 +5,29 @@
 # | Make file for source code                                                  |
 # +----------------------------------------------------------------------------+
 
-include ./Makefile.global
+include ../Makefile.global
 
-dirs =  editenvirconf editirrconf editmainconf override
+dirs=editenvirconf editirrconf editmainconf override
 
 all:
-	@echo Compiling source code:
-	@for dir in $(dirs); do \
-	  if [ -e Makefile ]; then make -s -C $$dir all; fi; \
+	@mkdir --parents _lib/$(architecture)-$(os)/
+	@for x in $(dirs); do \
+	  if [ -d $$x ]; \
+	  then \
+	    cd $$x; \
+	    fpc $(fpflag) $$x; \
+	    cd ..; \
+	    echo ""; \
+	  fi; \
+	  mv _lib/$(architecture)-$(os)/$$x ../binary/$(architecture)/$(name)-$$x.bin; \
 	done
-	@echo "Source code is compiled."
 
 clean:
-	@echo Cleaning source code:
-	@for dir in $(dirs); do \
-	  if [ -e Makefile ]; then make -s -C $$dir clean; fi; \
+	@for x in $(dirs); do \
+	  $(rm) $$x/config.pas; \
 	done
-	@$(rm) Makefile.global
-	@$(rm) config.log
-	@$(rm) config.status
-	@echo "Source code is cleaned."
+	@$(rm) _lib/$(architecture)-$(os)/*
 
 install:
-	@echo Installing binaries:
-	@for dir in $(dirs); do \
-	  if [ -e Makefile ]; then make -s -C $$dir install; fi; \
-	done
-	@echo "Programs are installed."
+
+uninstall:

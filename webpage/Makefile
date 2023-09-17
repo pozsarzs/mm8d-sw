@@ -5,14 +5,14 @@
 # | Makefile for many files of the same type                                   |
 # +----------------------------------------------------------------------------+
 
-include ../../Makefile.global
+include ../Makefile.global
 
-title="Perl CGI programs\t"
+title="CSS files\t\t"
 removetargetdir=0
 sourcedir="."
-targetdir="/usr/lib/cgi-bin"
-filemode=$(binmode)
-files=`ls $(sourcedir) | grep -v Makefile`
+targetdir="/var/www/html"
+filemode=$(txtmode)
+files=`ls $(sourcedir)/*.css | grep -v Makefile`
 
 all:
 

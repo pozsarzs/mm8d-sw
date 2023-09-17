@@ -35,8 +35,7 @@ fpflag		= -T@os@ \
                   -O1 \
                   -v0 \
                   -ve \
-                  -FE./source/lib/@architecture@-@os@/ \
-                  -Fu. \
+                  -FE../_lib/@architecture@-@os@/ \
                   -Fu./.. \
-                  -Fu./source/lib/@architecture@-@os@/
+                  -Fu../_lib/@architecture@-@os@/
 

@@ -7,11 +7,11 @@
 
 include ../../Makefile.global
 
-title="Perl CGI programs\t"
+title="picture files\t"
 removetargetdir=0
 sourcedir="."
-targetdir="/usr/lib/cgi-bin"
-filemode=$(binmode)
+targetdir="/var/www/html/pics"
+filemode=$(txtmode)
 files=`ls $(sourcedir) | grep -v Makefile`
 
 all:

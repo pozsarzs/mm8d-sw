@@ -175,9 +175,9 @@ copy "settings/$SWN2/*.ini" "/usr/$INSTDIR/etc/$SWN2/"
 copy "settings/init.d/*" "/etc/init.d/"
 copy "settings/systemd/system/$SWN2.service" "/etc/systemd/system/"
 copy "webpage/cgi-bin/*.cgi" "/usr/lib/cgi-bin/"
-copy "webpage/*.css" "/var/www/html/"
-copy "webpage/*.html" "/usr/$INSTDIR/share/$SWN2/"
+copy "webpage/html/*.html" "/usr/$INSTDIR/share/$SWN2/"
 copy "webpage/pics/*" "/var/www/html/pics/"
+copy "webpage/*.css" "/var/www/html/"
 if [ ! -e /etc/motd.orig ]
 then
   sudo cat /etc/motd | grep -qv $SWN1 && sudo mv /etc/motd /etc/motd.orig && sudo cp settings/motd /etc/

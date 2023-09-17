@@ -8,7 +8,7 @@
 include ../Makefile.global
 
 title="message files\t"
-removetargetdir=0
+removetargetdir=1
 sourcedir="."
 targetdir=$(localedir)
 filemode=$(txtmode)
