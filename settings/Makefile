@@ -14,6 +14,7 @@ filemode=$(txtmode)
 all:
 
 clean:
+	@$(rm) systemd/system/$(name).service
 
 install:
 	@echo -n "- Installing "$(title)"["
@@ -28,13 +29,13 @@ install:
 
 	@echo -n "#" 
 	@$(install) --directory $(targetdir)/cron.d
-	@$(install) --mode $(filemode) cron.d/mm8d* $(targetdir)/cron.d/
+	@$(install) --mode $(filemode) cron.d/$(name)* $(targetdir)/cron.d/
 	@echo -n "###" 
 	@$(install) --directory $(targetdir)/init.d
-	@$(install) --mode $(filemode) init.d/mm8d* $(targetdir)/init.d/
+	@$(install) --mode $(filemode) init.d/$(name)* $(targetdir)/init.d/
 	@echo -n "#" 
 	@$(install) --directory $(targetdir)/init.d
-	@$(install) --mode $(filemode) systemd/system/mm8d* $(targetdir)/systemd/system/
+	@$(install) --mode $(filemode) systemd/system/$(name)* $(targetdir)/systemd/system/
 	@echo -n "#" 
 	@echo "]"
 
@@ -43,10 +44,10 @@ uninstall:
 # b*szakodás a motd-vel
 
 	@echo -n "- Removing "$(title)"["
-	@$(rm) $(targetdir)/cron.d/mm8d*
+	@$(rm) $(targetdir)/cron.d/$(name)*
 	@echo -n "###" 
-	@$(rm) $(targetdir)/init.d/mm8d*
+	@$(rm) $(targetdir)/init.d/$(name)*
 	@echo -n "#" 
-	@$(rm) $(targetdir)/systemd/system/mm8d*
+	@$(rm) $(targetdir)/systemd/system/$(name).service
 	@echo -n "#" 
 	@echo "]"

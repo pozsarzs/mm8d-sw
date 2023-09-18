@@ -57,11 +57,31 @@ AC_SUBST(rm)
 AC_SUBST(sysconfdir)
 AC_SUBST(version)
 
-AC_OUTPUT(Makefile.global\
-          source/editenvirconf/config.pas\
-          source/editirrconf/config.pas\
-          source/editmainconf/config.pas\
-          source/override/config.pas)
+AC_OUTPUT(Makefile.global \
+	  programs/mm8d-hwtest.py \
+	  programs/mm8d-msctest.py \
+	  programs/mm8d.py \
+          settings/mm8d/mm8d.ini \
+	  settings/systemd/system/mm8d.service \
+          scripts/mm8d-creatediagrams \
+          scripts/mm8d-editenvirconf \
+          scripts/mm8d-editmainconf \
+          scripts/mm8d-exportlog2csv \
+          scripts/mm8d-getsnapshots-seccam \
+          scripts/mm8d-getsnapshots-tentcam \
+          scripts/mm8d-maintainlog \
+          scripts/mm8d-override \
+          scripts/mm8d-updatestartpage \
+          scripts/mm8d-viewlog \
+          source/editenvirconf/config.pas \
+          source/editirrconf/config.pas \
+          source/editmainconf/config.pas \
+          source/override/config.pas \
+	  webpage/cgi-bin/getcameras.cgi \
+	  webpage/cgi-bin/getchannel.cgi \
+	  webpage/cgi-bin/getdata.cgi \
+	  webpage/cgi-bin/getenvirconf.cgi \
+	  webpage/cgi-bin/getsupply.cgi)
 
 echo "
 Summary

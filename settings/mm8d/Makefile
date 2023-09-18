@@ -17,6 +17,12 @@ files=`ls $(sourcedir) | grep -v Makefile`
 all:
 
 clean:
+	@for x in $(files); do \
+	  if [ -f $(sourcedir)/$$x ]; \
+	  then \
+	    $(rm) `echo $$x | grep -w 'ini\.in' | sed s/'ini\.in'/'ini'/`; \
+	  fi \
+	done
 
 install:
 	@echo -n "- Installing "$(title)"["

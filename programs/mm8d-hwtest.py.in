@@ -35,11 +35,8 @@ else:
   HW = 0
   import RPi.GPIO as GPIO
 
-USRLOCALDIR = 1
-if (USRLOCALDIR == 1):
-  CONFFILE = '/usr/local/etc/mm8d/mm8d.ini'
-else:
-  CONFFILE = '/etc/mm8d/mm8d.ini'
+# constants
+CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
 
 global EOL
 global LPTADDRESSES

@@ -2173,7 +2173,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile.global source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas"
+ac_config_files="$ac_config_files Makefile.global programs/mm8d-hwtest.py programs/mm8d-msctest.py programs/mm8d.py settings/mm8d/mm8d.ini settings/systemd/system/mm8d.service scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-updatestartpage scripts/mm8d-viewlog source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2881,10 +2881,30 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile.global") CONFIG_FILES="$CONFIG_FILES Makefile.global" ;;
+    "programs/mm8d-hwtest.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-hwtest.py" ;;
+    "programs/mm8d-msctest.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-msctest.py" ;;
+    "programs/mm8d.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d.py" ;;
+    "settings/mm8d/mm8d.ini") CONFIG_FILES="$CONFIG_FILES settings/mm8d/mm8d.ini" ;;
+    "settings/systemd/system/mm8d.service") CONFIG_FILES="$CONFIG_FILES settings/systemd/system/mm8d.service" ;;
+    "scripts/mm8d-creatediagrams") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-creatediagrams" ;;
+    "scripts/mm8d-editenvirconf") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-editenvirconf" ;;
+    "scripts/mm8d-editmainconf") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-editmainconf" ;;
+    "scripts/mm8d-exportlog2csv") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-exportlog2csv" ;;
+    "scripts/mm8d-getsnapshots-seccam") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-getsnapshots-seccam" ;;
+    "scripts/mm8d-getsnapshots-tentcam") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-getsnapshots-tentcam" ;;
+    "scripts/mm8d-maintainlog") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-maintainlog" ;;
+    "scripts/mm8d-override") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-override" ;;
+    "scripts/mm8d-updatestartpage") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-updatestartpage" ;;
+    "scripts/mm8d-viewlog") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-viewlog" ;;
     "source/editenvirconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editenvirconf/config.pas" ;;
     "source/editirrconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editirrconf/config.pas" ;;
     "source/editmainconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editmainconf/config.pas" ;;
     "source/override/config.pas") CONFIG_FILES="$CONFIG_FILES source/override/config.pas" ;;
+    "webpage/cgi-bin/getcameras.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getcameras.cgi" ;;
+    "webpage/cgi-bin/getchannel.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getchannel.cgi" ;;
+    "webpage/cgi-bin/getdata.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getdata.cgi" ;;
+    "webpage/cgi-bin/getenvirconf.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getenvirconf.cgi" ;;
+    "webpage/cgi-bin/getsupply.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getsupply.cgi" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -3334,6 +3354,8 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
+
+echo $sharedstatedir
 
 echo "
 Summary

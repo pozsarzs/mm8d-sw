@@ -20,7 +20,7 @@
 #   3: wrong channel number
 
 # constants
-CFGFILE="/etc/mm8d/mm8d.ini"
+CFGFILE="@prefix@/etc/mm8d/mm8d.ini"
 
 checkparameter()
 {
@@ -286,11 +286,6 @@ usage()
 if [ $# -eq 0 ]
 then
   usage
-fi
-if [ ! -f $CFGFILE ]
-then
-  USRLOCALDIR="1"
-  CFGFILE="/usr/local"$CFGFILE
 fi
 checkparameter $1
 loadconfiguration

@@ -18,13 +18,7 @@
 #   1: cannot open configuration file
 
 # constants
-USRLOCALDIR="1"
-if [ $USRLOCALDIR -eq "1" ]
-then
-  CFGFILE="/usr/local/etc/mm8d/mm8d.ini"
-else
-  CFGFILE="/etc/mm8d/mm8d.ini"
-fi
+CFGFILE="@prefix@/etc/mm8d/mm8d.ini"
 
 if [ ! -f $CFGFILE ]
 then

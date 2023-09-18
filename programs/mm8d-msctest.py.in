@@ -26,11 +26,7 @@ import time
 from time import localtime, strftime
 
 # constants
-USRLOCALDIR = 1
-if (USRLOCALDIR == 1):
-  CONFFILE = '/usr/local/etc/mm8d/mm8d.ini'
-else:
-  CONFFILE = '/etc/mm8d/mm8d.ini'
+CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):

@@ -45,11 +45,8 @@ else:
   HW = 0
   import RPi.GPIO as GPIO
 
-USRLOCALDIR = 1
-if USRLOCALDIR == 1:
-  CONFDIR='/usr/local/etc/mm8d/'
-else:
-  CONFDIR='/etc/mm8d/'
+# constants
+CONFDIR="@prefix@/etc/mm8d/"
 
 COMPMV6=0
 COMPSV6=3
