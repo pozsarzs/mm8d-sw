@@ -1118,7 +1118,6 @@ def getcontrollerversion(conttype,channel):
     protocol = pro_mm7dch[channel]
   if conttype == 10:
     protocol = pro_mm10d
-  # See documents/mm10d.txt for URLs and ModBUS registers.
   try:
     if conttype == 6:
       url = "http://" + adr_mm6dch[channel] + "/version"
