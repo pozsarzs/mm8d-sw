@@ -28,7 +28,7 @@ use strict;
 # use warnings;
 
 my $contname = 'MM8D';
-my $contversion = 'v0.3';
+my $contversion = '@version@';
 my $conffile;
 
 $conffile = "@prefix@/etc/mm8d/mm8d.ini";

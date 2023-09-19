@@ -178,10 +178,8 @@ copy "webpage/cgi-bin/*.cgi" "/usr/lib/cgi-bin/"
 copy "webpage/html/*.html" "/usr/$INSTDIR/share/$SWN2/"
 copy "webpage/pics/*" "/var/www/html/pics/"
 copy "webpage/*.css" "/var/www/html/"
-if [ ! -e /etc/motd.orig ]
-then
-  sudo cat /etc/motd | grep -qv $SWN1 && sudo mv /etc/motd /etc/motd.orig && sudo cp settings/motd /etc/
-fi
+copy "/etc/motd" "/etc/motd."`date +%s`
+copy "settings/motd" "/etc/"
 echo "- set init.d:"
 sudo /etc/init.d/$SWN2.sh stop
 sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc0.d/K01$SWN2.sh

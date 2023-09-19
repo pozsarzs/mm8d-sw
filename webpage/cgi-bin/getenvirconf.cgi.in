@@ -20,8 +20,6 @@
 #   9: no parameter(s)
 #  10: bad channel value
 
-use constant USRLOCALDIR => 1;
-
 use lib 'cgi-bin';
 use Scalar::Util qw(looks_like_number);
 use Switch;
@@ -69,16 +67,8 @@ if ($channel eq '')
   exit 9;
 }
 
-# load configuration
-if (USRLOCALDIR eq 1)
-{
-  $conffile = "/usr/local/etc/mm8d/mm8d.ini";
-  $confdir = "/usr/local/etc/mm8d";
-} else
-{
-  $conffile = "/etc/mm8d/mm8d.ini";
-  $confdir = "/etc/mm8d";
-}
+$conffile = "@prefix@/etc/mm8d/mm8d.ini";
+$confdir = "@prefix@/etc/mm8d";
 
 if (-e $conffile)
 {

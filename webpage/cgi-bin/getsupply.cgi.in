@@ -19,8 +19,6 @@
 #   5: cannot open log file
 #  10: bad channel value
 
-use constant USRLOCALDIR => 1;
-
 use lib 'cgi-bin';
 use Switch;
 use Scalar::Util qw(looks_like_number);
@@ -41,15 +39,8 @@ my $row;
 my $yellow="<font color=\"yellow\">&#9679;</font>";
 my $type;
 
-if (USRLOCALDIR eq 1)
-{
-  $conffile = "/usr/local/etc/mm8d/mm8d.ini";
-  $creatediagprog = "/usr/local/bin/mm8d-creatediagrams";
-} else
-{
-  $conffile = "/etc/mm8d/mm8d.ini";
-  $creatediagprog = "/usr/bin/mm8d-creatediagrams";
-}
+$conffile = "@prefix@/etc/mm8d/mm8d.ini";
+$creatediagprog = "@prefix@/bin/mm8d-creatediagrams";
 
 # write header of webpage
 sub writeheader()

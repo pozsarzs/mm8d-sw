@@ -22,9 +22,9 @@ clean:
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir clean; fi; \
 	done
-	@$(rm) Makefile.global
 	@$(rm) config.log
 	@$(rm) config.status
+	@$(rm) Makefile.global
 	@echo "Source code is cleaned."
 
 install:

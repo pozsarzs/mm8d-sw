@@ -18,15 +18,11 @@ clean:
 
 install:
 	@echo -n "- Installing "$(title)"["
-
-#	@mv /etc/motd
-#	@if [ -f "/etc/motd" ]; \
-#	then; \
-#	  mv /etc/motd /etc/motd.orig
- #         cat /etc/motd | grep -qv $SWN1 && mv /etc/motd /etc/motd.orig && sudo cp settings/motd /etc/
-#fi
-
-
+	@if [ -f "/etc/motd" ]; \
+	then \
+	  cp /etc/motd /etc/motd.`date +%s`; \
+	fi
+	@$(install) --mode $(filemode) modt $(targetdir)/
 	@echo -n "#" 
 	@$(install) --directory $(targetdir)/cron.d
 	@$(install) --mode $(filemode) cron.d/$(name)* $(targetdir)/cron.d/
@@ -40,9 +36,6 @@ install:
 	@echo "]"
 
 uninstall:
-
-# b*szakodás a motd-vel
-
 	@echo -n "- Removing "$(title)"["
 	@$(rm) $(targetdir)/cron.d/$(name)*
 	@echo -n "###" 

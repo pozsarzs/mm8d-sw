@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
+{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incsaveinifile.pas                                                       | }
 { | Save configuration to ini file                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -39,7 +39,7 @@ var
     for b:=1 to 76 do l:=l+'-';
     l:=l+'+';
     writeln(iif,l);
-    writeln(iif,fullline('MM8D v'+VERSION+' * Growing house and irrigation controlling and monitoring system'));
+    writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and monitoring system'));
     writeln(iif,fullline(COPYRIGHT));
     writeln(iif,fullline('envir-ch?.ini'));
     writeln(iif,fullline('Growing environment characteristic'));

@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
 { | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
+{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | config.pas(.in)                                                          | }
 { | Setting for source code                                                  | }
 { +--------------------------------------------------------------------------+ }
@@ -13,6 +13,6 @@
 // FOR A PARTICULAR PURPOSE.
 
 const
-  VERSION: string='@version@';
+  VERSION: string='v@version@';
   PRGNAME: string='MM8D-EditEnvirConf';
-  COPYRIGHT: string='Copyright (C) 2020-2023 Pozsar Zsolt <pozsar.zsolt@szerafingomba.hu>';
+  COPYRIGHT: string='Copyright (C) 2020-2023 Pozsar Zsolt <pozsarzs@gmail.com>';
