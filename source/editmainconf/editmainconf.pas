@@ -18,8 +18,6 @@
 //  12: minimal terminal size is 80x25!
 //  13: cannot write configuration file
 
-{$DEFINE USRLOCALDIR}
-
 program editmainconf;
 {$MODE OBJFPC}{$H+}
 uses
@@ -52,6 +50,7 @@ var
   ena_ch:       array[1..8] of byte;
   ena_console:  byte;
   ena_mm10d:    byte;
+  ith_ch:       array[1..8] of byte;
   lng:          string;
   nam_ch:       array[0..8] of string;
   pro_mm6dch:   array[1..8] of string;
@@ -75,6 +74,7 @@ const
   E:            string='enable';
   G:            string='GPIOport';
   I:            string='IPcamera';
+  H:            string='heater';
   L:            string='LPTport';
   M10:          string='MM10D';
   M6:           string='MM6D';
@@ -83,8 +83,9 @@ const
   O:            string='log';
   U:            string='user';
   W:            string='openweathermap.org';
-  BLOCKS:       array[1..12] of byte=(1,1,2,1,1,1,1,5,3,3,3,4);
-  MINPOSX:      array[1..12,1..6] of byte=((18,0,0,0,0,0),
+  LASTPAGE:     byte=13;
+  BLOCKS:       array[1..13] of byte=(1,1,2,1,1,1,1,5,3,3,3,4,1);
+  MINPOSX:      array[1..13,1..6] of byte=((18,0,0,0,0,0),
                                            (17,0,0,0,0,0),
                                            (17,17,0,0,0,0),
                                            (15,0,0,0,0,0),
@@ -95,8 +96,9 @@ const
                                            (25,25,25,0,0,0),
                                            (25,25,25,0,0,0),
                                            (25,25,25,0,0,0),
-                                           (37,37,37,37,0,0));
-  MINPOSY:      array[1..12,1..6] of byte=((3,0,0,0,0,0),
+                                           (37,37,37,37,0,0),
+                                           (17,0,0,0,0,0));
+  MINPOSY:      array[1..13,1..6] of byte=((3,0,0,0,0,0),
                                            (3,0,0,0,0,0),
                                            (3,12,0,0,0,0),
                                            (3,0,0,0,0,0),
@@ -107,8 +109,9 @@ const
                                            (3,12,21,0,0,0),
                                            (3,12,21,0,0,0),
                                            (3,12,21,0,0,0),
-                                           (3,12,14,20,0,0));
-  MAXPOSY:      array[1..12,1..6] of byte=((4,0,0,0,0,0),
+                                           (3,12,14,20,0,0),
+                                           (3,0,0,0,0,0));
+  MAXPOSY:      array[1..13,1..6] of byte=((4,0,0,0,0,0),
                                            (11,0,0,0,0,0),
                                            (10,12,0,0,0,0),
                                            (4,0,0,0,0,0),
@@ -119,7 +122,8 @@ const
                                            (10,19,21,0,0,0),
                                            (10,19,21,0,0,0),
                                            (10,19,21,0,0,0),
-                                           (10,12,18,20,0,0));
+                                           (10,12,18,20,0,0),
+                                           (10,0,0,0,0,0));
   FOOTERS:      array[1..7] of string=('<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                        '<Enter> accept  <Esc> cancel',
                                        '<Space> change <Tab>/<Up>/<Down> move  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
@@ -143,6 +147,7 @@ const
 {$I incpage10screen.pas}
 {$I incpage11screen.pas}
 {$I incpage12screen.pas}
+{$I incpage13screen.pas}
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
@@ -163,6 +168,7 @@ begin
     10: page10screen;
     11: page11screen;
     12: page12screen;
+    13: page13screen;
   end;
   case page of
     4: footer(bottom-1,FOOTERS[6]);
@@ -348,6 +354,11 @@ begin
              if (c='0') or (c='1') then s:=c;
              if c=#8 then delete(s,length(s),1);
            end;
+         end;
+      // -- page #13 --
+      13: begin
+           if (c='0') or (c='1') then s:=c;
+           if c=#8 then delete(s,length(s),1);
          end;
     else
       begin
@@ -649,6 +660,19 @@ begin
         write(ena_seccams);
       end;
     end;
+    // -- page #13 --
+    if page=13 then
+    begin
+      // page #13 - block #1
+      if block=1 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        ith_ch[posy-2]:=strtoint(s);
+        write(ith_ch[posy-2]);
+      end;
+    end;
   end;
   case page of
      4: footer(bottom-1,FOOTERS[6]);
@@ -708,7 +732,7 @@ begin
       // next page
       #81: begin
              page:=page+1;
-             if page>12 then page:=12;
+             if page>LASTPAGE then page:=LASTPAGE;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];
@@ -716,7 +740,7 @@ begin
            end;
       // last page
       #79: begin
-             page:=12;
+             page:=LASTPAGE;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];

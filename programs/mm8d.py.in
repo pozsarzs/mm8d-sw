@@ -232,6 +232,7 @@ def loadconfiguration(conffile):
   global ena_ch
   global ena_console
   global ena_mm10d
+  global ith_ch
   global lockfile
   global logfile
   global pro_mm10d
@@ -261,6 +262,7 @@ def loadconfiguration(conffile):
   D = 'directories'
   E = 'enable'
   G = 'GPIOport'
+  H = 'heater'
   L = 'log'
   LP = 'LPTport'
   M10 = 'MM10D'
@@ -352,6 +354,10 @@ def loadconfiguration(conffile):
     uid_mm10d = "0"
     uid_mm10d = config.get(M10,'uid_mm10d')
     writedebuglog("i","Configuration is loaded.")
+    # internal thermostat in the heater (timer control only - 0/1)
+    ith_ch = [0 for x in range(9)]
+    for i in range(1,9):
+      ith_ch[i] = int(config.get(H,'ith_ch' + str(i)))
   except:
     writedebuglog("e","ERROR #01: Cannot open " + conffile + "!")
     exit(1)

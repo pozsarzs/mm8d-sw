@@ -39,7 +39,7 @@ var
     for b:=1 to 76 do l:=l+'-';
     l:=l+'+';
     writeln(iif,l);
-    writeln(iif,fullline('MM8D v'+VERSION+' * Growing house and irrigation controlling and monitoring system'));
+    writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and monitoring system'));
     writeln(iif,fullline(COPYRIGHT+' '));
     writeln(iif,fullline('mm8d.ini'));
     writeln(iif,fullline('Main settings'));
@@ -178,6 +178,11 @@ begin
     writeln(iif,'ena_seccams='+inttostr(ena_seccams));
     for b:=1 to 5 do
       writeln(iif,'cam_sc'+inttostr(b)+'='+cam_sc[b]);
+    writeln(iif,'');
+    writeln(iif,'['+H+']');
+    writeln(iif,'; internal thermostat in the heater (timer control only - 0/1)');
+    for b:=1 to 8 do
+      writeln(iif,'ith_ch'+inttostr(b)+'='+inttostr(ith_ch[b]));
     close(iif);
   except
     saveinifile:=false;

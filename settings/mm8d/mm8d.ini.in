@@ -1,6 +1,6 @@
 ; +----------------------------------------------------------------------------+
 ; | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-; | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+; | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 ; | mm8d.ini                                                                   |
 ; | Main settings                                                              |
 ; +----------------------------------------------------------------------------+
@@ -191,3 +191,14 @@ cam_sc2=http://camera-sc2.lan/webcapture.jpg?command=snap&channel=0&user=usernam
 cam_sc3=http://camera-sc3.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
 cam_sc4=http://camera-sc4.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
 cam_sc5=http://camera-sc5.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+
+[heater]
+; internal thermostat in the heater (timer control only)
+ith_ch1=0
+ith_ch2=0
+ith_ch3=0
+ith_ch4=0
+ith_ch5=0
+ith_ch6=0
+ith_ch7=0
+ith_ch8=0

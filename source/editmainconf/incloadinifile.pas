@@ -29,6 +29,7 @@ begin
     for b:=1 to 8 do
     begin
       ena_ch[b]:=strtoint(iif.ReadString(E,'ena_ch'+inttostr(b),'0'));
+      ith_ch[b]:=strtoint(iif.ReadString(H,'ith_ch'+inttostr(b),'0'));
       adr_mm6dch[b]:=iif.ReadString(M6,'adr_mm6dch'+inttostr(b),'');
       adr_mm7dch[b]:=iif.ReadString(M7,'adr_mm7dch'+inttostr(b),'');
       pro_mm6dch[b]:=iif.ReadString(M6,'pro_mm6dch'+inttostr(b),'http');
@@ -52,19 +53,11 @@ begin
     prt_lpt:=strtoint(iif.ReadString(L,'prt_lpt','1'));
     dir_htm:=iif.ReadString(D,'dir_htm','/var/www/html/');
     dir_tmp:=iif.ReadString(D,'dir_tmp','/var/tmp/');
-{$IFDEF USRLOCALDIR}
-    dir_lck:=iif.ReadString(D,'dir_lck','/var/local/lock/');
-    dir_log:=iif.ReadString(D,'dir_log','/var/local/log/');
-    dir_msg:=iif.ReadString(D,'dir_msg','/usr/local/share/locale/');
-    dir_shr:=iif.ReadString(D,'dir_shr','/usr/local/share/mm8d/');
-    dir_var:=iif.ReadString(D,'dir_var','/var/local/lib/mm8d/');
-{$ELSE}
     dir_lck:=iif.ReadString(D,'dir_lck','/var/lock/');
     dir_log:=iif.ReadString(D,'dir_log','/var/log/');
     dir_msg:=iif.ReadString(D,'dir_msg','/usr/share/locale/');
     dir_shr:=iif.ReadString(D,'dir_shr','/usr/share/mm8d/');
     dir_var:=iif.ReadString(D,'dir_var','/var/lib/mm8d/');
-{$ENDIF}
     adr_mm10d:=iif.ReadString(M10,'adr_mm10d','');
     api_key:=iif.ReadString(W,'api_key','');
     base_url:=iif.ReadString(W,'base_url','http://api.openweathermap.org/data/2.5/weather?');
