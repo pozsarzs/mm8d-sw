@@ -12,7 +12,7 @@ removetargetdir=0
 sourcedir="."
 targetdir="/usr/lib/cgi-bin"
 filemode=$(binmode)
-files=`ls $(sourcedir) | grep -v Makefile`
+files=`ls $(sourcedir) | grep -v Makefile | grep -v 'cgi\.in'`
 
 all:
 
@@ -20,7 +20,7 @@ clean:
 	@for x in $(files); do \
 	  if [ -f $(sourcedir)/$$x ]; \
 	  then \
-	    $(rm) `echo $$x | grep '\.in' | sed s/'\.in'//`; \
+	    $(rm) $(sourcedir)/$$x; \
 	  fi \
 	done
 

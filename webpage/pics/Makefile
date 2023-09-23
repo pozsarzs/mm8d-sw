@@ -8,7 +8,7 @@
 include ../../Makefile.global
 
 title="picture files\t"
-removetargetdir=0
+removetargetdir=1
 sourcedir="."
 targetdir="/var/www/html/pics"
 filemode=$(txtmode)

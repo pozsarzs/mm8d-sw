@@ -11,33 +11,34 @@ dirs =	binary documents manuals messages programs scripts settings settings/mm8d
         webpage/cgi-bin webpage/html webpage/pics webpage source
 
 all:
-	@echo "Compiling source code:"
+	@echo "Compiling source code..."
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir all; fi; \
 	done
-	@echo "Source code is compiled."
+	@echo "Done."
 
 clean:
-	@echo "Cleaning source code:"
+	@echo "Cleaning source code..."
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir clean; fi; \
 	done
 	@$(rm) config.log
 	@$(rm) config.status
 	@$(rm) Makefile.global
-	@echo "Source code is cleaned."
+	@echo "Done."
 
 install:
 	@echo "Installing program to "$(prefix)":"
 	@for dir in $(dirs); do \
 	  if [ -e Makefile ]; then make -s -C $$dir install; fi; \
 	done
-	@echo "Creating other directories:"
-	@if [ $(prefix) == "/usr" ]; then n="local"; else n=""; fi;
-	@install --directory $(printf "/var/$(n)/lib/$(name)/%01d " {0..8})
-	@$(install) --directory /var/$(n)/lock/
-	@$(install) --directory /var/$(n)/log/
-	@echo "Setting system services:"
+	@echo "Creating other directories..."
+	@for n in 0 1 2 3 4 5 6 7 8; do \
+	  $(install) --directory $(vardir)/lib/$(name)/$$n; \
+	done
+	@$(install) --directory $(vardir)/lock/
+	@$(install) --directory $(vardir)/log/
+	@echo "Setting system services..."
 	@service $(name) stop
 	@$(ln) /etc/init.d/$(name).sh /etc/rc0.d/K01$(name).sh
 	@$(ln) /etc/init.d/$(name).sh /etc/rc2.d/S01$(name).sh
@@ -50,10 +51,10 @@ install:
 	@service $(name) start
 	@service cron restart
 	@$(name)-updatestartpage
-	@echo "Program is installed."
+	@echo "Done."
 
 uninstall:
-	@echo "Setting system services:"
+	@echo "Setting system services..."
 	@service $(name) stop
 	@systemctl disable $(name).service
 	@echo "Removing program from "$(prefix)":"
@@ -68,8 +69,11 @@ uninstall:
 	@$(rm) /etc/rc6.d/K01$(name).sh
 	@systemctl daemon-reload
 	@service cron restart
-	@echo "Removing other directories:"
-	@if [ $(prefix) == "/usr" ]; then n="local"; else n=""; fi;
-	@$(rmdir) $(printf "/var/$(n)/lib/$(name)/%01d " {0..8})
-	@$(rmdir) /var/$(n)/lib/$(name)
-	@echo "Program is removed."
+	@echo "Removing other directories..."
+	@for n in 0 1 2 3 4 5 6 7 8; do \
+	  $(rmdir) $(vardir)/lib/$(name)/$$n; \
+	done
+	@$(rmdir) $(vardir)/lib/$(name)
+	@$(rmdir) $(vardir)/log/
+	@$(rmdir) $(vardir)/lock/
+	@echo "Done."

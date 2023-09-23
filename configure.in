@@ -79,8 +79,13 @@ AC_OUTPUT(Makefile.global \
           scripts/mm8d-getsnapshots-tentcam \
           scripts/mm8d-maintainlog \
           scripts/mm8d-override \
+          scripts/mm8d-restartdaemon \
+          scripts/mm8d-startdaemon \
+          scripts/mm8d-statusofdaemon \
+          scripts/mm8d-stopdaemon \
           scripts/mm8d-updatestartpage \
           scripts/mm8d-viewlog \
+          scripts/mm8d-webpage \
           source/editenvirconf/config.pas \
           source/editirrconf/config.pas \
           source/editmainconf/config.pas \

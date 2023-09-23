@@ -7,7 +7,7 @@
 
 include ../Makefile.global
 
-title="CSS files\t\t"
+title="CSS and HTML files\t"
 removetargetdir=0
 sourcedir="."
 targetdir="/var/www/html"
@@ -32,7 +32,7 @@ install:
 
 uninstall:
 	@echo -n "- Removing "$(title)"["
-	@for x in $(files); do \
+	@for x in $(files) index.html; do \
 	  $(rm) $(targetdir)/$$x; \
 	  echo -n "#"; \
 	done

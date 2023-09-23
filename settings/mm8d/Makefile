@@ -7,22 +7,17 @@
 
 include ../../Makefile.global
 
-title="config files\t"
+title="config files \t"
 removetargetdir=1
 sourcedir="."
 targetdir=$(sysconfdir)/$(name)
 filemode=$(txtmode)
-files=`ls $(sourcedir) | grep -v Makefile`
+files=`ls $(sourcedir) | grep -v Makefile | grep -v 'ini\.in'`
 
 all:
 
 clean:
-	@for x in $(files); do \
-	  if [ -f $(sourcedir)/$$x ]; \
-	  then \
-	    $(rm) `echo $$x | grep -w 'ini\.in' | sed s/'ini\.in'/'ini'/`; \
-	  fi \
-	done
+	@$(rm) mm8d.ini
 
 install:
 	@echo -n "- Installing "$(title)"["

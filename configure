@@ -2180,7 +2180,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile.global programs/mm8d-hwtest.py programs/mm8d-msctest.py programs/mm8d.py settings/motd settings/mm8d/mm8d.ini settings/systemd/system/mm8d.service scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-updatestartpage scripts/mm8d-viewlog source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
+ac_config_files="$ac_config_files Makefile.global programs/mm8d-hwtest.py programs/mm8d-msctest.py programs/mm8d.py settings/motd settings/mm8d/mm8d.ini settings/systemd/system/mm8d.service scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-restartdaemon scripts/mm8d-startdaemon scripts/mm8d-statusofdaemon scripts/mm8d-stopdaemon scripts/mm8d-updatestartpage scripts/mm8d-viewlog scripts/mm8d-webpage source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2902,8 +2902,13 @@ do
     "scripts/mm8d-getsnapshots-tentcam") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-getsnapshots-tentcam" ;;
     "scripts/mm8d-maintainlog") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-maintainlog" ;;
     "scripts/mm8d-override") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-override" ;;
+    "scripts/mm8d-restartdaemon") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-restartdaemon" ;;
+    "scripts/mm8d-startdaemon") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-startdaemon" ;;
+    "scripts/mm8d-statusofdaemon") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-statusofdaemon" ;;
+    "scripts/mm8d-stopdaemon") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-stopdaemon" ;;
     "scripts/mm8d-updatestartpage") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-updatestartpage" ;;
     "scripts/mm8d-viewlog") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-viewlog" ;;
+    "scripts/mm8d-webpage") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-webpage" ;;
     "source/editenvirconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editenvirconf/config.pas" ;;
     "source/editirrconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editirrconf/config.pas" ;;
     "source/editmainconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editmainconf/config.pas" ;;

@@ -7,7 +7,7 @@
 
 include ../Makefile.global
 
-title="system files\t"
+title="system files \t"
 targetdir="/etc"
 filemode=$(txtmode)
 
@@ -23,7 +23,7 @@ install:
 	then \
 	  cp /etc/motd /etc/motd.`date +%s`; \
 	fi
-	@$(install) --mode $(filemode) modt $(targetdir)/
+	@$(install) --mode $(filemode) motd $(targetdir)/
 	@echo -n "#" 
 	@$(install) --directory $(targetdir)/cron.d
 	@$(install) --mode $(filemode) cron.d/$(name)* $(targetdir)/cron.d/
