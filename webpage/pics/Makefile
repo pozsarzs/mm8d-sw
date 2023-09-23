@@ -21,6 +21,13 @@ clean:
 install:
 	@echo -n "- Installing "$(title)"["
 	@$(install) --directory $(targetdir)
+	@$(install) --directory $(targetdir)/../snapshots
+	@$(install) --directory $(targetdir)/../diagrams
+	@chown root:www-data $(targetdir)/../snapshots
+	@chown root:www-data $(targetdir)/../diagrams
+	@chmod 777 $(targetdir)/../diagrams
+	@chmod 777 $(targetdir)/../snapshots
+	@chmod 775 $(targetdir)
 	@for x in $(files); do \
 	  if [ -f $(sourcedir)/$$x ]; \
 	  then \
@@ -39,5 +46,7 @@ uninstall:
 	@if [ $(removetargetdir) -eq 1 ]; \
 	then \
 	  if [ -d $(targetdir) ]; then $(rmdir) $(targetdir); fi; \
+	  if [ -d $(targetdir) ]; then $(rmdir) $(targetdir)/../snapshots; fi; \
+	  if [ -d $(targetdir) ]; then $(rmdir) $(targetdir)/../diagrams; fi; \
 	fi
 	@echo "]"

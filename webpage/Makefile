@@ -21,6 +21,7 @@ clean:
 install:
 	@echo -n "- Installing "$(title)"["
 	@$(install) --directory $(targetdir)
+	@chown root:www-data $(targetdir)
 	@for x in $(files); do \
 	  if [ -f $(sourcedir)/$$x ]; \
 	  then \

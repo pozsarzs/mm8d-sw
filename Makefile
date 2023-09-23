@@ -35,6 +35,7 @@ install:
 	@echo "Creating other directories..."
 	@for n in 0 1 2 3 4 5 6 7 8; do \
 	  $(install) --directory $(vardir)/lib/$(name)/$$n; \
+	  chmod 777 $(vardir)/lib/$(name)/$$n; \
 	done
 	@$(install) --directory $(vardir)/lock/
 	@$(install) --directory $(vardir)/log/
