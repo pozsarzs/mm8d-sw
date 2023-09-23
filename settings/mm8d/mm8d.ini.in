@@ -52,12 +52,12 @@ web_lines=30
 [directories]
 ; directories of program
 dir_htm=/var/www/html
-dir_lck=/var/lock
-dir_log=/var/log
+dir_lck=@vardir@/lock
+dir_log=@vardir@/log
 dir_msg=@prefix@/share/locale
 dir_shr=@prefix@/share/mm8d
 dir_tmp=/var/tmp
-dir_var=/var/lib/mm8d
+dir_var=@vardir@/lib/mm8d
 
 [openweathermap.org]
 ; access data

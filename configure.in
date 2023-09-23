@@ -15,13 +15,12 @@ AC_PATH_PROG(rmdir, rmdir, no)
 AC_PATH_PROG(install, install, no)
 
 AC_CHECK_PROGS(make, gmake make)
-test "$make" = "" && AC_MSG_ERROR(Make not found!)
+test "$make" == "" && AC_MSG_ERROR(Make not found!)
 AC_CHECK_PROGS(hfpc,fpc,no)
-test x"$hfpc" = xno && AC_MSG_ERROR(FreePascal compiler not found!)
+test x"$hfpc" == xno && AC_MSG_ERROR(FreePascal compiler not found!)
 
 AC_CHECK_FILE(documents/VERSION,,AC_MSG_ERROR(VERSION file not found!))
 version=`cat documents/VERSION`
-
 AC_CHECK_FILE(documents/copyright,,AC_MSG_ERROR(copyright file not found!))
 copyright=`cat documents/copyright`
 
@@ -29,38 +28,47 @@ os=`fpc -iSO`
 architecture=`fpc -iSP`
 
 AC_PREFIX_DEFAULT("/usr/local")
-test x"$prefix" = xNONE && prefix="$ac_default_prefix"
-
+test x"$prefix" == xNONE && prefix="$ac_default_prefix"
 if test $prefix != "/usr" 
 then
   if test $prefix != "/usr/local" 
   then
     echo "WARNING! Only /usr and /usr/local can be used!"
-    prefix="$ac_default_prefix"
+    prefix = "$ac_default_prefix"
   fi
+fi
+if test $prefix == "/usr" 
+then
+  vardir="/var"
+else
+  vardir="/var/local"
 fi
 
 AC_SUBST(architecture)
-AC_SUBST(bindir)
-AC_SUBST(bprefix)
-AC_SUBST(datarootdir)
-AC_SUBST(fpflag)
-AC_SUBST(install)
-AC_SUBST(libdir)
-AC_SUBST(ln)
-AC_SUBST(logdir)
-AC_SUBST(make)
-AC_SUBST(mandir)
+AC_SUBST(copyright)
 AC_SUBST(os)
 AC_SUBST(prefix)
-AC_SUBST(rm)
-AC_SUBST(sysconfdir)
 AC_SUBST(version)
+
+AC_SUBST(bindir)
+AC_SUBST(datarootdir)
+AC_SUBST(libdir)
+AC_SUBST(mandir)
+AC_SUBST(sysconfdir)
+AC_SUBST(vardir)
+
+AC_SUBST(fpflag)
+
+AC_SUBST(install)
+AC_SUBST(ln)
+AC_SUBST(make)
+AC_SUBST(rm)
 
 AC_OUTPUT(Makefile.global \
 	  programs/mm8d-hwtest.py \
 	  programs/mm8d-msctest.py \
 	  programs/mm8d.py \
+          settings/motd \
           settings/mm8d/mm8d.ini \
 	  settings/systemd/system/mm8d.service \
           scripts/mm8d-creatediagrams \
@@ -90,5 +98,7 @@ Summary
     Target processor	$architecture
     Target directory	$prefix
 
+
   Type '${make}' for compilation and then '${make} install'.
+  Run 'packaging/bin/prepare' to install required programs.
 "

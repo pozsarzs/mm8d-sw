@@ -14,6 +14,7 @@ filemode=$(txtmode)
 all:
 
 clean:
+	@$(rm) motd
 	@$(rm) systemd/system/$(name).service
 
 install:

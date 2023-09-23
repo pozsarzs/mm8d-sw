@@ -5,6 +5,7 @@
 # | Global Makefile                                                            |
 # +----------------------------------------------------------------------------+
 
+copyright	= @copyright@
 name		= mm8d
 version		= @version@
 architecture	= @architecture@
@@ -16,10 +17,10 @@ datarootdir	= @datarootdir@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
 localedir	= @datarootdir@/locale
-logdir		= @logdir@
 mandir		= @mandir@
 srcdir		= @srcdir@
 sysconfdir	= @sysconfdir@
+vardir		= @vardir@
 
 binmode		= 0755
 txtmode		= 0644

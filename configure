@@ -584,11 +584,11 @@ PACKAGE_URL=
 ac_default_prefix="/usr/local"
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+fpflag
+vardir
 version
 os
-logdir
-fpflag
-bprefix
+copyright
 architecture
 hfpc
 make
@@ -2049,7 +2049,7 @@ fi
   test -n "$make" && break
 done
 
-test "$make" = "" && as_fn_error $? "Make not found!" "$LINENO" 5
+test "$make" == "" && as_fn_error $? "Make not found!" "$LINENO" 5
 for ac_prog in fpc
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
@@ -2093,7 +2093,7 @@ fi
 done
 test -n "$hfpc" || hfpc="no"
 
-test x"$hfpc" = xno && as_fn_error $? "FreePascal compiler not found!" "$LINENO" 5
+test x"$hfpc" == xno && as_fn_error $? "FreePascal compiler not found!" "$LINENO" 5
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for documents/VERSION" >&5
 $as_echo_n "checking for documents/VERSION... " >&6; }
@@ -2117,7 +2117,6 @@ else
 fi
 
 version=`cat documents/VERSION`
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for documents/copyright" >&5
 $as_echo_n "checking for documents/copyright... " >&6; }
 if ${ac_cv_file_documents_copyright+:} false; then :
@@ -2145,15 +2144,20 @@ os=`fpc -iSO`
 architecture=`fpc -iSP`
 
 
-test x"$prefix" = xNONE && prefix="$ac_default_prefix"
-
+test x"$prefix" == xNONE && prefix="$ac_default_prefix"
 if test $prefix != "/usr"
 then
   if test $prefix != "/usr/local"
   then
     echo "WARNING! Only /usr and /usr/local can be used!"
-    prefix="$ac_default_prefix"
+    prefix = "$ac_default_prefix"
   fi
+fi
+if test $prefix == "/usr"
+then
+  vardir="/var"
+else
+  vardir="/var/local"
 fi
 
 
@@ -2173,7 +2177,10 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile.global programs/mm8d-hwtest.py programs/mm8d-msctest.py programs/mm8d.py settings/mm8d/mm8d.ini settings/systemd/system/mm8d.service scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-updatestartpage scripts/mm8d-viewlog source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
+
+
+
+ac_config_files="$ac_config_files Makefile.global programs/mm8d-hwtest.py programs/mm8d-msctest.py programs/mm8d.py settings/motd settings/mm8d/mm8d.ini settings/systemd/system/mm8d.service scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-updatestartpage scripts/mm8d-viewlog source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2884,6 +2891,7 @@ do
     "programs/mm8d-hwtest.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-hwtest.py" ;;
     "programs/mm8d-msctest.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-msctest.py" ;;
     "programs/mm8d.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d.py" ;;
+    "settings/motd") CONFIG_FILES="$CONFIG_FILES settings/motd" ;;
     "settings/mm8d/mm8d.ini") CONFIG_FILES="$CONFIG_FILES settings/mm8d/mm8d.ini" ;;
     "settings/systemd/system/mm8d.service") CONFIG_FILES="$CONFIG_FILES settings/systemd/system/mm8d.service" ;;
     "scripts/mm8d-creatediagrams") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-creatediagrams" ;;
@@ -3362,5 +3370,7 @@ Summary
     Target processor	$architecture
     Target directory	$prefix
 
+
   Type '${make}' for compilation and then '${make} install'.
+  Run 'packaging/bin/prepare' to install required programs.
 "
