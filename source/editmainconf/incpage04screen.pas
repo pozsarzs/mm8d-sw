@@ -24,7 +24,7 @@ procedure page04screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 4/12: Web page language');
+  header(PRGNAME+' '+VERSION+' * Page 4/' + inttostr(LASTPAGE) + ': Web page language');
   textcolor(white);
   gotoxy(4,3); writeln('English');
   gotoxy(4,4); writeln('Hungarian');

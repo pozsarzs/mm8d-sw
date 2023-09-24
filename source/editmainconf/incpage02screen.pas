@@ -24,7 +24,7 @@ procedure page02screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 2/12: Channel names');
+  header(PRGNAME+' '+VERSION+' * Page 2/' + inttostr(LASTPAGE) + ': Channel names');
   textcolor(white);
   for b:=0 to 8 do
   begin

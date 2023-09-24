@@ -27,6 +27,7 @@ var
   bottom:       byte;
   // configuration
   adr_mm10d:    string;
+  adr_mm11d:    string;
   adr_mm6dch:   array[1..8] of string;
   adr_mm7dch:   array[1..8] of string;
   api_key:      string;
@@ -50,18 +51,21 @@ var
   ena_ch:       array[1..8] of byte;
   ena_console:  byte;
   ena_mm10d:    byte;
+  ena_mm11d:    byte;
   ith_ch:       array[1..8] of byte;
   lng:          string;
   nam_ch:       array[0..8] of string;
   pro_mm6dch:   array[1..8] of string;
   pro_mm7dch:   array[1..8] of string;
   pro_mm10d:    string;
+  pro_mm11d:    string;
   prt_com:      string;
   prt_i:        array[1..4] of byte;
   prt_lo:       array[1..4] of byte;
   prt_lpt:      byte;
   prt_ro:       array[1..4] of byte;
   uid_mm10d:    string;
+  uid_mm11d:    string;
   uid_mm6dch:   array[1..8] of string;
   uid_mm7dch:   array[1..8] of string;
   usr_nam:      string;
@@ -77,6 +81,7 @@ const
   H:            string='heater';
   L:            string='LPTport';
   M10:          string='MM10D';
+  M11:          string='MM11D';
   M6:           string='MM6D';
   M7:           string='MM7D';
   N:            string='names';
@@ -119,9 +124,9 @@ const
                                            (9,0,0,0,0,0),
                                            (5,0,0,0,0,0),
                                            (6,11,16,18,26,0),
-                                           (10,19,21,0,0,0),
-                                           (10,19,21,0,0,0),
-                                           (10,19,21,0,0,0),
+                                           (10,19,22,0,0,0),
+                                           (10,19,22,0,0,0),
+                                           (10,19,22,0,0,0),
                                            (10,12,18,20,0,0),
                                            (10,0,0,0,0,0));
   FOOTERS:      array[1..7] of string=('<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',

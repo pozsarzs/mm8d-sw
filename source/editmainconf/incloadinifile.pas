@@ -67,9 +67,12 @@ begin
     ena_seccams:=strtoint(iif.ReadString(I,'ena_seccams','0'));
     ena_tentcams:=strtoint(iif.ReadString(I,'ena_tentcams','0'));
     ena_mm10d:=strtoint(iif.ReadString(M10,'ena_mm10d','1'));
+    ena_mm11d:=strtoint(iif.ReadString(M11,'ena_mm11d','1'));
     lng:=iif.ReadString('language','lng','en');
     pro_mm10d:=iif.ReadString(M10,'pro_mm10d','http');
     uid_mm10d:=iif.ReadString(M10,'uid_mm10d','1');
+    pro_mm11d:=iif.ReadString(M11,'pro_mm11d','http');
+    uid_mm11d:=iif.ReadString(M11,'uid_mm11d','1');
     web_lines:=strtoint(iif.ReadString(O,'web_lines','30'));
   except
     loadinifile:=false;

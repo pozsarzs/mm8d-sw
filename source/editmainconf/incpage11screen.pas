@@ -23,6 +23,9 @@
 
   [MM10D]
   adr_mm10d=192.168.1.30
+
+  [MM11D]
+  adr_mm11d=192.168.1.31
 }
 
 // write options to screen
@@ -30,7 +33,7 @@ procedure page11screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 11/12: IP address of controllers');
+  header(PRGNAME+' '+VERSION+' * Page 11/' + inttostr(LASTPAGE) + ': IP address of controllers');
   textcolor(white);
   for b:=1 to 8 do
   begin
@@ -38,10 +41,12 @@ begin
     gotoxy(4,b+2+9); write('MM7D on channel #'+inttostr(b)+':');
   end;
   gotoxy(4,21); write('MM10D:');
+  gotoxy(4,22); write('MM11D:');
   for b:=1 to 8 do
   begin
     gotoxy(MINPOSX[11,1],b+2); writeln(adr_mm6dch[b]);
     gotoxy(MINPOSX[11,2],b+2+9); writeln(adr_mm7dch[b]);
   end;
   gotoxy(MINPOSX[11,3],21); writeln(adr_mm10d);
+  gotoxy(MINPOSX[11,3],22); writeln(adr_mm11d);
 end;

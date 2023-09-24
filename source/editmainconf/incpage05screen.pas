@@ -24,7 +24,7 @@
 // write options to screen
 procedure page05screen;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 5/12: Logging');
+  header(PRGNAME+' '+VERSION+' * Page 5/' + inttostr(LASTPAGE) + ': Logging');
   textcolor(white);
   gotoxy(4,3); writeln('Storing time of log records in days:');
   gotoxy(4,4); writeln('Enable debug log (0: disable):');

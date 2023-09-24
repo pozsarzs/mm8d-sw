@@ -28,7 +28,7 @@
 // write options to screen
 procedure page06screen;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 6/12: Directories');
+  header(PRGNAME+' '+VERSION+' * Page 6/' + inttostr(LASTPAGE) + ': Directories');
   textcolor(white);
   gotoxy(4,3); writeln('HTML files for webserver:');
   gotoxy(4,4); writeln('Lock file:');

@@ -24,7 +24,7 @@
 // write options to screen
 procedure page07screen;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 7/12: OpenWeather.org account');
+  header(PRGNAME+' '+VERSION+' * Page 7/' + inttostr(LASTPAGE) + ': OpenWeather.org account');
   textcolor(white);
   gotoxy(4,3); writeln('API key:');
   gotoxy(4,4); writeln('URL:');

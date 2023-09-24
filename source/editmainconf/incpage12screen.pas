@@ -27,7 +27,7 @@ procedure page12screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 12/12: URL of IP cameras');
+  header(PRGNAME+' '+VERSION+' * Page 12/' + inttostr(LASTPAGE) + ': URL of IP cameras');
   textcolor(white);
   for b:=1 to 8 do
   begin

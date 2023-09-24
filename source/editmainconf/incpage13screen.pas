@@ -24,7 +24,7 @@ procedure page13screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 13/13: Heater timer control only');
+  header(PRGNAME+' '+VERSION+' * Page 13/' + inttostr(LASTPAGE) + ': Heater timer control only');
   textcolor(white);
   for b:=1 to 8 do
   begin

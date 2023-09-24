@@ -168,6 +168,16 @@ begin
     writeln(iif,'; ModBUS unitID');
     writeln(iif,'uid_mm10d='+uid_mm10d);
     writeln(iif,'');
+    writeln(iif,'['+M11+']');
+    writeln(iif,'; enable/disable handling (0/1)');
+    writeln(iif,'ena_mm11d='+inttostr(ena_mm11d));
+    writeln(iif,'; protocol (http/modbus)');
+    writeln(iif,'pro_mm11d='+pro_mm11d);
+    writeln(iif,'; IP address');
+    writeln(iif,'adr_mm11d='+adr_mm11d);
+    writeln(iif,'; ModBUS unitID');
+    writeln(iif,'uid_mm11d='+uid_mm11d);
+    writeln(iif,'');
     writeln(iif,'['+I+']');
     writeln(iif,'; show tent camera on the webpage of channel (0/1)');
     writeln(iif,'ena_tentcams='+inttostr(ena_tentcams));

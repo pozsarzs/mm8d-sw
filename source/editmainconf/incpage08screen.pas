@@ -44,7 +44,7 @@ procedure page08screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 8/12: I/O ports');
+  header(PRGNAME+' '+VERSION+' * Page 8/' + inttostr(LASTPAGE) + ': I/O ports');
   textcolor(white);
   for b:=1 to 4 do
   begin

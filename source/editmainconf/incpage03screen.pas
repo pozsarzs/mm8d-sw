@@ -27,7 +27,7 @@ procedure page03screen;
 var
   b: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 3/12: Enable/disable channels');
+  header(PRGNAME+' '+VERSION+' * Page 3/' + inttostr(LASTPAGE) + ': Enable/disable channels');
   textcolor(white);
   for b:=1 to 8 do
   begin
