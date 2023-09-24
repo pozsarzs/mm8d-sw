@@ -172,6 +172,16 @@ adr_mm10d=192.168.1.30
 ; ModBUS unitID
 uid_mm10d=30
 
+[MM11D]
+; enable/disable handling (0/1)
+ena_mm11d=0
+; protocol (http/modbus)
+pro_mm11d=http
+; IP address
+adr_mm11d=192.168.1.31
+; ModBUS unitID
+uid_mm10d=31
+
 [IPcamera]
 ; show tent camera on the webpage of channel (0/1)
 ena_tentcams=0

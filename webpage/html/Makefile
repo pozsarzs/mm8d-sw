@@ -1,5 +1,5 @@
 # +----------------------------------------------------------------------------+
-# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | MM8D v@version@ * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | Makefile                                                                   |
 # | Makefile for many files of the same type                                   |
@@ -12,11 +12,17 @@ removetargetdir=1
 sourcedir="."
 targetdir=$(datarootdir)/$(name)
 filemode=$(txtmode)
-files=`ls $(sourcedir) | grep -v Makefile`
+files=`ls $(sourcedir) | grep -v Makefile | grep -v '\.in'`
 
 all:
 
 clean:
+	@for x in $(files); do \
+	  if [ -f $(sourcedir)/$$x ]; \
+	  then \
+	    $(rm) $(sourcedir)/$$x; \
+	  fi \
+	done
 
 install:
 	@echo -n "- Installing "$(title)"["

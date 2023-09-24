@@ -1,0 +1,87 @@
+.TH "getchannel.cgi" "7" "@version@" "Pozsár Zsolt" "MM8D"
+.SH "NAME"
+.LP 
+getchannel.cgi - CGI program
+.SH "SYNTAX"
+.LP
+\fBgetchannel.cgi\fP?channel=c"
+.SH "OPTIONS"
+.TP
+.BR channel
+channel of growing house control (0: master and irrigator device, [1-8]: slave devices)
+.SH "DESCRIPTION"
+.LP 
+This is a part of MM8D growing house and irrigation controlling and remote monitoring system. This
+CGI program for create HTML output from channel's data.
+.SH "FILES"
+.LP
+.TP
+\fI/usr/bin/mm8d-creatediagrams\fR or \fI/usr/local/bin/mm8d-creatediagrams\fR
+diagram maker
+.TP
+\fI/usr/bin/mm8d-getsnapshots-tentcam\fR or \fI/usr/local/bin/mm8d-getsnapshots-tentcam\fR
+IP camera snapshot maker
+.TP
+\fI/etc/mm8d/mm8d.ini\fR or \fI/usr/local/etc/mm8d/mm8d.ini\fR
+main configuration file
+.TP
+\fIfooter_??.html\fR and \fIheader_??.html\fR in data directory
+webpage footer and header
+.TP
+\fImm8d.log\fR in log directory
+main log file
+.TP
+\fImm8d.lck\fR in directory of lock files
+locking file
+.TP
+\fIout1\fR, \fIout2\fR, \fIout3\fR and \fIout4\fR in directory of changing files
+output state files
+.TP
+\fI/var/www/html/*\fR
+files of webpage
+.SH "EXIT STATUS"
+.TP
+.B 0
+normal exit
+.TP
+.B 1
+cannot open configuration file
+.TP
+.B 5
+cannot open log file
+.TP
+.B 9
+no parameter(s)
+.TP
+.B 10
+bad channel value
+.SH "HOMEPAGE"
+\fIhttp://www.pozsarzs.hu\fR
+.SH "SEE ALSO"
+.PD 0
+.LP
+\fBgetcameras.cgi\fP(7)
+\fBgetdata.cgi\fP(7)
+\fBgetenvirconf.cgi\fP(7)
+\fBgetsupply.cgi\fP(7)
+\fBmm8d-creatediagrams\fP(1)
+\fBmm8d-editenvirconf\fP(1)
+\fBmm8d-editmainconf\fP(1)
+\fBmm8d-exportlog2csv\fP(1)
+\fBmm8d-getsnapshots-seccam\fP(1)
+\fBmm8d-getsnapshots-tentcam\fP(1)
+\fBmm8d-hwtest.py\fP(1)
+\fBmm8d-maintainlog\fP(1)
+\fBmm8d-msctest.py\fP(1)
+\fBmm8d-override\fP(1)
+\fBmm8d.py\fP(8)
+\fBmm8d-restartdaemon\fP(1)
+\fBmm8d-startdaemon\fP(1)
+\fBmm8d-statusofdaemon\fP(1)
+\fBmm8d-stopdaemon\fP(1)
+\fBmm8d-updatestartpage\fP(1)
+\fBmm8d-viewlog\fP(1)
+\fBmm8d-webpage\fP(1)
+and \fI/usr/share/doc/mm8d/\fP or equivalent on your system.
+.SH "AUTHOR"
+Pozsár Zsolt \fIpozsarzs@gmail.com\fR

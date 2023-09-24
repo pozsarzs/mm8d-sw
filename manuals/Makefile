@@ -1,5 +1,5 @@
 # +----------------------------------------------------------------------------+
-# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | MM8D v@version@ * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | Makefile                                                                   |
 # | Makefile for manuals                                                       |
@@ -12,13 +12,31 @@ removetargetdir=1
 sourcedir="."
 targetdir=$(mandir)
 filemode=$(txtmode)
-man1files= `ls *.1.gz | grep -v Makefile`
-man7files= `ls *.7.gz | grep -v Makefile`
-man8files= `ls *.8.gz | grep -v Makefile`
+man1files= `ls *.1 | grep -v Makefile | grep -v '\.in'`
+man7files= `ls *.7 | grep -v Makefile | grep -v '\.in'`
+man8files= `ls *.8 | grep -v Makefile | grep -v '\.in'`
 
 all:
 
 clean:
+	@for x in $(man1files); do \
+	  if [ -f $(sourcedir)/$$x ]; \
+	  then \
+	    $(rm) $(sourcedir)/$$x; \
+	  fi \
+	done
+	@for x in $(man7files); do \
+	  if [ -f $(sourcedir)/$$x ]; \
+	  then \
+	    $(rm) $(sourcedir)/$$x; \
+	  fi \
+	done
+	@for x in $(man8files); do \
+	  if [ -f $(sourcedir)/$$x ]; \
+	  then \
+	    $(rm) $(sourcedir)/$$x; \
+	  fi \
+	done
 
 install:
 	@echo -n "- Installing "$(title)"["

@@ -65,6 +65,29 @@ AC_SUBST(make)
 AC_SUBST(rm)
 
 AC_OUTPUT(Makefile.global \
+	  manuals/getcameras.cgi.7 \
+	  manuals/getchannel.cgi.7 \
+	  manuals/getdata.cgi.7 \
+	  manuals/getenvirconf.cgi.7 \
+	  manuals/getsupply.cgi.7 \
+	  manuals/mm8d-creatediagrams.1 \
+	  manuals/mm8d-editenvirconf.1 \
+	  manuals/mm8d-editmainconf.1 \
+	  manuals/mm8d-exportlog2csv.1 \
+	  manuals/mm8d-getsnapshots-seccam.1 \
+	  manuals/mm8d-getsnapshots-tentcam.1 \
+	  manuals/mm8d-hwtest.py.1 \
+	  manuals/mm8d-maintainlog.1 \
+	  manuals/mm8d-msctest.py.1 \
+	  manuals/mm8d-override.1 \
+	  manuals/mm8d.py.8 \
+	  manuals/mm8d-restartdaemon.1 \
+	  manuals/mm8d-startdaemon.1 \
+	  manuals/mm8d-statusofdaemon.1 \
+	  manuals/mm8d-stopdaemon.1 \
+	  manuals/mm8d-updatestartpage.1 \
+	  manuals/mm8d-viewlog.1 \
+	  manuals/mm8d-webpage.1 \
 	  programs/mm8d-hwtest.py \
 	  programs/mm8d-msctest.py \
 	  programs/mm8d.py \
@@ -90,6 +113,10 @@ AC_OUTPUT(Makefile.global \
           source/editirrconf/config.pas \
           source/editmainconf/config.pas \
           source/override/config.pas \
+	  webpage/html/footer_en.html \
+	  webpage/html/footer_hu.html \
+	  webpage/html/header_en.html \
+	  webpage/html/header_hu.html \
 	  webpage/cgi-bin/getcameras.cgi \
 	  webpage/cgi-bin/getchannel.cgi \
 	  webpage/cgi-bin/getdata.cgi \

@@ -2180,7 +2180,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile.global programs/mm8d-hwtest.py programs/mm8d-msctest.py programs/mm8d.py settings/motd settings/mm8d/mm8d.ini settings/systemd/system/mm8d.service scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-restartdaemon scripts/mm8d-startdaemon scripts/mm8d-statusofdaemon scripts/mm8d-stopdaemon scripts/mm8d-updatestartpage scripts/mm8d-viewlog scripts/mm8d-webpage source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
+ac_config_files="$ac_config_files Makefile.global manuals/getcameras.cgi.7 manuals/getchannel.cgi.7 manuals/getdata.cgi.7 manuals/getenvirconf.cgi.7 manuals/getsupply.cgi.7 manuals/mm8d-creatediagrams.1 manuals/mm8d-editenvirconf.1 manuals/mm8d-editmainconf.1 manuals/mm8d-exportlog2csv.1 manuals/mm8d-getsnapshots-seccam.1 manuals/mm8d-getsnapshots-tentcam.1 manuals/mm8d-hwtest.py.1 manuals/mm8d-maintainlog.1 manuals/mm8d-msctest.py.1 manuals/mm8d-override.1 manuals/mm8d.py.8 manuals/mm8d-restartdaemon.1 manuals/mm8d-startdaemon.1 manuals/mm8d-statusofdaemon.1 manuals/mm8d-stopdaemon.1 manuals/mm8d-updatestartpage.1 manuals/mm8d-viewlog.1 manuals/mm8d-webpage.1 programs/mm8d-hwtest.py programs/mm8d-msctest.py programs/mm8d.py settings/motd settings/mm8d/mm8d.ini settings/systemd/system/mm8d.service scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-restartdaemon scripts/mm8d-startdaemon scripts/mm8d-statusofdaemon scripts/mm8d-stopdaemon scripts/mm8d-updatestartpage scripts/mm8d-viewlog scripts/mm8d-webpage source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/html/footer_en.html webpage/html/footer_hu.html webpage/html/header_en.html webpage/html/header_hu.html webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2888,6 +2888,29 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile.global") CONFIG_FILES="$CONFIG_FILES Makefile.global" ;;
+    "manuals/getcameras.cgi.7") CONFIG_FILES="$CONFIG_FILES manuals/getcameras.cgi.7" ;;
+    "manuals/getchannel.cgi.7") CONFIG_FILES="$CONFIG_FILES manuals/getchannel.cgi.7" ;;
+    "manuals/getdata.cgi.7") CONFIG_FILES="$CONFIG_FILES manuals/getdata.cgi.7" ;;
+    "manuals/getenvirconf.cgi.7") CONFIG_FILES="$CONFIG_FILES manuals/getenvirconf.cgi.7" ;;
+    "manuals/getsupply.cgi.7") CONFIG_FILES="$CONFIG_FILES manuals/getsupply.cgi.7" ;;
+    "manuals/mm8d-creatediagrams.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-creatediagrams.1" ;;
+    "manuals/mm8d-editenvirconf.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-editenvirconf.1" ;;
+    "manuals/mm8d-editmainconf.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-editmainconf.1" ;;
+    "manuals/mm8d-exportlog2csv.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-exportlog2csv.1" ;;
+    "manuals/mm8d-getsnapshots-seccam.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-getsnapshots-seccam.1" ;;
+    "manuals/mm8d-getsnapshots-tentcam.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-getsnapshots-tentcam.1" ;;
+    "manuals/mm8d-hwtest.py.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-hwtest.py.1" ;;
+    "manuals/mm8d-maintainlog.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-maintainlog.1" ;;
+    "manuals/mm8d-msctest.py.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-msctest.py.1" ;;
+    "manuals/mm8d-override.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-override.1" ;;
+    "manuals/mm8d.py.8") CONFIG_FILES="$CONFIG_FILES manuals/mm8d.py.8" ;;
+    "manuals/mm8d-restartdaemon.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-restartdaemon.1" ;;
+    "manuals/mm8d-startdaemon.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-startdaemon.1" ;;
+    "manuals/mm8d-statusofdaemon.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-statusofdaemon.1" ;;
+    "manuals/mm8d-stopdaemon.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-stopdaemon.1" ;;
+    "manuals/mm8d-updatestartpage.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-updatestartpage.1" ;;
+    "manuals/mm8d-viewlog.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-viewlog.1" ;;
+    "manuals/mm8d-webpage.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-webpage.1" ;;
     "programs/mm8d-hwtest.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-hwtest.py" ;;
     "programs/mm8d-msctest.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-msctest.py" ;;
     "programs/mm8d.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d.py" ;;
@@ -2913,6 +2936,10 @@ do
     "source/editirrconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editirrconf/config.pas" ;;
     "source/editmainconf/config.pas") CONFIG_FILES="$CONFIG_FILES source/editmainconf/config.pas" ;;
     "source/override/config.pas") CONFIG_FILES="$CONFIG_FILES source/override/config.pas" ;;
+    "webpage/html/footer_en.html") CONFIG_FILES="$CONFIG_FILES webpage/html/footer_en.html" ;;
+    "webpage/html/footer_hu.html") CONFIG_FILES="$CONFIG_FILES webpage/html/footer_hu.html" ;;
+    "webpage/html/header_en.html") CONFIG_FILES="$CONFIG_FILES webpage/html/header_en.html" ;;
+    "webpage/html/header_hu.html") CONFIG_FILES="$CONFIG_FILES webpage/html/header_hu.html" ;;
     "webpage/cgi-bin/getcameras.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getcameras.cgi" ;;
     "webpage/cgi-bin/getchannel.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getchannel.cgi" ;;
     "webpage/cgi-bin/getdata.cgi") CONFIG_FILES="$CONFIG_FILES webpage/cgi-bin/getdata.cgi" ;;

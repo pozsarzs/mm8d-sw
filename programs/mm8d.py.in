@@ -111,7 +111,7 @@ def writedebuglogtocomport(level,text):
       print("writedebuglogtocomport")
 
 # send power supply data to serial console
-def writepowersupplydatatocomport():
+def writesupplydatatocomport():
   transmitbuffer = [0x00 for x in range(16)]
   line = ""
   if ena_console == "1":
@@ -144,7 +144,7 @@ def writepowersupplydatatocomport():
       com.close
       time.sleep(0.1)
     except:
-      print("writepowersupplydatatocomport")
+      print("writesupplydatatocomport")
 
 # send channels' data to serial console
 def writechannelstatustocomport(channel):
@@ -219,6 +219,7 @@ def writechannelstatustocomport(channel):
 # load configuration
 def loadconfiguration(conffile):
   global adr_mm10d
+  global adr_mm11d
   global adr_mm6dch
   global adr_mm7dch
   global api_key
@@ -232,14 +233,17 @@ def loadconfiguration(conffile):
   global ena_ch
   global ena_console
   global ena_mm10d
+  global ena_mm11d
   global ith_ch
   global lockfile
   global logfile
   global pro_mm10d
+  global pro_mm11d
   global pro_mm6dch
   global pro_mm7dch
   global prt_com
   global uid_mm10d
+  global uid_mm11d
   global uid_mm6dch
   global uid_mm7dch
   global usr_uid
@@ -266,6 +270,7 @@ def loadconfiguration(conffile):
   L = 'log'
   LP = 'LPTport'
   M10 = 'MM10D'
+  M11 = 'MM11D'
   M6 = 'MM6D'
   M7 = 'MM7D'
   O = 'openweathermap.org'
@@ -344,15 +349,23 @@ def loadconfiguration(conffile):
     # enable/disable handling (0/1)
     ena_mm10d = 0
     ena_mm10d = int(config.get(M10,'ena_mm10d'))
+    ena_mm11d = 0
+    ena_mm11d = int(config.get(M11,'ena_mm11d'))
     # protocol (http/modbus)
     pro_mm10d = HP
     pro_mm10d = config.get(M10,'pro_mm10d')
+    pro_mm11d = HP
+    pro_mm11d = config.get(M11,'pro_mm11d')
     # IP address
     adr_mm10d = "0"
     adr_mm10d = config.get(M10,'adr_mm10d')
+    adr_mm11d = "0"
+    adr_mm11d = config.get(M11,'adr_mm11d')
     # ModBUS unitID
     uid_mm10d = "0"
     uid_mm10d = config.get(M10,'uid_mm10d')
+    uid_mm11d = "0"
+    uid_mm11d = config.get(M11,'uid_mm11d')
     writedebuglog("i","Configuration is loaded.")
     # internal thermostat in the heater (timer control only - 0/1)
     ith_ch = [0 for x in range(9)]
@@ -473,7 +486,7 @@ def lckfile(mode):
     writedebuglog("w","Cannot create/remove"+lockfile+".")
 
 # write power supply data to logfile
-def writepowersupplydatatolog(statusdata):
+def writesupplydatatolog(statusdata):
   logfile = dir_log + '/mm8d-supply.log'
   dt = (strftime("%Y-%m-%d,%H:%M",localtime()))
   lckfile(1)
@@ -920,6 +933,47 @@ def closelocalports():
     GPIO.cleanup
   else:
     portio.outb(0,LPTADDRESSES[prt_lpt])
+
+# read remote MM11D device
+def readMM11Ddevice():
+  rc = 0
+  # See documents/mm11d.txt for URLs and ModBUS registers.
+  try:
+    if pro_mm11d == HP:
+      url = "http://" + adr_mm11d + "/raw/"
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+        l = 0
+        for line in r.text.splitlines():
+          l = l + 1
+          if l == 1:
+            raw_qv = int(line)
+      else:
+        rc = 0
+    else:
+      mb_fc = 3
+      mb_reg = 0
+      mb_regs = 0
+      mb_client = ModbusClient()
+      mb_client.host(adr_mm11d)
+      mb_client.port(MB_PORT)
+      if not mb_client.is_open():
+        if not mb_client.open():
+          rc = 0
+      if mb_client.is_open():
+        # read 10 registers at address 0, store result in regs list
+        regs = mb_client.read_holding_registers(mb_reg, mb_regs)
+        # if success display registers
+        if regs:
+          raw_qv = regs[0]
+      rc = 1
+  except:
+    rc = 0
+  if rc > 0:
+    # See documents/mm10d.txt for real and raw value pairs.
+    real_qv = str((raw_qv * 100) / 32767)
+  return rc
 
 # read remote MM10D device
 def readMM10Ddevice():
@@ -1499,7 +1553,7 @@ while True:
     if ena_mm10d == 1:
       newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi + real_qv
       if (prevdata_ps != newdata_ps):
-        writepowersupplydatatolog(newdata_ps)
+        writesupplydatatolog(newdata_ps)
         prevdata_ps = newdata_ps
     # write data to mm8d-ch0.log
     newdata_ch[0] = str(mainsbreakers) + \
@@ -1528,7 +1582,7 @@ while True:
             prevdata_ch[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]
     # send power supply data to display via serial port
     if ena_mm10d == 1:
-      writepowersupplydatatocomport()
+      writesupplydatatocomport()
     # send channels' data to display via serial port
     writechannelstatustocomport(loop)
     if loop == 8:

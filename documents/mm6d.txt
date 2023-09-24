@@ -42,8 +42,8 @@ Data access of the MM6D device
 |   set status of outputs      |   a=0&h=0&l=0&v=0                    |  -   |   -   |    -    |
 +------------------------------+--------------------------------------+------+-------+---------+
 
-Warning! The device does not yet support the ModBUS protocol, the table contains
-         the planned register allocation.
+Warning! The device does not yet support the ModBUS protocol, the table contains the planned
+         register allocation.
 
 Notes:
 - coils:             00001-09999   1 bit  read/write
