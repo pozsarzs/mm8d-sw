@@ -35,10 +35,6 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
  - MM9A (Irrigation controller)
      <https://github.com/pozsarzs/mm9a>
 
- - MM10D (Combined consumption meter)
-     <https://github.com/pozsarzs/mm10d-hw>
-     <https://github.com/pozsarzs/mm10d-sw>
-
  - Mini serial console
      <https://github.com/pozsarzs/mini_serial_console-hw>
      <https://github.com/pozsarzs/mini_serial_console_mm8d-sw>
