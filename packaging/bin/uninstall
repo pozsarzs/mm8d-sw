@@ -1,0 +1,102 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | uninstall                                                                  |
+# | Uninstaller script                                                         |
+# +----------------------------------------------------------------------------+
+
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.2 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+line()
+{
+  for ((i=0; i<${#SWCR}; i++))
+  do
+    echo -n "-"
+  done
+  echo ""
+}
+
+# erase a file
+erase()
+{
+  sudo rm --force $1 2> /dev/null
+  echo "  $1"
+}
+
+erasedir()
+{
+  sudo rmdir $1 2> /dev/null
+  echo "  $1"
+}
+
+# constants
+SWN1="MM8D"
+SWN2="mm8d"
+SWCR=`cat documents/copyright`
+SWV=`cat documents/VERSION`
+INSTDIR="local"
+
+# uninstaller
+echo -e "\n$SWN1 v$SWV uninstaller script"
+echo "$SWCR"
+line
+sleep 1
+echo "Uninstalling..."
+echo "- stopping daemon:"
+sudo /etc/init.d/$SWN2.sh stop
+sudo systemctl disable $SWN2.service
+echo "- removing files:"
+erase "/etc/init.d/$SWN2.sh"
+erase "/etc/rc0.d/K01$SWN2.sh"
+erase "/etc/rc2.d/S01$SWN2.sh"
+erase "/etc/rc3.d/S01$SWN2.sh"
+erase "/etc/rc4.d/S01$SWN2.sh"
+erase "/etc/rc5.d/S01$SWN2.sh"
+erase "/etc/rc6.d/K01$SWN2.sh"
+erase "/etc/systemd/system/$SWN2.service"
+sudo systemctl daemon-reload
+echo "- removing from cron:"
+erase "/etc/cron.d/$SWN2*"
+sudo /etc/init.d/cron restart
+echo "- removing files:"
+erase "/usr/$INSTDIR/bin/$SWN2*"
+erase "/usr/$INSTDIR/share/doc/$SWN2/*"
+erase "/usr/$INSTDIR/share/locale/*/$SWN2.msg"
+erase "/usr/$INSTDIR/share/man/man1/$SWN2*"
+erase "/usr/$INSTDIR/share/man/man7/getcameras.cgi.7.gz"
+erase "/usr/$INSTDIR/share/man/man7/getchannel.cgi.7.gz"
+erase "/usr/$INSTDIR/share/man/man7/getdata.cgi.7.gz"
+erase "/usr/$INSTDIR/share/man/man7/getenvirconf.cgi.7.gz"
+erase "/usr/$INSTDIR/share/man/man7/getsupply.cgi.7.gz"
+erase "/usr/$INSTDIR/share/man/man8/$SWN2*"
+erase "/usr/$INSTDIR/share/$SWN2/*"
+erase "/usr/lib/cgi-bin/getcameras.cgi"
+erase "/usr/lib/cgi-bin/getchannel.cgi"
+erase "/usr/lib/cgi-bin/getdata.cgi"
+erase "/usr/lib/cgi-bin/getenvirconf.cgi"
+erase "/usr/lib/cgi-bin/getsupply.cgi"
+erase "/var/$INSTDIR/lib/$SWN2/*/*"
+erase "/var/$INSTDIR/lock/$SWN2*"
+erase "/var/$INSTDIR/log/$SWN2*"
+erase "/var/$INSTDIR/log/debug-*.log"
+erase "/var/www/html/*.css"
+erase "/var/www/html/*.html"
+erase "/var/www/html/diagrams/*"
+erase "/var/www/html/pics/*"
+erase "/var/www/html/snapshots/*"
+echo "- removing directories:"
+erasedir "/usr/$INSTDIR/share/doc/$SWN2/"
+erasedir "/usr/$INSTDIR/share/$SWN2/"
+erasedir "/var/$INSTDIR/lib/$SWN2/*/"
+erasedir "/var/$INSTDIR/lib/$SWN2/"
+erasedir "/var/www/html/diagrams/"
+erasedir "/var/www/html/pics/"
+erasedir "/var/www/html/snapshots/"
+sudo mv "/etc/motd.orig" "/etc/motd"
+echo "Done."

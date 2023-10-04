@@ -3,11 +3,11 @@
 SHELL=/bin/sh
 PATH=/usr/local/bin:/usr/bin
 
-3,33 * * * *			root	mm8d-getsnapshot 1 > /dev/null 2>&1
-4,34 * * * *			root	mm8d-getsnapshot 2 > /dev/null 2>&1
-5,35 * * * *			root	mm8d-getsnapshot 3 > /dev/null 2>&1
-6,36 * * * *			root	mm8d-getsnapshot 4 > /dev/null 2>&1
-7,37 * * * *			root	mm8d-getsnapshot 5 > /dev/null 2>&1
-8,38 * * * *			root	mm8d-getsnapshot 6 > /dev/null 2>&1
-9,39 * * * *			root	mm8d-getsnapshot 7 > /dev/null 2>&1
-10,40 * * * *			root	mm8d-getsnapshot 8 > /dev/null 2>&1
+3,18,33,48 * * * *			root	mm8d-getsnapshot-tentcam 1 > /dev/null 2>&1
+4,19,34,49 * * * *			root	mm8d-getsnapshot-tentcam 2 > /dev/null 2>&1
+5,20,35,50 * * * *			root	mm8d-getsnapshot-tentcam 3 > /dev/null 2>&1
+6,21,36,51 * * * *			root	mm8d-getsnapshot-tentcam 4 > /dev/null 2>&1
+7,22,37,52 * * * *			root	mm8d-getsnapshot-tentcam 5 > /dev/null 2>&1
+8,23,38,53 * * * *			root	mm8d-getsnapshot-tentcam 6 > /dev/null 2>&1
+9,24,39,54 * * * *			root	mm8d-getsnapshot-tentcam 7 > /dev/null 2>&1
+10,25,40,55 * * * *			root	mm8d-getsnapshot-tentcam 8 > /dev/null 2>&1

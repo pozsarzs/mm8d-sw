@@ -1,0 +1,43 @@
+# +----------------------------------------------------------------------------+
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | Makefile                                                                   |
+# | Global Makefile                                                            |
+# +----------------------------------------------------------------------------+
+
+copyright	= @copyright@
+name		= mm8d
+version		= @version@
+architecture	= @architecture@
+os              = @os@
+
+prefix		= @prefix@
+bindir		= @bindir@
+datarootdir	= @datarootdir@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+localedir	= @datarootdir@/locale
+mandir		= @mandir@
+srcdir		= @srcdir@
+sysconfdir	= @sysconfdir@
+vardir		= @vardir@
+
+binmode		= 0755
+txtmode		= 0644
+
+install		= @install@
+ln		= @ln@ --symbolic --force
+make		= @make@
+rm		= @rm@ --force
+rmdir		= @rmdir@ --ignore-fail-on-non-empty
+
+fpflag		= -T@os@ \
+                  -MObjFPC \
+                  -Scgi \
+                  -O1 \
+                  -v0 \
+                  -ve \
+                  -FE../_lib/@architecture@-@os@/ \
+                  -Fu./.. \
+                  -Fu../_lib/@architecture@-@os@/
+

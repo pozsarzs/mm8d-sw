@@ -38,7 +38,24 @@ Content of log files
    12:  status of heater output               0: off     1: on
 
 
-  3. debug-YYMMDD.log
+  3. mm8d-supply.log
+  ------------------
+
+  Example line: "2020-09-19,13:15,232,12,2760,0,2760,1,34"
+
+  Columns:
+    1:  date
+    2:  time
+    3:  effective mains voltage in V
+    4:  effective mains current in A
+    5:  active power in W
+    6:  reactive power in VAR
+    7:  apparent power in VA
+    8:  cos phi
+    9:  water flow rate in l/min
+
+
+  4. debug-YYMMDD.log
   -------------------
 
   Example line: "2020-09-19 21:01:33  INFO Initializing I/O ports."
@@ -50,5 +67,4 @@ Content of log files
     4:  content of record
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
-
+ MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>

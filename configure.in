@@ -1,0 +1,136 @@
+dnl +--------------------------------------------------------------------------+
+dnl | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. |
+dnl | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                |
+dnl | configure.in                                                             |
+dnl | Autoconf input file for unix-like systems                                |
+dnl +--------------------------------------------------------------------------+
+
+AC_INIT
+AC_CONFIG_AUX_DIR(config)
+AC_CANONICAL_SYSTEM
+
+AC_PATH_PROG(ln, ln, no)
+AC_PATH_PROG(rm, rm, no)
+AC_PATH_PROG(rmdir, rmdir, no)
+AC_PATH_PROG(install, install, no)
+
+AC_CHECK_PROGS(make, gmake make)
+test "$make" == "" && AC_MSG_ERROR(Make not found!)
+AC_CHECK_PROGS(hfpc,fpc,no)
+test x"$hfpc" == xno && AC_MSG_ERROR(FreePascal compiler not found!)
+
+AC_CHECK_FILE(documents/VERSION,,AC_MSG_ERROR(VERSION file not found!))
+version=`cat documents/VERSION`
+AC_CHECK_FILE(documents/copyright,,AC_MSG_ERROR(copyright file not found!))
+copyright=`cat documents/copyright`
+
+os=`fpc -iSO`
+architecture=`fpc -iSP`
+
+AC_PREFIX_DEFAULT("/usr/local")
+test x"$prefix" == xNONE && prefix="$ac_default_prefix"
+if test $prefix != "/usr" 
+then
+  if test $prefix != "/usr/local" 
+  then
+    echo "WARNING! Only /usr and /usr/local can be used!"
+    prefix = "$ac_default_prefix"
+  fi
+fi
+if test $prefix == "/usr" 
+then
+  vardir="/var"
+else
+  vardir="/var/local"
+fi
+
+AC_SUBST(architecture)
+AC_SUBST(copyright)
+AC_SUBST(os)
+AC_SUBST(prefix)
+AC_SUBST(version)
+
+AC_SUBST(bindir)
+AC_SUBST(datarootdir)
+AC_SUBST(libdir)
+AC_SUBST(mandir)
+AC_SUBST(sysconfdir)
+AC_SUBST(vardir)
+
+AC_SUBST(fpflag)
+
+AC_SUBST(install)
+AC_SUBST(ln)
+AC_SUBST(make)
+AC_SUBST(rm)
+
+AC_OUTPUT(Makefile.global \
+	  manuals/getcameras.cgi.7 \
+	  manuals/getchannel.cgi.7 \
+	  manuals/getdata.cgi.7 \
+	  manuals/getenvirconf.cgi.7 \
+	  manuals/getsupply.cgi.7 \
+	  manuals/mm8d-creatediagrams.1 \
+	  manuals/mm8d-editenvirconf.1 \
+	  manuals/mm8d-editmainconf.1 \
+	  manuals/mm8d-exportlog2csv.1 \
+	  manuals/mm8d-getsnapshots-seccam.1 \
+	  manuals/mm8d-getsnapshots-tentcam.1 \
+	  manuals/mm8d-hwtest.py.1 \
+	  manuals/mm8d-maintainlog.1 \
+	  manuals/mm8d-msctest.py.1 \
+	  manuals/mm8d-override.1 \
+	  manuals/mm8d.py.8 \
+	  manuals/mm8d-restartdaemon.1 \
+	  manuals/mm8d-startdaemon.1 \
+	  manuals/mm8d-statusofdaemon.1 \
+	  manuals/mm8d-stopdaemon.1 \
+	  manuals/mm8d-updatestartpage.1 \
+	  manuals/mm8d-viewlog.1 \
+	  manuals/mm8d-webpage.1 \
+	  programs/mm8d-hwtest.py \
+	  programs/mm8d-msctest.py \
+	  programs/mm8d.py \
+          settings/motd \
+          settings/mm8d/mm8d.ini \
+	  settings/systemd/system/mm8d.service \
+          scripts/mm8d-creatediagrams \
+          scripts/mm8d-editenvirconf \
+          scripts/mm8d-editmainconf \
+          scripts/mm8d-exportlog2csv \
+          scripts/mm8d-getsnapshots-seccam \
+          scripts/mm8d-getsnapshots-tentcam \
+          scripts/mm8d-maintainlog \
+          scripts/mm8d-override \
+          scripts/mm8d-restartdaemon \
+          scripts/mm8d-startdaemon \
+          scripts/mm8d-statusofdaemon \
+          scripts/mm8d-stopdaemon \
+          scripts/mm8d-updatestartpage \
+          scripts/mm8d-viewlog \
+          scripts/mm8d-webpage \
+          source/editenvirconf/config.pas \
+          source/editirrconf/config.pas \
+          source/editmainconf/config.pas \
+          source/override/config.pas \
+	  webpage/html/footer_en.html \
+	  webpage/html/footer_hu.html \
+	  webpage/html/header_en.html \
+	  webpage/html/header_hu.html \
+	  webpage/cgi-bin/getcameras.cgi \
+	  webpage/cgi-bin/getchannel.cgi \
+	  webpage/cgi-bin/getdata.cgi \
+	  webpage/cgi-bin/getenvirconf.cgi \
+	  webpage/cgi-bin/getsupply.cgi)
+
+echo "
+Summary
+=======
+    Target op. system	$os
+    Target processor	$architecture
+    Target directory	$prefix
+
+
+  Type '${make}' for compilation and then '${make} install'.
+  Run 'packaging/bin/prepare' to install required programs.
+"

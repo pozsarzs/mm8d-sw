@@ -1,16 +1,24 @@
 Arguments of CGI programs
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-  1. getenvirconf.cgi
-  -----------------------
+
+  1. getcameras.cgi
+  -----------------
   Example line:
-    "http://.../cgi-bin/getenvirconf.cgi?channel=2"
+    "http://.../cgi-bin/getcameras.cgi"
+
+
+  2. getchannel.cgi
+  -----------------
+  Example line:
+    "http://.../cgi-bin/getchannel.cgi?&channel=2"
 
   Argument:
     channel:    0:      master and irrigator device
                 [1-8]:  slave devices
 
-  2. getdata.cgi
-  ------------------
+
+  3. getdata.cgi
+  --------------
   Example lines:
     "http://.../cgi-bin/getdata.cgi?uid=....&channel=2&value=2"
     "http://.../cgi-bin/getdata.cgi?uid=....&channel=2&value=2&type=xml"
@@ -19,21 +27,36 @@ Arguments of CGI programs
     uid:        user identity, you can set in mm8d.ini
     channel:    0:      master and irrigator device
                 [1-8]:  slave devices
-    value:      0:      name and version of this program
+    value:     -1:      power supply
+                0:      name and version of this program
                 1:      user's data
                 2:      status of controller
     type:       xml:    XML output format
 
-  3. getpage.cgi
-  ------------------
+
+
+  4. getenvirconf.cgi
+  -------------------
   Example line:
-    "http://.../cgi-bin/getpage.cgi?&channel=2"
+    "http://.../cgi-bin/getenvirconf.cgi?channel=2"
 
   Argument:
     channel:    0:      master and irrigator device
                 [1-8]:  slave devices
 
-  See manual pages of getenvirconf.cgi, getdata.cgi and getpage.cgi for details.
+
+
+  5. getsupply.cgi
+  ----------------
+  Example line:
+    "http://.../cgi-bin/getsupply.cgi?type=e"
+
+  Arguments:
+    type:       e:      electricity supply
+                w:      water supply
+
+
+  See manual pages for details.
 
 --------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>

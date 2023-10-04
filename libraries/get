@@ -1,9 +1,11 @@
 #!/bin/bash
 # +----------------------------------------------------------------------------+
-# | MM8D v0.4 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | get                                                                        |
 # | get library packages                                                       |
 # +----------------------------------------------------------------------------+
 
 wget http://portio.inrim.it/portio-0.5.tar.gz
+wget https://github.com/sourceperl/pyModbusTCP/archive/refs/tags/v0.1.10.tar.gz
+mv v0.1.10.tar.gz pyModbusTCP-0.1.10.tar.gz

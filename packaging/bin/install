@@ -1,0 +1,198 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | install                                                                    |
+# | Installer script                                                           |
+# +----------------------------------------------------------------------------+
+#
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.2 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+line()
+{
+  for ((i=0; i<${#SWCR}; i++))
+  do
+    echo -n "-"
+  done
+  echo ""
+}
+
+copy()
+{
+  sudo cp $1 $2
+  echo "  $1 -> $2"
+}
+
+# constans
+ARCH=`uname -m`
+SWN1="MM8D"
+SWN2="mm8d"
+SWCR=`cat documents/copyright`
+SWV=`cat documents/VERSION`
+INSTDIR="local"
+LANGUAGES="hu"
+SUBDIRS="/usr/$INSTDIR/bin \
+         /usr/$INSTDIR/etc \
+         /usr/$INSTDIR/etc/$SWN2 \
+         /usr/$INSTDIR/share \
+         /usr/$INSTDIR/share/doc \
+         /usr/$INSTDIR/share/doc/$SWN2 \
+         /usr/$INSTDIR/share/locale \
+         /usr/$INSTDIR/share/$SWN2 \
+         /usr/$INSTDIR/share/man \
+         /usr/$INSTDIR/share/man/man1 \
+         /usr/$INSTDIR/share/man/man7 \
+         /usr/$INSTDIR/share/man/man8 \
+         /var/$INSTDIR/lib/$SWN2 \
+         /var/$INSTDIR/lib/$SWN2/0 \
+         /var/$INSTDIR/lib/$SWN2/1 \
+         /var/$INSTDIR/lib/$SWN2/2 \
+         /var/$INSTDIR/lib/$SWN2/3 \
+         /var/$INSTDIR/lib/$SWN2/4 \
+         /var/$INSTDIR/lib/$SWN2/5 \
+         /var/$INSTDIR/lib/$SWN2/6 \
+         /var/$INSTDIR/lib/$SWN2/7 \
+         /var/$INSTDIR/lib/$SWN2/8 \
+         /var/$INSTDIR/lock \
+         /var/$INSTDIR/log \
+         /var/www/ \
+         /var/www/html \
+         /var/www/html/pics \
+         /var/www/html/snapshots \
+         /var/www/html/diagrams"
+README="/usr/$INSTDIR/share/doc/$SWN2/README"
+
+# installer
+echo -e "\n$SWN1 v$SWV installer script"
+echo "$SWCR"
+line
+echo -e "\n  This program is free software: you can redistribute it and/or modify it
+under the terms of the European Union Public License 1.2 version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.\n"
+sleep 3
+
+echo -e "\nChecking binaries:"
+if [ $ARCH = 'x86_64' ]
+then
+  BINDIR="binary/$ARCH"
+else
+  if [ $ARCH = 'armhf' ]
+  then
+    BINDIR="binary/$ARCH"
+  else
+    BINDIR="binary/i386"
+  fi
+fi
+EXISTBIN=0
+if [ -f "$BINDIR/$SWN2-editenvirconf.bin" ]
+then
+  echo " $BINDIR/$SWN2-editenvirconf.bin"
+  if [ -f "$BINDIR/$SWN2-editirrconf.bin" ]
+  then
+    echo " $BINDIR/$SWN2-editirrconf.bin"
+    if [ -f "$BINDIR/$SWN2-editmainconf.bin" ]
+    then
+      echo " $BINDIR/$SWN2-editmainconf.bin"
+      if [ -f "$BINDIR/$SWN2-override.bin" ]
+      then
+        echo " $BINDIR/$SWN2-override.bin"
+        EXISTBIN=1
+      fi
+    fi
+  fi
+fi
+if [ $EXISTBIN -ne 1 ]
+then 
+  echo "-e \Building source code:"
+  cd source
+  ./configure && make && make install
+  cd ..
+fi
+
+if [ -f "binary/x86_64/*.bin" ]
+  then
+    echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+    exit 1
+  fi
+echo -e "\nInstalling..."
+echo "- creating directories:"
+sudo mkdir --parents /usr/$INSTDIR 2> /dev/null
+for D in $SUBDIRS
+do
+  sudo mkdir --parents $D 2> /dev/null
+  echo "  $D"
+done
+for X in $LANGUAGES; do
+  if [ -e "messages/"$SWN2"_"$X".msg" ]
+  then
+    sudo mkdir --parents /usr/$INSTDIR/share/locale/$X 2> /dev/null
+    echo "  /usr/$INSTDIR/share/locale/$X"
+  fi;
+done
+sudo rm --force /var/www/html/diagrams/* 2> /dev/null
+sudo chown root:www-data /var/www/html
+sudo chown root:www-data /var/www/html/snapshots
+sudo chown root:www-data /var/www/html/diagrams
+sudo chmod 777 /var/www/html/diagrams
+sudo chmod 777 /var/www/html/snapshots
+sudo chmod 775 /var/www/html/pics
+sudo chmod 777 /var/$INSTDIR/lib/$SWN2
+echo "- copying files:"
+copy "LICENCE" "/usr/$INSTDIR/share/doc/$SWN2/COPYING"
+copy "documents/*" "/usr/$INSTDIR/share/doc/$SWN2/"
+copy "manuals/*.1.gz" "/usr/$INSTDIR/share/man/man1/"
+copy "manuals/*.7.gz" "/usr/$INSTDIR/share/man/man7/"
+copy "manuals/*.8.gz" "/usr/$INSTDIR/share/man/man8/"
+for X in $LANGUAGES; do
+  if [ -e "messages/"$SWN2"_"$X".msg" ]
+  then
+    copy "messages/"$SWN2"_"$X".msg" "/usr/$INSTDIR/share/locale/$X/$SWN2.msg"
+  fi;
+done
+if [ $ARCH = 'x86_64' ]
+then
+  copy "binary/x86_64/*.bin" "/usr/$INSTDIR/bin/"
+else
+  if [ $ARCH = 'armhf' ]
+  then
+    copy "binary/armhf/*.bin" "/usr/$INSTDIR/bin/"
+  else
+    copy "binary/i386/*.bin" "/usr/$INSTDIR/bin/"
+  fi
+fi
+copy "programs/*.py" "/usr/$INSTDIR/bin/"
+copy "scripts/*" "/usr/$INSTDIR/bin/"
+copy "settings/cron.d/*" "/etc/cron.d/"
+copy "settings/$SWN2/*.ini" "/usr/$INSTDIR/etc/$SWN2/"
+copy "settings/init.d/*" "/etc/init.d/"
+copy "settings/systemd/system/$SWN2.service" "/etc/systemd/system/"
+copy "webpage/cgi-bin/*.cgi" "/usr/lib/cgi-bin/"
+copy "webpage/html/*.html" "/usr/$INSTDIR/share/$SWN2/"
+copy "webpage/pics/*" "/var/www/html/pics/"
+copy "webpage/*.css" "/var/www/html/"
+copy "/etc/motd" "/etc/motd."`date +%s`
+copy "settings/motd" "/etc/"
+echo "- set init.d:"
+sudo /etc/init.d/$SWN2.sh stop
+sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc0.d/K01$SWN2.sh
+sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc2.d/S01$SWN2.sh
+sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc3.d/S01$SWN2.sh
+sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc4.d/S01$SWN2.sh
+sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc5.d/S01$SWN2.sh
+sudo ln -sf /etc/init.d/$SWN2.sh /etc/rc6.d/K01$SWN2.sh
+sudo systemctl daemon-reload
+sudo systemctl enable $SWN2.service
+sudo /etc/init.d/$SWN2.sh start
+echo "- set cron.d:"
+sudo /etc/init.d/cron restart
+echo "- create default startpage:"
+/usr/$INSTDIR/bin/$SWN2-updatestartpage
+echo "Done."

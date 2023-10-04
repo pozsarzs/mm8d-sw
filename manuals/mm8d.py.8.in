@@ -1,0 +1,90 @@
+.TH "mm8d.py" "8" "@version@" "Pozsár Zsolt" "MM8D"
+.SH "NAME"
+.LP 
+mm8d.py - daemon program
+.SH "SYNTAX"
+.LP
+\fBmm8d.py\fP
+.SH "DESCRIPTION"
+.LP 
+This is a part of MM8D growing house and irrigation controlling and
+remote monitoring system. Do not run it manually, use
+\fBmm8d-startdaemon\fP and \fBmm8d-stopdaemon\fP scripts.
+.SH "FILES"
+.LP
+.TP
+\fI/etc/mm8d/envir-ch?.ini\fR or \fI/usr/local/etc/mm8d/envir-ch?.ini\fR
+environment characteristic configuration files
+.TP
+\fI/etc/mm8d/mm8d.ini\fR or \fI/usr/local/etc/mm8d/mm8d.ini\fR
+main configuration file
+.TP
+\fIdebug-YYYYMMDD.log\fR in log directory
+debug log file
+.TP
+\fImm8d-ch?.log\fR in log directory
+log file of channels
+.TP
+\fImm8d-supply.log\fR in log directory
+log file of power supply
+.TP
+\fImm8d.lck\fR in directory of lock files
+locking file
+.TP
+\fIout1\fR, \fIout2\fR, and \fIout3\fR in directories of changing files
+output state files for override
+.SH "EXIT STATUS"
+.TP
+.B 0
+normal exit
+.TP
+.B 1
+cannot open configuration file
+.TP
+.B 14
+cannot open environment characteristic configuration file
+.TP
+.B 15
+cannot create log file
+.TP
+.B 17
+cannot access i/o port
+.TP
+.B 18
+there is not enabled channel
+.TP
+.B 19
+fatal error
+.TP
+.B 20
+cannot open irrigator configuration file
+.SH "HOMEPAGE"
+\fIhttp://www.pozsarzs.hu\fR
+.SH "SEE ALSO"
+.PD 0
+.LP
+\fBgetcameras.cgi\fP(7)
+\fBgetchannel.cgi\fP(7)
+\fBgetdata.cgi\fP(7)
+\fBgetenvirconf.cgi\fP(7)
+\fBgetsupply.cgi\fP(7)
+\fBmm8d-creatediagrams\fP(1)
+\fBmm8d-editenvirconf\fP(1)
+\fBmm8d-editmainconf\fP(1)
+\fBmm8d-exportlog2csv\fP(1)
+\fBmm8d-getsnapshots-seccam\fP(1)
+\fBmm8d-getsnapshots-tentcam\fP(1)
+\fBmm8d-hwtest.py\fP(1)
+\fBmm8d-maintainlog\fP(1)
+\fBmm8d-msctest.py\fP(1)
+\fBmm8d-override\fP(1)
+\fBmm8d-restartdaemon\fP(1)
+\fBmm8d-startdaemon\fP(1)
+\fBmm8d-statusofdaemon\fP(1)
+\fBmm8d-stopdaemon\fP(1)
+\fBmm8d-updatestartpage\fP(1)
+\fBmm8d-viewlog\fP(1)
+\fBmm8d-webpage\fP(1)
+and \fI/usr/share/doc/mm8d/\fP or equivalent on your system.
+.SH "AUTHOR"
+Pozsár Zsolt \fIpozsarzs@gmail.com\fR

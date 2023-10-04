@@ -1,15 +1,30 @@
+ MM8D (0.5) unstable; urgency=low
+
+  * Some bug fixes.
+  * Electricity consumption meter support (MM10D).
+  * Water consumption meter support (MM11D).
+  * Improved web interface.
+  * Modified main configuration file and configuration programs.
+  * Modified log file reader.
+  * Export log file to CSV.
+  * Take and display security camera snapshots on the web interface (this is not the marquee camera on the channel side).
+  * Prepared ModBUS/TCP support.
+  * Cannot exits without active channels.
+
+ -- Pozsár Zsolt <pozsarzs@gmail.com>             XXX, 00 May 2023 00:00:00
+
  MM8D (0.4) unstable; urgency=low
 
   * Add mini serial console support. See miniserialconsole.txt for
     details.
 
- -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Tue, 13 Dec 2022 14:05:12
+ -- Pozsár Zsolt <pozsarzs@gmail.com>             Tue, 13 Dec 2022 14:05:12
 
  MM8D (0.3.1) unstable; urgency=low
 
   * Some bugfix.
 
- -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Fri, 19 Aug 2022 15:44:00
+ -- Pozsár Zsolt <pozsarzs@gmail.com>             Fri, 19 Aug 2022 15:44:00
 
  MM8D (0.3) unstable; urgency=low
 
@@ -20,7 +35,7 @@
   * Modified function of inputs (on interface board).
   * New function of outputs (on interface board).
 
- -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Mon, 28 Mar 2022 16:57:00
+ -- Pozsár Zsolt <pozsarzs@gmail.com>             Mon, 28 Mar 2022 16:57:00
 
  MM8D (0.2) unstable; urgency=low
 
@@ -30,11 +45,11 @@
   * Packages for amd64 architecture.
   * Some bugfix.
 
- -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Fri, 31 Dec 2021 23:59:59
+ -- Pozsár Zsolt <pozsarzs@gmail.com>             Fri, 31 Dec 2021 23:59:59
 
 
  MM8D (0.1) unstable; urgency=low
 
   * Initial release.
 
- -- Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>  Thu, 10 Jun 2021 08:28:00
+ -- Pozsár Zsolt <pozsarzs@gmail.com>             Thu, 10 Jun 2021 08:28:00

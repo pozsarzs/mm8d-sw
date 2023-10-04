@@ -1,0 +1,138 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | mm8d-exportlog2csv                                                         |
+# | Export log file in CSV format (to stdout)                                  |
+# +----------------------------------------------------------------------------+
+
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.2 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+# Exit codes:
+#   0: normal exit
+#   1: cannot open configuration file
+#   2: specified value is not number
+#   3: wrong channel number
+#   5: cannot open log file
+
+# constants
+S=","
+CFGFILE="@prefix@/etc/mm8d/mm8d.ini"
+
+loadconfiguration()
+{
+  if [ ! -f $CFGFILE ]
+  then
+    echo "ERROR #1: Cannot open $CFGFILE configuration file!"
+    exit 1
+  fi
+  DIR_LOG=`cat $CFGFILE | grep dir_log= | sed 's/dir_log=//'`
+}
+
+exportlogfile()
+{
+  if [ $CHANNEL -eq "-1" ]
+  then
+    echo -e "date"$S"time"$S"Urms [V]"$S"Irms [A]"$S"P [W]"$S"Q [VAr]"$S"S [VA]"$S"cosFi"$S"qv [l/min]"
+    OLDIFS=$IFS
+    IFS=,
+    while read C1 C2 C3 C4 C5 C6 C7 C8
+    do
+      echo "$C1$S$C2$S$C3$S$C4$S$C5$S$C6$S$C7$S$C8$C9"
+    done < $LOGFILE
+    IFS=$OLDIFS
+    echo "1: Urms - effective mains voltage in V"$S$S$S$S$S$S$S$S
+    echo "2: Irms - effective mains current in A"$S$S$S$S$S$S$S$S
+    echo "3: P - active power in W"$S$S$S$S$S$S$S$S
+    echo "4: Q - reactive power in VAr"$S$S$S$S$S$S$S$S
+    echo "5: S - apparend power in VA"$S$S$S$S$S$S$S$S
+    echo "6: cos Fi"$S$S$S$S$S$S$S$S
+    echo "7:  qv - water flow rate in l/min"$S$S$S$S$S$S$S$S
+  fi
+  if [ $CHANNEL -eq "0" ]
+  then
+    echo "date"$S"time"$S"1"$S"2"$S"3"$S"4"$S"5"$S"6"$S"7"
+    OLDIFS=$IFS
+    IFS=,
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9
+    do
+      echo "$C1$S$C2$S$C3$S$C4$S$C5$S$C6$S$C7$S$C8$S$C9"
+    done < $LOGFILE
+    IFS=$OLDIFS
+    echo "1:  overcurrent breaker error            0: closed  1: opened"$S$S$S$S$S$S$S$S
+    echo "2:  water pump pressure error (no water) 0: good    1: bad"$S$S$S$S$S$S$S$S
+    echo "3:  water pump pressure error (clogging) 0: good    1: bad"$S$S$S$S$S$S$S$S
+    echo "4:  external temperature in °C"$S$S$S$S$S$S$S$S
+    echo "5:  status of water pump and tube #1     0: off     1: on"$S$S$S$S$S$S$S$S
+    echo "6:  status of water pump and tube #2     0: off     1: on"$S$S$S$S$S$S$S$S
+    echo "7:  status of water pump and tube #3     0: off     1: on"$S$S$S$S$S$S$S$S
+  fi
+  if [ $CHANNEL -ge "1" ]
+  then
+    echo "date"$S"time"$S"1"$S"2"$S"3"$S"4"$S"5"$S"6"$S"7"$S"8"$S"9"$S"10"
+    OLDIFS=$IFS
+    IFS=,
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11 C12
+    do
+      echo "$C1$S$C2$S$C3$S$C4$S$C5$S$C6$S$C7$S$C8$S$C9$S$C10$S$C11$S$C12"
+    done < $LOGFILE
+    IFS=$OLDIFS
+    echo " 1: temperature in °C"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 2: relative humidity in %"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 3: relative unwanted gas concentrate in %"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 4: operation mode                          0: hyphae  1: mushroom"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 5: manual mode                             0: auto    1: manual"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 6: overcurrent breaker error               0: closed  1: opened"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 7: status of door (alarm)                  0: closed  1: opened"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 8: status of lamp output                   0: off     1: on"$S$S$S$S$S$S$S$S$S$S$S
+    echo " 9: status of ventilator output             0: off     1: on"$S$S$S$S$S$S$S$S$S$S$S
+    echo "10: status of heater output                 0: off     1: on"$S$S$S$S$S$S$S$S$S$S$S
+  fi
+}
+
+# main function
+if [ $# -eq 0 ]
+then
+  read -p "Channel (-1..8): " CHANNEL
+else
+  CHANNEL=$1
+fi
+
+if [[ ! "$CHANNEL" =~ ^-?[0-9]+$ ]]; then 
+  echo "ERROR #2: Specified value is not number!"
+  exit 2
+fi
+loadconfiguration
+if [ $CHANNEL -ge "-1" ]
+then
+  if [ $CHANNEL -le "8" ]
+  then
+    if [ $CHANNEL == "-1" ]
+    then
+      LOGFILE=$DIR_LOG"/mm8d-supply.log"
+    else
+      LOGFILE=$DIR_LOG"/mm8d-ch"
+      LOGFILE=$LOGFILE$CHANNEL".log"
+    fi
+    if [ ! -f $LOGFILE ]
+    then
+      echo "ERROR #5: Cannot open $LOGFILE log file!"
+      exit 5
+    fi
+    exportlogfile
+  else
+    echo "ERROR #3: Wrong channel number!"
+    echo "Valid values: -1..8"
+    exit 3
+  fi
+else
+  echo "ERROR #3: Wrong channel number!"
+  echo "Valid values: -1..8"
+  exit 3
+fi
+exit 0

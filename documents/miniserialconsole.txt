@@ -1,7 +1,7 @@
 Mini serial console
-
+~~~~~~~~~~~~~~~~~~~
 About this device
-
+-----------------
   This is a Raspberry Pi Pico-based device. The display is 20x4 character-sized
   liquid crystal display, which displays 20x4 size area of the larger size
   virtual screen. This area is a can be moved with buttons. The default size of
@@ -43,8 +43,9 @@ Serial ports
 
 
 Incoming (binary) data lines in Mode #3
+---------------------------------------
 
-  0123456789ABC
+   0123456789ABC
   "CH..........."
 
     0:   'C'                                  0x43
@@ -74,7 +75,29 @@ Incoming (binary) data lines in Mode #3
     C:   status of heater output              0x00: off    0x01: on     0x02: always off 0x03: always on
 
 
+   0123456789ABCD
+  "SP............"
+
+    0:   'S'                                  0x53
+    1:   'P'                                  0x50
+    2:   effective mains voltage (raw data)  (0x00-0xFF) upper byte
+    3:   effective mains voltage (raw data)  (0x00-0xFF) lower byte
+    4:   effective mains current (raw data)  (0x00-0xFF) upper byte
+    5:   effective mains current (raw data)  (0x00-0xFF) lower byte
+    6:   active power (raw data)             (0x00-0xFF) upper byte
+    7:   active power (raw data)             (0x00-0xFF) lower byte
+    8:   reactive power (raw data)           (0x00-0xFF) upper byte
+    9:   reactive power (raw data)           (0x00-0xFF) lower byte
+    A:   apparant power (raw data)           (0x00-0xFF) upper byte
+    B:   apparant power (raw data)           (0x00-0xFF) lower byte
+    C:   cos phi (raw data)                  (0x00-0xFF) upper byte
+    D:   cos phi (raw data)                  (0x00-0xFF) lower byte
+    E:   water flow rate (raw data)          (0x00-0xFF) upper byte
+    F:   water flow rate (raw data)          (0x00-0xFF) lower byte
+
+
 Example incoming (text) log lines in Mode #3
+--------------------------------------------
 
      0      1    2           3
   "221213 114421 I Configuration is loaded."
@@ -88,7 +111,7 @@ Example incoming (text) log lines in Mode #3
 
 
 Display
-
+-------
   Starting screens
 
     +--------------------+
@@ -180,5 +203,35 @@ Display
     3:  level of record: I | W | E - information | warning | error
     4:  short description
 
+  Electricity supply screens
+
+    Press F1 to see power supply screen.
+    You can page up and down with up and down buttons.
+
+    +--------------------+
+    |POWER   [  ]  SUPPLY|
+    |Urms:   234 V       |
+    |Irms:   16.0 A      |
+    |Cos Fi: 1.00        |
+    +--------------------+
+    +--------------------+
+    |POWER   [  ]  SUPPLY|
+    |P:      3746 W      |
+    |Q:      0000 VAr    |
+    |S:      3746 VA     |
+    +--------------------+
+
+  Water supply screens
+
+    Press F1 to see water supply screen.
+    You can page up and down with up and down buttons.
+
+    +--------------------+
+    |WATER   [  ]  SUPPLY|
+    |                    |
+    |qv:     34 l/min    |
+    |                    |
+    +--------------------+
+
 --------------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>
+  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>

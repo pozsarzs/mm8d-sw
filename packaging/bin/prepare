@@ -1,0 +1,78 @@
+#!/bin/bash
+# +----------------------------------------------------------------------------+
+# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>       |
+# | prepare                                                                    |
+# | Prepare OS                                                                 |
+# +----------------------------------------------------------------------------+
+#
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.2 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+line()
+{
+  for ((i=0; i<${#SWCR}; i++))
+  do
+    echo -n "-"
+  done
+  echo ""
+}
+
+# constants
+ARCH=`uname -m`
+SWN1="MM8D"
+SWN2="mm8d"
+SWCR=`cat documents/copyright`
+SWV=`cat documents/VERSION`
+
+# installer
+echo -e "\n$SWN1 v$SWV prepare OS"
+echo "$SWCR"
+line
+sleep 1
+echo "Installing required components..."
+sudo apt-get install apache2 \
+                     build-essential \
+                     git \
+                     gnuplot \
+                     libconfig-tiny-perl \
+                     libfreetype6-dev \
+                     libjpeg-dev \
+                     libswitch-perl \
+                     python3-daemon \
+                     python3-dev \
+                     python3-openssl \
+                     python3-pip \
+                     python3-requests \
+                     python3-serial \
+                     python-configparser \
+                     sudo \
+                     wget
+
+if [ "$ARCH" = "armhf" ]
+then
+  sudo apt-get install python3-rpi.gpio
+else
+  cp libraries/portio-0.5.tar.gz /tmp/
+  cd /tmp/
+  tar -xzf portio-0.5.tar.gz
+  cd portio-0.5
+  sudo python3 setup.py install
+fi
+
+cp libraries/pyModbusTCP-0.1.10.tar.gz /tmp/
+cd /tmp/
+tar -xzf pyModbusTCP-0.1.10.tar.gz
+cd pyModbusTCP-0.1.10
+sudo python3 setup.py install
+
+echo -e "\nSetting Apache2..."
+sudo ln --force --symbolic /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/
+sudo ln --force --symbolic /etc/apache2/mods-available/cgid.conf /etc/apache2/mods-enabled/
+sudo ln --force --symbolic /etc/apache2/conf-available/serve-cgi-bin.conf /etc/apache2/conf-enabled/
+sudo /etc/init.d/apache2 restart
+echo -e "\nDone."

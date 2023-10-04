@@ -1,12 +1,12 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.4 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
+{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | editirrconf.pas                                                          | }
 { | Full-screen program for edit irrigation.ini file                         | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
-// under the terms of the European Union Public License 1.1 version.
+// under the terms of the European Union Public License 1.2 version.
 //
 //   This program is distributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -45,18 +45,18 @@ const
                                   '<Esc> cancel');
 
 {$I config.pas}
-{$I incpage1screen.pas}
-{$I incpage2screen.pas}
+{$I incpage01screen.pas}
+{$I incpage02screen.pas}
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
-// draw base screen
+// base screen
 procedure screen(page: byte);
 begin
   background;
   case page of
-    1: page1screen;
-    2: page2screen;
+    1: page01screen;
+    2: page02screen;
   end;
   footer(bottom-1,FOOTERS[1]);
   textbackground(black);

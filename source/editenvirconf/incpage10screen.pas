@@ -1,16 +1,24 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.4 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2022 Pozsár Zsolt <pozsar.zsolt@szerafingomba.hu>     | }
+{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage10screen.pas                                                      | }
 { | Show screen content of page #10                                          | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
-// under the terms of the European Union Public License 1.1 version.
+// under the terms of the European Union Public License 1.2 version.
 //
 //   This program is distributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE.
+
+{
+  Relevant settings file section:
+
+  [mushroom]
+  vent_hightemp=25
+  vent_disablehightemp_??=0
+}
 
 // write options to screen
 procedure page10screen;
