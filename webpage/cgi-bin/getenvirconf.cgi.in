@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # +----------------------------------------------------------------------------+
-# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | getenvirconf.cgi                                                           |
 # | CGI program                                                                |
 # +----------------------------------------------------------------------------+
@@ -33,9 +33,12 @@ my $ch;
 my $channel;
 my $confdir;
 my $conffile;
+my $dark="<font color=\"gray\">&#9679;</font>";
+my $green="<font color=\"green\">&#9679;</font>";
 my $dir_msg;
 my $dir_shr;
 my $lang;
+my $led;
 my $row;
 
 # get data
@@ -102,6 +105,8 @@ if (-e $conffile)
 }
 
 # load messages
+my $msg06 = "Stand-by";
+my $msg07 = "enabled";
 my $msg08 = "Channel";
 my $msg36 = "Log in with SSH and use the <i>mm8d-editenvirconf</i> to set values.";
 my $msg38 = "Environment characteristic";
@@ -117,7 +122,7 @@ my $msg47 = "minimum";
 my $msg48 = "maximum";
 my $msg49 = "disable power on";
 my $msg50 = "timed";
-my $msg54 = "irrigator tube #";
+my $msg54 = "tube #";
 my $msg55 = "Irrigator settings";
 my $msg58 = "minimal temperature";
 my $msg59 = "maximal temperature";
@@ -144,6 +149,8 @@ while(<MSG>)
   my($datarownum) = $#datarow;
   switch ($columns[0])
   {
+    case "msg06" { $msg06 = $columns[1]; }
+    case "msg07" { $msg07 = $columns[1]; }
     case "msg08" { $msg08 = $columns[1]; }
     case "msg36" { $msg36 = $columns[1]; }
     case "msg38" { $msg38 = $columns[1]; }
@@ -251,6 +258,15 @@ if ($ch == 0)
   print "        <td align=\"center\">$config->{\"tube-1\"}{name}</td>";
   print "        <td align=\"center\">$config->{\"tube-2\"}{name}</td>";
   print "        <td align=\"center\">$config->{\"tube-3\"}{name}</td>";
+  print "      </tr>";
+  print "      <tr>";
+  print "        <td align=\"left\"><b>$msg07</b></td>";
+  if ($config->{"tube-1"}{enable} eq 1) { $led = $green } else { $led = $dark };
+  print "        <td align=\"center\">$led</td>";
+  if ($config->{"tube-2"}{enable} eq 1) { $led = $green } else { $led = $dark };
+  print "        <td align=\"center\">$led</td>";
+  if ($config->{"tube-3"}{enable} eq 1) { $led = $green } else { $led = $dark };
+  print "        <td align=\"center\">$led</td>";
   print "      </tr>";
   print "      <tr>";
   print "        <td align=\"left\"><b>$msg64</b></td>";
@@ -375,18 +391,22 @@ if ($ch == 0)
     print "      <tr>";
     print "        <td align=\"center\">$_</td>";
     $v = "heater_disable_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "        <td align=\"center\">$_</td>";
     print "        <td class=\"empty\" align=\"center\">&nbsp;</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disable_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disablelowtemp_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disablehightemp_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "      </tr>";
   }
   print "    </table>";
@@ -476,18 +496,22 @@ if ($ch == 0)
     print "      <tr>";
     print "        <td align=\"center\">$_</td>";
     $v = "heater_disable_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "        <td align=\"center\">$_</td>";
     print "        <td class=\"empty\" align=\"center\">&nbsp;</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disable_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disablelowtemp_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "        <td align=\"center\">$_</td>";
     $v = "vent_disablehightemp_" . sprintf ("%02d",$_);
-    print "        <td align=\"center\">$config->{$section}{$v}<br></td>";
+    if ($config->{$section}{$v} eq 0) { $led = $green } else { $led = $dark };
+    print "        <td align=\"center\">$led</td>";
     print "      </tr>";
   }
 }

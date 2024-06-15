@@ -1,6 +1,6 @@
 # +----------------------------------------------------------------------------+
-# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | mm8d_hu.msg                                                                |
 # | message file                                                               |
 # +----------------------------------------------------------------------------+
@@ -10,14 +10,14 @@ msg02=
 msg03=Felhasználó
 msg04=
 msg05=
-msg06=
-msg07=
+msg06=Készenlét
+msg07=engedélyezve
 msg08=Csatorna
 msg09=Részletek
 msg10=Elnevezések
 msg11=hőmérséklet &deg;C-ban
 msg12=relatív páratartalom %-ban
-msg13=relatív gáz koncentrátum %-ban
+msg13=általános hiba
 msg14=semleges
 msg15=bekapcsolva
 msg16=kikapcsolva

@@ -3,29 +3,46 @@ MM8D - Growing house and irrigation controlling and remote monitoring system
 
 1. About software
 -----------------
-
   It is a contoller software for MM8D system. MM8D system contents up to eight
 MM6D remote controlled switching devices, eight MM7D air quality measuring
-device, one MM9A irrigation controller, one MM10D electricity consumption
-meter, one MM11D water consumption meter, one MM8D interface board and a PC
-or Raspberry Pi. You can view actual status on connected Mini serial console
-or with a browser application and administrate it with SSH client.
+device, one MM9A irrigation controller, outdoor temperature meter, electricity
+power meter, water flow meter, LED display in tents, one or two MM8D interface
+board and a PC or Raspberry Pi. You can view actual status on connected Mini
+serial console or with a browser application and administrate it with SSH client.
+Devices can connect via LAN or serial line with HTTP or Modbus protocol.
 
-  MM6Ds, MM7Ds, MM10D, MM11D connects via wireless LAN (HTTP/ModBUS), MM9A and
-others (auxiliary contact of overcurrent breakers and LEDs) via MM8D interface
-board. Serial console connects via RS-232 with unique protocol.
+2. My setup
+~~~~~~~~~~~
+  Breaking with tradition, this version was primarily developed for old
+industrial PCs, but with certain restrictions (e.g. number of ports) it can
+also be run on Raspberry Pi. (See connecting.txt for details.) This was chosen
+because they are already cheap and reliable. The PC I use is a 500 MHz AMD
+Geode 32-bit machine with Debian Bookworm installed.
+
+Devices: 
+ - MM6Ds                      COM4  RS-485  Modbus/RTU
+ - MM7Ds                      COM4  RS-485  Modbus/RTU
+ - tent displays              COM4  RS-485  Modbus/RTU
+ - outdoor temperature meter  COM3  RS-485  Modbus/RTU
+ - electricity power meter    COM2  RS-232  Modbus/ASCII
+ - mini serial console        COM1  RS-232  unique protocol
+
+Note:
+  On this processor and operating system, the running of one or two basic
+programs (e.g. sudo) stops with an 'illegal instruction' error, they must
+be recompiled from the source code with the '--disable-hardening' option.
 
 Requirements:
 
-  Hardware: Raspberry Pi 2 Model B.
-  Software: Raspberry Pi OS Lite,
+  Hardware: PC with a paralel and some serial ports.
+  Software: Debian GNU/Linux operation system,
             Apache webserver,
             GNUPlot,
             Perl,
             Python3.
 
-  Hardware: PC with a paralel and a serial port.
-  Software: Debian GNU/Linux operation system,
+  Hardware: Raspberry Pi 2 Model B.
+  Software: Raspberry Pi OS Lite,
             Apache webserver,
             GNUPlot,
             Perl,
@@ -73,4 +90,4 @@ c. Download from Debian repository
    Mobile:               +36 30/249-5030
 
 --------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

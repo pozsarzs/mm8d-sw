@@ -1,6 +1,6 @@
 # +----------------------------------------------------------------------------+
-# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | Makefile                                                                   |
 # | Makefile for many files of the same type                                   |
 # +----------------------------------------------------------------------------+

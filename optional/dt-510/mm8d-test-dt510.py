@@ -1,0 +1,76 @@
+#!/usr/bin/python3
+# +----------------------------------------------------------------------------+
+# | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | mm8d-test-dt510.py                                                         |
+# | DT-510 type consumption meter test program                                 |
+# +----------------------------------------------------------------------------+
+
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.2 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+# Exit codes:
+#   0: normal exit
+#   1: cannot open configuration file
+
+import configparser
+import io
+import serial
+import sys
+import time
+import dt510 as pwm
+
+# constants
+CONFFILE="/usr/local/etc/mm8d/mm8d.ini"
+
+# load configuration
+def loadconfiguration(CONFFILE):
+  P = 'powermeter'
+  global pwm_port
+  global pwm_speed
+  global pwm_modbusid
+  try:
+    with open(CONFFILE) as f:
+      mm8d_config = f.read()
+    config = configparser.RawConfigParser(allow_no_value=True)
+    config.read_file(io.StringIO(mm8d_config))
+    # power meter
+    pwm_modbusid = 0
+    pwm_modbusid = int(config.get(P, 'pwm_modbusid'))
+    pwm_port = config.get(P, 'pwm_port')
+    pwm_speed = 9600
+    pwm_speed = int(config.get(P, 'pwm_speed'))
+  except:
+    print("ERROR #1: Cannot open configuration file!");
+    sys.exit(1);
+
+# main function
+print("\nDT-510 test utility * (C) 2024 Pozsar Zsolt")
+print("-------------------------------------------")
+print("Load configuration: %s..." % CONFFILE)
+loadconfiguration(CONFFILE)
+print(" - used port: " + pwm_port)
+print(" - baudrate:  " + str(pwm_speed))
+pwm.port = pwm_port
+pwm.baudrate = pwm_speed
+while True:
+  print("Press enter for read device (or q)")
+  selection = input("> ")
+  if selection == "Q" or selection == "q":
+    print("\nQuitting.")
+    sys.exit(0)
+  if pwm.readregisters(1):
+    print(' ', round(pwm.getp(), 2), 'W')
+    print(' ', round(pwm.getq(), 2), 'VAr')
+    print(' ', round(pwm.gets(), 2), 'VA')
+    print(' ', round(pwm.geturms(), 2), 'V')
+    print(' ', round(pwm.getirms(), 2), 'A')
+    print(' ', round(pwm.getcosfi(), 2))
+  else:
+    print('Data read error from ID', modbusid)
+sys.exit(0)
+

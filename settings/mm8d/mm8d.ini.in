@@ -1,6 +1,6 @@
 ; +----------------------------------------------------------------------------+
-; | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-; | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+; | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+; | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 ; | mm8d.ini                                                                   |
 ; | Main settings                                                              |
 ; +----------------------------------------------------------------------------+
@@ -10,32 +10,30 @@
 ;
 
 [user]
-; user's data
-usr_nam=Szerafin Gomba Tiszaföldvár
-usr_uid=00000000
+; user's name
+usr_name=Szerafin Gomba Tiszaföldvár
 
-[names]
-; name of channels
-nam_ch0=Irrigator
-nam_ch1=Tent #11
-nam_ch2=Tent #12
-nam_ch3=(unused)
-nam_ch4=(unused)
-nam_ch5=(unused)
-nam_ch6=(unused)
-nam_ch7=(unused)
-nam_ch8=(unused)
+[channels]
+; name of the channels
+ch0_name=Irrigator
+ch1_name=Mushroom tent #1
+ch2_name=Mushroom tent #2
+ch3_name=(unused)
+ch4_name=(unused)
+ch5_name=(unused)
+ch6_name=(unused)
+ch7_name=(unused)
+ch8_name=(unused)
 
-[enable]
-; enable/disable channels (0/1)
-ena_ch1=1
-ena_ch2=0
-ena_ch3=0
-ena_ch4=0
-ena_ch5=0
-ena_ch6=0
-ena_ch7=0
-ena_ch8=0
+; enable/disable channels
+ch1_enable=1
+ch2_enable=0
+ch3_enable=0
+ch4_enable=0
+ch5_enable=0
+ch6_enable=0
+ch7_enable=0
+ch8_enable=0
 
 [language]
 ; language of webpage (en/hu)
@@ -43,11 +41,11 @@ lng=en
 
 [log]
 ; storing time of the log files
-day_log=7
+log_day=7
 ; create verbose debug log file
-dbg_log=0
+log_debug=1
 ; number of log lines on web interface
-web_lines=30
+log_weblines=30
 
 [directories]
 ; directories of program
@@ -61,154 +59,245 @@ dir_var=@vardir@/lib/mm8d
 
 [openweathermap.org]
 ; access data
-api_key=00000000000000000000000000000000
-base_url=http://api.openweathermap.org/data/2.5/weather?
-city_name=Tiszafoldvar
+owm_enable=1
+owm_apikey=00000000000000000000000000000000
+owm_url=http://api.openweathermap.org/data/2.5/weather?
+owm_city=Tiszafoldvar
 
 ;
 ; hardware
 ;
 
-[GPIOport]
-; number of the used GPIO ports
-prt_i1=12
-prt_i2=16
-prt_i3=20
-prt_i4=21
-prt_ro1=18
-prt_ro2=23
-prt_ro3=24
-prt_ro4=25
-prt_lo1=2
-prt_lo2=3
-prt_lo3=4
-prt_lo4=17
+[LocalIO]
+; Serial port: GPIO14-15
 
-[LPTport]
-; address of the used LPT port (0x378: 0, 0x278: 1, 0x3BC: 2)
-prt_lpt=0
+; local I/O ports
+; DC 24-36 V inputs
+gpio_i1=2
+gpio_i2=3
+gpio_i3=4
+gpio_i4=5
+gpio_i5=6
 
-[COMport]
-; enable/disable external serial display (0/1)
-ena_console=1
-; port name
-prt_com=/dev/ttyS0
-; prt_com=/dev/ttyAMA0
-; port speed
-com_speed=9600
-; level of verbosity of the log on console
-; (nothing: 0, only error: 1, warning and error: 2, all: 3)
-com_verbose=2
+; open collector outputs for LED
+gpio_lo1=16
+gpio_lo2=17
+gpio_lo3=18
+gpio_lo4=19
+
+; relay outputs
+gpio_ro1=20
+gpio_ro2=21
+gpio_ro3=22
+gpio_ro4=23
+gpio_ro5=24
+gpio_ro6=25
+gpio_ro7=26
+gpio_ro8=27
+
+; base addresses: 0x378, 0x278, 0x3BC
+lpt_address=0x378
+
+; DC 24-36 V inputs
+# address BA+1
+lpt_i1_bit=3
+lpt_i1_negation=0
+lpt_i2_bit=4
+lpt_i2_negation=0
+lpt_i3_bit=5
+lpt_i3_negation=0
+lpt_i4_bit=6
+lpt_i4_negation=0
+lpt_i5_bit=7
+lpt_i5_negation=1
+
+; open collector outputs for LED
+# address BA+2
+lpt_lo1_bit=0
+lpt_lo1_negation=1
+lpt_lo2_bit=1
+lpt_lo2_negation=1
+lpt_lo3_bit=2
+lpt_lo3_negation=1
+lpt_lo4_bit=3
+lpt_lo4_negation=1
+
+; relay outputs
+# address BA+0
+lpt_ro1_bit=0
+lpt_ro1_negation=0
+lpt_ro2_bit=1
+lpt_ro2_negation=0
+lpt_ro3_bit=2
+lpt_ro3_negation=0
+lpt_ro4_bit=3
+lpt_ro4_negation=0
+lpt_ro5_bit=4
+lpt_ro5_negation=0
+lpt_ro6_bit=5
+lpt_ro6_negation=0
+lpt_ro7_bit=6
+lpt_ro7_negation=0
+lpt_ro8_bit=7
+lpt_ro8_negation=0
 
 ;
 ; external devices
 ;
 
+[console]
+; mini serial console
+msc_enable=1
+msc_port=/dev/ttyS0
+msc_speed=9600
+; level of verbosity of the log on console:
+;   0: nothing
+;   1: only error
+;   2: warning and error
+;   3: all
+msc_verbose=2
+
+[powermeter]
+; electric power meter
+; protocols: ascii, rtu, tcp
+pwm_enable=1
+pwm_protocol=ascii
+pwm_port=/dev/ttyS1
+pwm_speed=9600
+pwm_modbusid=1
+pwm_ipaddress=0.0.0.0
+pwm_handler=dt510
+
+[flowmeter]
+; water flow meter
+; protocols: ascii, rtu, tcp
+fwm_enable=0
+fwm_protocol=rtu
+fwm_port=
+fwm_speed=9600
+fwm_modbusid=0
+fwm_ipaddress=0.0.0.0
+fwm_handler=
+
+[outdoortempmeter]
+; outdoor temperature meter
+; protocols: ascii, rtu, tcp
+otm_enable=0
+otm_protocol=rtu
+otm_port=/dev/ttyS2
+otm_speed=9600
+otm_modbusid=20
+otm_ipaddress=0.0.0.0
+otm_handler=pta8b01
+
+[tentdisplay]
+; display in the tent
+; protocols: ascii, rtu, tcp
+tdp_enable=1
+tdp_protocol=rtu
+tdp_port=/dev/ttyS2
+tdp_speed=9600
+tdp_handler=dm36b06
+tdpch1_modbusid=21
+tdpch1_ipaddress=0.0.0.0
+tdpch2_modbusid=22
+tdpch2_ipaddress=0.0.0.0
+tdpch3_modbusid=0
+tdpch3_ipaddress=0.0.0.0
+tdpch4_modbusid=0
+tdpch4_ipaddress=0.0.0.0
+tdpch5_modbusid=0
+tdpch5_ipaddress=0.0.0.0
+tdpch6_modbusid=0
+tdpch6_ipaddress=0.0.0.0
+tdpch7_modbusid=0
+tdpch7_ipaddress=0.0.0.0
+tdpch8_modbusid=0
+tdpch8_ipaddress=0.0.0.0
+
 [MM6D]
-; protocol (http/modbus)
-pro_mm6dch1=http
-pro_mm6dch2=http
-pro_mm6dch3=http
-pro_mm6dch4=http
-pro_mm6dch5=http
-pro_mm6dch6=http
-pro_mm6dch7=http
-pro_mm6dch8=http
-; IP address
-adr_mm6dch1=192.168.1.11
-adr_mm6dch2=192.168.1.12
-adr_mm6dch3=192.168.1.13
-adr_mm6dch4=192.168.1.14
-adr_mm6dch5=192.168.1.15
-adr_mm6dch6=192.168.1.16
-adr_mm6dch7=192.168.1.17
-adr_mm6dch8=192.168.1.18
-; ModBUS unitID
-uid_mm6dch1=11
-uid_mm6dch2=12
-uid_mm6dch3=13
-uid_mm6dch4=14
-uid_mm6dch5=15
-uid_mm6dch6=16
-uid_mm6dch7=17
-uid_mm6dch8=18
+; Grow house control devices
+; protocols: http, rtu, tcp
+mm6d_protocol=tcp
+mm6d_port=/dev/ttyS2
+mm6d_speed=9600
+; using internal thermostat in the heaters (timer control only)
+mm6d_intthermostat=0
+
+mm6dch1_modbusid=1
+mm6dch1_ipaddress=192.168.0.211
+
+mm6dch2_modbusid=3
+mm6dch2_ipaddress=192.168.0.213
+
+mm6dch3_modbusid=0
+mm6dch3_ipaddress=0.0.0.0
+
+mm6dch4_modbusid=0
+mm6dch4_ipaddress=0.0.0.0
+
+mm6dch5_modbusid=0
+mm6dch5_ipaddress=0.0.0.0
+
+mm6dch6_modbusid=0
+mm6dch6_ipaddress=0.0.0.0
+
+mm6dch7_modbusid=0
+mm6dch7_ipaddress=0.0.0.0
+
+mm6dch8_modbusid=0
+mm6dch8_ipaddress=0.0.0.0
 
 [MM7D]
-; protocol (http/modbus)
-pro_mm7dch1=http
-pro_mm7dch2=http
-pro_mm7dch3=http
-pro_mm7dch4=http
-pro_mm7dch5=http
-pro_mm7dch6=http
-pro_mm7dch7=http
-pro_mm7dch8=http
-; IP address
-adr_mm7dch1=192.168.1.21
-adr_mm7dch2=192.168.1.22
-adr_mm7dch3=192.168.1.23
-adr_mm7dch4=192.168.1.24
-adr_mm7dch5=192.168.1.25
-adr_mm7dch6=192.168.1.26
-adr_mm7dch7=192.168.1.27
-adr_mm7dch8=192.168.1.28
-; ModBUS unitID
-uid_mm7dch1=21
-uid_mm7dch2=22
-uid_mm7dch3=23
-uid_mm7dch4=24
-uid_mm7dch5=25
-uid_mm7dch6=26
-uid_mm7dch7=27
-uid_mm7dch8=28
+; R/TH measure devices
+; protocols: http, rtu, tcp
+mm7d_protocol=tcp
+mm7d_port=/dev/ttyS2
+mm7d_speed=9600
 
-[MM10D]
-; enable/disable handling (0/1)
-ena_mm10d=0
-; protocol (http/modbus)
-pro_mm10d=http
-; IP address
-adr_mm10d=192.168.1.30
-; ModBUS unitID
-uid_mm10d=30
+mm7dch1_modbusid=2
+mm7dch1_ipaddress=192.168.0.212
 
-[MM11D]
-; enable/disable handling (0/1)
-ena_mm11d=0
-; protocol (http/modbus)
-pro_mm11d=http
-; IP address
-adr_mm11d=192.168.1.31
-; ModBUS unitID
-uid_mm11d=31
+mm7dch2_modbusid=4
+mm7dch2_ipaddress=192.168.0.214
 
-[IPcamera]
-; show tent camera on the webpage of channel (0/1)
-ena_tentcams=0
+mm7dch3_modbusid=0
+mm7dch3_ipaddress=0.0.0.0
+
+mm7dch4_modbusid=0
+mm7dch4_ipaddress=0.0.0.0
+
+mm7dch5_modbusid=0
+mm7dch5_ipaddress=0.0.0.0
+
+mm7dch6_modbusid=0
+mm7dch6_ipaddress=0.0.0.0
+
+mm7dch7_modbusid=0
+mm7dch7_ipaddress=0.0.0.0
+
+mm7dch8_modbusid=0
+mm7dch8_ipaddress=0.0.0.0
+
+[IPCamera]
+; tent and security IP cameras
+; show tent camera on the webpage of channel
+ipctent_enable=0
 ; snapshot url of the tent cameras
-cam_ch1=http://camera-tc1.lan/snapshot.cgi?user=username&pwd=password
-cam_ch2=http://camera-tc2.lan/snapshot.cgi?user=username&pwd=password
-cam_ch3=
-cam_ch4=
-cam_ch5=
-cam_ch6=
-cam_ch7=
-cam_ch8=
-; snapshot url of the security cameras
-ena_seccams=1
-cam_sc1=http://camera-sc1.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
-cam_sc2=http://camera-sc2.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
-cam_sc3=http://camera-sc3.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
-cam_sc4=http://camera-sc4.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
-cam_sc5=http://camera-sc5.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipctent1_url=http://camera-tc1.lan/snapshot.cgi?user=username&pwd=password
+ipctent2_url=http://camera-tc2.lan/snapshot.cgi?user=username&pwd=password
+ipctent3_url=
+ipctent4_url=
+ipctent5_url=
+ipctent6_url=
+ipctent7_url=
+ipctent8_url=
 
-[heater]
-; internal thermostat in the heater (timer control only)
-ith_ch1=0
-ith_ch2=0
-ith_ch3=0
-ith_ch4=0
-ith_ch5=0
-ith_ch6=0
-ith_ch7=0
-ith_ch8=0
+; show security cameras on the webpage
+ipcsec_enable=0
+; snapshot url of the security cameras
+ipcsec1_url==http://camera-sc1.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipcsec2_url==http://camera-sc2.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipcsec3_url==http://camera-sc3.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipcsec4_url==http://camera-sc4.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+

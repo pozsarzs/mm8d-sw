@@ -21,21 +21,21 @@ Content of log files
   2. mm8d-ch[1-8].log
   -------------------
 
-  Example line: "2020-09-19,13:59,13,23,33,1,1,1,0,1,1,1"
+  Example line: "2020-09-19,13:59,18,68,1,2,0,0,0,1,1,1"
 
   Columns:
     1:  date
     2:  time
     3:  temperature in °C
     4:  relative humidity
-    5:  relative unwanted gas concentrate
-    6:  operation mode                        0: hyphae  1: mushroom
-    7:  manual mode                           0: auto    1: manual
-    8:  overcurrent breaker error             0: closed  1: opened
-    9:  status of door (alarm)                0: closed  1: opened
-   10:  status of lamp output                 0: off     1: on
-   11:  status of ventilator output           0: off     1: on
-   12:  status of heater output               0: off     1: on
+    5:  general error                         0: no error  1: error
+    6:  operation mode                        0: stand-by  1: hyphae  2: mushroom
+    7:  manual mode                           0: auto      1: manual
+    8:  overcurrent breaker error             0: closed    1: opened
+    9:  status of door (alarm)                0: closed    1: opened
+   10:  status of lamp output                 0: off       1: on
+   11:  status of ventilator output           0: off       1: on
+   12:  status of heater output               0: off       1: on
 
 
   3. mm8d-supply.log
@@ -67,4 +67,4 @@ Content of log files
     4:  content of record
 
 --------------------------------------------------------------------------------
- MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

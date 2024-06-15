@@ -1,0 +1,11 @@
+[Unit]
+Description=MM8D operating software
+
+[Service]
+ExecStart=/usr/local/bin/mm8d.py
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+

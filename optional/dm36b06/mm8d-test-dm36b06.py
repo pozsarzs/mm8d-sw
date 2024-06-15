@@ -1,0 +1,84 @@
+#!/usr/bin/python3
+# +----------------------------------------------------------------------------+
+# | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
+# | mm8d-test-dm36b06.py                                                       |
+# | DM36b06 type tdp.ay test program                                          |
+# +----------------------------------------------------------------------------+
+
+#   This program is free software: you can redistribute it and/or modify it
+# under the terms of the European Union Public License 1.2 version.
+#
+#   This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.
+
+# Exit codes:
+#   0: normal exit
+#   1: cannot open configuration file
+
+import configparser
+import io
+import serial
+import sys
+import time
+import dm36b06 as tdp
+
+# constants
+CONFFILE="/usr/local/etc/mm8d/mm8d.ini"
+
+# load configuration
+def loadconfiguration(CONFFILE):
+  Y = 'tentdisplay'
+  global tdp_port
+  global tdp_speed
+  global tdpch_modbusid
+  try:
+    with open(CONFFILE) as f:
+      mm8d_config = f.read()
+    config = configparser.RawConfigParser(allow_no_value=True)
+    config.read_file(io.StringIO(mm8d_config))
+    # tent tdp.ays
+    tdpch_modbusid = [0 for x in range(1, 10)]
+    for i in range(1, 9):
+      tdpch_modbusid[i] = int(config.get(Y, 'tdpch' + str(i) + '_modbusid'))
+    tdp_port = config.get(Y, 'tdp_port')
+    tdp_speed = 9600
+    tdp_speed = int(config.get(Y, 'tdp_speed'))
+  except:
+    print("ERROR #1: Cannot open configuration file!");
+    sys.exit(1);
+
+# main function
+print("\nDM36B06 test utility * (C) 2024 Pozsar Zsolt")
+print("--------------------------------------------")
+print("Load configuration: %s..." % CONFFILE)
+loadconfiguration(CONFFILE)
+print(" - used port: " + tdp_port)
+print(" - baudrate:  " + str(tdp_speed))
+tdp.port = tdp_port
+tdp.baudrate = tdp_speed
+while True:
+  print("What channel do you want to test? (1-8 or q)")
+  selection = input("> ")
+  if selection == "Q" or selection == "q":
+    print("\nQuitting.")
+    sys.exit(0)
+  if selection.isnumeric():
+    iselection = int(selection)
+  else:
+    iselection = 255
+  if iselection > 0 and iselection < 8:
+    print("Modbus ID: " + str(tdpch_modbusid[iselection]))
+    tdp.cleardisplay(tdpch_modbusid[iselection])
+    tdp.writestr(tdpch_modbusid[iselection], 'CH'+ selection)
+    time.sleep(2)
+    digits = [0 for x in range(6)]
+    for i in range(0,10):
+      for j in range(6):
+        digits[j] = 48 + i
+      tdp.writedigits(tdpch_modbusid[iselection], digits)
+      time.sleep(1)
+    time.sleep(1)
+    tdp.cleardisplay(tdpch_modbusid[iselection])
+sys.exit(0)

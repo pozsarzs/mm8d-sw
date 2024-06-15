@@ -1,55 +1,97 @@
-Data access of the MM6D device
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Data retrieving/setting from/to MM6D device
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+----------------------------------------------------------------------------+-----------------+
-|                                    HTTP                                    |      ModBUS     |
-+------------------------------+--------------------------------------+------+-------+---------+
-|           function           |                link                  |format|  reg. |  type   |
-+------------------------------+--------------------------------------+------+-------+---------+
-| Information                                                                                  |
-+------------------------------+--------------------------------------+------+-------+---------+
-| help page                    | http://.../                          | html |       |         |
-| log                          | http://.../log                       | html |       |         |
-| summary                      | http://.../summary                   | html |       |         |
-| version                      | http://.../version                   | txt  | 49998*| integer |
-|                              |          -                           |  -   | 49999*| integer |
-+------------------------------+--------------------------------------+------+-------+---------+
-| Get data                                                                                     |
-+------------------------------+--------------------------------------+------+-------+---------+
-| all status                   | http://.../get/all?uid=...           | txt  |       |         |
-| alarm status                 | http://.../get/alarm?uid=...         | txt  | 10001 |   bit   |
-| status of heater output      | http://.../get/heater?uid=...        | txt  | 10002 |   bit   |
-| status of lamp output        | http://.../get/lamp?uid=...          | txt  | 10003 |   bit   |
-| status of man. mode switches | http://.../get/manualswitch?uid=...  | txt  | 10004 |   bit   |
-| status of oc. protection     | http://.../get/protection?uid=...    | txt  | 10005 |   bit   |
-| status of op. mode switch    | http://.../get/operationmode?uid=... | txt  | 10006 |   bit   |
-| status of ventilator         | http://.../get/ventilator?uid=...    | txt  | 10007 |   bit   |
-+------------------------------+--------------------------------------+------+-------+---------+
-| Set data                                                                                     |
-+------------------------------+--------------------------------------+------+-------+---------+
-| restore alarm                | http://.../set/alarm/off?uid=...     | txt  | 00001 |   bit   |
-| switch off all outputs       | http://.../set/all/off?uid=...       | txt  |       |         |
-| switch off heater            | http://.../set/heater/off?uid=...    | txt  | 00002 |   bit   |
-| switch off lamp              | http://.../set/lamp/off?uid=...      | txt  | 00003 |   bit   |
-| switch off ventilator        | http://.../set/ventilator/off?uid=...| txt  | 00004 |   bit   |
-| switch on heater             | http://.../set/heater/on?uid=...     | txt  | 00002 |   bit   |
-| switch on lamp               | http://.../set/lamp/on?uid=...       | txt  | 00003 |   bit   |
-| switch on ventilator         | http://.../set/ventilator/on?uid=... | txt  | 00004 |   bit   |
-+------------------------------+--------------------------------------+------+-------+---------+
-| Get and set data                                                                             |
-+------------------------------+--------------------------------------+------+-------+---------+
-| get all data and             | http://.../operation?uid=...&        | txt  |       |         |
-|   set status of outputs      |   a=0&h=0&l=0&v=0                    |  -   |   -   |    -    |
-+------------------------------+--------------------------------------+------+-------+---------+
+a. Information pages:
+  http://../          help                                             text/html
+  http://../summary   summary                                          text/html
+  http://../log       log                                              text/html
 
-Warning! The device does not yet support the ModBUS protocol, the table contains the planned
-         register allocation.
+b. Data access with HTTP:
+  http://../get/csv                   all values in CSV format         text/plain
+  http://../get/json                  all values in JSON format        text/plain
+  http://../get/txt                   all values in TXT format         text/plain
+  http://../get/xml                   all values in XML format         text/plain
+  http://../set?lamp=0&vent=0&heat=0  turn on and off outputs          text/plain
+
+  Output format:
+  CSV:                                    TXT:
+  "name","MM6D"                           MM6D
+  "version","0.4.0"                       0.4.0
+  "mac_address","EC:FA:BC:C1:0A:72"       EC:FA:BC:C1:0A:72
+  "ip_address","192.168.0.245"            192.168.0.245
+  "modbus_uid","1"                        1
+  "com_speed","9600"                      9600
+  "gen_error","1"                         1
+  "alarm","1"                             1
+  "breaker","1"                           1
+  "timeout","0"                           0
+  "standby","0"                           0
+  "hyphae","0"                            0
+  "mushroom","1"                          1
+  "manual","1"                            1
+  "lamp","0"                              0
+  "vent","1"                              1
+  "heat","1"                              1
+  
+
+  JSON:                                   XML:
+  {                                       <xml>
+    "software": {                           <software>
+      "name": "MM6D",                         <name>MM6D</name>
+      "version": "0.4.0"                      <version>0.4.0</version>
+    },                                      </software>
+    "hardware": {                           <hardware>
+      "mac_address": "EC:FA:BC:C1:0A:72",     <mac_address>EC:FA:BC:C1:0A:72</mac_address>
+      "ip_address": "192.168.0.245",          <ip_address>192.168.0.245</ip_address>
+      "modbus_uid": "1",                      <modbus_uid>1</modbus_uid>
+      "com_speed": "9600"                     <com_speed>9600</com_speed>
+    },                                      </hardware>
+    "data": {                               <data>
+      "bit": {                                <bit>
+        "gen_error": "1",                       <gen_error>1</gen_error>
+        "alarm": "1",                           <alarm>1</alarm>
+        "breaker": "1",                         <breaker>1</breaker>
+        "timeout": "0",                         <timeout>0</timeout>
+        "standby": "0",                         <standby>0</standby>
+        "hyphae": "0",                          <hyphae>0</hyphae>
+        "mushroom": "1",                        <mushroom>1</mushroom>
+        "manual": "1",                          <manual>1</manual>
+        "lamp": "0",                            <lamp>0</lamp>
+        "vent": "1",                            <vent>1</vent>
+        "heat": "1",                            <heat>1</heat>
+      }                                       </bit>
+    }                                       </data>
+  }                                        </xml>
+
+c. Data access with Modbus:
+  Outputs (RW):
+  00001               lamp output                                (0/1: off/on)  bit
+  00002               ventilator output                          (0/1: off/on)  bit
+  00003               heater output                              (0/1: off/on)  bit
+
+  Status (RO):
+  10001               general_error                           (0/1: red/green)  bit
+  10002               alarm                                (0/1: normal/alarm)  bit
+  10003               overcurrent breaker                 (0/1: closed/opened)  bit
+  10004               connection timeout error                                  bit
+  10005               stand-by operation mode                                   bit
+  10006               growing hyphae operation mode                             bit
+  10007               growing mushroom operation mode                           bit
+  10008               manual switch                              (0/1: off/on)  bit
+
+  Configuration (RO):
+  40001-40008         device name                                8 ASCII coded char
+  40009-40011         software version                                       3 byte
+  40012-40017         MAC address                                            6 byte
+  40018-40021         IP address                                             4 byte
+  40022               Modbus UID                                             1 byte
+  40023-40028         serial port speed         
 
 Notes:
-- coils:             00001-09999   1 bit  read/write
+  coils:             00001-09999   1 bit  read/write
   discrete inputs:   10001-19999   1 bit  read only
   input registers:   30001-39999  16 bit  read only
   holding registers: 40001-39999  16 bit  read/write
 
 ------------------------------------------------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

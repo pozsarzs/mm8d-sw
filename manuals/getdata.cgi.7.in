@@ -4,13 +4,10 @@
 getdata.cgi - CGI program
 .SH "SYNTAX"
 .LP
-\fBgetdata.cgi\fP?uid=...&channel=c&value=x
+\fBgetdata.cgi\fP?channel=c&value=x
 .br
-\fBgetdata.cgi\fP?uid=...&channel=c&value=x&type=xml
+\fBgetdata.cgi\fP?channel=c&value=x&type=xml
 .SH "OPTIONS"
-.TP
-.BR uid
-user ID (usr_uid value in main configuration file)
 .TP
 .BR channel
 channel of growing house control (-1: supply, 0: master and irrigator device, [1-8]: slave devices)
@@ -77,14 +74,14 @@ Data groups and output format:
 
 \fBvalue=1\fP:
 .br
-  usr_nam value in configuration file
+  usr_name value in configuration file
 
 \fBvalue=1&type=xml\fP:
 .br
   <?xml version="1.0" encoding="utf-8"?>
   <xml>
     <user>
-      <name>usr_nam value in configuration file</name>
+      <name>usr_name value in configuration file</name>
     </user>
   </xml>
 
@@ -130,14 +127,14 @@ Data groups and output format:
   time
   temperature in degree Celsius
   relative humidity in percent
-  relative unwanted gas level in percent
-  operation mode                          0: hyphae  1: mushroom
-  manual mode                             0: auto    1: manual
-  overcurrent breaker error               0: closed  1: opened
-  status of alarm                         0: off     1: on
-  status of lamp                          0: off     1: on
-  status of ventilator                    0: off     1: on
-  status of heater                        0: off     1: on
+  general error                         0: no error  1: error
+  operation mode                        0: stand-by  1: hyphae  2: mushroom
+  manual mode                           0: auto      1: manual
+  overcurrent breaker error             0: closed    1: opened
+  status of alarm                       0: off       1: on
+  status of lamp                        0: off       1: on
+  status of ventilator                  0: off       1: on
+  status of heater                      0: off       1: on
 
 \fBchannel=[1-8]&value=2&type=xml\fP:
 .br
@@ -151,9 +148,9 @@ Data groups and output format:
       <time>time</time>
       <temperature>temperature in degree Celsius</temperature>
       <humidity>relative humidity in percent</humidity>
-      <unwantedgas>relative unwanted gas level in percent</unwantedgas>
       <operationmode>operation mode</operationmode>
       <manualmode>manual mode</manualmode>
+      <gen_error>general error</gen_error>
       <overcurrentbreaker>overcurrent breaker error</overcurrentbreaker>
       <alarm>status of alarm</alarm>
       <lamp>status of lamp</lamp>
@@ -237,9 +234,6 @@ no parameter(s)
 .TP
 .B 10
 bad channel value
-.TP
-.B 11
-bad UID value
 .SH "HOMEPAGE"
 \fIhttp://www.pozsarzs.hu\fR
 .SH "SEE ALSO"

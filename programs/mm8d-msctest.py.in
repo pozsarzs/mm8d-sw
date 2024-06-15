@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2023 Pozsar Zsolt <pozsarzs@gmail.com>                  |
+# | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | mm8d-msctest.py                                                            |
 # | Mini serial console test program                                           |
 # +----------------------------------------------------------------------------+
@@ -30,7 +30,7 @@ CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):
-  if ena_console == "1":
+  if msc_enable == "1":
     dt = (strftime("%y%m%d %H%M%S",localtime()))
     try:
       com.open
@@ -43,7 +43,7 @@ def writedebuglogtocomport(level,text):
 def writechannelstatustocomport(channel):
   transmitbuffer = [0x00 for x in range(13)]
   line = ""
-  if ena_console == "1":
+  if msc_enable == "1":
     if channel == 0:
       transmitbuffer[0x00] = ord("C")
       transmitbuffer[0x01] = ord("H")
@@ -103,48 +103,12 @@ def writechannelstatustocomport(channel):
     except:
       print("")
 
-# send power supply's data to display via serial port
-def writepowersupplystatustocomport():
-  transmitbuffer = [0x00 for x in range(16)]
-  line = ""
-  if ena_console == "1":
-    transmitbuffer[0x00] = ord("S")
-    transmitbuffer[0x01] = ord("P")
-    c, f = divmod(raw_urms, 1<<8)
-    transmitbuffer[0x02] = c
-    transmitbuffer[0x03] = f
-    c, f = divmod(raw_irms, 1<<8)
-    transmitbuffer[0x04] = c
-    transmitbuffer[0x05] = f
-    c, f = divmod(raw_p, 1<<8)
-    transmitbuffer[0x06] = c
-    transmitbuffer[0x07] = f
-    c, f = divmod(raw_q, 1<<8)
-    transmitbuffer[0x08] = c
-    transmitbuffer[0x09] = f
-    c, f = divmod(raw_s, 1<<8)
-    transmitbuffer[0x0A] = c
-    transmitbuffer[0x0B] = f
-    c, f = divmod(raw_cosfi, 1<<8)
-    transmitbuffer[0x0C] = c
-    transmitbuffer[0x0D] = f
-    c, f = divmod(raw_qv, 1<<8)
-    transmitbuffer[0x0E] = c
-    transmitbuffer[0x0F] = f
-    try:
-      com.open
-      com.write(transmitbuffer)
-      com.close
-    except:
-      print("")
-
-
 # load configuration
 def loadconfiguration(CONFFILE):
   global com
-  global prt_com
-  global com_speed
-  global ena_console
+  global msc_port
+  global msc_speed
+  global msc_enable
   C = 'COMport'
   try:
     with open(CONFFILE) as f:
@@ -152,20 +116,20 @@ def loadconfiguration(CONFFILE):
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mm8d_config))
     # enable/disable external serial display (0/1)
-    ena_console = '1'
-    ena_console = config.get(C,'ena_console')
+    msc_enable = '1'
+    msc_enable = config.get(C,'msc_enable')
     # port name
-    prt_com = config.get(C,'prt_com')
+    msc_port = config.get(C,'msc_port')
     # port speed
-    com_speed = '9600'
-    com_speed = int(config.get(C,'com_speed'))
+    msc_speed = '9600'
+    msc_speed = int(config.get(C,'msc_speed'))
   except:
     print("ERROR #1: Cannot open configuration file!");
     sys.exit(1);
 
 # main function
 global channel
-global ena_ch
+global ch_enable
 global eol
 global exttemp
 global in_alarm
@@ -181,20 +145,13 @@ global out_lamps
 global out_vents
 global override
 global ovrstatus
-global raw_cosfi
-global raw_irms
-global raw_p
-global raw_q
-global raw_qv
-global raw_s
-global raw_urms
 global relay_tube1
 global relay_tube2
 global relay_tube3
 global waterpressurehigh
 global waterpressurelow
 channel = 0
-ena_ch = [1 for channel in range(9)]
+ch_enable = [1 for channel in range(9)]
 eol = "\r"
 exttemp = 23
 in_alarm = [0 for channel in range(9)]
@@ -210,31 +167,23 @@ out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 override = [[0 for x in range(3)] for x in range(9)]
 ovrstatus = ["neutral","off","on"]
-raw_cosfi = 0
-raw_irms = 0
-raw_p = 0
-raw_q = 0
-raw_qv = 0
-raw_s = 0
-raw_urms = 0
 relay_tube1 = 0
 relay_tube2 = 0
 relay_tube3 = 0
 waterpressurehigh = 0
 waterpressurelow = 0
-print("\nMM8D Mini serial console test utility * (C) 2020-2023 Pozsar Zsolt")
+print("\nMM8D Mini serial console test utility * (C) 2020-2024 Pozsar Zsolt")
 print("--------------------------------------------------------------------")
 print(" * load configuration: %s..." % CONFFILE)
 loadconfiguration(CONFFILE)
 print(" * setting ports...")
-com = serial.Serial(prt_com, com_speed)
+com = serial.Serial(msc_port, msc_speed)
 
 while True:
   print(" * What do you like?")
   menuitem = input(" \
    1: Set parameters of the Channel #0\n \
    2: Set parameters of the Channel #1-8\n \
-   3: Set electricity or water supply data\n \
    q: Quit\n")
   # exit
   if menuitem is "Q" or menuitem is "q":
@@ -255,7 +204,7 @@ while True:
       print("   8: override[" + str(channel) + "][0]        ",ovrstatus[override[channel][0]])
       print("   9: override[" + str(channel) + "][1]        ",ovrstatus[override[channel][1]])
       print("   a: override[" + str(channel) + "][2]        ",ovrstatus[override[channel][2]] + "\n")
-      print("      Enable/disable CH #" + str(channel) + "  ",ena_ch[channel])
+      print("      Enable/disable CH #" + str(channel) + "  ",ch_enable[channel])
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
@@ -339,7 +288,7 @@ while True:
       print("   b: override[" + str(channel) + "][0]        ",ovrstatus[override[channel][0]])
       print("   c: override[" + str(channel) + "][1]        ",ovrstatus[override[channel][1]])
       print("   d: override[" + str(channel) + "][2]        ",ovrstatus[override[channel][2]] + "\n")
-      print("   y: Enable/disable CH #" + str(channel) + "  ",ena_ch[channel])
+      print("   y: Enable/disable CH #" + str(channel) + "  ",ch_enable[channel])
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
@@ -418,46 +367,13 @@ while True:
         if override[channel][2] == 1:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> heaters OFF")
       if submenuitem is "y":
-        ena_ch[channel] = int(not ena_ch[channel])
-        if ena_ch[channel] == 0:
+        ch_enable[channel] = int(not ch_enable[channel])
+        if ch_enable[channel] == 0:
           in_opmode[channel] = 127
         else:
           in_opmode[channel] = 0
       if submenuitem is "x":
         writechannelstatustocomport(channel)
-      if submenuitem is "Q" or submenuitem is "q":
-        break
-  # power supply
-  if menuitem is "3":
-    channel = 1
-    while True:
-      print(" * Set power raw power supply data")
-      print("   0: Urms                  ",raw_urms)
-      print("   1: Irms                  ",raw_irms)
-      print("   2: P                     ",raw_p)
-      print("   3: Q                     ",raw_q)
-      print("   4: S                     ",raw_s)
-      print("   5: Cos Fi                ",raw_cosfi)
-      print("   6: qv                    ",raw_qv,"\n")
-      print("   x: Send data")
-      print("   q: Back to main menu")
-      submenuitem = input()
-      if submenuitem is "0":
-        raw_urms = int(input("Enter new value (0-32767): "))
-      if submenuitem is "1":
-        raw_irms = int(input("Enter new value (0-32767): "))
-      if submenuitem is "2":
-        raw_p = int(input("Enter new value (0-32767): "))
-      if submenuitem is "3":
-        raw_q = int(input("Enter new value (0-32767): "))
-      if submenuitem is "4":
-        raw_s = int(input("Enter new value (0-32767): "))
-      if submenuitem is "5":
-        raw_cosfi = int(input("Enter new value (0-32767): "))
-      if submenuitem is "6":
-        raw_qv = int(input("Enter new value (0-32767): "))
-      if submenuitem is "x":
-        writepowersupplystatustocomport()
       if submenuitem is "Q" or submenuitem is "q":
         break
 sys.exit(0)

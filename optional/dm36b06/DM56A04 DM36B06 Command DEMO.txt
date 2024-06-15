@@ -1,0 +1,35 @@
+DM56A04 DM36B06 MODBUS POLL DEMO : 
+https://youtu.be/drO3p_UGiYM
+
+DM56A04 DM36B06 Register 0-5 DEMO(Demonstrates how to write data through registers 0-5 (supports numbers and letters)):
+https://youtu.be/nATG5VzV5c8
+
+DM56A04 DM36B06 Register 6-7 DEMO(Demonstrates how to write data through registers 6-7 (numbers are supported)):
+https://youtu.be/9oFAjeaW5yE
+
+
+
+
+
+Register 0-5:
+
+Write 123456：
+01 10 00 00 00 06 0C 00 31 00 32 00 33 00 34 00 35 00 36 9E 95 
+
+Write 888888：
+01 10 00 00 00 06 0C 00 38 00 38 00 38 00 38 00 38 00 38 74 6F 
+
+
+Write 1234：
+01 10 00 00 00 04 08 00 31 00 32 00 33 00 34 5E A5 
+
+Write 8888：
+01 10 00 00 00 04 08 00 38 00 38 00 38 00 38 2E 63 
+
+
+Register 6-7:
+ Write "12.3456"
+01 10 00 06 00 02 04 04 01 E2 40 6A 25
+
+ Write "-12.345"
+01 10 00 06 00 02 04 13 00 30 39 A3 13

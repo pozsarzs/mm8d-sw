@@ -1,60 +1,80 @@
-Data access of the MM7D device
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Data retrieving from MM7D device
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-+----------------------------------------------------------------------------+-----------------+
-|                                    HTTP                                    |      ModBUS     |
-+----------------------------+----------------------------------------+------+-------+---------+
-|           function         |                  link                  |format|  reg. |  type   |
-+----------------------------+----------------------------------------+------+-------+---------+
-| Information                                                                                  |
-+----------------------------+----------------------------------------+------+-------+---------+
-| log                        | http://.../log                         | html |       |         |
-| startpage                  | http://.../                            | html |       |         |
-| summary                    | http://.../summary                     | html |       |         |
-| version                    | http://.../version                     | txt  | 49998*| integer |
-|                            |          -                             |  -   | 49999*| integer |
-+----------------------------+----------------------------------------+------+-------+---------+
-| Set operation mode                                                                           |
-+----------------------------+----------------------------------------+------+-------+---------+
-| automatic mode             | http://.../mode/auto?uid=...           | txt  | 00004 |   bit   |
-| manual mode                | http://.../mode/manual?uid=...         | txt  | 00004 |   bit   |
-| get operation mode         | http://.../mode/?uid=...               | txt  | 10004 |   bit   |
-+----------------------------+----------------------------------------+------+-------+---------+
-| Get data                                                                                     |
-+----------------------------+----------------------------------------+------+-------+---------+
-| all measured data          | http://.../get/all?uid=...             | txt  |       |         |
-| status of green LED        | http://.../get/greenled?uid=...        | txt  | 10001 |   bit   |
-| relative humidity [%]      | http://.../get/humidity?uid=...        | txt  | 30001 | integer |
-| status of red LED          | http://.../get/redled?uid=...          | txt  | 10002 |   bit   |
-| temperature in [°C]        | http://.../get/temperature?uid=...     | txt  | 30002 | integer |
-| relative gas level [%]     | http://.../get/unwantedgaslevel?uid=...| txt  | 30003 | integer |
-| status of yellow LED       | http://.../get/yellowled?uid=...       | txt  | 10003 |   bit   |
-+----------------------------+----------------------------------------+------+-------+---------+
-| Set data                                                                                     |
-+----------------------------+----------------------------------------+------+-------+---------+
-| switch off all LEDs        | http://.../set/all/off?uid=...         | txt  |       |         |
-| switch off green LED       | http://.../set/greenled/off?uid=...    | txt  | 00001 |   bit   |
-| switch off red LED         | http://.../set/redled/off?uid=...      | txt  | 00002 |   bit   |
-| switch off yellow LED      | http://.../set/yellowled/off?uid=...   | txt  | 00003 |   bit   |
-| switch on green LED        | http://.../set/greenled/on?uid=...     | txt  | 00001 |   bit   |
-| switch on red LED          | http://.../set/redled/on?uid=...       | txt  | 00002 |   bit   |
-| switch on yellow LED       | http://.../set/yellowled/on?uid=...    | txt  | 00003 |   bit   |
-+----------------------------+----------------------------------------+------+-------+---------+
-| Get and set data                                                                             |
-+----------------------------+----------------------------------------+------+-------+---------+
-| Get all measured data and  | http://.../operation?uid=...&g=20&     | txt  |       |         |
-|   set limit values         | h1=65&h2=70&h3=80&h4=85&t1=13&t2=150&  |  -   |   -   |   -     |
-|                            | t3=20&t4=22                            |  -   |   -   |   -     |
-+----------------------------+----------------------------------------+------+-------+---------+
+a. HTML information pages:
+  http://../          help                                     text/html
+  http://../summary   summary                                  text/html
+  http://../log       log                                      text/html
 
-Warning! The device does not yet support the ModBUS protocol, the table contains the planned
-         register allocation.
+b. Data access with HTTP:
+  http://../get/csv   all values and status in CSV format      text/plain
+  http://../get/json  all values and status in JSON format     text/plain
+  http://../get/txt   all measured values in TXT format        text/plain
+  http://../get/xml   all measured values in XML format        text/plain
+
+  Output format:
+
+  CSV:                                         TXT:
+    "name","MM7D"                                MM7D
+    "version","0.4.0"                            0.4.0
+    "mac_address","80:7D:3A:5D:53:84"            80:7D:3A:5D:53:84
+    "ip_address","192.168.0.103"                 192.168.0.103
+    "modbus_uid","1"                             1
+    "com_speed","9600"                           9600
+    "rhint","67"                                 67
+    "tint","292"                                 292
+    "vcc","5020"                                 5020
+    "ledg","1"                                   1
+    "ledy","0"                                   0
+    "ledr","0"                                   0
+
+  JSON:                                        XML:
+    "{                                           <xml>
+      "software": {                                <software>
+        "name": "MM7D",                              <name>MM7D</name>
+        "version": "0.4.0"                           <version>0.4.0</version>
+      },                                           </software>
+      "hardware": {                                <hardware>
+        "mac_address": "80:7D:3A:5D:53:84",          <mac_address>80:7D:3A:5D:53:84</mac_address>
+        "ip_address": "192.168.0.103",               <ip_address>192.168.0.103</ip_address>
+        "modbus_uid": "1",                           <modbus_uid>1</modbus_uid>
+        "com_speed": "9600"                          <com_speed>9600</com_speed>
+      },                                           </hardware>
+      "data": {                                    <data>
+        "integer": {                                 <integer>
+          "rhint": "67",                               <rhint>67</rhint>
+          "tint": "292",                               <tint>292</tint>
+          "vcc": "5020"                                <vcc>5020</vcc>
+        },                                           </integer>
+        "bit": {                                     <bit>
+          "ledg": "1",                                 <ledg>1</ledg>
+          "ledy": "0",                                 <ledy>0</ledy>
+          "ledr": "0"                                  <ledr>0</ledr>
+        }                                            </bit>
+      }                                            </data>
+    }                                            </xml>
+
+c. Data access with Modbus:
+  10001               status of the green LED   (0/1: off/on)     bit
+  10002               status of the yellow LED  (0/1: off/on)     bit
+  10003               status of the red LED     (0/1: off/on)     bit
+
+  30001               internal humidity in percent             uint16
+  30002               internal temperature in K                uint16
+  30003               power voltage in mV                      uint16
+
+  40001-40008         device name                  8 ASCII coded char
+  40009-40011         software version                         3 byte
+  40012-40017         MAC address                              6 byte
+  40018-40021         IP address                               4 byte
+  40022               modbus UID                               1 byte
+  40023-40028         serial port speed            6 ASCII coded char
 
 Notes:
-- coils:             00001-09999   1 bit  read/write
+  coils:             00001-09999   1 bit  read/write
   discrete inputs:   10001-19999   1 bit  read only
   input registers:   30001-39999  16 bit  read only
   holding registers: 40001-39999  16 bit  read/write
 
 ------------------------------------------------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

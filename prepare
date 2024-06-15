@@ -49,7 +49,9 @@ sudo apt-get install apache2 \
                      python3-pip \
                      python3-requests \
                      python3-serial \
-                     python-configparser \
+                     python3-setuptools \
+		     python3-iniparse \
+		     pip \
                      sudo \
                      wget
 
@@ -57,18 +59,10 @@ if [ "$ARCH" = "armhf" ]
 then
   sudo apt-get install python3-rpi.gpio
 else
-  cp libraries/portio-0.5.tar.gz /tmp/
-  cd /tmp/
-  tar -xzf portio-0.5.tar.gz
-  cd portio-0.5
-  sudo python3 setup.py install
+  sudo pip install portio
 fi
 
-cp libraries/pyModbusTCP-0.1.10.tar.gz /tmp/
-cd /tmp/
-tar -xzf pyModbusTCP-0.1.10.tar.gz
-cd pyModbusTCP-0.1.10
-sudo python3 setup.py install
+sudo pip install pymodbus
 
 echo -e "\nSetting Apache2..."
 sudo ln --force --symbolic /etc/apache2/mods-available/cgid.load /etc/apache2/mods-enabled/

@@ -20,11 +20,10 @@ Arguments of CGI programs
   3. getdata.cgi
   --------------
   Example lines:
-    "http://.../cgi-bin/getdata.cgi?uid=....&channel=2&value=2"
-    "http://.../cgi-bin/getdata.cgi?uid=....&channel=2&value=2&type=xml"
+    "http://.../cgi-bin/getdata.cgi?channel=2&value=2"
+    "http://.../cgi-bin/getdata.cgi?channel=2&value=2&type=xml"
 
   Arguments:
-    uid:        user identity, you can set in mm8d.ini
     channel:    0:      master and irrigator device
                 [1-8]:  slave devices
     value:     -1:      power supply
@@ -59,4 +58,4 @@ Arguments of CGI programs
   See manual pages for details.
 
 --------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

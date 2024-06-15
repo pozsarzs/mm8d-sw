@@ -1,0 +1,23 @@
+Variables
+~~~~~~~~~
+  global baudrate
+  global method
+  global port
+
+Functions
+~~~~~~~~~
+  def blinkdigits(modbusid, digits)
+  def blinkdisplay(modbusid)
+  def cleardigits(modbusid, digits)
+  def cleardisplay(modbusid)
+  def factoryreset(modbusid)
+  def noblinkdisplay(modbusid)
+  def setbaudrate(modbusid, newbaudrate)
+  def setbrightness(modbusid, brightness)
+  def setmodbusid(modbusid, newid)
+  def setparity(modbusid, newparity)
+  def writedigits(modbusid, digits)
+  def writeint(modbusid, number)
+  def writestr(modbusid, text)
+--------------------------------------------------------------------------------
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

@@ -1,27 +1,85 @@
-Connecting devices
-~~~~~~~~~~~~~~~~~~
+Default connection of devices
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Connections can be set in /etc/mm8d/mm8d.ini or /usr/local/etc/mm8d/mm8d.ini file.
+
+1. Connecting to PC
+-------------------
+
+Serial ports:
+  COM1:  mini serial console  RS-232  9600 baud 8N1  unique protocol
+  COM2:  DT-510 power meter   RS-232  9600 baud 7E1  Modbus/ASCII
+  COM3:  local bus            RS-485  9600 baud 8N1  Modbus/RTU
+  COM4:  field bus            RS-485  9600 baud 8N1  Modbus/RTU
+
+Note:
+  - An RS-232/RS-485 converter is plugged into COM3, at the other end of the bus
+    the devices are connected either directly.
+  - An RS-232/RS-485 converter is plugged into COM4, at the other end of the bus
+    the devices are connected either directly or via an RS-485/RS-232 TTL converter.
+
+Paralel port:
+  LPT1:  local I/O ports for MM8D interface card
+
+2. Connecting to Raspberry Pi
+-----------------------------
+
+Serial ports:
+  /dev/ttyAMA0:  mini serial console  RS-232 TTL  9600 baud 8N1, unique protocol
+
+Note:
+  - It is possible to configure several serial ports on the Raspberry Pi, but
+    this reduces the number of GPIO ports that can be used.
+  - A better solution is to access the MM6D and MM7D via WLAN with Modbus/TCP
+    or HTTP and connect the Modbus/RTU devices to a LAN using an RTU/TCP
+    gateway.
+
+GPIO ports:
+  local I/O ports for MM8D interface card
+
 +-----------------------+------------------------------------------------------------+
 |    MM8D connectors    |    GPIO port   |     LPT port   |          short           |
 | sign | pin | function | pin | function | pin | function |       description        |
-+------+-----+----------+-----+----------+-------------------------------------------+
-| J2   |  1  |   I1C    |  3  |   GPIO02 | 15      -ERROR | overcurrent breakers     |
-|      |  2  |   I2C    |  5  |   GPIO03 | 13      SELECT | water pump low pressure  |
-|      |  3  |   I3C    |  7  |   GPIO04 | 12      PE     | water pump high pressure |
-|      |  4  |   I4C    | 11  |   GPIO17 | 10      -ACK   | (unused)                 |
-| J3   |  1  |   +5 V   |  2  |   +5 V   |                | power input +5 V         |
-|      |  2  |   GND    |  6  |   GND    |                | power input GND          |
-|      |  3  |   GND    |  9  |   GND    | 25      GND    | GND                      |
-|      |  4  |   +3.3 V | 17  |   +3.3 V |  -       -     | power input +3.3 V       |
-| J4   |  1  |   RO1C   | 12  |   GPIO18 |  2       DO    | to alarm input           |
-|      |  2  |   RO2C   | 16  |   GPIO23 |  3       D1    | to irrigator input #1    |
-|      |  3  |   RO3C   | 18  |   GPIO24 |  4       D2    | to irrigator input #2    |
-|      |  4  |   RO4C   | 22  |   GPIO25 |  5       D3    | to irrigator input #3    |
-| J5   |  1  |   LO1C   | 32  |   GPIO12 |  6       D4    | ACTIVE light (B)         |
-|      |  2  |   LO2C   | 36  |   GPIO16 |  7       D5    | WARNING light (Y)        |
-|      |  3  |   LO3C   | 38  |   GPIO20 |  8       D6    | ERROR light (R)          |
-|      |  4  |   LO4C   | 40  |   GPIO21 |  9       D7    | PUMP ERROR light (R)     |
-+------+----------------+-----+----------+----------------+--------------------------+
++-----------------------+----------------+-------------------------------------------+
+|                                    MM8D #1                                         |
++-----------------------+----------------+-------------------------------------------+
+| J2   |  1  |   I1C    |  3  |  GPIO02  | 15  |   -ERROR | overcurrent breakers     |
+|      |  2  |   I2C    |  5  |  GPIO03  | 13  |   SELECT | water pump low pressure  |
+|      |  3  |   I3C    |  7  |  GPIO04  | 12  |   PE     | water pump high pressure |
+|      |  4  |   I4C    | 11  |  GPIO17  | 10  |   -ACK   | (unused)                 |
+| J3   |  1  |   +5 V   |  2  |  +5 V    |     |          | power input +5 V         |
+|      |  2  |   GND    |  6  |  GND     |     |          | power input GND          |
+|      |  3  |   GND    |  9  |  GND     | 25  |   GND    | GND                      |
+|      |  4  |   +3.3 V | 17  |  +3.3 V  |  -  |    -     | power input +3.3 V       |
+| J4   |  1  |   RO1C   | 12  |  GPIO18  |  2  |    DO    | to alarm input           |
+|      |  2  |   RO2C   | 16  |  GPIO23  |  3  |    D1    | to irrigator input #1    |
+|      |  3  |   RO3C   | 18  |  GPIO24  |  4  |    D2    | to irrigator input #2    |
+|      |  4  |   RO4C   | 22  |  GPIO25  |  5  |    D3    | to irrigator input #3    |
+| J5   |  1  |   LO1C   | 32  |  GPIO12  |  1  | -STROBE  | ACTIVE light (B)         |
+|      |  2  |   LO2C   | 36  |  GPIO16  | 14  |-AUTOFEED | WARNING light (Y)        |
+|      |  3  |   LO3C   | 38  |  GPIO20  | 16  |  -INIT   | ERROR light (R)          |
+|      |  4  |   LO4C   | 40  |  GPIO21  | 17  | -SEL IN  | PUMP ERROR light (R)     |
++-----------------------+----------------+-------------------------------------------+
+|                                    MM8D #2                                         |
++-----------------------+----------------+-------------------------------------------+
+| J2   |  1  |   I1C    |  3  |          | 11  |   BUSY   | (unused)                 |
+|      |  2  |   I2C    |     |          |     |          |                          |
+|      |  3  |   I3C    |     |          |     |          |                          |
+|      |  4  |   I4C    |     |          |     |          |                          |
+| J3   |  1  |   +5 V   |  2  |  +5 V    |     |          | power input +5 V         |
+|      |  2  |   GND    |  6  |  GND     |     |          | power input GND          |
+|      |  3  |   GND    |  9  |  GND     | 25  |   GND    | GND                      |
+|      |  4  |   +3.3 V | 17  |  +3.3 V  |  -  |    -     | power input +3.3 V       |
+| J4   |  1  |   RO1C   |     |  GPIO    |  6  |    D4    | (unused)                 |
+|      |  2  |   RO2C   |     |  GPIO    |  7  |    D5    | (unused)                 |
+|      |  3  |   RO3C   |     |  GPIO    |  8  |    D6    | (unused)                 |
+|      |  4  |   RO4C   |     |  GPIO    |  9  |    D7    | (unused)                 |
+| J5   |  1  |   LO1C   |     |  GPIO    |  6  |    D4    | RO1C status              |
+|      |  2  |   LO2C   |     |  GPIO    |  7  |    D5    | RO2C status              |
+|      |  3  |   LO3C   |     |  GPIO    |  8  |    D6    | RO3C status              |
+|      |  4  |   LO4C   |     |  GPIO    |  9  |    D7    | RO4C status              |
++-----------------------+----------------+-------------------------------------------+
 
 --------------------------------------------------------------------------------------
-  MM8D * Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>
 

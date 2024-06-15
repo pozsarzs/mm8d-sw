@@ -1,0 +1,22 @@
+Variables
+~~~~~~~~~
+  global baudrate
+  global databits
+  global method
+  global parity
+  global port
+
+Functions
+~~~~~~~~~
+  def getcosfi()
+  def getirms()
+  def getp()
+  def getq()
+  def gets()
+  def geturms()
+  def readregisters(modbusid)
+  def setbaudrate(modbusid, newbaudrate)
+  def setmodbusid(modbusid, newid)
+  def setparity(modbusid, newparity)
+--------------------------------------------------------------------------------
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

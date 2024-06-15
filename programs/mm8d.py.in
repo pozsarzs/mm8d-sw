@@ -1,18 +1,18 @@
 #!/usr/bin/python3
 # +----------------------------------------------------------------------------+
-# | MM8D v0.5 * Growing house and irrigation controlling and monitoring system |
-# | Copyright (C) 2020-2023 Pozsar Zsolt <pozsarzs@gmail.com>                  |
+# | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
+# | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
 # | mm8d.py                                                                    |
 # | Main program                                                               |
 # +----------------------------------------------------------------------------+
-
+#
 #   This program is free software: you can redistribute it and/or modify it
 # under the terms of the European Union Public License 1.2 version.
 #
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.
-
+# 
 # Exit codes:
 #   0: normal exit
 #   1: cannot open configuration file
@@ -22,7 +22,7 @@
 #  18: there is not enabled channel
 #  19: fatal error
 #  20: cannot open irrigator configuration file
-
+ 
 import configparser
 import daemon
 import io
@@ -33,7 +33,8 @@ import requests
 import serial
 import sys
 import time
-from pyModbusTCP.client import ModbusClient
+from pymodbus.client import ModbusSerialClient
+from pymodbus.client import ModbusTcpClient
 from time import localtime, strftime
 
 # constants
@@ -47,19 +48,15 @@ else:
 
 # constants
 CONFDIR="@prefix@/etc/mm8d/"
-
 COMPMV6=0
-COMPSV6=3
+COMPSV6=4
 COMPMV7=0
-COMPSV7=3
-COMPMV10=0
-COMPSV10=1
+COMPSV7=4
 DELAY=2
 
 global EOL
 global LPTADDRESSES
 EOL = "\r"
-LPTADDRESSES = [0x378,0x278,0x3bc]
 MB_PORT = 502
 
 # add a zero char
@@ -74,15 +71,15 @@ def addzero(num):
 # write a line to debug logfile
 def writedebuglog(level,text):
   if level == "i":
-    if com_verbose > 2:
+    if msc_verbose > 2:
       writedebuglogtocomport(level,text)
   if level == "w":
-    if com_verbose > 1:
+    if msc_verbose > 1:
       writedebuglogtocomport(level,text)
   if level == "e":
-    if com_verbose > 0:
+    if msc_verbose > 0:
       writedebuglogtocomport(level,text)
-  if dbg_log == "1":
+  if log_debug == 1:
     if level == "i":
       lv = "INFO   "
     if level == "w":
@@ -100,7 +97,7 @@ def writedebuglog(level,text):
 
 # write a debug log line to serial console
 def writedebuglogtocomport(level,text):
-  if ena_console == "1":
+  if msc_enable == 1:
     dt = (strftime("%y%m%d %H%M%S",localtime()))
     try:
       com.open
@@ -110,47 +107,11 @@ def writedebuglogtocomport(level,text):
     except:
       print("writedebuglogtocomport")
 
-# send power supply data to serial console
-def writesupplydatatocomport():
-  transmitbuffer = [0x00 for x in range(16)]
-  line = ""
-  if ena_console == "1":
-    transmitbuffer[0x00] = ord("P")
-    transmitbuffer[0x01] = ord("S")
-    c, f = divmod(raw_urms, 1<<8)
-    transmitbuffer[0x02] = c
-    transmitbuffer[0x03] = f
-    c, f = divmod(raw_irms, 1<<8)
-    transmitbuffer[0x04] = c
-    transmitbuffer[0x05] = f
-    c, f = divmod(raw_p, 1<<8)
-    transmitbuffer[0x06] = c
-    transmitbuffer[0x07] = f
-    c, f = divmod(raw_q, 1<<8)
-    transmitbuffer[0x08] = c
-    transmitbuffer[0x09] = f
-    c, f = divmod(s, 1<<8)
-    transmitbuffer[0x0A] = c
-    transmitbuffer[0x0B] = f
-    c, f = divmod(raw_cosfi, 1<<8)
-    transmitbuffer[0x0C] = c
-    transmitbuffer[0x0D] = f
-    c, f = divmod(raw_qv, 1<<8)
-    transmitbuffer[0x0E] = c
-    transmitbuffer[0x0F] = f
-    try:
-      com.open
-      com.write(transmitbuffer)
-      com.close
-      time.sleep(0.1)
-    except:
-      print("writesupplydatatocomport")
-
 # send channels' data to serial console
 def writechannelstatustocomport(channel):
   transmitbuffer = [0x00 for x in range(13)]
   line = ""
-  if ena_console == "1":
+  if msc_enable == 1:
     if channel == 0:
       transmitbuffer[0x00] = ord("C")
       transmitbuffer[0x01] = ord("H")
@@ -186,8 +147,8 @@ def writechannelstatustocomport(channel):
       transmitbuffer[0x02] = channel
       transmitbuffer[0x03] = in_temperature[channel]
       transmitbuffer[0x04] = in_humidity[channel]
-      transmitbuffer[0x05] = in_gasconcentrate[channel]
-      transmitbuffer[0x06] = not in_opmode[channel]
+      transmitbuffer[0x05] = 0
+      transmitbuffer[0x06] = in_opmode[channel]
       transmitbuffer[0x07] = in_swmanu[channel]
       transmitbuffer[0x08] = in_ocprot[channel]
       transmitbuffer[0x09] = in_alarm[channel]
@@ -206,7 +167,7 @@ def writechannelstatustocomport(channel):
         transmitbuffer[0x0C] = 0x03
       if override[channel][3] == "off":
         transmitbuffer[0x0C] = 0x02
-      if ena_ch[channel] == 0:
+      if ch_enable[channel] == 0:
         transmitbuffer[0x06] = 0x7F
     try:
       com.open
@@ -218,173 +179,264 @@ def writechannelstatustocomport(channel):
 
 # load configuration
 def loadconfiguration(conffile):
-  global adr_mm10d
-  global adr_mm11d
-  global adr_mm6dch
-  global adr_mm7dch
-  global api_key
-  global base_url
-  global city_name
-  global com_speed
-  global com_verbose
-  global dbg_log
+  global ch_enable
   global dir_log
   global dir_var
-  global ena_ch
-  global ena_console
-  global ena_mm10d
-  global ena_mm11d
-  global ith_ch
+  global fwm_enable
+  global fwm_handler
+  global fwm_ipaddress
+  global fwm_modbusid
+  global fwm_port
+  global fwm_protocol
+  global fwm_speed
   global lockfile
+  global log_debug
   global logfile
-  global pro_mm10d
-  global pro_mm11d
-  global pro_mm6dch
-  global pro_mm7dch
-  global prt_com
-  global uid_mm10d
-  global uid_mm11d
-  global uid_mm6dch
-  global uid_mm7dch
-  global usr_uid
+  global mm6d_intthermostat
+  global mm6d_port
+  global mm6d_protocol
+  global mm6d_speed
+  global mm6dch_ipaddress
+  global mm6dch_modbusid
+  global mm7d_port
+  global mm7d_protocol
+  global mm7d_speed
+  global mm7dch_ipaddress
+  global mm7dch_modbusid
+  global msc_enable
+  global msc_port
+  global msc_speed
+  global msc_verbose
+  global otm_enable
+  global otm_handler
+  global otm_ipaddress
+  global otm_modbusid
+  global otm_port
+  global otm_protocol
+  global otm_speed
+  global owm_apikey
+  global owm_city
+  global owm_enable
+  global owm_url
+  global pwm_enable
+  global pwm_handler
+  global pwm_ipaddress
+  global pwm_modbusid
+  global pwm_port
+  global pwm_protocol
+  global pwm_speed
+  global tdp_enable
+  global tdp_handler
+  global tdp_port
+  global tdp_protocol
+  global tdp_speed
+  global tdpch_ipaddress
+  global tdpch_modbusid
   if (HW == 0):
-    global prt_i1
-    global prt_i2
-    global prt_i3
-    global prt_i4
-    global prt_ro1
-    global prt_ro2
-    global prt_ro3
-    global prt_ro4
-    global prt_lo1
-    global prt_lo2
-    global prt_lo3
-    global prt_lo4
+    global gpio_i1
+    global gpio_i2
+    global gpio_i3
+    global gpio_i4
+    global gpio_i5
+    global gpio_lo1
+    global gpio_lo2
+    global gpio_lo3
+    global gpio_lo4
+    global gpio_ro1
+    global gpio_ro1
+    global gpio_ro2
+    global gpio_ro3
+    global gpio_ro5
+    global gpio_ro6
+    global gpio_ro7
+    global gpio_ro8
   else:
-    global prt_lpt
-  C = 'COMport'
+    global lpt_address
+    global lpt_bits
+  C = 'channels'
   D = 'directories'
-  E = 'enable'
-  G = 'GPIOport'
-  H = 'heater'
+  F = 'flowmeter'
+  I = 'LocalIO'
   L = 'log'
-  LP = 'LPTport'
-  M10 = 'MM10D'
-  M11 = 'MM11D'
   M6 = 'MM6D'
   M7 = 'MM7D'
   O = 'openweathermap.org'
-  U = 'user'
-  global HP
-  HP = 'http'
+  P = 'powermeter'
+  S = 'console'
+  T = 'outdoortempmeter'
+  Y = 'tentdisplay'
   try:
     with open(conffile) as f:
       mainconfig = f.read()
     config = configparser.RawConfigParser(allow_no_value = True)
     config.read_file(io.StringIO(mainconfig))
-    # user's data
-    usr_uid = config.get(U,'usr_uid')
-    # enable/disable channels (0/1)
-    ena_ch = [0 for x in range(9)]
+    # enable/disable channels
+    ch_enable = [0 for x in range(9)]
     for i in range(1,9):
-      ena_ch[i] = int(config.get(E,'ena_ch' + str(i)))
+      ch_enable[i] = int(config.get(C,'ch' + str(i) + '_enable'))
     # create verbose debug log file
-    dbg_log = '0'
-    dbg_log = config.get(L,'dbg_log')
+    log_debug = 0
+    log_debug = int(config.get(L,'log_debug'))
     # directories of program
     dir_log = config.get(D,'dir_log')
     dir_var = config.get(D,'dir_var')
     lockfile = config.get(D,'dir_lck') + 'mm8d.lck'
-    # access data
-    api_key = config.get(O,'api_key')
-    base_url = config.get(O,'base_url')
-    city_name = config.get(O,'city_name')
-    # number of the used GPIO ports
+    # openweather.org access data
+    owm_apikey = config.get(O,'owm_apikey')
+    owm_city = config.get(O,'owm_city')
+    owm_enable = 0
+    owm_enable = int(config.get(O,'owm_enable'))
+    owm_url = config.get(O,'owm_url')
+    # local ports
     if HW == 0:
-      prt_i1 = int(config.get(G,'prt_i1'))
-      prt_i2 = int(config.get(G,'prt_i2'))
-      prt_i3 = int(config.get(G,'prt_i3'))
-      prt_i4 = int(config.get(G,'prt_i4'))
-      prt_ro1 = int(config.get(G,'prt_ro1'))
-      prt_ro2 = int(config.get(G,'prt_ro2'))
-      prt_ro3 = int(config.get(G,'prt_ro3'))
-      prt_ro4 = int(config.get(G,'prt_ro4'))
-      prt_lo1 = int(config.get(G,'prt_lo1'))
-      prt_lo2 = int(config.get(G,'prt_lo2'))
-      prt_lo3 = int(config.get(G,'prt_lo3'))
-      prt_lo4 = int(config.get(G,'prt_lo4'))
+      gpio_i1 = int(config.get(I,'gpio_i1'))
+      gpio_i2 = int(config.get(I,'gpio_i2'))
+      gpio_i3 = int(config.get(I,'gpio_i3'))
+      gpio_i4 = int(config.get(I,'gpio_i4'))
+      gpio_i5 = int(config.get(I,'gpio_i5'))
+      gpio_lo1 = int(config.get(I,'gpio_lo1'))
+      gpio_lo2 = int(config.get(I,'gpio_lo2'))
+      gpio_lo3 = int(config.get(I,'gpio_lo3'))
+      gpio_lo4 = int(config.get(I,'gpio_lo4'))
+      gpio_ro1 = int(config.get(I,'gpio_ro1'))
+      gpio_ro2 = int(config.get(I,'gpio_ro2'))
+      gpio_ro3 = int(config.get(I,'gpio_ro3'))
+      gpio_ro4 = int(config.get(I,'gpio_ro4'))
+      gpio_ro5 = int(config.get(I,'gpio_ro5'))
+      gpio_ro6 = int(config.get(I,'gpio_ro6'))
+      gpio_ro7 = int(config.get(I,'gpio_ro7'))
+      gpio_ro8 = int(config.get(I,'gpio_ro8'))
     else:
-      # address of the used LPT port (0x378: 0, 0x278: 1, 0x3BC: 2)
-      prt_lpt = int(config.get(LP,'prt_lpt'))
-    # enable/disable external serial display (0/1)
-    ena_console = '0'
-    ena_console = config.get(C,'ena_console')
-    # port name
-    prt_com = '/dev/ttyS0'
-    prt_com = config.get(C,'prt_com')
-    # port speed
-    com_speed = '9600'
-    com_speed = config.get(C,'com_speed')
-    # level of verbosity of the log on console
-    com_verbose = 0
-    com_verbose = int(config.get(C,'com_verbose'))
-    # protocol (http/modbus)
-    pro_mm6dch = [HP for x in range(9)]
-    pro_mm7dch = [HP for x in range(9)]
-    # IP address
-    adr_mm6dch = [0 for x in range(9)]
-    adr_mm7dch = [0 for x in range(9)]
-    # ModBUS unitID
-    uid_mm6dch = [0 for x in range(9)]
-    uid_mm7dch = [0 for x in range(9)]
+      lpt_address = 0x378
+      lpt_address = int(config.get(I,'lpt_address'),16)
+      lpt_bits = [[0 for y in range(3)] for x in range(17)]
+      for x in range(0,5):
+        lpt_bits[x][0] = 1
+        lpt_bits[x][1] = int(config.get(I,'lpt_i' + str(x + 1) + '_bit'))
+        lpt_bits[x][2] = int(config.get(I,'lpt_i' + str(x + 1) + '_negation'))
+      for x in range(5,9):
+        lpt_bits[x][0] = 2
+        lpt_bits[x][1] = int(config.get(I,'lpt_lo' + str(x - 4) + '_bit'))
+        lpt_bits[x][2] = int(config.get(I,'lpt_lo' + str(x - 4) + '_negation'))
+      for x in range(9,17):
+        lpt_bits[x][0] = 0
+        lpt_bits[x][1] = int(config.get(I,'lpt_ro' + str(x - 8) + '_bit'))
+        lpt_bits[x][2] = int(config.get(I,'lpt_ro' + str(x - 8) + '_negation'))
+      for x in range(0,17):
+        lpt_bits[x][2] = 1 if lpt_bits[x][2] >= 1 else 0
+    # serial console
+    msc_enable = 0
+    msc_enable = int(config.get(S,'msc_enable'))
+    msc_port = '/dev/ttyS0'
+    msc_port = config.get(S,'msc_port')
+    msc_speed = 9600
+    msc_speed = int(config.get(S,'msc_speed'))
+    msc_verbose = 0
+    msc_verbose = int(config.get(S,'msc_verbose'))
+    # power meter
+    pwm_enable = 0
+    pwm_enable = int(config.get(P,'pwm_enable'))
+    pwm_handler = ''
+    pwm_handler = config.get(P,'pwm_handler')
+    pwm_ipaddress = '0.0.0.0'
+    pwm_ipaddress = config.get(P,'pwm_ipaddress')
+    pwm_modbusid = 0
+    pwm_modbusid = int(config.get(P,'pwm_modbusid'))
+    pwm_port = '/dev/ttyS1'
+    pwm_port = config.get(P,'pwm_port')
+    pwm_protocol = 'rtu'
+    pwm_protocol = config.get(P,'pwm_protocol')
+    pwm_speed = 9600
+    pwm_speed = int(config.get(P,'pwm_speed'))
+    # flow meter
+    fwm_enable = 0
+    fwm_enable = int(config.get(F,'fwm_enable'))
+    fwm_handler = ''
+    fwm_handler = config.get(F,'fwm_handler')
+    fwm_ipaddress = '0.0.0.0'
+    fwm_ipaddress = config.get(F,'fwm_ipaddress')
+    fwm_modbusid = 0
+    fwm_modbusid = int(config.get(F,'fwm_modbusid'))
+    fwm_port = '/dev/ttyS1'
+    fwm_port = config.get(F,'fwm_port')
+    fwm_protocol = 'rtu'
+    fwm_protocol = config.get(F,'fwm_protocol')
+    fwm_speed = 9600
+    fwm_speed = int(config.get(F,'fwm_speed'))
+    # outdoor temperature meter
+    otm_enable = 0
+    otm_enable = int(config.get(T,'otm_enable'))
+    otm_handler = ''
+    otm_handler = config.get(T,'otm_handler')
+    otm_ipaddress = '0.0.0.0'
+    otm_ipaddress = config.get(T,'otm_ipaddress')
+    otm_modbusid = 0
+    otm_modbusid = int(config.get(T,'otm_modbusid'))
+    otm_port = '/dev/ttyS2'
+    otm_port = config.get(T,'otm_port')
+    otm_protocol = 'rtu'
+    otm_protocol = config.get(T,'otm_protocol')
+    otm_speed = 9600
+    otm_speed = int(config.get(T,'otm_speed'))
+    # tent displays
+    tdp_protocol = 'rtu'
+    tdp_protocol = config.get(Y,'tdp_protocol')
+    tdp_enable = 0
+    tdp_enable = int(config.get(Y,'tdp_enable'))
+    tdp_handler = ''
+    tdp_handler = config.get(Y,'tdp_handler')
+    tdpch_modbusid = [0 for x in range(1,10)]
+    tdpch_ipaddress = [0 for x in range(1,10)]
     for i in range(1,9):
-      # protocol (http/modbus)
-      pro_mm6dch[i] = config.get(M6,'pro_mm6dch' + str(i))
-      pro_mm7dch[i] = config.get(M7,'pro_mm7dch' + str(i))
-      adr_mm6dch[i] = config.get(M6,'adr_mm6dch' + str(i))
-      adr_mm7dch[i] = config.get(M7,'adr_mm7dch' + str(i))
-      ena_ch[i] = int(config.get(E,'ena_ch' + str(i)))
-      uid_mm6dch[i] = config.get(M6,'uid_mm6dch' + str(i))
-      uid_mm7dch[i] = config.get(M7,'uid_mm7dch' + str(i))
-    # enable/disable handling (0/1)
-    ena_mm10d = 0
-    ena_mm10d = int(config.get(M10,'ena_mm10d'))
-    ena_mm11d = 0
-    ena_mm11d = int(config.get(M11,'ena_mm11d'))
-    # protocol (http/modbus)
-    pro_mm10d = HP
-    pro_mm10d = config.get(M10,'pro_mm10d')
-    pro_mm11d = HP
-    pro_mm11d = config.get(M11,'pro_mm11d')
-    # IP address
-    adr_mm10d = "0"
-    adr_mm10d = config.get(M10,'adr_mm10d')
-    adr_mm11d = "0"
-    adr_mm11d = config.get(M11,'adr_mm11d')
-    # ModBUS unitID
-    uid_mm10d = "0"
-    uid_mm10d = config.get(M10,'uid_mm10d')
-    uid_mm11d = "0"
-    uid_mm11d = config.get(M11,'uid_mm11d')
+      tdpch_modbusid[i] = int(config.get(Y,'tdpch' + str(i) + '_modbusid'))
+      tdpch_ipaddress[i] = config.get(Y,'tdpch' + str(i) + '_ipaddress')
+    tdp_port = '/dev/ttyS3'
+    tdp_port = config.get(Y,'tdp_port')
+    tdp_speed = 9600
+    tdp_speed = int(config.get(Y,'tdp_speed'))
+    # MM6D devices
+    mm6d_protocol = 'http'
+    mm6d_protocol = config.get(M6,'mm6d_protocol')
+    mm6d_port = '/dev/ttyS3'
+    mm6d_port = config.get(M6,'mm6d_port')
+    mm6d_speed = 9600
+    mm6d_speed = int(config.get(M6,'mm6d_speed'))
+    mm6d_intthermostat = 0
+    mm6d_intthermostat = int(config.get(M6,'mm6d_intthermostat'))
+    mm6dch_modbusid = [0 for x in range(1,10)]
+    mm6dch_ipaddress = [0 for x in range(1,10)]
+    for i in range(1,9):
+      mm6dch_modbusid[i] = int(config.get(M6,'mm6dch' + str(i) + '_modbusid'))
+      mm6dch_ipaddress[i] = config.get(M6,'mm6dch' + str(i) + '_ipaddress')
+    # MM7D devices
+    mm7d_protocol = 'http'
+    mm7d_protocol = config.get(M7,'mm7d_protocol')
+    mm7d_port = '/dev/ttyS3'
+    mm7d_port = config.get(M7,'mm7d_port')
+    mm7d_speed = 9600
+    mm7d_speed = int(config.get(M7,'mm7d_speed'))
+    mm7dch_modbusid = [0 for x in range(1,10)]
+    mm7dch_ipaddress = [0 for x in range(1,10)]
+    for i in range(1,9):
+      mm7dch_modbusid[i] = int(config.get(M7,'mm7dch' + str(i) + '_modbusid'))
+      mm7dch_ipaddress[i] = config.get(M7,'mm7dch' + str(i) + '_ipaddress')
     writedebuglog("i","Configuration is loaded.")
-    # internal thermostat in the heater (timer control only - 0/1)
-    ith_ch = [0 for x in range(9)]
-    for i in range(1,9):
-      ith_ch[i] = int(config.get(H,'ith_ch' + str(i)))
   except:
-    writedebuglog("e","ERROR #01: Cannot open " + conffile + "!")
+    writedebuglog("e","ERROR #01: Cannot open or read " + conffile + "!")
     exit(1)
 
 # load configuration
 def loadirrconf(conffile):
   C = "common"
   T = "tube-"
+  global irenable
   global irevening_start
   global irevening_stop
   global irmorning_start
   global irmorning_stop
   global irtemp_max
   global irtemp_min
+  irenable = [0 for channel in range(4)]
   irevening_start = [0 for channel in range(4)]
   irevening_stop = [0 for channel in range(4)]
   irmorning_start = [0 for channel in range(4)]
@@ -399,6 +451,7 @@ def loadirrconf(conffile):
     irtemp_max = int(config.get(C,'temp_max'))
     irtemp_min = int(config.get(C,'temp_min'))
     for i in range(1,4):
+      irenable[i] = config.get(T + str(i),'enable')
       irevening_start[i] = config.get(T + str(i),'evening_start')
       irevening_stop[i] = config.get(T + str(i),'evening_stop')
       irmorning_start[i] = config.get(T + str(i),'morning_start')
@@ -407,10 +460,9 @@ def loadirrconf(conffile):
   except:
     writedebuglog("e","ERROR #20: Cannot open " + conffile + "!")
     exit(20)
-
+ 
 # load environment characteristics
 def loadenvirconf(channel,conffile):
-  C = "common"
   H = "hyphae"
   M = "mushroom"
   try:
@@ -418,7 +470,6 @@ def loadenvirconf(channel,conffile):
       envir_config = f.read()
     config = configparser.RawConfigParser(allow_no_value = True)
     config.read_file(io.StringIO(envir_config))
-    cgasconcentrate_max[channel] = int(config.get(C,'gasconcentrate_max'))
     hhumidifier_off[channel] = int(config.get(H,'humidifier_off'))
     hhumidity_max[channel] = int(config.get(H,'humidity_max'))
     hhumidity_min[channel] = int(config.get(H,'humidity_min'))
@@ -467,9 +518,9 @@ def loadenvirconf(channel,conffile):
     for x in range(24):
       mvent_disablehightemp[x][channel] = int(config.get(M,'vent_disablehightemp_' + addzero(x)))
     mvent_hightemp[channel] = int(config.get(M,'vent_hightemp'))
-    writedebuglog("i","CH"+ str(channel) +": Environment characteristics is loaded.")
+    writedebuglog("i","CH" + str(channel) + ": Environment characteristics is loaded.")
   except:
-    writedebuglog("e","ERROR #14: Cannot open "+conffile+"!")
+    writedebuglog("e","ERROR #14: Cannot open " +conffile+ "!")
     exit(14)
 
 # create and remove lock file
@@ -483,40 +534,10 @@ def lckfile(mode):
       writedebuglog("i","Removing lockfile.")
       os.remove(lockfile)
   except:
-    writedebuglog("w","Cannot create/remove"+lockfile+".")
-
-# write power supply data to logfile
-def writesupplydatatolog(statusdata):
-  logfile = dir_log + '/mm8d-supply.log'
-  dt = (strftime("%Y-%m-%d,%H:%M",localtime()))
-  lckfile(1)
-  writedebuglog("i","Writing power supply data to logfile.")
-  if not os.path.isfile(logfile):
-    f = open(logfile,'w')
-    f.close()
-  try:
-    with open(logfile,"r+") as f:
-      first_line = f.readline()
-      lines = f.readlines()
-      f.seek(0)
-      s = dt + ',' + statusdata[0] + ',' + \
-                     statusdata[1] + ',' + \
-                     statusdata[2] + ',' + \
-                     statusdata[3] + ',' + \
-                     statusdata[4] + ',' + \
-                     statusdata[5] + '\n'
-      f.write(s)
-      f.write(first_line)
-      f.writelines(lines)
-      f.close()
-  except:
-    writedebuglog("e","ERROR #15: Cannot write " + logfile + "!")
-    lckfile(0)
-    exit(15)
-  lckfile(0)
+    writedebuglog("w","Cannot create/remove" +lockfile+ ".")
 
 # write channel's data to logfile
-def writechannelstatustolog(channel,temperature,humidity,gasconcentrate,statusdata):
+def writechannelstatustolog(channel,temperature,humidity,statusdata):
   logfile = dir_log + '/mm8d-ch' + str(channel) + '.log'
   dt = (strftime("%Y-%m-%d,%H:%M",localtime()))
   lckfile(1)
@@ -525,7 +546,7 @@ def writechannelstatustolog(channel,temperature,humidity,gasconcentrate,statusda
     f = open(logfile,'w')
     f.close()
   try:
-    with open(logfile,"r+") as f:
+    with open(logfile,'r+') as f:
       first_line = f.readline()
       lines = f.readlines()
       f.seek(0)
@@ -534,20 +555,20 @@ def writechannelstatustolog(channel,temperature,humidity,gasconcentrate,statusda
                        statusdata[1] + ',' + \
                        statusdata[2] + ',' + \
                        str(temperature) + ',' + \
+                       statusdata[3] + ',' + \
                        statusdata[4] + ',' + \
-                       statusdata[5] + ',' + \
-                       statusdata[6] + '\n'
+                       statusdata[5] + '\n'
       else:
         s = dt + ',' + str(temperature) + ',' + \
                        str(humidity) + ',' + \
-                       str(gasconcentrate) + ',' + \
                        statusdata[0] + ',' + \
                        statusdata[1] + ',' + \
                        statusdata[2] + ',' + \
                        statusdata[3] + ',' + \
                        statusdata[4] + ',' + \
                        statusdata[5] + ',' + \
-                       statusdata[6] + '\n'
+                       statusdata[6] + ',' + \
+                       statusdata[7] + '\n'
       f.write(s)
       f.write(first_line)
       f.writelines(lines)
@@ -577,9 +598,9 @@ def outputoverride(channel,output,status):
   return s
 
 # blink ACTIVE LED
-def blinkactiveled(on):
+def blinkactiveled(status):
   global led_active
-  led_active = on
+  led_active = status
   writelocalports()
   return 0
 
@@ -587,7 +608,7 @@ def blinkactiveled(on):
 def getexttemp():
   writedebuglog("i","Get external temperature from internet.")
   try:
-    response=requests.get(base_url + "appid=" + api_key + "&q=" + city_name)
+    response=requests.get(owm_url + "appid=" + owm_apikey + "&q=" + owm_city)
     x=response.json()
     if x["cod"] != "404":
       y = x["main"]
@@ -600,6 +621,19 @@ def getexttemp():
       return 18
   except:
     writedebuglog("w","Cannot get external temperature from internet.")
+    return 18
+
+# measure external temperature with an external device
+def measureexttemp():
+  writedebuglog("i","Measure external temperature.")
+  try:
+    #  writedebuglog("i","External temperature: " + str(current_temperature) + " degree Celsius")
+    #  return current_temperature
+    #else:
+    #  writedebuglog("w","Cannot mesasure external temperature.")
+      return 18
+  except:
+    writedebuglog("w","Cannot measure external temperature.")
     return 18
 
 # analise data
@@ -643,22 +677,22 @@ def analise(section):
         h2, m2 = irmorning_stop[1].split(':')
         h3, m3 = irevening_start[1].split(':')
         h4, m4 = irevening_stop[1].split(':')
-        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m < int(h2)*100+int(m2))) or \
-           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m < int(h4)*100+int(m4))):
+        if ((h * 100 + m >= int(h1) * 100 + int(m1)) and (h * 100 + m < int(h2) * 100 + int(m2))) or \
+           ((h * 100 + m >= int(h3) * 100 + int(m3)) and (h * 100 + m < int(h4) * 100 + int(m4))):
           relay_tube1 = 1
         h1, m1 = irmorning_start[2].split(':')
         h2, m2 = irmorning_stop[2].split(':')
         h3, m3 = irevening_start[2].split(':')
         h4, m4 = irevening_stop[2].split(':')
-        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m < int(h2)*100+int(m2))) or \
-           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m < int(h4)*100+int(m4))):
+        if ((h*100+m >= int(h1) * 100 + int(m1)) and (h * 100 + m < int(h2) * 100 + int(m2))) or \
+           ((h*100+m >= int(h3) * 100 + int(m3)) and (h * 100 + m < int(h4) * 100 + int(m4))):
           relay_tube2 = 1
         h1, m1 = irmorning_start[3].split(':')
         h2, m2 = irmorning_stop[3].split(':')
         h3, m3 = irevening_start[3].split(':')
         h4, m4 = irevening_stop[3].split(':')
-        if ((h*100+m >= int(h1)*100+int(m1)) and (h*100+m < int(h2)*100+int(m2))) or \
-           ((h*100+m >= int(h3)*100+int(m3)) and (h*100+m < int(h4)*100+int(m4))):
+        if ((h * 100 + m >= int(h1) * 100 + int(m1)) and (h * 100 + m < int(h2) * 100 + int(m2))) or \
+           ((h * 100 + m >= int(h3) * 100 + int(m3)) and (h * 100 + m < int(h4) * 100 + int(m4))):
           relay_tube3 = 1
     # - messages
     if relay_tube1 == 1:
@@ -682,36 +716,30 @@ def analise(section):
       writedebuglog("e","Pressure is too high after water pump!")
     # MM6D
     for channel in range(1,9):
-      if ena_ch[channel] == 1:
+      if ch_enable[channel] == 1:
         # - opened doors
         if in_alarm[channel] == 1:
           relay_alarm = 1
           led_warning = 1
-          writedebuglog("w","CH"+ str(channel) +": Alarm event detected.")
-          writedebuglog("i","CH"+ str(channel) +": Restore alarm input of MM6D device.")
-          if restoreMM6Dalarm(channel) == 1:
-            writedebuglog("i","CH"+ str(channel) +": Restore succeeded.")
-          else:
-            writedebuglog("w","CH"+ str(channel) +": Restore failed.")
+          writedebuglog("w","CH" + str(channel) + ": Alarm event detected.")
         # - bad manual switch position
         if in_swmanu[channel] == 1:
           led_warning = 1
-          writedebuglog("w","CH"+ str(channel) +": Manual mode switch is on position.")
+          writedebuglog("w","CH" + str(channel) + ": Manual mode switch is on position.")
         # - opened overcurrent breaker(s)
         if in_ocprot[channel] == 1:
           led_error = 1
-          writedebuglog("e","CH"+ str(channel) +": Overcurrent breaker of MM6D is opened!")
+          writedebuglog("e","CH" + str(channel) + ": Overcurrent breaker of MM6D is opened!")
   else:
     # Growing environments
     for channel in range(1,9):
-      if ena_ch[channel] == 1:
-        wrongdata = in_temperature[channel] + in_humidity[channel] + in_gasconcentrate[channel]
+      if ch_enable[channel] == 1:
+        wrongdata = in_temperature[channel] + in_humidity[channel]
         writedebuglog("i","CH" + str(channel) + ": Measured T is " + str(in_temperature[channel]) + " C")
         writedebuglog("i","CH" + str(channel) + ": Measured RH is " + str(in_humidity[channel]) + "%")
-        writedebuglog("i","CH" + str(channel) + ": Measured RUGC is " + str(in_gasconcentrate[channel]) + "%")
         if wrongdata == 0:
           writedebuglog("e","CH" + str(channel) + ": Measured data are wrong!")
-        if in_opmode[channel] == 0:
+        if in_opmode[channel] == 2:
           # growing mushroom
           writedebuglog("i","CH" + str(channel) + ": Operation mode: growing mushroom.")
           # - bad temperature
@@ -724,12 +752,9 @@ def analise(section):
             writedebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (" + str(in_humidity[channel]) + " % < " + str(mhumidity_min[channel]) + "%)")
           if in_humidity[channel] > mhumidity_max[channel]:
             writedebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (" + str(in_humidity[channel]) + " % > " + str(mhumidity_max[channel]) + "%)")
-          # - bad gas concentrate
-          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
-            writedebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (> " + str(cgasconcentrate_max[channel]) + "%)")
           # - heaters
           if wrongdata > 0:
-            if ith_ch[channel] == 0:
+            if mm6d_intthermostat == 0:
               out_heaters[channel] = 0
               if in_temperature[channel] < mheater_on[channel]:
                 out_heaters[channel] = 1
@@ -753,11 +778,9 @@ def analise(section):
             out_vents[channel] = 0
           if (in_humidity[channel] > mhumidity_max[channel]) and (exttemp < mtemperature_max[channel]):
             out_vents[channel] = 1
-          if (in_gasconcentrate[channel] > cgasconcentrate_max[channel]) and (exttemp < mtemperature_max[channel]):
-            out_vents[channel] = 1
           if (in_temperature[channel] > mtemperature_max[channel]) and (exttemp < mtemperature_max[channel]):
             out_vents[channel] = 1
-        else:
+        if in_opmode[channel] == 1:
           # growing hyphae
           writedebuglog("i","CH" + str(channel) + ": Operation mode: growing hyphae.")
           # - bad temperature
@@ -770,12 +793,9 @@ def analise(section):
             writedebuglog("w","CH" + str(channel) + ": Relative humidity is too low! (" + str(in_humidity[channel]) + " % < " + str(hhumidity_min[channel]) + "%)")
           if in_humidity[channel] > hhumidity_max[channel]:
             writedebuglog("w","CH" + str(channel) + ": Relative humidity is too high! (" + str(in_humidity[channel]) + " % > " + str(hhumidity_max[channel]) + "%)")
-          # - bad gas concentrate
-          if in_gasconcentrate[channel] > cgasconcentrate_max[channel]:
-            writedebuglog("w","CH" + str(channel) + ": Unwanted gas concentrate is too high! (" + str(in_gasconcentrate[channel]) + " % > " + str(cgasconcentrate_max[channel]) + "%)")
           # - heaters
           if wrongdata > 0:
-            if ith_ch[channel] == 0:
+            if mm6d_intthermostat == 0:
               out_heaters[channel] = 0
               if in_temperature[channel] < hheater_on[channel]:
                 out_heaters[channel] = 1
@@ -797,14 +817,21 @@ def analise(section):
             out_vents[channel] = 1
           if (in_humidity[channel] > hhumidity_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
-          if (in_gasconcentrate[channel] > cgasconcentrate_max[channel]) and (exttemp < htemperature_max[channel]):
-            out_vents[channel] = 1
           if (in_temperature[channel] > htemperature_max[channel]) and (exttemp < htemperature_max[channel]):
             out_vents[channel] = 1
           if hvent_disablelowtemp[h][channel] == 1:
             out_vents[channel] = 0
           if hvent_disablehightemp[h][channel] == 1:
             out_vents[channel] = 0
+        if (in_opmode[channel] == 0):
+          # stand-by
+          writedebuglog("i","CH" + str(channel) + ": Operation mode: stand-by.")
+          # - heaters
+          out_heaters[channel] = 0
+          # - lights
+          out_lamps[channel] = 0
+          # - ventilators
+          out_vents[channel] = 0
         # messages
         if out_heaters[channel] == 1:
           writedebuglog("i","CH" + str(channel) + ": Output heaters ON")
@@ -826,104 +853,139 @@ def initializelocalports():
     # GPIO ports
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(prt_i1,GPIO.IN)
-    GPIO.setup(prt_i2,GPIO.IN)
-    GPIO.setup(prt_i3,GPIO.IN)
-    GPIO.setup(prt_i4,GPIO.IN)
-    GPIO.setup(prt_ro1,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_ro2,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_ro3,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_ro4,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo1,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo2,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
-    GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_i1,GPIO.IN)
+    GPIO.setup(gpio_i2,GPIO.IN)
+    GPIO.setup(gpio_i3,GPIO.IN)
+    GPIO.setup(gpio_i4,GPIO.IN)
+    GPIO.setup(gpio_i5,GPIO.IN)
+    GPIO.setup(gpio_lo1,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_lo2,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_lo3,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_lo4,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro1,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro1,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro2,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro3,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro5,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro6,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro7,GPIO.OUT,initial=GPIO.LOW)
+    GPIO.setup(gpio_ro8,GPIO.OUT,initial=GPIO.LOW)
   else:
     # paralel (LPT) port
-    status = portio.ioperm(LPTADDRESSES[prt_lpt],1,1)
-    if status:
-      writedebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(LPTADDRESSES[prt_lpt])) + "!")
-      sys.exit(17)
-    status = portio.ioperm(LPTADDRESSES[prt_lpt] + 1,1,1)
-    if status:
-      writedebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(LPTADDRESSES[prt_lpt] + 1)) + "!")
-      sys.exit(17)
-    portio.outb(0,LPTADDRESSES[prt_lpt])
-
-# write data from GPIO/LPT port
+    for i in range(0,3):
+      status = portio.ioperm(lpt_address + i,1,1)
+      if status:
+        writedebuglog("e","ERROR #17: Cannot access I/O port: " + str(hex(lpt_address + i)) + "!")
+        sys.exit(17)
+    portio.outb(0,lpt_address)
+ 
+# write data to GPIO/LPT port
 def writelocalports():
   if HW == 0:
     # GPIO ports
     try:
-      GPIO.output(prt_lo1,led_active)
-      GPIO.output(prt_lo2,led_warning)
-      GPIO.output(prt_lo3,led_error)
-      GPIO.output(prt_lo4,led_waterpumperror)
-      GPIO.output(prt_ro1,relay_alarm)
-      GPIO.output(prt_ro2,relay_tube1)
-      GPIO.output(prt_ro3,relay_tube2)
-      GPIO.output(prt_ro4,relay_tube3)
+      GPIO.output(gpio_lo1,led_active)
+      GPIO.output(gpio_lo2,led_warning)
+      GPIO.output(gpio_lo3,led_error)
+      GPIO.output(gpio_lo4,led_waterpumperror)
+      GPIO.output(gpio_ro1,relay_alarm)
+      GPIO.output(gpio_ro2,relay_tube1)
+      GPIO.output(gpio_ro3,relay_tube2)
+      GPIO.output(gpio_ro4,relay_tube3)
+      # unused outputs
+      GPIO.output(gpio_ro5,0)
+      GPIO.output(gpio_ro6,0)
+      GPIO.output(gpio_ro7,0)
+      GPIO.output(gpio_ro8,0)
       return 1
     except:
       return 0
   else:
     # paralel (LPT) port
-    outdata = 128 * led_waterpumperror + \
-               64 * led_error + \
-               32 * led_warning + \
-               16 * led_active + \
-                8 * relay_tube3 + \
-                4 * relay_tube2 + \
-                2 * relay_tube1 + \
-                    relay_alarm
-    portio.outb(outdata,LPTADDRESSES[prt_lpt])
-    if (portio.inb(LPTADDRESSES[prt_lpt]) == outdata):
-      return 1
+    lpterror = 0
+    outdata = 0
+    outbit = 0
+    outbit = lpt_bits[5][2] ^ led_active
+    outdata = outdata | (2 ** lpt_bits[5][1]) * outbit
+    outbit = lpt_bits[6][2] ^ led_warning
+    outdata = outdata | (2 ** lpt_bits[6][1]) * outbit
+    outbit = lpt_bits[7][2] ^ led_error
+    outdata = outdata | (2 ** lpt_bits[7][1]) * outbit
+    outbit = lpt_bits[8][2] ^ led_waterpumperror
+    outdata = outdata | (2 ** lpt_bits[8][1]) * outbit
+    portio.outb(outdata,lpt_address + lpt_bits[5][0])
+    if (0x0F & portio.inb(lpt_address + lpt_bits[5][0]) == outdata):
+      outdata = 0
+      outbit = 0
+      outbit = lpt_bits[9][2] ^ relay_alarm
+      outdata = outdata | (2 ** lpt_bits[9][1]) * outbit
+      outbit = lpt_bits[10][2] ^ relay_tube1
+      outdata = outdata | (2 ** lpt_bits[10][1]) * outbit
+      outbit = lpt_bits[11][2] ^ relay_tube1
+      outdata = outdata | (2 ** lpt_bits[11][1]) * outbit
+      outbit = lpt_bits[12][2] ^ relay_tube3
+      outdata = outdata | (2 ** lpt_bits[12][1]) * outbit
+      # unused outputs
+      outbit = lpt_bits[13][2] ^ 0
+      outdata = outdata | (2 ** lpt_bits[13][1]) * outbit
+      outbit = lpt_bits[14][2] ^ 0
+      outdata = outdata | (2 ** lpt_bits[14][1]) * outbit
+      outbit = lpt_bits[15][2] ^ 0
+      outdata = outdata | (2 ** lpt_bits[15][1]) * outbit
+      outbit = lpt_bits[16][2] ^ 0
+      outdata = outdata | (2 ** lpt_bits[16][1]) * outbit
+      portio.outb(outdata,lpt_address + lpt_bits[9][0])
+      if (portio.inb(lpt_address + lpt_bits[9][0]) != outdata):
+        lpterror = 1
     else:
-      return 0
+      lpterror = 1
+    return not lpterror
 
 # read data from GPIO/LPT port
 def readlocalports():
   global mainsbreakers
   global waterpressurelow
   global waterpressurehigh
-  global unused_local_input
   if HW == 0:
     # GPIO ports
     try:
-      mainsbreakers = GPIO.input(prt_i1)
-      waterpressurelow = GPIO.input(prt_i2)
-      waterpressurehigh = GPIO.input(prt_i3)
-      unused_local_input = GPIO.input(prt_i4)
+      mainsbreakers = GPIO.input(gpio_i1)
+      waterpressurelow = GPIO.input(gpio_i2)
+      waterpressurehigh = GPIO.input(gpio_i3)
+      # unused1 = GPIO.input(gpio_i4)
+      # unused2 = GPIO.input(gpio_i5)
       return 1
     except:
       mainsbreakers = 0;
       waterpressurelow = 0
       waterpressurehigh = 0
-      unused_local_input = 0
       return 0
   else:
     # paralel (LPT) port
     try:
-      indata = portio.inb(LPTADDRESSES[prt_lpt] + 1)
-      mainsbreakers = indata & 8
-      if mainsbreakers > 1:
-        mainsbreakers = 1
-      waterpressurelow = indata & 16
-      if waterpressurelow > 1:
-        waterpressurelow = 1
-      waterpressurehigh = indata & 32
-      if waterpressurehigh > 1:
-        waterpressurehigh = 1
-      unused_local_input = indata & 64
-      if unused_local_input > 1:
-        unused_local_input = 1
+      indata = portio.inb(lpt_address + lpt_bits[0][0])
+      mainsbreakers = indata & (2 ** lpt_bits[0][1])
+      waterpressurelow = indata & (2 ** lpt_bits[1][1])
+      waterpressurehigh = indata & (2 ** lpt_bits[2][1])
+      # unused1 = indata & (2 ** lpt_bits[3][1])
+      # unused2 = indata & (2 ** lpt_bits[4][1])
+      mainsbreakers = 1 if mainsbreakers >= 1 else 0
+      waterpressurelow = 1 if waterpressurelow >=1 else 0
+      waterpressurehigh = 1 if waterpressurehigh >=1 else 0
+      # unused1 = 1 if unused1 >=1 else 0
+      # unused2 = 1 if unused2 >=1 else 0
+      mainsbreakers = lpt_bits[0][2] ^ mainsbreakers
+      waterpressurelow = lpt_bits[1][2] ^ waterpressurelow
+      waterpressurehigh = lpt_bits[2][2] ^ waterpressurehigh
+      # unused1 = lpt_bits[3][2] ^ unused1
+      # unused2 = lpt_bits[4][2] ^ unused2
       return 1
     except:
       mainsbreakers = 0;
       waterpressurelow = 0
       waterpressurehigh = 0
-      unused_local_input = 0
+      # unused1 = 0
+      # unused2 = 0
       return 0
 
 # close GPIO/LPT port
@@ -932,307 +994,311 @@ def closelocalports():
   if HW == 0:
     GPIO.cleanup
   else:
-    portio.outb(0,LPTADDRESSES[prt_lpt])
-
-# read remote MM11D device
-def readMM11Ddevice():
-  rc = 0
-  # See documents/mm11d.txt for URLs and ModBUS registers.
-  try:
-    if pro_mm11d == HP:
-      url = "http://" + adr_mm11d + "/raw/"
-      r = requests.get(url,timeout = 3)
-      if r.status_code == 200:
-        rc = 1
-        l = 0
-        for line in r.text.splitlines():
-          l = l + 1
-          if l == 1:
-            raw_qv = int(line)
-      else:
-        rc = 0
+    lpterror = 0
+    outdata = 0
+    outbit = 0
+    outdata = outdata | (2 ** lpt_bits[5][1]) * outbit
+    outdata = outdata | (2 ** lpt_bits[6][1]) * outbit
+    outdata = outdata | (2 ** lpt_bits[7][1]) * outbit
+    outdata = outdata | (2 ** lpt_bits[8][1]) * outbit
+    portio.outb(outdata,lpt_address + lpt_bits[5][0])
+    if (0x0F & portio.inb(lpt_address + lpt_bits[5][0]) == outdata):
+      outdata = 0
+      outbit = 0
+      outdata = outdata | (2 ** lpt_bits[9][1]) * outbit
+      outdata = outdata | (2 ** lpt_bits[10][1]) * outbit
+      outdata = outdata | (2 ** lpt_bits[11][1]) * outbit
+      outdata = outdata | (2 ** lpt_bits[12][1]) * outbit
+      # unused outputs
+      outdata = outdata | (2 ** lpt_bits[13][1]) * outbit
+      outdata = outdata | (2 ** lpt_bits[14][1]) * outbit
+      outdata = outdata | (2 ** lpt_bits[15][1]) * outbit
+      outdata = outdata | (2 ** lpt_bits[16][1]) * outbit
+      portio.outb(outdata,lpt_address + lpt_bits[9][0])
+      if (portio.inb(lpt_address + lpt_bits[9][0]) != outdata):
+        lpterror = 1
     else:
-      mb_fc = 3
-      mb_reg = 0
-      mb_regs = 0
-      mb_client = ModbusClient()
-      mb_client.host(adr_mm11d)
-      mb_client.port(MB_PORT)
-      if not mb_client.is_open():
-        if not mb_client.open():
-          rc = 0
-      if mb_client.is_open():
-        # read 10 registers at address 0, store result in regs list
-        regs = mb_client.read_holding_registers(mb_reg, mb_regs)
-        # if success display registers
-        if regs:
-          raw_qv = regs[0]
-      rc = 1
-  except:
-    rc = 0
-  if rc > 0:
-    # See documents/mm10d.txt for real and raw value pairs.
-    real_qv = str((raw_qv * 100) / 32767)
-  return rc
+      lpterror = 1
+    return not lpterror
 
-# read remote MM10D device
-def readMM10Ddevice():
+# read remote MM7D device
+def readMM7Ddevice(channel):
   rc = 0
-  # See documents/mm10d.txt for URLs and ModBUS registers.
+  modbusid = mm7dch_modbusid[channel]
+  protocol = mm7d_protocol
+  serport = mm7d_port
+  serspeed = mm7d_speed
+  url = mm7dch_ipaddress[channel]
+  if protocol == HT:
+    url = "http://" + mm7dch_ipaddress[channel] + "/get/txt"
   try:
-    if pro_mm10d == HP:
-      url = "http://" + adr_mm10d + "/raw/"
+    if mm7d_protocol == HT:
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
         l = 0
         for line in r.text.splitlines():
           l = l + 1
-          if l == 1:
-            raw_p = int(line)
-          if l == 2:
-            raw_q = int(line)
-          if l == 3:
-            raw_s = int(line)
-          if l == 4:
-            raw_urms = int(line)
-          if l == 5:
-            raw_irms = int(line)
-          if l == 6:
-            raw_cosfi = int(line)
           if l == 7:
-            raw_qv = int(line)
-      else:
-        rc = 0
-    else:
-      mb_fc = 3
-      mb_reg = 0
-      mb_regs = 7
-      mb_client = ModbusClient()
-      mb_client.host(adr_mm10d)
-      mb_client.port(MB_PORT)
-      if not mb_client.is_open():
-        if not mb_client.open():
-          rc = 0
-      if mb_client.is_open():
-        # read 10 registers at address 0, store result in regs list
-        regs = mb_client.read_holding_registers(mb_reg, mb_regs)
-        # if success display registers
-        if regs:
-          raw_p = regs[0]
-          raw_q = regs[1]
-          raw_s = regs[2]
-          raw_urms = regs[3]
-          raw_irms = regs[4]
-          raw_cosfi = regs[5]
-          raw_qv = regs[6]
-      rc = 1
-  except:
-    rc = 0
-  if rc > 0:
-    # current transformer ratio:
-    CT_RATIO = 10
-    # See documents/mm10d.txt for real and raw value pairs.
-    real_urms = str((raw_urms * 367.7) / 32767)
-    real_irms = str((raw_irms * 8.16 * CT_RATIO) / 32767)
-    real_cosfi = str((raw_cosfi * 1) / 32767)
-    real_p = str((raw_p * 3000 * CT_RATIO) / 32767)
-    real_q = str((raw_q * 3000 * CT_RATIO) / 32767)
-    real_s = str((raw_s * 3000 * CT_RATIO) / 32767)
-    real_qv = str((raw_qv * 100) / 32767)
-  return rc
-
-# read and write remote MM7D device
-def readwriteMM7Ddevice(channel):
-  rc = 0
-  try:
-    if pro_mm7dch[channel] == HP:
-      if in_opmode[channel] == 0:
-        url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
-              "&h1=" + str(mhumidity_min[channel]) + "&h2=" + str(mhumidifier_on[channel]) + \
-              "&h3=" + str(mhumidifier_off[channel]) + "&h4=" + str(mhumidity_max[channel]) + \
-              "&t1=" + str(mtemperature_min[channel]) + "&t2=" + str(mheater_on[channel]) + \
-              "&t3=" + str(mheater_off[channel]) + "&t4=" + str(mtemperature_max[channel]) + \
-              "&g=" + str(cgasconcentrate_max[channel])
-      else:
-        url = "http://" + adr_mm7dch[channel] + "/operation?uid=" + usr_uid + \
-              "&h1=" + str(hhumidity_min[channel]) + "&h2=" + str(hhumidifier_on[channel]) + \
-              "&h3=" + str(hhumidifier_off[channel]) + "&h4=" + str(hhumidity_max[channel]) + \
-              "&t1=" + str(htemperature_min[channel]) + "&t2=" + str(hheater_on[channel]) + \
-              "&t3=" + str(hheater_off[channel]) + "&t4=" + str(htemperature_max[channel]) + \
-              "&g=" + str(cgasconcentrate_max[channel])
-      r = requests.get(url,timeout = 3)
-      if r.status_code == 200:
-        rc = 1
-        l = 0
-        for line in r.text.splitlines():
-          l = l + 1
-          if l == 1:
-            in_gasconcentrate[channel] = int(line)
-          if l == 2:
             in_humidity[channel] = int(line)
-          if l == 3:
-            in_temperature[channel] = int(line)
+          if l == 8:
+            in_temperature[channel] = int(line) - 273
+          if l == 9:
+            in_5v[channel] = int(line)
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure.
-      # This will be included if the slave device supports the ModBUS protocol.
-      rc = 0
+      if protocol == MT:
+        mb_client = ModbusTcpClient(url, MB_PORT)
+      if protocol == MR:
+        mb_client = ModbusSerialClient(method='rtu', port=serport, baudrate=serspeed)
+      mb_reg = 0
+      mb_regs = 3
+      mb_client.connect()
+      if protocol == MT:
+        mb_result = mb_client.read_input_registers(mb_reg, mb_regs)
+      if protocol == MR:
+        mb_result = mb_client.read_input_registers(mb_reg, mb_regs, modbusid)
+      in_humidity[channel] = mb_result.registers[0]
+      in_temperature[channel] = mb_result.registers[1] - 273
+      in_5v[channel] = mb_result.registers[2]
+      mb_client.close()
+      rc = 1
+    time.sleep(DELAY)
   except:
     rc = 0
   return rc
 
-# set automatic mode of remote MM7D device
-def setautomodeMM7Ddevice(channel):
+# read remote MM6D device
+def readMM6Ddevice(channel):
   rc = 0
+  modbusid = mm6dch_modbusid[channel]
+  protocol = mm6d_protocol
+  url = mm6dch_ipaddress[channel]
+  if protocol == HT:
+    url = "http://" + mm6dch_ipaddress[channel] + "/get/txt"
   try:
-    if pro_mm7dch[channel] == HP:
-      url = "http://" + adr_mm7dch[channel] + "/mode/auto?uid=" + usr_uid
-      r = requests.get(url,timeout = 3)
-      if r.status_code == 200:
-        rc = 1
-      else:
-        rc = 0
-    else:
-      # The location of the ModBUS communication procedure.
-      # This will be included if the slave device supports the ModBUS protocol.
-      rc = 0
-  except:
-    rc = 0
-  return rc
-
-# read and write remote MM6D device
-def readwriteMM6Ddevice(channel):
-  rc = 0
-  try:
-    if pro_mm6dch[channel] == HP:
-      url = "http://" + adr_mm6dch[channel] + "/operation?uid=" + usr_uid + \
-            "&a=0&h=" + str(out_heaters[channel]) + "&l=" + str(out_lamps[channel]) + "&v=" + str(out_vents[channel])
+    if mm6d_protocol == HT:
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
         l = 0
         for line in r.text.splitlines():
           l = l + 1
-          if l == 1:
+          if l == 7:
+            in_error[channel] = int(line)
+          if l == 8:
             in_alarm[channel] = int(line)
-          if l == 2:
-            in_opmode[channel] = int(line)
-          if l == 3:
-            in_swmanu[channel] = int(line)
-          if l == 4:
+          if l == 9:
             in_ocprot[channel] = int(line)
+          if l == 11:
+            if int(line) == 1:
+              in_opmode[channel] = 0
+          if l == 12:
+            if int(line) == 1:
+              in_opmode[channel] = 1
+          if l == 13:
+            if int(line) == 1:
+              in_opmode[channel] = 2
+          if l == 14:
+            in_swmanu[channel] = int(line)
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure.
-      # This will be included if the slave device supports the ModBUS protocol.
-      rc = 0
+      if protocol == MT:
+        mb_client = ModbusTcpClient(url, MB_PORT)
+      if protocol == MR:
+        mb_client = ModbusSerialClient(method='rtu', port=serport, baudrate=serspeed)
+      mb_reg = 0
+      mb_regs = 8
+      mb_client.connect()
+      if protocol == MT:
+        mb_result = mb_client.read_discrete_inputs(mb_reg, mb_regs)
+      if protocol == MR:
+        mb_result = mb_client.read_discrete_inputs(mb_reg, mb_regs, modbusid)
+      in_error[channel] = int(mb_result.bits[0])
+      in_alarm[channel] = int(mb_result.bits[1])
+      in_ocprot[channel] = int(mb_result.bits[2])
+      for i in range(0,3):
+        if mb_result.bits[4 + i] == 1:
+          in_opmode[channel] = i
+      in_swmanu[channel] = int(mb_result.bits[7])
+      mb_client.close()
+      rc = 1
+    time.sleep(DELAY)
   except:
     rc = 0
   return rc
 
-# set default state of remote MM6D device
+# write remote MM6D device
+def writeMM6Ddevice(channel):
+  rc = 0
+  modbusid = mm6dch_modbusid[channel]
+  protocol = mm6d_protocol
+  url = mm6dch_ipaddress[channel]
+  if protocol == HT:
+    url = "http://" + mm6dch_ipaddress[channel] + "/set?"
+  try:
+    if mm6d_protocol == HT:
+      url = url + "lamp=" + str(out_lamps[channel]) + "&vent=" + str(out_vents[channel]) + "&heat=" + str(out_heaters[channel])
+      r = requests.get(url,timeout = 3)
+      if r.status_code == 200:
+        rc = 1
+      else:
+        rc = 0
+    else:
+      if protocol == MT:
+        mb_client = ModbusTcpClient(url, MB_PORT)
+      if protocol == MR:
+        mb_client = ModbusSerialClient(method='rtu', port=serport, baudrate=serspeed)
+      mb_reg = 0
+      mb_client.connect()
+      if protocol == MT:
+        mb_client.write_coil(mb_reg, bool(out_lamps[channel]))
+        mb_client.write_coil(mb_reg + 1, bool(out_vents[channel]))
+        mb_client.write_coil(mb_reg + 2, bool(out_heaters[channel]))
+      if protocol == MR:
+        mb_client.write_coil(mb_reg, bool(out_lamps[channel]), modbusid)
+        mb_client.write_coil(mb_reg + 1, bool(out_vents[channel]), modbusid)
+        mb_client.write_coil(mb_reg + 2, bool(out_heaters[channel]), modbusid)
+      mb_client.close()
+      rc = 1
+    time.sleep(DELAY)
+  except:
+    rc = 0
+  return rc
+
+# set default state of the remote MM6D device
 def resetMM6Ddevice(channel):
   rc = 0
+  modbusid = mm6dch_modbusid[channel]
+  protocol = mm6d_protocol
+  url = mm6dch_ipaddress[channel]
+  if protocol == HT:
+    url = "http://" + mm6dch_ipaddress[channel] + "/set?"
   try:
-    if pro_mm6dch[channel] == HP:
-      url = "http://" + adr_mm6dch[channel] + "/set/all/off?uid=" + usr_uid
+    if mm6d_protocol == HT:
+      url = url + "lamp=0&vent=0&heat=0"
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
       else:
         rc = 0
     else:
-      # The location of the ModBUS communication procedure.
-      # This will be included if the slave device supports the ModBUS protocol.
-      rc = 0
+      if protocol == MT:
+        mb_client = ModbusTcpClient(url, MB_PORT)
+      if protocol == MR:
+        mb_client = ModbusSerialClient(method='rtu', port=serport, baudrate=serspeed)
+      mb_reg = 0
+      mb_client.connect()
+      if protocol == MT:
+        mb_client.write_coil(mb_reg, 0)
+        mb_client.write_coil(mb_reg + 1, 0)
+        mb_client.write_coil(mb_reg + 2, 0)
+      if protocol == MR:
+        mb_client.write_coil(mb_reg, 0, modbusid)
+        mb_client.write_coil(mb_reg + 1, 0, modbusid)
+        mb_client.write_coil(mb_reg + 2, 0, modbusid)
+      mb_client.close()
+      rc = 1
+    time.sleep(DELAY)
   except:
     rc = 0
   return rc
-
-# restore alarm input of remote MM6D device
-def restoreMM6Dalarm(channel):
-  rc = 0
-  try:
-    if pro_mm6dch[channel] == HP:
-      url = "http://" + adr_mm6dch[channel] + "/set/alarm/off?uid=" + usr_uid
-      r=requests.get(url,timeout=3)
-      if (r.status_code == 200):
-        rc = 1
-      else:
-        rc = 0
-    else:
-      # The location of the ModBUS communication procedure.
-      # This will be included if the slave device supports the ModBUS protocol.
-      rc = 0
-  except:
-      rc = 0
-  return rc
-
-# get version of remote MM6D, MM7D and MM10D device
+ 
+# get version of the remote MM6D or MM7D device
 def getcontrollerversion(conttype,channel):
   global mv
   global sv
+  global rev
   mv = 0
   sv = 0
+  rev = 0
   rc = 0
   if conttype == 6:
-    protocol = pro_mm6dch[channel]
+    modbusid = mm6dch_modbusid[channel]
+    protocol = mm6d_protocol
+    url = mm6dch_ipaddress[channel]
+    if protocol == HT:
+      url = "http://" + mm6dch_ipaddress[channel] + "/get/txt"
   if conttype == 7:
-    protocol = pro_mm7dch[channel]
-  if conttype == 10:
-    protocol = pro_mm10d
+    modbusid = mm7dch_modbusid[channel]
+    protocol = mm7d_protocol
+    url = mm7dch_ipaddress[channel]
+    if protocol == HT:
+      url = "http://" + mm7dch_ipaddress[channel] + "/get/txt"
   try:
-    if conttype == 6:
-      url = "http://" + adr_mm6dch[channel] + "/version"
-    if conttype == 7:
-      url = "http://" + adr_mm7dch[channel] + "/version"
-    if conttype == 10:
-      url = "http://" + adr_mm10d + "/version"
-    if protocol == HP:
+    if protocol == HT:
       r = requests.get(url,timeout = 3)
       if r.status_code == 200:
         rc = 1
         l = 0
         for line in r.text.splitlines():
           l = l + 1
+          if l == 1:
+            writedebuglog("i","CH" + str(channel) + " " + line + ":")
           if l == 2:
+            writedebuglog("i","- Software version: " + line)
             mv = int(line[0])
             sv = int(line[2])
-            break
+            rev = int(line[4])
+          if l == 3:
+            writedebuglog("i","- MAC address: " + line)
+          if l == 4:
+            writedebuglog("i","- IP address: " + line)
+          if l == 5:
+            writedebuglog("i","- Modbus ID: " + line)
       else:
           rc = 0
-      print(mv)
-      print(sv)
     else:
-      mb_client = ModbusClient()
-      if conttype == 6:
-        mb_client.host(adr_mm6dch[channel])
-      if conttype == 7:
-        mb_client.host(adr_mm7dch[channel])
-      if conttype == 10:
-        mb_client.host(adr_mm10d)
-      mb_fc = 3
-      mb_reg = 9997
-      mb_regs = 2
-      mb_client.port(MB_PORT)
-      if not mb_client.is_open():
-        if not mb_client.open():
-          rc = 0
-      if mb_client.is_open():
-        regs = mb_client.read_holding_registers(mb_reg, mb_regs)
-        if regs:
-          mv = regs[0]
-          sv = regs[1]
+      if protocol == MT:
+        mb_client = ModbusTcpClient(url, MB_PORT)
+      if protocol == MR:
+        mb_client = ModbusSerialClient(method='rtu', port=serport,baudrate=serspeed)
+      mb_reg = 0
+      mb_regs = 3
+      mb_client.connect()
+      if protocol == MT:
+        mb_result = mb_client.read_input_registers(mb_reg, mb_regs)
+      if protocol == MR:
+        mb_result = mb_client.read_input_registers(mb_reg, mb_regs, modbusid)
+      #if protocol == RT:
+        #mb_client = ModbusTcpClient()
+      mb_reg = 0
+      mb_regs = 22
+      mb_client.connect()
+      mb_result = mb_client.read_holding_registers(mb_reg, mb_regs)
+      line = "" 
+      for i in range(0,8):
+        if mb_result.registers[i] > 0:
+          line = line + chr(mb_result.registers[i])
+      writedebuglog("i","CH" + str(channel) + " " + line + ":")
+      mv = mb_result.registers[8]
+      sv = mb_result.registers[9]
+      rev = mb_result.registers[10]
+      line = str(mv) + "." + str(sv) + "." + str(rev)
+      writedebuglog("i","- Software version: " + line)
+      line = ""
+      for i in range(11,17):
+        line = line + str(hex(mb_result.registers[i])[2:])
+        if i < 16:
+          line = line + ":"
+      writedebuglog("i","- MAC address: " + line.upper())
+      line = ""
+      for i in range(17,21):
+        line = line + str(mb_result.registers[i])
+        if i < 20:
+          line = line + "."
+      writedebuglog("i","- IP address: " + line)
+      writedebuglog("i","- Modbus ID: " + str(mb_result.registers[21]))
+      mb_client.close()
       rc = 1
+    time.sleep(DELAY)
   except:
     rc = 0
   return rc
 
 # main program
-global cgasconcentrate_max
 global com
 global exttemp
 global hheater_disable
@@ -1257,8 +1323,9 @@ global hvent_lowtemp
 global hvent_off
 global hvent_on
 global in_alarm
-global in_gasconcentrate
+global in_error
 global in_humidity
+global in_5v
 global in_ocprot
 global in_opmode
 global in_swmanu
@@ -1293,26 +1360,14 @@ global out_heaters
 global out_lamps
 global out_vents
 global override
-global raw_cosfi
-global raw_irms
-global raw_p
-global raw_q
-global raw_qv
-global raw_s
-global raw_urms
-global real_cosfi
-global real_irms
-global real_p
-global real_q
-global real_qv
-global real_s
-global real_urms
 global relay_alarm
 global relay_tube1
 global relay_tube2
 global relay_tube3
+global HT
+global MR
+global MT
 # reset variables
-cgasconcentrate_max = [0 for x in range(9)]
 done = 0
 exttemp = 18
 hheater_disable = [[0 for x in range(9)] for y in range(24)]
@@ -1336,8 +1391,9 @@ hvent_lowtemp = [0 for x in range(9)]
 hvent_off = [0 for x in range(9)]
 hvent_on = [0 for x in range(9)]
 in_alarm = [0 for channel in range(9)]
-in_gasconcentrate = [0 for channel in range(9)]
+in_error = [0 for channel in range(9)]
 in_humidity = [0 for channel in range(9)]
+in_5v = [0 for channel in range(9)]
 in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
 in_swmanu = [0 for channel in range(9)]
@@ -1368,88 +1424,94 @@ mvent_lowtemp = [0 for x in range(9)]
 mvent_off = [0 for x in range(9)]
 mvent_on = [0 for x in range(9)]
 newdata_ch = ["" for x in range(10)]
-newdata_ps = ""
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 override = [["neutral" for x in range(4)] for x in range(9)]
 prevdata_ch = ["" for x in range(10)]
-prevdata_ps = ""
-raw_cosfi = 0
-raw_irms = 0
-raw_p = 0
-raw_q = 0
-raw_qv = 0
-raw_s = 0
-raw_urms = 0
-real_cosfi = "1"
-real_irms = "0"
-real_p = "0"
-real_q = "0"
-real_qv = "0"
-real_s = "0"
-real_urms = "0"
 relay_alarm = 0
 relay_tube1 = 0
 relay_tube2 = 0
 relay_tube3 = 0
+HT = 'http'
+MR = 'rtu'
+MT = 'tcp'
 # load main settings
 loadconfiguration(CONFDIR + "mm8d.ini")
-# intialize serial port
-if ena_console == "1":
-  com = serial.Serial(prt_com, com_speed)
+# load modules
+if fwm_enable == 1:
+  fwm = __import__(fwm_handler)
+  fwm.baudrate = fwm_speed
+  fwm.method = fwm_protocol
+  fwm.port = fwm_port
+if pwm_enable == 1:
+  pwm = __import__(pwm_handler)
+  pwm.baudrate = pwm_speed
+  pwm.method = pwm_protocol
+  pwm.port = pwm_port
+if otm_enable == 1:
+  otm = __import__(otm_handler)
+  otm.baudrate = otm_speed
+  otm.method = otm_protocol
+  otm.port = otm_port
+if tdp_enable == 1:
+  tdp = __import__(tdp_handler)
+  tdp.baudrate = tdp_speed
+  tdp.method = tdp_protocol
+  tdp.port = tdp_port
+# clear tent display
+for channel in range(1,9):
+  if ch_enable[channel] == 1:
+    if tdp_enable == 1:
+      if tdp.cleardisplay(tdpch_modbusid[channel]): 
+        writedebuglog("i","CH" + str(channel) + ": Clear tent display.")
+      else:
+        writedebuglog("w","CH" + str(channel) + ": Cannot clear tent display.")
+# intialize serial port of console
+if msc_enable == 1:
+  com = serial.Serial(msc_port, msc_speed)
 # load irrigator settings
 loadirrconf(CONFDIR + "irrigator.ini")
 # checking version of remote devices
 for channel in range(1,9):
-  if ena_ch[channel] > 0:
+  if ch_enable[channel] > 0:
     if getcontrollerversion(6,channel):
       if (mv * 10 + sv) < (COMPMV6 * 10 + COMPSV6):
-        ena_ch[channel] = 0;
-        writedebuglog("w","CH"+ str(channel) +": Version of MM6D is not compatible.")
+        ch_enable[channel] = 0;
+        writedebuglog("w","CH" + str(channel) + ": Version of MM6D is not compatible.")
     else:
-      ena_ch[channel] = 0;
-      writedebuglog("w","CH"+ str(channel) +": MM6D is not accessible.")
+      ch_enable[channel] = 0;
+      writedebuglog("w","CH" + str(channel) + ": MM6D is not accessible.")
 for channel in range(1,9):
-  if ena_ch[channel] > 0:
+  if ch_enable[channel] > 0:
     if getcontrollerversion(7,channel):
       if (mv * 10 + sv) < (COMPMV7 * 10 + COMPSV7):
-        ena_ch[channel] = 0;
-        writedebuglog("w","CH"+ str(channel) +": Version of MM7D is not compatible.")
+        ch_enable[channel] = 0;
+        writedebuglog("w","CH" + str(channel) + ": Version of MM7D is not compatible.")
     else:
-      ena_ch[channel] = 0;
-      writedebuglog("w","CH"+ str(channel) +": MM7D is not accessible.")
-if ena_mm10d == 1:
-  if getcontrollerversion(10,1):
-    if (mv * 10 + sv) < (COMPMV10 * 10 + COMPSV10):
-      ena_mm10d = 0;
-      writedebuglog("w","Version of MM10D is not compatible.")
-  else:
-    ena_mm10d = 0;
-    writedebuglog("w","MM10D is not accessible.")
+      ch_enable[channel] = 0;
+      writedebuglog("w","CH" + str(channel) + ": MM7D is not accessible.")
 # check number of enabled channels
 ii = 0;
 for channel in range(1,9):
-  ii=ii+ena_ch[channel];
+  ii=ii+ch_enable[channel];
 # Error #18 -> warning
 if ii == 0:
-#  writedebuglog("e","ERROR #18: There is not enabled channel!")
-#  exit(18);
+  # writedebuglog("e","ERROR #18: There is not enabled channel!")
+  # exit(18);
   writedebuglog("w","There is not enabled channel!")
 # load environment parameter settings
 for channel in range(1,9):
-  if ena_ch[channel] == 1:
+  if ch_enable[channel] == 1:
     loadenvirconf(channel,CONFDIR + "envir-ch" + str(channel) + ".ini")
 # initialize local ports to default state
 initializelocalports()
-# set auto mode of MM7D device
-for channel in range(1,9):
-  if ena_ch[channel] == 1:
-    if setautomodeMM7Ddevice(channel):
-      writedebuglog("i","CH"+ str(channel) +": Set auto mode of MM7D.")
-    else:
-      writedebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
-exttemp = getexttemp()
+# get or measure external temperature
+exttemp = 18
+if owm_enable == 1:
+  exttemp = getexttemp()
+if otm_enable == 1:
+  exttemp = measureexttemp()
 # *** start loop ***
 writedebuglog("i","Starting program as daemon.")
 while True:
@@ -1460,10 +1522,10 @@ while True:
     # read data from local port
     writedebuglog("i","Read data from local I/O port.")
     if readlocalports():
-      writedebuglog("i","- input data: " + str(unused_local_input) + \
-                                           str(waterpressurehigh) + \
-                                           str(waterpressurelow) + \
-                                           str(mainsbreakers) +".")
+      writedebuglog("i","Input data:")
+      writedebuglog("i","- Pressure high:  " + str(waterpressurehigh))
+      writedebuglog("i","- Pressure low:   " + str(waterpressurelow))
+      writedebuglog("i","- Mains breakers: " + str(mainsbreakers))
     else:
       writedebuglog("w","Cannot read data from local I/O port.")
     # analise data
@@ -1487,45 +1549,43 @@ while True:
     # write data to local port
     writedebuglog("i","Write data to local I/O port.")
     if writelocalports():
-      writedebuglog("i","- output data: " + str(led_waterpumperror) + \
-                                            str(led_error) + \
-                                            str(led_warning) + \
-                                            str(led_active) + \
-                                            str(relay_tube3) + \
-                                            str(relay_tube2) + \
-                                            str(relay_tube1) + \
-                                            str(relay_alarm) +".")
+      writedebuglog("i","Output data:")
+      writedebuglog("i","- Pump error LED:      " + str(led_waterpumperror))
+      writedebuglog("i","- General error LED:   " + str(led_error))
+      writedebuglog("i","- General warning LED: " + str(led_warning))
+      writedebuglog("i","- Active LED:          " + str(led_active))
+      writedebuglog("i","- Tube #3 relay:       " + str(relay_tube3))
+      writedebuglog("i","- Tube #2 relay:       " + str(relay_tube2))
+      writedebuglog("i","- Tube #1 relay:       " + str(relay_tube1))
+      writedebuglog("i","- Alarm relay:         " + str(relay_alarm))
     else:
       writedebuglog("w","Cannot write data to local I/O port.")
-    # set outputs of MM6D
+    # get status and set outputs of the MM6D
     for channel in range(1,9):
-      if ena_ch[channel] == 1:
-        if readwriteMM6Ddevice(channel):
-          writedebuglog("i","CH"+ str(channel) +": Set outputs of MM6D.")
+      if ch_enable[channel] == 1:
+        if writeMM6Ddevice(channel):
+          writedebuglog("i","CH" + str(channel) + ": Set outputs of the MM6D.")
         else:
-          writedebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D.")
+          writedebuglog("w","CH" + str(channel) + ": Cannot set outputs of the MM6D.")
+        if readMM6Ddevice(channel):
+          writedebuglog("i","CH" + str(channel) + ": Get status of the MM6D.")
+        else:
+          writedebuglog("w","CH" + str(channel) + ": Cannot get status of the MM6D.")
     # section #2:
-    # get power supply data from MM10D
-    if ena_mm10d == 1:
-      if readwriteMM10Ddevice():
-        writedebuglog("i","Get power supply data from MM10D.")
-      else:
-        writedebuglog("w","Cannot get power supply data from MM10D.")
-    # get parameters of air from MM7Ds
+    # get data from MM7Ds
     for channel in range(1,9):
-      if ena_ch[channel] == 1:
-        if readwriteMM7Ddevice(channel):
-          writedebuglog("i","CH"+ str(channel) +": Get parameters of air from MM7D.")
-        else:
-          writedebuglog("w","CH"+ str(channel) +": Cannot get parameters of air from MM7D.")
-        if setautomodeMM7Ddevice(channel):
-          writedebuglog("i","CH"+ str(channel) +": Set auto mode of MM7D.")
-        else:
-          writedebuglog("w","CH"+ str(channel) +": Cannot set auto mode of MM7D.")
+      if ch_enable[channel] == 1:
+       if readMM7Ddevice(channel):
+         writedebuglog("i","CH" + str(channel) + ": Get data from the MM7D.")
+       else:
+         writedebuglog("w","CH" + str(channel) + ": Cannot get data from the MM7D.")
     # get external temperature from internet
     if (int(time.strftime("%M")) == 0) or (int(time.strftime("%M")) == 1):
       if done == 0:
-        exttemp = getexttemp()
+        if owm_enable == 1:
+          exttemp = getexttemp()
+        if otm_enable == 1:
+          exttemp = measureexttemp()
         done = 1
     if (int(time.strftime("%M")) == 30) or (int(time.strftime("%M")) == 31):
       done = 0
@@ -1533,7 +1593,7 @@ while True:
     analise(2);
     # override state of outputs
     for channel in range(1,9):
-      if ena_ch[channel] == 1:
+      if ch_enable[channel] == 1:
         out_lamps[channel] = outputoverride(channel,1,out_lamps[channel])
         out_vents[channel] = outputoverride(channel,2,out_vents[channel])
         out_heaters[channel] = outputoverride(channel,3,out_heaters[channel])
@@ -1549,40 +1609,52 @@ while True:
           writedebuglog("i","CH" + str(channel) + ": -> ventilators ON")
         else:
           writedebuglog("i","CH" + str(channel) + ": -> ventilators OFF")
-    # write data to mm8d-supply.log
-    if ena_mm10d == 1:
-      newdata_ps = real_urms + real_irms + real_p + real_q + real_s + real_cosfi + real_qv
-      if (prevdata_ps != newdata_ps):
-        writesupplydatatolog(newdata_ps)
-        prevdata_ps = newdata_ps
     # write data to mm8d-ch0.log
     newdata_ch[0] = str(mainsbreakers) + \
                     str(waterpressurelow) + \
                     str(waterpressurehigh) + \
-                    str(unused_local_input) + \
                     str(relay_tube1) + \
                     str(relay_tube2) + \
                     str(relay_tube3)
     if (prevdata_ch[0] != str(exttemp) + newdata_ch[0]):
-      writechannelstatustolog(0,exttemp,0,0,newdata_ch[0])
+      writechannelstatustolog(0,exttemp,0,newdata_ch[0])
       prevdata_ch[0] = str(exttemp) + newdata_ch[0]
     # write data to mm8d-ch[1-8].log
     for channel in range(1,9):
-      if ena_ch[channel] == 1:
-        if in_temperature[channel] + in_humidity[channel] + in_gasconcentrate[channel] > 0:
-          newdata_ch[channel] = str(in_opmode[channel]) + \
+      if ch_enable[channel] == 1:
+        if in_temperature[channel] + in_humidity[channel] > 0:
+          newdata_ch[channel] = str(in_error[channel]) + \
+                                str(in_opmode[channel]) + \
                                 str(in_swmanu[channel]) + \
                                 str(in_ocprot[channel]) + \
                                 str(in_alarm[channel]) + \
                                 str(out_lamps[channel]) + \
                                 str(out_vents[channel]) + \
                                 str(out_heaters[channel])
-          if (prevdata_ch[channel] != str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]):
-            writechannelstatustolog(channel, in_temperature[channel],in_humidity[channel],in_gasconcentrate[channel],newdata_ch[channel])
-            prevdata_ch[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + str(in_gasconcentrate[channel]) + newdata_ch[channel]
-    # send power supply data to display via serial port
-    if ena_mm10d == 1:
-      writesupplydatatocomport()
+          if (prevdata_ch[channel] != str(in_temperature[channel]) + str(in_humidity[channel]) + newdata_ch[channel]):
+            writechannelstatustolog(channel, in_temperature[channel],in_humidity[channel],newdata_ch[channel])
+            prevdata_ch[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + newdata_ch[channel]
+    # write data to the tent display
+    for channel in range(1,9):
+      if ch_enable[channel] == 1:
+        if tdp_enable == 1:
+          if in_temperature[channel] < 0: s = "00"
+          if in_temperature[channel] < 10:
+            s = "0" + str(in_temperature[channel])
+          else:
+            s = str(in_temperature[channel])
+          if in_temperature[channel] > 99: s = "99"
+          s = s + " "
+          if in_humidity[channel] < 0: s = s + "000"
+          if in_humidity[channel] < 10: s = s + "00" + str(in_humidity[channel])
+          if in_humidity[channel] < 100:
+            s = s + "0" + str(in_humidity[channel])
+          else:
+            s = s + "100"
+          if tdp.writestr(tdpch_modbusid[channel], s):
+            writedebuglog("i", "CH" + str(channel) + ": Write T/RH to the tent display.")
+          else:
+            writedebuglog("w", "CH" + str(channel) + ": Cannot write T/RH to the tent display.")
     # send channels' data to display via serial port
     writechannelstatustocomport(loop)
     if loop == 8:
@@ -1598,23 +1670,39 @@ while True:
     writedebuglog("e","ERROR #19: Fatal error!")
     # close local ports
     closelocalports()
+    # clear tent display
+    for channel in range(1,9):
+      if ch_enable[channel] == 1:
+        if tdp_enable == 1:
+          if tdp.cleardisplay(tdpch_modbusid[channel]): 
+            writedebuglog("i","CH" + str(channel) + ": Clear tent display.")
+          else:
+            writedebuglog("w","CH" + str(channel) + ": Cannot clear tent display.")
     # set outputs of MM6D
     for channel in range(1,9):
-      if ena_ch[channel] == 1:
+      if ch_enable[channel] == 1:
         if resetMM6Ddevice(channel):
-          writedebuglog("i","CH"+ str(channel) +": Set outputs of MM6D to default state.")
+          writedebuglog("i","CH" + str(channel) + ": Set outputs of the MM6D to default state.")
         else:
-          writedebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D to default state.")
+          writedebuglog("w","CH" + str(channel) + ": Cannot set outputs of the MM6D to default state.")
     writedebuglog("i","Program stopped.")
     sys.exit(19)
 # close local ports
 closelocalports()
 # set outputs of MM6D
 for channel in range(1,9):
-  if ena_ch[channel] == 1:
+  if ch_enable[channel] == 1:
     if resetMM6Ddevice(channel):
-      writedebuglog("i","CH"+ str(channel) +": Set outputs of MM6D to default state.")
+      writedebuglog("i","CH" + str(channel) + ": Set outputs of the MM6D to default state.")
     else:
-      writedebuglog("w","CH"+ str(channel) +": Cannot set outputs of MM6D to default state.")
+      writedebuglog("w","CH" + str(channel) + ": Cannot set outputs of the MM6D to default state.")
+# clear tent display
+for channel in range(1,9):
+  if ch_enable[channel] == 1:
+    if tdp_enable == 1:
+      if tdp.cleardisplay(tdpch_modbusid[channel]): 
+        writedebuglog("i","CH" + str(channel) + ": Clear tent display.")
+      else:
+        writedebuglog("w","CH" + str(channel) + ": Cannot clear tent display.")
 writedebuglog("i","Program stopped.")
 sys.exit(0)
