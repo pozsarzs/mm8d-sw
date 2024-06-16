@@ -25,7 +25,7 @@ import time
 import dt510 as pwm
 
 # constants
-CONFFILE="/usr/local/etc/mm8d/mm8d.ini"
+CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
 
 # load configuration
 def loadconfiguration(CONFFILE):
@@ -63,14 +63,17 @@ while True:
   if selection == "Q" or selection == "q":
     print("\nQuitting.")
     sys.exit(0)
-  if pwm.readregisters(1):
-    print(' ', round(pwm.getp(), 2), 'W')
-    print(' ', round(pwm.getq(), 2), 'VAr')
-    print(' ', round(pwm.gets(), 2), 'VA')
-    print(' ', round(pwm.geturms(), 2), 'V')
-    print(' ', round(pwm.getirms(), 2), 'A')
-    print(' ', round(pwm.getcosfi(), 2))
+  if pwm.readregisters(pwm_modbusid) == 1:
+    try:
+      print(' ', round(pwm.getp(), 2), 'W')
+      print(' ', round(pwm.getq(), 2), 'VAr')
+      print(' ', round(pwm.gets(), 2), 'VA')
+      print(' ', round(pwm.geturms(), 2), 'V')
+      print(' ', round(pwm.getirms(), 2), 'A')
+      print(' ', round(pwm.getcosfi(), 2))
+    except:
+      print('Data read error from ID', pwm_modbusid)
   else:
-    print('Data read error from ID', modbusid)
+    print('Data read error from ID', pwm_modbusid)
 sys.exit(0)
 

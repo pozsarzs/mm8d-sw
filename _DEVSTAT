@@ -52,9 +52,9 @@ manuals/mm8d-editmainconf.1.in                                        DONE
 manuals/mm8d-exportlog2csv.1.in                                       DONE
 manuals/mm8d-getsnapshots-seccam.1.in                                 DONE
 manuals/mm8d-getsnapshots-tentcam.1.in                                DONE
-manuals/mm8d-hwtest.py.1.in                                           DONE
+manuals/mm8d-test-mm8d.py.1.in                                        DONE
 manuals/mm8d-maintainlog.1.in                                         DONE
-manuals/mm8d-msctest.py.1.in                                          DONE
+manuals/mm8d-test-msc.py.1.in                                         DONE
 manuals/mm8d-override.1.in                                            DONE
 manuals/mm8d-restartdaemon.1.in                                       DONE
 manuals/mm8d-startdaemon.1.in                                         DONE
@@ -117,8 +117,8 @@ packaging/web-all/postinst
 packaging/web-all/prerm
 
 programs/Makefile                                                     DONE
-programs/mm8d-hwtest.py.in
-programs/mm8d-msctest.py.in
+programs/mm8d-test-mm8d.py.in
+programs/mm8d-test-msc.py.in
 programs/mm8d.py.in
 
 scripts/Makefile                                                      DONE

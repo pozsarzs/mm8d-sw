@@ -1,7 +1,7 @@
 > [!WARNING]
 > This version (v0.6) is still under development, please use the previous one!
 
-##MM8D * Growing house and irrigation controlling and remote monitoring system
+## MM8D * Growing house and irrigation controlling and remote monitoring system
 Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>  
 Homepage: <http://www.pozsarzs.hu>  
 GitHub: <https://github.com/pozsarzs/mm8d-sw>  
@@ -27,7 +27,7 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
  - Datcon DT510 power meter with Modbus/ASCII access via RS-232 serial connection
  - PTA8B01 temperature meter  with Modbus/RTU access via RS-485 serial connection
 
-####Software
+#### Software
 |features              |                                                |
 |:---------------------|------------------------------------------------|
 |architecture          |amd64, armhf, i386                              |

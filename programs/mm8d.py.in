@@ -1546,7 +1546,11 @@ if owm_enable == 1:
 if otm_enable == 1:
   if otm.readregisters(otm_modbusid) == 1:
     writedebuglog("i","Get data from outdoor temperature meter.")
-    exttemp = otm.gett
+    try: 
+      exttemp = round(otm.gett())
+    except:
+      exttemp = 18
+      writedebuglog("w","Cannot get data from outdoor temperature meter.")
   else:
     writedebuglog("w","Cannot get data from outdoor temperature meter.")
 writedebuglog("i","External temperature: " + str(exttemp) + " degree Celsius")
@@ -1660,7 +1664,11 @@ while True:
     if otm_enable == 1:
       if otm.readregisters(otm_modbusid) == 1:
         writedebuglog("i","Get data from outdoor temperature meter.")
-        exttemp = otm.gett
+        try: 
+          exttemp = round(otm.gett())
+        except:
+          exttemp = 18
+          writedebuglog("w","Cannot get data from outdoor temperature meter.")
       else:
         writedebuglog("w","Cannot get data from outdoor temperature meter.")
     writedebuglog("i","External temperature: " + str(exttemp) + " degree Celsius")

@@ -182,13 +182,13 @@ fwm_handler=
 [outdoortempmeter]
 ; outdoor temperature meter
 ; protocols: ascii, rtu, tcp
-otm_enable=0
+otm_enable=1
 otm_protocol=rtu
 otm_port=/dev/ttyS2
 otm_speed=9600
 otm_modbusid=20
 otm_ipaddress=0.0.0.0
-otm_handler=pta8b01
+otm_handler=pta9b01
 
 [tentdisplay]
 ; display in the tent
