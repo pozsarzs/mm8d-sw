@@ -2,7 +2,7 @@
 # +----------------------------------------------------------------------------+
 # | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
-# | mm8d-msctest.py                                                            |
+# | mm8d-test-msc.py                                                           |
 # | Mini serial console test program                                           |
 # +----------------------------------------------------------------------------+
 
@@ -30,7 +30,7 @@ CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
 
 # write a debug log line to serial port
 def writedebuglogtocomport(level,text):
-  if msc_enable == "1":
+  if msc_enable == 1:
     dt = (strftime("%y%m%d %H%M%S",localtime()))
     try:
       com.open
@@ -43,7 +43,7 @@ def writedebuglogtocomport(level,text):
 def writechannelstatustocomport(channel):
   transmitbuffer = [0x00 for x in range(13)]
   line = ""
-  if msc_enable == "1":
+  if msc_enable == 1:
     if channel == 0:
       transmitbuffer[0x00] = ord("C")
       transmitbuffer[0x01] = ord("H")
@@ -109,20 +109,20 @@ def loadconfiguration(CONFFILE):
   global msc_port
   global msc_speed
   global msc_enable
-  C = 'COMport'
+  S = 'console'
   try:
     with open(CONFFILE) as f:
       mm8d_config=f.read()
     config=configparser.RawConfigParser(allow_no_value=True)
     config.read_file(io.StringIO(mm8d_config))
     # enable/disable external serial display (0/1)
-    msc_enable = '1'
-    msc_enable = config.get(C,'msc_enable')
+    msc_enable = 1
+    msc_enable = int(config.get(S,'msc_enable'))
     # port name
-    msc_port = config.get(C,'msc_port')
+    msc_port = config.get(S,'msc_port')
     # port speed
-    msc_speed = '9600'
-    msc_speed = int(config.get(C,'msc_speed'))
+    msc_speed = 9600
+    msc_speed = int(config.get(S,'msc_speed'))
   except:
     print("ERROR #1: Cannot open configuration file!");
     sys.exit(1);
@@ -172,27 +172,27 @@ relay_tube2 = 0
 relay_tube3 = 0
 waterpressurehigh = 0
 waterpressurelow = 0
-print("\nMM8D Mini serial console test utility * (C) 2020-2024 Pozsar Zsolt")
-print("--------------------------------------------------------------------")
-print(" * load configuration: %s..." % CONFFILE)
+print("\nMini serial console test utility * (C) 2020-2024 Pozsar Zsolt")
+print("-------------------------------------------------------------")
+print("Load configuration: %s..." % CONFFILE)
 loadconfiguration(CONFFILE)
-print(" * setting ports...")
+print("Setting ports...")
 com = serial.Serial(msc_port, msc_speed)
 
 while True:
-  print(" * What do you like?")
+  print("What do you like?")
   menuitem = input(" \
    1: Set parameters of the Channel #0\n \
    2: Set parameters of the Channel #1-8\n \
    q: Quit\n")
   # exit
-  if menuitem is "Q" or menuitem is "q":
+  if menuitem == "Q" or menuitem == "q":
     break;
   # channel #0
-  if menuitem is "1":
+  if menuitem == "1":
     channel = 0
     while True:
-      print(" * Set variables of the Channel #0")
+      print(" Set variables of the Channel #0")
       print("      channel               ",channel)
       print("   1: mainsbreakers         ",mainsbreakers)
       print("   2: waterpressurelow      ",waterpressurelow)
@@ -208,40 +208,40 @@ while True:
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
-      if submenuitem is "1":
+      if submenuitem == "1":
         mainsbreakers = int(not mainsbreakers)
         if mainsbreakers == 1:
           writedebuglogtocomport("e","Overcurrent breaker is opened!")
-      if submenuitem is "2":
+      if submenuitem == "2":
         waterpressurelow = int(not waterpressurelow)
         if waterpressurelow == 1:
           writedebuglogtocomport("e","Pressure is too low after water pump!")
-      if submenuitem is "3":
+      if submenuitem == "3":
         waterpressurehigh = int(not waterpressurehigh)
         if waterpressurehigh == 1:
           writedebuglogtocomport("e","Pressure is too high after water pump!")
-      if submenuitem is "4":
+      if submenuitem == "4":
         exttemp = int(input("Enter new value (0-100): "))
         writedebuglogtocomport("i","External temperature: " + str(exttemp) + " degree Celsius")
-      if submenuitem is "5":
+      if submenuitem == "5":
          relay_tube1 = int(not relay_tube1)
          if relay_tube1 == 1:
            writedebuglogtocomport("i","CH0: Output water pump and valve #1 ON")
          else:
            writedebuglogtocomport("i","CH0: Output water pump and valve #1 OFF")
-      if submenuitem is "6":
+      if submenuitem == "6":
          relay_tube2 = int(not relay_tube2)
          if relay_tube2 == 1:
            writedebuglogtocomport("i","CH0: Output water pump and valve #2 ON")
          else:
            writedebuglogtocomport("i","CH0: Output water pump and valve #2 OFF")
-      if submenuitem is "7":
+      if submenuitem == "7":
          relay_tube3 = int(not relay_tube3)
          if relay_tube3 == 1:
            writedebuglogtocomport("i","CH0: Output water pump and valve #3 ON")
          else:
            writedebuglogtocomport("i","CH0: Output water pump and valve #3 OFF")
-      if submenuitem is "8":
+      if submenuitem == "8":
         override[channel][0] = override[channel][0] + 1
         if override[channel][0] == 3:
           override[channel][0] = 0
@@ -249,7 +249,7 @@ while True:
           writedebuglogtocomport("i","CH0: -> water pump and valve #1 ON")
         if override[channel][0] == 1:
           writedebuglogtocomport("i","CH0: -> water pump and valve #1 OFF")
-      if submenuitem is "9":
+      if submenuitem == "9":
         override[channel][1] = override[channel][1] + 1
         if override[channel][1] == 3:
           override[channel][1] = 0
@@ -257,7 +257,7 @@ while True:
           writedebuglogtocomport("i","CH0: -> water pump and valve #2 ON")
         if override[channel][1] == 1:
           writedebuglogtocomport("i","CH0: -> water pump and valve #2 OFF")
-      if submenuitem is "a":
+      if submenuitem == "a":
         override[channel][2] = override[channel][2] + 1
         if override[channel][2] == 3:
           override[channel][2] = 0
@@ -265,15 +265,15 @@ while True:
           writedebuglogtocomport("i","CH0: -> water pump and valve #3 ON")
         if override[channel][2] == 1:
           writedebuglogtocomport("i","CH0: -> water pump and valve #3 OFF")
-      if submenuitem is "x":
+      if submenuitem == "x":
         writechannelstatustocomport(channel)
-      if submenuitem is "Q" or submenuitem is "q":
+      if submenuitem == "Q" or submenuitem == "q":
         break
   # channel #1-8
-  if menuitem is "2":
+  if menuitem == "2":
     channel = 1
     while True:
-      print(" * Set variables of the Channel #1-8")
+      print(" Set variables of the Channel #1-8")
       print("   0: channel               ",channel)
       print("   1: in_temperature[" + str(channel) + "]     ",in_temperature[channel])
       print("   2: in_humidity[" + str(channel) + "]        ",in_humidity[channel])
@@ -292,57 +292,57 @@ while True:
       print("   x: Send data")
       print("   q: Back to main menu")
       submenuitem = input()
-      if submenuitem is "0":
+      if submenuitem == "0":
         channel = channel + 1
         if channel == 9:
           channel = 1
-      if submenuitem is "1":
+      if submenuitem == "1":
         in_temperature[channel] = int(input("Enter new value (0-100): "))
-        writedebuglogtocomport("i","CH" + str(channel) + ": Measured T is " + str(in_temperature[channel]) + " C")
-      if submenuitem is "2":
+        writedebuglogtocomport("i","CH" + str(channel) + ": Measured T == " + str(in_temperature[channel]) + " C")
+      if submenuitem == "2":
         in_humidity[channel] = int(input("Enter new value (0-100): "))
-        writedebuglogtocomport("i","CH" + str(channel) + ": Measured RH is " + str(in_humidity[channel]) + "%")
-      if submenuitem is "3":
+        writedebuglogtocomport("i","CH" + str(channel) + ": Measured RH == " + str(in_humidity[channel]) + "%")
+      if submenuitem == "3":
         in_gasconcentrate[channel] = int(input("Enter new value (0-100): "))
-        writedebuglogtocomport("i","CH" + str(channel) + ": Measured RUGC is " + str(in_gasconcentrate[channel]) + "%")
-      if submenuitem is "4":
+        writedebuglogtocomport("i","CH" + str(channel) + ": Measured RUGC == " + str(in_gasconcentrate[channel]) + "%")
+      if submenuitem == "4":
         if in_opmode[channel] < 2:
           in_opmode[channel] = int(not in_opmode[channel])
           if in_opmode[channel] == 1:
             writedebuglogtocomport("i","CH" + str(channel) + ": Operation mode: growing hyphae.")
           else:
             writedebuglogtocomport("i","CH" + str(channel) + ": Operation mode: growing mushroom.")
-      if submenuitem is "5":
+      if submenuitem == "5":
         in_swmanu[channel] = int(not in_swmanu[channel])
         if in_swmanu[channel] == 1:
           writedebuglogtocomport("w","CH"+ str(channel) +": Manual mode switch is on position.")
-      if submenuitem is "6":
+      if submenuitem == "6":
         in_ocprot[channel] = int(not in_ocprot[channel])
         if in_ocprot[channel] == 1:
           writedebuglogtocomport("e","CH"+ str(channel) +": Overcurrent breaker of MM6D is opened!")
-      if submenuitem is "7":
+      if submenuitem == "7":
         in_alarm[channel] = int(not in_alarm[channel])
         if in_alarm[channel] == 1:
           writedebuglogtocomport("i","CH"+ str(channel) +": Alarm input of MM6D device is active.")
-      if submenuitem is "8":
+      if submenuitem == "8":
          out_lamps[channel] = int(not out_lamps[channel])
          if out_lamps[channel] == 1:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output lamps ON")
          else:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output lamps OFF")
-      if submenuitem is "9":
+      if submenuitem == "9":
          out_vents[channel] = int(not out_vents[channel])
          if out_vents[channel] == 1:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output ventilators ON")
          else:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output ventilators OFF")
-      if submenuitem is "a":
+      if submenuitem == "a":
          out_heaters[channel] = int(not out_heaters[channel])
          if out_heaters[channel] == 1:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output heaters ON")
          else:
            writedebuglogtocomport("i","CH" + str(channel) + ": Output heaters OFF")
-      if submenuitem is "b":
+      if submenuitem == "b":
         override[channel][0] = override[channel][0] + 1
         if override[channel][0] == 3:
           override[channel][0] = 0
@@ -350,7 +350,7 @@ while True:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> lamps ON")
         if override[channel][0] == 1:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> lamps OFF")
-      if submenuitem is "c":
+      if submenuitem == "c":
         override[channel][1] = override[channel][1] + 1
         if override[channel][1] == 3:
           override[channel][1] = 0
@@ -358,7 +358,7 @@ while True:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> ventilators ON")
         if override[channel][1] == 1:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> ventilators OFF")
-      if submenuitem is "d":
+      if submenuitem == "d":
         override[channel][2] = override[channel][2] + 1
         if override[channel][2] == 3:
           override[channel][2] = 0
@@ -366,14 +366,14 @@ while True:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> heaters ON")
         if override[channel][2] == 1:
           writedebuglogtocomport("i","CH" + str(channel) + ": -> heaters OFF")
-      if submenuitem is "y":
+      if submenuitem == "y":
         ch_enable[channel] = int(not ch_enable[channel])
         if ch_enable[channel] == 0:
           in_opmode[channel] = 127
         else:
           in_opmode[channel] = 0
-      if submenuitem is "x":
+      if submenuitem == "x":
         writechannelstatustocomport(channel)
-      if submenuitem is "Q" or submenuitem is "q":
+      if submenuitem == "Q" or submenuitem == "q":
         break
 sys.exit(0)

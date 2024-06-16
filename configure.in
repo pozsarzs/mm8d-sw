@@ -82,20 +82,20 @@ AC_OUTPUT(Makefile.global \
 	manuals/mm8d-startdaemon.1 \
 	manuals/mm8d-statusofdaemon.1 \
 	manuals/mm8d-stopdaemon.1 \
+	manuals/mm8d-test-dm36b06.1 \
+	manuals/mm8d-test-dt510.1 \
 	manuals/mm8d-test-mm8d.py.1 \
 	manuals/mm8d-test-msc.py.1 \
+	manuals/mm8d-test-pta9b01.1 \
 	manuals/mm8d-updatestartpage.1 \
 	manuals/mm8d-viewlog.1 \
 	manuals/mm8d-webpage.1 \
 	manuals/mm8d.py.8 \
-	optional/dm36b06/mm8d-test-dm36b06.1 \
-	optional/dm36b06/mm8d-test-dm36b06.py \
-	optional/dt510/mm8d-test-dt510.1 \
-	optional/dt510/mm8d-test-dt510.py \
-	optional/pta9b01/mm8d-test-pta9b01.1 \
-	optional/pta9b01/mm8d-test-pta9b01.py \
+	programs/mm8d-test-dm36b06.py \
+	programs/mm8d-test-dt510.py \
 	programs/mm8d-test-mm8d.py \
 	programs/mm8d-test-msc.py \
+	programs/mm8d-test-pta9b01.py \
 	programs/mm8d.py \
 	scripts/mm8d-creatediagrams \
 	scripts/mm8d-editenvirconf \

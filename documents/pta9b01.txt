@@ -1,0 +1,17 @@
+Variables
+~~~~~~~~~
+global baudrate
+global databits
+global method
+global parity
+global port
+
+Functions
+~~~~~~~~~
+def readregisters(modbusid)
+def gett()
+def getr()
+def setmodbusid(modbusid, newid)
+def setbaudrate(modbusid, newbaudrate)
+--------------------------------------------------------------------------------
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>

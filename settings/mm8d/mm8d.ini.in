@@ -68,7 +68,7 @@ owm_city=Tiszafoldvar
 ; hardware
 ;
 
-[LocalIO]
+[localio]
 ; Serial port: GPIO14-15
 
 ; local I/O ports
@@ -215,7 +215,7 @@ tdpch7_ipaddress=0.0.0.0
 tdpch8_modbusid=0
 tdpch8_ipaddress=0.0.0.0
 
-[MM6D]
+[mm6d]
 ; Grow house control devices
 ; protocols: http, rtu, tcp
 mm6d_protocol=tcp
@@ -248,7 +248,7 @@ mm6dch7_ipaddress=0.0.0.0
 mm6dch8_modbusid=0
 mm6dch8_ipaddress=0.0.0.0
 
-[MM7D]
+[mm7d]
 ; R/TH measure devices
 ; protocols: http, rtu, tcp
 mm7d_protocol=tcp
@@ -279,7 +279,7 @@ mm7dch7_ipaddress=0.0.0.0
 mm7dch8_modbusid=0
 mm7dch8_ipaddress=0.0.0.0
 
-[IPCamera]
+[ipcamera]
 ; tent and security IP cameras
 ; show tent camera on the webpage of channel
 ipctent_enable=0

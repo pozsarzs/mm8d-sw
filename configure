@@ -2180,7 +2180,7 @@ fi
 
 
 
-ac_config_files="$ac_config_files Makefile.global manuals/getcameras.cgi.7 manuals/getchannel.cgi.7 manuals/getdata.cgi.7 manuals/getenvirconf.cgi.7 manuals/getsupply.cgi.7 manuals/mm8d-creatediagrams.1 manuals/mm8d-editenvirconf.1 manuals/mm8d-editmainconf.1 manuals/mm8d-exportlog2csv.1 manuals/mm8d-getsnapshots-seccam.1 manuals/mm8d-getsnapshots-tentcam.1 manuals/mm8d-maintainlog.1 manuals/mm8d-override.1 manuals/mm8d-restartdaemon.1 manuals/mm8d-startdaemon.1 manuals/mm8d-statusofdaemon.1 manuals/mm8d-stopdaemon.1 manuals/mm8d-test-mm8d.py.1 manuals/mm8d-test-msc.py.1 manuals/mm8d-updatestartpage.1 manuals/mm8d-viewlog.1 manuals/mm8d-webpage.1 manuals/mm8d.py.8 optional/dm36b06/mm8d-test-dm36b06.1 optional/dm36b06/mm8d-test-dm36b06.py optional/dt510/mm8d-test-dt510.1 optional/dt510/mm8d-test-dt510.py optional/pta9b01/mm8d-test-pta9b01.1 optional/pta9b01/mm8d-test-pta9b01.py programs/mm8d-test-mm8d.py programs/mm8d-test-msc.py programs/mm8d.py scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-restartdaemon scripts/mm8d-startdaemon scripts/mm8d-statusofdaemon scripts/mm8d-stopdaemon scripts/mm8d-updatestartpage scripts/mm8d-viewlog scripts/mm8d-webpage settings/mm8d/mm8d.ini settings/motd settings/systemd/system/mm8d.service source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/html/footer_en.html webpage/html/footer_hu.html webpage/html/header_en.html webpage/html/header_hu.html webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
+ac_config_files="$ac_config_files Makefile.global manuals/getcameras.cgi.7 manuals/getchannel.cgi.7 manuals/getdata.cgi.7 manuals/getenvirconf.cgi.7 manuals/getsupply.cgi.7 manuals/mm8d-creatediagrams.1 manuals/mm8d-editenvirconf.1 manuals/mm8d-editmainconf.1 manuals/mm8d-exportlog2csv.1 manuals/mm8d-getsnapshots-seccam.1 manuals/mm8d-getsnapshots-tentcam.1 manuals/mm8d-maintainlog.1 manuals/mm8d-override.1 manuals/mm8d-restartdaemon.1 manuals/mm8d-startdaemon.1 manuals/mm8d-statusofdaemon.1 manuals/mm8d-stopdaemon.1 manuals/mm8d-test-dm36b06.1 manuals/mm8d-test-dt510.1 manuals/mm8d-test-mm8d.py.1 manuals/mm8d-test-msc.py.1 manuals/mm8d-test-pta9b01.1 manuals/mm8d-updatestartpage.1 manuals/mm8d-viewlog.1 manuals/mm8d-webpage.1 manuals/mm8d.py.8 programs/mm8d-test-dm36b06.py programs/mm8d-test-dt510.py programs/mm8d-test-mm8d.py programs/mm8d-test-msc.py programs/mm8d-test-pta9b01.py programs/mm8d.py scripts/mm8d-creatediagrams scripts/mm8d-editenvirconf scripts/mm8d-editmainconf scripts/mm8d-exportlog2csv scripts/mm8d-getsnapshots-seccam scripts/mm8d-getsnapshots-tentcam scripts/mm8d-maintainlog scripts/mm8d-override scripts/mm8d-restartdaemon scripts/mm8d-startdaemon scripts/mm8d-statusofdaemon scripts/mm8d-stopdaemon scripts/mm8d-updatestartpage scripts/mm8d-viewlog scripts/mm8d-webpage settings/mm8d/mm8d.ini settings/motd settings/systemd/system/mm8d.service source/editenvirconf/config.pas source/editirrconf/config.pas source/editmainconf/config.pas source/override/config.pas webpage/cgi-bin/getcameras.cgi webpage/cgi-bin/getchannel.cgi webpage/html/footer_en.html webpage/html/footer_hu.html webpage/html/header_en.html webpage/html/header_hu.html webpage/cgi-bin/getdata.cgi webpage/cgi-bin/getenvirconf.cgi webpage/cgi-bin/getsupply.cgi"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2905,20 +2905,20 @@ do
     "manuals/mm8d-startdaemon.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-startdaemon.1" ;;
     "manuals/mm8d-statusofdaemon.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-statusofdaemon.1" ;;
     "manuals/mm8d-stopdaemon.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-stopdaemon.1" ;;
+    "manuals/mm8d-test-dm36b06.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-test-dm36b06.1" ;;
+    "manuals/mm8d-test-dt510.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-test-dt510.1" ;;
     "manuals/mm8d-test-mm8d.py.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-test-mm8d.py.1" ;;
     "manuals/mm8d-test-msc.py.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-test-msc.py.1" ;;
+    "manuals/mm8d-test-pta9b01.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-test-pta9b01.1" ;;
     "manuals/mm8d-updatestartpage.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-updatestartpage.1" ;;
     "manuals/mm8d-viewlog.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-viewlog.1" ;;
     "manuals/mm8d-webpage.1") CONFIG_FILES="$CONFIG_FILES manuals/mm8d-webpage.1" ;;
     "manuals/mm8d.py.8") CONFIG_FILES="$CONFIG_FILES manuals/mm8d.py.8" ;;
-    "optional/dm36b06/mm8d-test-dm36b06.1") CONFIG_FILES="$CONFIG_FILES optional/dm36b06/mm8d-test-dm36b06.1" ;;
-    "optional/dm36b06/mm8d-test-dm36b06.py") CONFIG_FILES="$CONFIG_FILES optional/dm36b06/mm8d-test-dm36b06.py" ;;
-    "optional/dt510/mm8d-test-dt510.1") CONFIG_FILES="$CONFIG_FILES optional/dt510/mm8d-test-dt510.1" ;;
-    "optional/dt510/mm8d-test-dt510.py") CONFIG_FILES="$CONFIG_FILES optional/dt510/mm8d-test-dt510.py" ;;
-    "optional/pta9b01/mm8d-test-pta9b01.1") CONFIG_FILES="$CONFIG_FILES optional/pta9b01/mm8d-test-pta9b01.1" ;;
-    "optional/pta9b01/mm8d-test-pta9b01.py") CONFIG_FILES="$CONFIG_FILES optional/pta9b01/mm8d-test-pta9b01.py" ;;
+    "programs/mm8d-test-dm36b06.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-test-dm36b06.py" ;;
+    "programs/mm8d-test-dt510.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-test-dt510.py" ;;
     "programs/mm8d-test-mm8d.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-test-mm8d.py" ;;
     "programs/mm8d-test-msc.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-test-msc.py" ;;
+    "programs/mm8d-test-pta9b01.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d-test-pta9b01.py" ;;
     "programs/mm8d.py") CONFIG_FILES="$CONFIG_FILES programs/mm8d.py" ;;
     "scripts/mm8d-creatediagrams") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-creatediagrams" ;;
     "scripts/mm8d-editenvirconf") CONFIG_FILES="$CONFIG_FILES scripts/mm8d-editenvirconf" ;;
