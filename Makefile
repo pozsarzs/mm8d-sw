@@ -7,7 +7,8 @@
 
 include ./Makefile.global
 
-dirs = binary documents manuals messages programs scripts settings settings/mm8d \
+dirs = binary documents manuals messages programs optional/dm36b06 \
+       optional/dt510 optional/pta8b01 ptscripts settings settings/mm8d \
        webpage/cgi-bin webpage/html webpage/pics webpage source
 
 all:

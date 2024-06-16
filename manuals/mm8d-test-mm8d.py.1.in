@@ -1,17 +1,18 @@
-.TH "mm8d-msctest.py" "1" "@version@" "Pozsár Zsolt" "MM8D"
+.TH "mm8d-test-mm8d.py" "1" "@version@" "Pozsár Zsolt" "MM8D"
 .SH "NAME"
 .LP 
-mm8d-msctest.py - mini serial console test program
+mm8d-test-mm8d.py - hardware test program
 .SH "SYNTAX"
 .LP
-\fBmm8d-hwtest.py\fP
+\fBmm8d-test-mm8d.py\fP
 .SH "DESCRIPTION"
 .LP 
 This is a part of MM8D growing house and irrigation controlling and remote monitoring
 system.
 .PP
-This is a menu-controlled test program for emulate operation of the MM8D daemon
-to check the mini serial console.
+This is a menu-controlled test program for check inputs, relay and open collector
+outputs of the interface board via GPIO or LPT port and you can write text to the
+mini serial console with it.
 Before use, run \fBmm8d-stopdaemon\fP script to stop daemon and after test
 run \fBmm8d-startdaemon\fP to normal operating.
 .SH "FILES"
@@ -26,6 +27,9 @@ normal exit
 .TP
 .B 1
 cannot open configuration file
+.TP
+.B 17
+cannot access I/O port
 .SH "HOMEPAGE"
 \fIhttp://www.pozsarzs.hu\fR
 .SH "SEE ALSO"
@@ -42,7 +46,6 @@ cannot open configuration file
 \fBmm8d-exportlog2csv\fP(1)
 \fBmm8d-getsnapshots-seccam\fP(1)
 \fBmm8d-getsnapshots-tentcam\fP(1)
-\fBmm8d-hwtest.py\fP(1)
 \fBmm8d-maintainlog\fP(1)
 \fBmm8d-override\fP(1)
 \fBmm8d.py\fP(8)
@@ -50,6 +53,11 @@ cannot open configuration file
 \fBmm8d-startdaemon\fP(1)
 \fBmm8d-statusofdaemon\fP(1)
 \fBmm8d-stopdaemon\fP(1)
+\fBmm8d-test-dm36b06.py\fP(1)
+\fBmm8d-test-dt510.py\fP(1)
+\fBmm8d-test-mm8d.py\fP(1)
+\fBmm8d-test-msc.py\fP(1)
+\fBmm8d-test-pta9b01.py\fP(1)
 \fBmm8d-updatestartpage\fP(1)
 \fBmm8d-viewlog\fP(1)
 \fBmm8d-webpage\fP(1)

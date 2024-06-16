@@ -1,0 +1,231 @@
+FILE                                                                 STATUS
+---------------------------------------------------------------------------
+.gitattributes                                                        DONE
+.gitignore                                                            DONE
+LICENCE                                                               DONE
+Makefile                                                              DONE 
+Makefile.global                                                       DONE
+Makefile.global.in                                                    DONE
+README.md                                                             DONE
+configure                                                             DONE
+configure.in                                                          DONE
+prepare                                                               DONE
+
+binary/Makefile                                                       DONE
+binary/arm/.gitignore                                                 DONE
+binary/i386/.gitignore                                                DONE
+binary/x86_64/.gitignore                                              DONE
+
+config/config.guess                                                   DONE
+config/config.sub                                                     DONE
+config/install-sh                                                     DONE
+
+documents/AUTHORS                                                     DONE
+documents/INSTALL.pc                                                  DONE
+documents/INSTALL.raspi                                               DONE
+documents/Makefile                                                    DONE
+documents/README                                                      DONE
+documents/VERSION                                                     DONE
+documents/cgiprogs.txt                                                DONE
+documents/changelog                                                   DONE
+documents/connecting.txt                                              DONE
+documents/copyright                                                   DONE
+documents/exitcodes.txt                                               DONE
+documents/logfiles.txt                                                DONE
+documents/mm6d.txt                                                    DONE
+documents/mm7d.txt                                                    DONE
+documents/msc.txt                                                     DONE
+
+libraries/get                                                         DONE
+libraries/portio-0.5.tar.gz                                           DONE
+libraries/pymodbus-3.6.8.tar.gz                                       DONE
+
+manuals/Makefile                                                      DONE
+manuals/getcameras.cgi.7.in                                           DONE
+manuals/getchannel.cgi.7.in                                           DONE
+manuals/getdata.cgi.7.in                                              DONE
+manuals/getenvirconf.cgi.7.in                                         DONE
+manuals/getsupply.cgi.7.in                                            DONE
+manuals/mm8d-creatediagrams.1.in                                      DONE
+manuals/mm8d-editenvirconf.1.in                                       DONE
+manuals/mm8d-editmainconf.1.in                                        DONE
+manuals/mm8d-exportlog2csv.1.in                                       DONE
+manuals/mm8d-getsnapshots-seccam.1.in                                 DONE
+manuals/mm8d-getsnapshots-tentcam.1.in                                DONE
+manuals/mm8d-hwtest.py.1.in                                           DONE
+manuals/mm8d-maintainlog.1.in                                         DONE
+manuals/mm8d-msctest.py.1.in                                          DONE
+manuals/mm8d-override.1.in                                            DONE
+manuals/mm8d-restartdaemon.1.in                                       DONE
+manuals/mm8d-startdaemon.1.in                                         DONE
+manuals/mm8d-statusofdaemon.1.in                                      DONE
+manuals/mm8d-stopdaemon.1.in                                          DONE
+manuals/mm8d-updatestartpage.1.in                                     DONE
+manuals/mm8d-viewlog.1.in                                             DONE
+manuals/mm8d-webpage.1.in                                             DONE
+manuals/mm8d.py.8.in                                                  DONE
+
+messages/Makefile                                                     DONE
+messages/mm8d_hu.msg                                                  DONE
+
+optional/dm36b06/DM56A04 DM36B06 Command DEMO.txt                     DONE
+optional/dm36b06/DM56A04 DM36B06 MODBUS RTU Command.pdf               DONE
+optional/dm36b06/DM56A04 DM36B06 RS485 digital tube display....pdf    DONE
+optional/dm36b06/Makefile 
+optional/dm36b06/dm36b06.py                                           DONE
+optional/dm36b06/dm36b06.txt                                          DONE
+optional/dm36b06/mm8d-test-dm36b06.1.in                               DONE
+optional/dm36b06/mm8d-test-dm36b06.py.in                              DONE
+optional/dt-510/DT-510.pdf                                            DONE
+optional/dt-510/dt510.py                                              DONE
+optional/dt-510/dt510.txt                                             DONE
+optional/dt-510/mm8d-test-dt510.1.in                                  DONE
+optional/dt-510/mm8d-test-dt510.py.in                                 DONE
+optional/dt510/Makefile 
+optional/pta8b01/Makefile 
+optional/pta8b01/PTA8B01.pdf
+optional/pta8b01/mm8d-test-pta8b01.1.in
+optional/pta8b01/mm8d-test-pta8b01.py.in
+optional/pta8b01/pta8b01.py
+
+packaging/bin/install
+packaging/bin/uninstall
+packaging/eec-amd64/control
+packaging/eec-amd64/postinst
+packaging/eec-amd64/prerm
+packaging/eec-armhf/control
+packaging/eec-armhf/postinst
+packaging/eec-armhf/prerm
+packaging/eec-i386/control
+packaging/eec-i386/postinst
+packaging/eec-i386/prerm
+packaging/sw-amd64/conffiles
+packaging/sw-amd64/control
+packaging/sw-amd64/postinst
+packaging/sw-amd64/prerm
+packaging/sw-armhf/conffiles
+packaging/sw-armhf/control
+packaging/sw-armhf/postinst
+packaging/sw-armhf/prerm
+packaging/sw-i386/conffiles
+packaging/sw-i386/control
+packaging/sw-i386/postinst
+packaging/sw-i386/prerm
+packaging/web-all/conffiles
+packaging/web-all/control
+packaging/web-all/postinst
+packaging/web-all/prerm
+
+programs/Makefile                                                     DONE
+programs/mm8d-hwtest.py.in
+programs/mm8d-msctest.py.in
+programs/mm8d.py.in
+
+scripts/Makefile                                                      DONE
+scripts/mm8d-creatediagrams.in                                        DONE
+scripts/mm8d-editenvirconf.in                                         DONE
+scripts/mm8d-editmainconf.in                                          DONE
+scripts/mm8d-exportlog2csv.in                                         DONE
+scripts/mm8d-getsnapshots-seccam.in                                   DONE
+scripts/mm8d-getsnapshots-tentcam.in                                  DONE
+scripts/mm8d-maintainlog.in                                           DONE
+scripts/mm8d-override.in                                              DONE
+scripts/mm8d-restartdaemon.in                                         DONE
+scripts/mm8d-startdaemon.in                                           DONE
+scripts/mm8d-statusofdaemon.in                                        DONE
+scripts/mm8d-stopdaemon.in                                            DONE
+scripts/mm8d-updatestartpage.in                                       DONE
+scripts/mm8d-viewlog.in                                               DONE
+scripts/mm8d-webpage.in                                               DONE
+
+settings/Makefile                                                     DONE
+settings/cron.d/mm8d-sw                                               DONE
+settings/cron.d/mm8d-web                                              DONE
+settings/init.d/mm8d.sh                                               DONE
+settings/mm8d/Makefile                                                DONE
+settings/mm8d/envir-ch1.ini                                           DONE
+settings/mm8d/envir-ch2.ini                                           DONE
+settings/mm8d/envir-ch3.ini                                           DONE
+settings/mm8d/envir-ch4.ini                                           DONE
+settings/mm8d/envir-ch5.ini                                           DONE
+settings/mm8d/envir-ch6.ini                                           DONE
+settings/mm8d/envir-ch7.ini                                           DONE
+settings/mm8d/envir-ch8.ini                                           DONE
+settings/mm8d/irrigator.ini                                           DONE
+settings/mm8d/mm8d.ini.in                                             DONE
+settings/motd.in                                                      DONE
+settings/systemd/system/mm8d.service                                  DONE
+settings/systemd/system/mm8d.service.in                               DONE
+
+source/Makefile                                                       DONE
+source/_lib/arm-linux/.gitignore                                      DONE
+source/_lib/i386-linux/.gitignore                                     DONE
+source/_lib/x86_64-linux/.gitignore                                   DONE
+source/editenvirconf/config.pas.in                                    DONE
+source/editenvirconf/editenvirconf.pas                                DONE
+source/editenvirconf/incloadinifile.pas                               DONE
+source/editenvirconf/incpage01screen.pas                              DONE
+source/editenvirconf/incpage02screen.pas                              DONE
+source/editenvirconf/incpage03screen.pas                              DONE
+source/editenvirconf/incpage04screen.pas                              DONE
+source/editenvirconf/incpage05screen.pas                              DONE
+source/editenvirconf/incpage06screen.pas                              DONE
+source/editenvirconf/incpage07screen.pas                              DONE
+source/editenvirconf/incpage08screen.pas                              DONE
+source/editenvirconf/incpage09screen.pas                              DONE
+source/editenvirconf/incpage10screen.pas                              DONE
+source/editenvirconf/incpage11screen.pas                              DONE
+source/editenvirconf/incsaveinifile.pas                               DONE
+source/editirrconf/config.pas.in                                      DONE
+source/editirrconf/editirrconf.pas
+source/editirrconf/incloadinifile.pas
+source/editirrconf/incpage01screen.pas
+source/editirrconf/incpage02screen.pas
+source/editirrconf/incsaveinifile.pas
+source/editmainconf/config.pas.in                                     DONE
+source/editmainconf/editmainconf.pas
+source/editmainconf/incloadinifile.pas
+source/editmainconf/incpage01screen.pas
+source/editmainconf/incpage02screen.pas
+source/editmainconf/incpage03screen.pas
+source/editmainconf/incpage04screen.pas
+source/editmainconf/incpage05screen.pas
+source/editmainconf/incpage06screen.pas
+source/editmainconf/incpage07screen.pas
+source/editmainconf/incpage08screen.pas
+source/editmainconf/incpage09screen.pas
+source/editmainconf/incpage10screen.pas
+source/editmainconf/incpage11screen.pas
+source/editmainconf/incpage12screen.pas
+source/editmainconf/incpage13screen.pas
+source/editmainconf/incsaveinifile.pas
+source/override/config.pas.in                                         DONE
+source/override/incloadoutfiles.pas                                   DONE
+source/override/incpage1screen.pas                                    DONE
+source/override/incsaveoutfiles.pas                                   DONE
+source/override/override.pas                                          DONE
+source/untcommon.pas                                                  DONE
+
+webpage/Makefile                                                      DONE
+webpage/cgi-bin/Makefile                                              DONE
+webpage/cgi-bin/getcameras.cgi.in                                     DONE
+webpage/cgi-bin/getchannel.cgi.in                                     DONE
+webpage/cgi-bin/getdata.cgi.in                                        DONE
+webpage/cgi-bin/getenvirconf.cgi.in                                   DONE
+webpage/cgi-bin/getsupply.cgi.in                                      DONE
+webpage/html/Makefile                                                 DONE
+webpage/html/footer_en.html.in                                        DONE
+webpage/html/footer_hu.html.in                                        DONE
+webpage/html/header_en.html.in                                        DONE
+webpage/html/header_hu.html.in                                        DONE
+webpage/pics/Makefile                                                 DONE
+webpage/pics/ants.jpg                                                 DONE 
+webpage/pics/current-empty.png                                        DONE
+webpage/pics/flowrate-empty.png                                       DONE
+webpage/pics/humidity-empty.png                                       DONE
+webpage/pics/power-empty.png                                          DONE
+webpage/pics/szerafin.ico                                             DONE
+webpage/pics/temperature-empty.png                                    DONE
+webpage/pics/voltage-empty.png                                        DONE
+webpage/styles.css                                                    DONE
+

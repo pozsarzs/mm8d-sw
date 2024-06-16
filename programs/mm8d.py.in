@@ -579,6 +579,37 @@ def writechannelstatustolog(channel,temperature,humidity,statusdata):
     exit(15)
   lckfile(0)
 
+# write power supply data to logfile
+def writesupplydatatolog(urms, irms, p, q, s, cosfi, qv):
+  logfile = dir_log + '/mm8d-supply.log'
+  dt = (strftime("%Y-%m-%d,%H:%M",localtime()))
+  lckfile(1)
+  writedebuglog("i","Writing power supply data to logfile.")
+  if not os.path.isfile(logfile):
+    f = open(logfile,'w')
+    f.close()
+  try:
+    with open(logfile,"r+") as f:
+      first_line = f.readline()
+      lines = f.readlines()
+      f.seek(0)
+      s = dt + ',' + str(pwm_urms) + ',' + \
+                     str(pwm_irms) + ',' + \
+                     str(pwm_p) + ',' + \
+                     str(pwm_q) + ',' + \
+                     str(pwm_s) + ',' + \
+                     str(pwm_cosfi) + ',' + \
+                     str(fwm_qv) + '\n'
+      f.write(s)
+      f.write(first_line)
+      f.writelines(lines)
+      f.close()
+  except:
+    writedebuglog("e","ERROR #15: Cannot write " + logfile + "!")
+    lckfile(0)
+    exit(15)
+  lckfile(0)
+
 # check external control files
 def outputoverride(channel,output,status):
   writedebuglog("i","CH" + str(channel) + ": Checking override file " + str(output) + ".")
@@ -614,26 +645,12 @@ def getexttemp():
       y = x["main"]
       current_temperature = y["temp"]
       current_temperature = round(current_temperature - 273)
-      writedebuglog("i","External temperature: " + str(current_temperature) + " degree Celsius")
       return current_temperature
     else:
       writedebuglog("w","Cannot get external temperature from internet.")
       return 18
   except:
     writedebuglog("w","Cannot get external temperature from internet.")
-    return 18
-
-# measure external temperature with an external device
-def measureexttemp():
-  writedebuglog("i","Measure external temperature.")
-  try:
-    #  writedebuglog("i","External temperature: " + str(current_temperature) + " degree Celsius")
-    #  return current_temperature
-    #else:
-    #  writedebuglog("w","Cannot mesasure external temperature.")
-      return 18
-  except:
-    writedebuglog("w","Cannot measure external temperature.")
     return 18
 
 # analise data
@@ -1262,8 +1279,6 @@ def getcontrollerversion(conttype,channel):
         mb_result = mb_client.read_input_registers(mb_reg, mb_regs)
       if protocol == MR:
         mb_result = mb_client.read_input_registers(mb_reg, mb_regs, modbusid)
-      #if protocol == RT:
-        #mb_client = ModbusTcpClient()
       mb_reg = 0
       mb_regs = 22
       mb_client.connect()
@@ -1301,6 +1316,7 @@ def getcontrollerversion(conttype,channel):
 # main program
 global com
 global exttemp
+global fwm_qv
 global hheater_disable
 global hheater_off
 global hheater_on
@@ -1322,10 +1338,10 @@ global hvent_hightemp
 global hvent_lowtemp
 global hvent_off
 global hvent_on
+global in_5v
 global in_alarm
 global in_error
 global in_humidity
-global in_5v
 global in_ocprot
 global in_opmode
 global in_swmanu
@@ -1360,6 +1376,12 @@ global out_heaters
 global out_lamps
 global out_vents
 global override
+global pwm_cosfi
+global pwm_irms
+global pwm_p
+global pwm_q
+global pwm_s
+global pwm_urms
 global relay_alarm
 global relay_tube1
 global relay_tube2
@@ -1367,9 +1389,11 @@ global relay_tube3
 global HT
 global MR
 global MT
+
 # reset variables
 done = 0
 exttemp = 18
+fwm_qv = 0
 hheater_disable = [[0 for x in range(9)] for y in range(24)]
 hheater_off = [0 for x in range(9)]
 hheater_on = [0 for x in range(9)]
@@ -1390,10 +1414,10 @@ hvent_hightemp = [0 for x in range(9)]
 hvent_lowtemp = [0 for x in range(9)]
 hvent_off = [0 for x in range(9)]
 hvent_on = [0 for x in range(9)]
+in_5v = [0 for channel in range(9)]
 in_alarm = [0 for channel in range(9)]
 in_error = [0 for channel in range(9)]
 in_humidity = [0 for channel in range(9)]
-in_5v = [0 for channel in range(9)]
 in_ocprot = [0 for channel in range(9)]
 in_opmode = [0 for channel in range(9)]
 in_swmanu = [0 for channel in range(9)]
@@ -1424,11 +1448,19 @@ mvent_lowtemp = [0 for x in range(9)]
 mvent_off = [0 for x in range(9)]
 mvent_on = [0 for x in range(9)]
 newdata_ch = ["" for x in range(10)]
+newdata_ps = ["" for x in range(10)]
 out_heaters = [0 for channel in range(9)]
 out_lamps = [0 for channel in range(9)]
 out_vents = [0 for channel in range(9)]
 override = [["neutral" for x in range(4)] for x in range(9)]
 prevdata_ch = ["" for x in range(10)]
+prevdata_ps = ""
+pwm_cosfi = 0
+pwm_irms = 0
+pwm_p = 0
+pwm_q = 0
+pwm_s = 0
+pwm_urms = 0
 relay_alarm = 0
 relay_tube1 = 0
 relay_tube2 = 0
@@ -1510,8 +1542,14 @@ initializelocalports()
 exttemp = 18
 if owm_enable == 1:
   exttemp = getexttemp()
+# get outdoor temperature from meter
 if otm_enable == 1:
-  exttemp = measureexttemp()
+  if otm.readregisters(otm_modbusid) == 1:
+    writedebuglog("i","Get data from outdoor temperature meter.")
+    exttemp = otm.gett
+  else:
+    writedebuglog("w","Cannot get data from outdoor temperature meter.")
+writedebuglog("i","External temperature: " + str(exttemp) + " degree Celsius")
 # *** start loop ***
 writedebuglog("i","Starting program as daemon.")
 while True:
@@ -1572,6 +1610,37 @@ while True:
         else:
           writedebuglog("w","CH" + str(channel) + ": Cannot get status of the MM6D.")
     # section #2:
+    # get data from electricity consumption meter
+    if pwm_enable == 1:
+      if pwm.readregisters(pwm_modbusid) == 1:
+        writedebuglog("i","Get data from consumption meter.")
+        try:
+          pwm_p = round(pwm.getp())
+          pwm_q = round(pwm.getq())
+          pwm_s = round(pwm.gets())
+          pwm_urms = round(pwm.geturms())
+          pwm_irms = round(pwm.getirms())
+          pwm_cosfi = round(pwm.getcosfi())
+        except:
+          pwm_p = 0
+          pwm_q = 0
+          pwm_s = 0
+          pwm_urms = 0
+          pwm_irms = 0
+          pwm_cosfi = 0
+          writedebuglog("w","Cannot get data from consumption meter.")
+      else:
+        writedebuglog("w","Cannot get data from consumption meter.")
+      writedebuglog("i","Mains voltage: " + str(pwm_urms) + " V")
+      writedebuglog("i","Mains current: " + str(pwm_irms) + " A")
+    # get data from water flow meter
+    if fwm_enable == 1:
+      if fwm.readregisters(fwm_modbusid) == 1:
+        writedebuglog("i","Get data from water flow meter.")
+        fwm_qv = fwm.getqv
+        writedebuglog("i","Water flow: " + str(fwm_qv) + " l/h")
+      else:
+        writedebuglog("w","Cannot get data from water flow meter.")
     # get data from MM7Ds
     for channel in range(1,9):
       if ch_enable[channel] == 1:
@@ -1579,16 +1648,22 @@ while True:
          writedebuglog("i","CH" + str(channel) + ": Get data from the MM7D.")
        else:
          writedebuglog("w","CH" + str(channel) + ": Cannot get data from the MM7D.")
-    # get external temperature from internet
+    # get outdoor temperature from internet
     if (int(time.strftime("%M")) == 0) or (int(time.strftime("%M")) == 1):
       if done == 0:
         if owm_enable == 1:
           exttemp = getexttemp()
-        if otm_enable == 1:
-          exttemp = measureexttemp()
         done = 1
     if (int(time.strftime("%M")) == 30) or (int(time.strftime("%M")) == 31):
       done = 0
+    # get outdoor temperature from meter
+    if otm_enable == 1:
+      if otm.readregisters(otm_modbusid) == 1:
+        writedebuglog("i","Get data from outdoor temperature meter.")
+        exttemp = otm.gett
+      else:
+        writedebuglog("w","Cannot get data from outdoor temperature meter.")
+    writedebuglog("i","External temperature: " + str(exttemp) + " degree Celsius")
     # analise data
     analise(2);
     # override state of outputs
@@ -1634,6 +1709,18 @@ while True:
           if (prevdata_ch[channel] != str(in_temperature[channel]) + str(in_humidity[channel]) + newdata_ch[channel]):
             writechannelstatustolog(channel, in_temperature[channel],in_humidity[channel],newdata_ch[channel])
             prevdata_ch[channel] = str(in_temperature[channel]) + str(in_humidity[channel]) + newdata_ch[channel]
+    # write data to mm8d-supply.log
+    if pwm_enable == 1:
+        newdata_ps = str(pwm_urms) + \
+                     str(pwm_irms) + \
+                     str(pwm_p) + \
+                     str(pwm_q) + \
+                     str(pwm_s) + \
+                     str(pwm_cosfi) + \
+                     str(fwm_qv)
+        if (prevdata_ps != newdata_ps):
+          writesupplydatatolog(pwm_urms, pwm_irms, pwm_p, pwm_q, pwm_s, pwm_cosfi, fwm_qv)
+          prevdata_ps = newdata_ps
     # write data to the tent display
     for channel in range(1,9):
       if ch_enable[channel] == 1:
