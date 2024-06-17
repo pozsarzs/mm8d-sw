@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incloadinifile.pas                                                       | }
 { | Load configuration from ini file                                         | }
 { +--------------------------------------------------------------------------+ }
@@ -27,6 +27,7 @@ begin
     for b:=1 to 3 do
     begin
       name[b]:=iif.ReadString(T+inttostr(b),'name','Irrigator tube #'+inttostr(b));
+      enable[b]:=iif.ReadString(T+inttostr(b),'enable','0');
       morningstart[b]:=iif.ReadString(T+inttostr(b),'morning_start','00:00');
       morningstop[b]:=iif.ReadString(T+inttostr(b),'morning_stop','00:00');
       eveningstart[b]:=iif.ReadString(T+inttostr(b),'evening_start','00:00');

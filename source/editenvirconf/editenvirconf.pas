@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | editenvirconf.pas                                                        | }
 { | Full-screen program for edit envir-ch?.ini file                          | }
 { +--------------------------------------------------------------------------+ }
@@ -15,8 +15,8 @@
 // Exit codes:
 //   0: normal exit, file is saved
 //   1: cannot open configuration file
-//   12: bad terminal size
-//   13: cannot write configuration file
+//  12: bad terminal size
+//  13: cannot write configuration file
 
 program editenvirconf;
 {$MODE OBJFPC}{$H+}
@@ -46,16 +46,16 @@ var
   hventoff, mventoff:                 byte;
   hventon, mventon:                   byte;
 const
-  C:                                  string='common';
   H:                                  string='hyphae';
   M:                                  string='mushroom';
+  LASTPAGE:                           byte=10;
   FOOTERS:                            array[1..4] of string=(
                                         '<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                         '<Enter> accept  <Esc> cancel',
                                         '<+>/<-> sign change  <Enter> accept  <Esc> cancel',
                                         '<Esc> cancel');
-  BLOCKS:                             array[1..11] of byte=(1,3,1,6,3,1,3,1,6,6,1);
-  MINPOSX:                            array[1..11,1..6] of byte=((46,0,0,0,0,0),
+  BLOCKS:                             array[1..10] of byte=(1,3,1,6,3,1,3,1,6,6);
+  MINPOSX:                            array[1..10,1..6] of byte=((46,0,0,0,0,0),
                                                                  (46,17,35,0,0,0),
                                                                  (46,0,0,0,0,0),
                                                                  (46,17,35,53,71,46),
@@ -64,9 +64,8 @@ const
                                                                  (46,17,35,0,0,0),
                                                                  (46,0,0,0,0,0),
                                                                  (46,17,35,53,71,46),
-                                                                 (17,35,46,0,0,0),
-                                                                 (46,0,0,0,0,0));
-  MINPOSY:                            array[1..11,1..6] of byte=((3,0,0,0,0,0),
+                                                                 (17,35,46,0,0,0));
+  MINPOSY:                            array[1..10,1..6] of byte=((3,0,0,0,0,0),
                                                                  (3,10,10,0,0,0),
                                                                  (3,0,0,0,0,0),
                                                                  (3,8,8,8,8,21),
@@ -75,9 +74,8 @@ const
                                                                  (3,10,10,0,0,0),
                                                                  (3,0,0,0,0,0),
                                                                  (3,8,8,8,8,21),
-                                                                 (4,4,17,0,0,0),
-                                                                 (3,0,0,0,0,0));
-  MAXPOSY:                           array[1..11,1..6] of byte=((6,0,0,0,0,0),
+                                                                 (4,4,17,0,0,0));
+  MAXPOSY:                           array[1..10,1..6] of byte=((6,0,0,0,0,0),
                                                                  (6,21,21,0,0,0),
                                                                  (6,0,0,0,0,0),
                                                                  (4,19,19,19,19,21),
@@ -86,8 +84,7 @@ const
                                                                  (6,21,21,0,0,0),
                                                                  (6,0,0,0,0,0),
                                                                  (4,19,19,19,19,21),
-                                                                 (15,15,17,0,0,0),
-                                                                 (3,0,0,0,0,0));
+                                                                 (15,15,17,0,0,0));
 
 {$I config.pas}
 {$I incpage01screen.pas}
@@ -100,7 +97,6 @@ const
 {$I incpage08screen.pas}
 {$I incpage09screen.pas}
 {$I incpage10screen.pas}
-{$I incpage11screen.pas}
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
@@ -119,7 +115,6 @@ begin
     8: page08screen;
     9: page09screen;
     10: page10screen;
-    11: page11screen;
   end;
   footer(bottom-1,FOOTERS[1]);
   textbackground(black);
@@ -454,20 +449,6 @@ begin
         mventhightemp:=strtoint(s); write(mventhightemp);
       end;
     end;
-    // -- page #11 --
-    if page=11 then
-    begin
-      // page #11 - block #1
-      if block=1 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block]-1,posy); write('  ');
-        gotoxy(MINPOSX[page,block]-length(s)+1,posy);
-        case posy of
-          3: begin gasconmax:=strtoint(s); write(gasconmax); end;
-        end;
-      end;
-    end;
   end;
   footer(bottom-1,FOOTERS[1]);
   gotoxy(1,bottom); clreol;
@@ -513,7 +494,7 @@ begin
       // next page
       #81: begin
              page:=page+1;
-             if page>11 then page:=11;
+             if page>10 then page:=10;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];
@@ -521,7 +502,7 @@ begin
            end;
       // last page
       #79: begin
-             page:=11;
+             page:=10;
              screen(page);
              block:=1;
              posy:=MINPOSY[page,block];

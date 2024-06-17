@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage01screen.pas                                                      | }
 { | Show screen content of page #1                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -25,8 +25,10 @@ procedure page01screen;
 var
   b: byte;
   x: byte;
+const
+  PAGE=1;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 1/2: Common parameters');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Common parameters');
   textcolor(white);
   gotoxy(4,3); writeln('Minimal temperature (below this, irrigation is missed):');
   gotoxy(4,4); writeln('Maximal temperature (above this, irrigation is missed):');

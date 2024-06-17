@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | editirrconf.pas                                                          | }
 { | Full-screen program for edit irrigation.ini file                         | }
 { +--------------------------------------------------------------------------+ }
@@ -15,8 +15,8 @@
 // Exit codes:
 //   0: normal exit, file is saved
 //   1: cannot open configuration file
-//   12: bad terminal size
-//   13: cannot write configuration file
+//  12: bad terminal size
+//  13: cannot write configuration file
 
 program editirrconf;
 {$MODE OBJFPC}{$H+}
@@ -24,6 +24,7 @@ uses
   INIFiles, SysUtils, character, crt, untcommon;
 var
   bottom:                       byte;
+  enable:                       array[1..3] of string;
   eveningstart, eveningstop:    array[1..3] of string;
   morningstart, morningstop:    array[1..3] of string;
   name:                         array[1..3] of string;
@@ -31,15 +32,16 @@ var
   tempday, tempmax, tempmin:    byte;
   workstart, workstop:          byte;
 const
-  C: string='common';
-  T: string='tube-';
+  C:                            string='common';
+  T:                            string='tube-';
+  LASTPAGE:                     byte=2;
   BLOCKS:                       array[1..2] of byte=(1,3);
   MINPOSX:                      array[1..2,1..6] of byte=((76,0,0,0,0,0),
                                                           (40,40,40,0,0,0));
   MINPOSY:                      array[1..2,1..6] of byte=((3,0,0,0,0,0),
                                                           (3,10,17,0,0,0));
   MAXPOSY:                      array[1..2,1..6] of byte=((4,0,0,0,0,0),
-                                                          (7,14,21,0,0,0));
+                                                          (8,15,22,0,0,0));
   FOOTERS: array[1..3] of string=('<Tab>/<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                   '<Enter> accept  <Esc> cancel',
                                   '<Esc> cancel');
@@ -78,18 +80,21 @@ begin
     c:=readkey;
     if c=#8 then delete(s,length(s),1) else
     begin
-      if (page=2) and ((posy=3) or (posy=10) or (posy=17)) then
+      if page=2 then
       begin
-        if (length(s)<32) and (c<>#0) and (c<>#8) and (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
-      end else
-      begin
-        if (isnumber(c)) or (c=':') then
-        begin
-          if (page=1) and (block=1) then
-            if length(s)<2 then s:=s+c;
-          if page=2 then
-            if length(s)<5 then s:=s+c;
-        end;
+        if (posy=3) or (posy=10) or (posy=17) then
+          if (length(s)<32) and (c<>#0) and (c<>#8) and (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+        if (posy=4) or (posy=11) or (posy=18) then
+          if (c='0') or (c='1') then s:=c;
+        if ((posy>=5) and (posy<=9)) or
+           ((posy>=12) and (posy<=16)) or (posy>=19) then
+          if (isnumber(c)) or (c=':') then
+          begin
+            if (page=1) and (block=1) then
+              if length(s)<2 then s:=s+c;
+            if page=2 then
+              if length(s)<5 then s:=s+c;
+          end;
       end;
     end;
     gotoxy(1,bottom); clreol; write('>'+s);
@@ -117,13 +122,16 @@ begin
     textbackground(blue);
     if page=2 then
     begin
-      if (posy=3) or (posy=10) or (posy=17) then
+      if (posy=3) or (posy=4) or
+         (posy=10) or (posy=11) or
+         (posy=17) or (posy=18) then
       begin
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
         posy:=posy-7*(block-1);
         case posy of
           3: begin name[block]:=s; write(name[block]); end;
+          4: begin enable[block]:=s[1]; write(enable[block]); end;
         end;
       end else
       begin
@@ -136,11 +144,10 @@ begin
                gotoxy(MINPOSX[page,block],posy);
                posy:=posy-7*(block-1);
                case posy of
-                 3: begin name[block]:=s; write(name[block]); end;
-                 4: begin morningstart[block]:=s; write(morningstart[block]); end;
-                 5: begin morningstop[block]:=s; write(morningstop[block]); end;
-                 6: begin eveningstart[block]:=s; write(eveningstart[block]); end;
-                 7: begin eveningstop[block]:=s; write(eveningstop[block]); end;
+                 5: begin morningstart[block]:=s; write(morningstart[block]); end;
+                 6: begin morningstop[block]:=s; write(morningstop[block]); end;
+                 7: begin eveningstart[block]:=s; write(eveningstart[block]); end;
+                 8: begin eveningstop[block]:=s; write(eveningstop[block]); end;
                end;
              end;
       end;

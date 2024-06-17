@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incsaveinifile.pas                                                       | }
 { | Save configuration to ini file                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -39,7 +39,7 @@ var
     for b:=1 to 76 do l:=l+'-';
     l:=l+'+';
     writeln(iif,l);
-    writeln(iif,fullline('MM8D v'+VERSION+' * Growing house and irrigation controlling and monitoring system'));
+    writeln(iif,fullline('MM8D '+VERSION+' * Growing house and irrigation controlling and monitoring system'));
     writeln(iif,fullline(COPYRIGHT));
     writeln(iif,fullline('irrigator.ini'));
     writeln(iif,fullline('Irrigator settings'));
@@ -63,6 +63,7 @@ begin
       writeln(iif,'['+T+inttostr(b)+']');
       writeln(iif,'; parameters of tube');
       writeln(iif,'name=',name[b]);
+      writeln(iif,'enable=',enable[b]);
       writeln(iif,'morning_start=',morningstart[b]);
       writeln(iif,'morning_stop=',morningstop[b]);
       writeln(iif,'evening_start=',eveningstart[b]);

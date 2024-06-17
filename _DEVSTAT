@@ -173,14 +173,13 @@ source/editenvirconf/incpage07screen.pas                              DONE
 source/editenvirconf/incpage08screen.pas                              DONE
 source/editenvirconf/incpage09screen.pas                              DONE
 source/editenvirconf/incpage10screen.pas                              DONE
-source/editenvirconf/incpage11screen.pas                              DONE
 source/editenvirconf/incsaveinifile.pas                               DONE
 source/editirrconf/config.pas.in                                      DONE
-source/editirrconf/editirrconf.pas
-source/editirrconf/incloadinifile.pas
-source/editirrconf/incpage01screen.pas
-source/editirrconf/incpage02screen.pas
-source/editirrconf/incsaveinifile.pas
+source/editirrconf/editirrconf.pas                                    DONE
+source/editirrconf/incloadinifile.pas                                 DONE
+source/editirrconf/incpage01screen.pas                                DONE
+source/editirrconf/incpage02screen.pas                                DONE
+source/editirrconf/incsaveinifile.pas                                 DONE
 source/editmainconf/config.pas.in                                     DONE
 source/editmainconf/editmainconf.pas
 source/editmainconf/incloadinifile.pas

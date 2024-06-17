@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incsaveinifile.pas                                                       | }
 { | Save configuration to ini file                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -53,10 +53,6 @@ begin
     assign(iif,filename);
     rewrite(iif);
     fileheader;
-    writeln(iif,'['+C+']');
-    writeln(iif,'; common parameters');
-    writeln(iif,'gasconcentrate_max=',gasconmax);
-    writeln(iif,'');
     writeln(iif,'['+H+']');
     writeln(iif,'; humidifier');
     writeln(iif,'humidity_min=',hhummin);

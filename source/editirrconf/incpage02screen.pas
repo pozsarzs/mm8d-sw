@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage02screen.pas                                                      | }
 { | Show screen content of page #2                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,6 +16,7 @@
   Relevant settings file section:
 
   [tube-?]
+  enable=1
   name=Tomato and eggplant
   morning_start=05:00
   morning_stop=05:30
@@ -28,21 +29,25 @@ procedure page02screen;
 var
   b: byte;
   x: byte;
+const
+  PAGE=2;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 2/2: Irrigator tubes');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Irrigator tubes');
   textcolor(white);
   x:=40;
   for b:=1 to 3 do
   begin
     gotoxy(4,3+7*(b-1)); writeln('name of tube #'+inttostr(b)+' :');
-    gotoxy(4,4+7*(b-1)); writeln('start of morning irrigation:');
-    gotoxy(4,5+7*(b-1)); writeln('end of morning irrigation:');
-    gotoxy(4,6+7*(b-1)); writeln('start of evening irrigation:');
-    gotoxy(4,7+7*(b-1)); writeln('end of evening irrigation:');
+    gotoxy(4,4+7*(b-1)); writeln('enable irrigation:');
+    gotoxy(4,5+7*(b-1)); writeln('start of morning irrigation:');
+    gotoxy(4,6+7*(b-1)); writeln('end of morning irrigation:');
+    gotoxy(4,7+7*(b-1)); writeln('start of evening irrigation:');
+    gotoxy(4,8+7*(b-1)); writeln('end of evening irrigation:');
     gotoxy(x,3+7*(b-1)); writeln(name[b]);
-    gotoxy(x,4+7*(b-1)); writeln(morningstart[b]);
-    gotoxy(x,5+7*(b-1)); writeln(morningstop[b]);
-    gotoxy(x,6+7*(b-1)); writeln(eveningstart[b]);
-    gotoxy(x,7+7*(b-1)); writeln(eveningstop[b]);
+    gotoxy(x,4+7*(b-1)); writeln(enable[b]);
+    gotoxy(x,5+7*(b-1)); writeln(morningstart[b]);
+    gotoxy(x,6+7*(b-1)); writeln(morningstop[b]);
+    gotoxy(x,7+7*(b-1)); writeln(eveningstart[b]);
+    gotoxy(x,8+7*(b-1)); writeln(eveningstop[b]);
   end;
 end;

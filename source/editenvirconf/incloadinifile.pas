@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incloadinifile.pas                                                       | }
 { | Load configuration from ini file                                         | }
 { +--------------------------------------------------------------------------+ }
@@ -22,7 +22,6 @@ begin
   iif:=TIniFile.Create(filename);
   loadinifile:=true;
   try
-    gasconmax:=strtoint(iif.ReadString(C,'gasconcentrate_max','0'));
     hhummax:=strtoint(iif.ReadString(H,'humidity_max','0'));
     hhummin:=strtoint(iif.ReadString(H,'humidity_min','0'));
     hhumoff:=strtoint(iif.ReadString(H,'humidifier_off','0'));

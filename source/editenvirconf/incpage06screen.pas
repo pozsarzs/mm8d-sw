@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage06screen.pas                                                      | }
 { | Show screen content of page #6                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -26,15 +26,18 @@
 procedure page06screen;
 var
   b: byte;
+const
+  PAGE=6;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 6/11: Growing mushroom - humidifying');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Growing mushroom - humidifying');
   textcolor(white);
+  // #1
   gotoxy(4,3); writeln('Minimal relative humidity:');
   gotoxy(4,4); writeln('Lower warning level of humidity:');
   gotoxy(4,5); writeln('Higher warning level of humidity:');
   gotoxy(4,6); writeln('Maximal relative humidity:');
-  if mhummin>9 then gotoxy(45,3) else gotoxy(46,3); writeln(mhummin,' %');
-  if mhumon>9 then gotoxy(45,4) else gotoxy(46,4); writeln(mhumon,' %');
-  if mhumoff>9 then gotoxy(45,5) else gotoxy(46,5); writeln(mhumoff,' %');
-  if mhummax>9 then gotoxy(45,6) else gotoxy(46,6); writeln(mhummax,' %');
+  if mhummin>9 then gotoxy(MINPOSX[PAGE,1]-1,3) else gotoxy(MINPOSX[PAGE,1],3); writeln(mhummin,' %');
+  if mhumon>9 then gotoxy(MINPOSX[PAGE,1]-1,4) else gotoxy(MINPOSX[PAGE,1],4); writeln(mhumon,' %');
+  if mhumoff>9 then gotoxy(MINPOSX[PAGE,1]-1,5) else gotoxy(MINPOSX[PAGE,1],5); writeln(mhumoff,' %');
+  if mhummax>9 then gotoxy(MINPOSX[PAGE,1]-1,6) else gotoxy(MINPOSX[PAGE,1],6); writeln(mhummax,' %');
 end;
