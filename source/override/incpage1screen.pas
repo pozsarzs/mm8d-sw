@@ -18,20 +18,21 @@ var
   b: byte;
 begin
   header(PRGNAME+' '+VERSION+' * Override output status');
-  textcolor(white);
+  textcolor(lightcyan);
   if dir[length(dir)] = '0' then
   begin  
-    gotoxy(4,3); writeln('Irrigator tube #1:');
-    gotoxy(4,4); writeln('Irrigator tube #2:');
-    gotoxy(4,5); writeln('Irrigator tube #3:');
+    gotoxy(4,MINPOSY); writeln('Irrigator tube #1:');
+    gotoxy(4,MINPOSY+1); writeln('Irrigator tube #2:');
+    gotoxy(4,MINPOSY+2); writeln('Irrigator tube #3:');
   end else
   begin
-    gotoxy(4,3); writeln('Output #1 - lamp:');
-    gotoxy(4,4); writeln('Output #2 - ventilator:');
-    gotoxy(4,5); writeln('Output #3 - heater:');
+    gotoxy(4,MINPOSY); writeln('Output #1 - lamp:');
+    gotoxy(4,MINPOSY+1); writeln('Output #2 - ventilator:');
+    gotoxy(4,MINPOSY+2); writeln('Output #3 - heater:');
   end;
+  textcolor(white);
   for b:=1 to 3 do
   begin
-    gotoxy(30,2+b); writeln(outputs[b]);
+    gotoxy(30,MINPOSY+b-1); writeln(outputs[b]);
   end;
 end;

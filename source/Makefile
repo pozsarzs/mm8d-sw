@@ -7,7 +7,8 @@
 
 include ../Makefile.global
 
-dirs=editenvirconf editirrconf editmainconf override
+dirs=editmainconf
+#editenvirconf editirrconf editmainconf override
 
 all:
 	@mkdir --parents _lib/$(architecture)-$(os)/

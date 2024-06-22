@@ -23,16 +23,16 @@
 // write options to screen
 procedure page01screen;
 var
-  b: byte;
-  x: byte;
+  block: byte;
 const
   PAGE=1;
 begin
   header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Common parameters');
+  block:=1;
+  textcolor(lightcyan);
+  gotoxy(4,MINPOSY[PAGE,block]); writeln('minimal outdoor temperature:');
+  gotoxy(4,MINPOSY[PAGE,block]+1); writeln('maximal outdoor temperature:');
   textcolor(white);
-  gotoxy(4,3); writeln('Minimal temperature (below this, irrigation is missed):');
-  gotoxy(4,4); writeln('Maximal temperature (above this, irrigation is missed):');
-  x:=75;
-  if tempmin>9 then gotoxy(x,3) else gotoxy(x+1,3); writeln(tempmin,' °C');
-  if tempmax>9 then gotoxy(x,4) else gotoxy(x+1,4); writeln(tempmax,' °C');
+  if tempmin>9 then gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]) else gotoxy(MINPOSX[1,1],MINPOSY[PAGE,block]); writeln(tempmin,' °C');
+  if tempmax>9 then gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]+1) else gotoxy(MINPOSX[1,1],MINPOSY[PAGE,block]+1); writeln(tempmax,' °C');
 end;

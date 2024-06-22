@@ -36,7 +36,7 @@ const
   T:                            string='tube-';
   LASTPAGE:                     byte=2;
   BLOCKS:                       array[1..2] of byte=(1,3);
-  MINPOSX:                      array[1..2,1..6] of byte=((76,0,0,0,0,0),
+  MINPOSX:                      array[1..2,1..6] of byte=((40,0,0,0,0,0),
                                                           (40,40,40,0,0,0));
   MINPOSY:                      array[1..2,1..6] of byte=((3,0,0,0,0,0),
                                                           (3,10,17,0,0,0));

@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage07screen.pas                                                      | }
 { | Show screen content of page #7                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,20 +16,29 @@
   Relevant settings file section:
 
   [openweathermap.org]
-  api_key=00000000000000000000000000000000
-  base_url=http://api.openweathermap.org/data/2.5/weather?
-  city_name=Tiszafoldvar
+  owm_enable=1
+  owm_apikey=00000000000000000000000000000000
+  owm_url=http://api.openweathermap.org/data/2.5/weather?
+  owm_city=Tiszafoldvar
 }
 
 // write options to screen
 procedure page07screen;
+const
+  PAGE=7;
+var
+  block: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 7/' + inttostr(LASTPAGE) + ': OpenWeather.org account');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': OpenWeather.org account');
+  block:=1;
+  textcolor(lightcyan);
+  gotoxy(4,MINPOSY[PAGE,block]); writeln('enable/disable:');
+  gotoxy(4,MINPOSY[PAGE,block]+1); writeln('API key:');
+  gotoxy(4,MINPOSY[PAGE,block]+2); writeln('URL:');
+  gotoxy(4,MINPOSY[PAGE,block]+3); writeln('city:');
   textcolor(white);
-  gotoxy(4,3); writeln('API key:');
-  gotoxy(4,4); writeln('URL:');
-  gotoxy(4,5); writeln('Name of city:');
-  gotoxy(MINPOSX[7,1],3); writeln(api_key);
-  gotoxy(MINPOSX[7,1],4); writeln(base_url);
-  gotoxy(MINPOSX[7,1],5); writeln(city_name);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]); writeln(owm_enable);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+1); writeln(owm_apikey);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+2); writeln(owm_url);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+3); writeln(owm_city);
 end;

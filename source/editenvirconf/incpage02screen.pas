@@ -27,36 +27,48 @@
 procedure page02screen;
 var
   b: byte;
+  block: byte;
 const
   PAGE=2;
 begin
   header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Growing hyphae - heating');
+  block:=1;
+  textcolor(lightcyan);
+  gotoxy(4,MINPOSY[PAGE,block]); writeln('minimal temperature:');
+  gotoxy(4,MINPOSY[PAGE,block]+1); writeln('heating switch-on temperature:');
+  gotoxy(4,MINPOSY[PAGE,block]+2); writeln('heating switch-off temperature:');
+  gotoxy(4,MINPOSY[PAGE,block]+3); writeln('maximal temperature:');
   textcolor(white);
-  // #1
-  gotoxy(4,3); writeln('Minimal temperature:');
-  gotoxy(4,4); writeln('Heating switch-on temperature:');
-  gotoxy(4,5); writeln('Heating switch-off temperature:');
-  gotoxy(4,6); writeln('Maximal temperature:');
-  if htempmin>9 then gotoxy(MINPOSX[PAGE,1]-1,3) else gotoxy(MINPOSX[PAGE,1],3); writeln(htempmin,' °C');
-  if htempon>9 then gotoxy(MINPOSX[PAGE,1]-1,4) else gotoxy(MINPOSX[PAGE,1],4); writeln(htempon,' °C');
-  if htempoff>9 then gotoxy(MINPOSX[PAGE,1]-1,5) else gotoxy(MINPOSX[PAGE,1],5); writeln(htempoff,' °C');
-  if htempmax>9 then gotoxy(MINPOSX[PAGE,1]-1,6) else gotoxy(MINPOSX[PAGE,1],6); writeln(htempmax,' °C');
-  // #2
-  gotoxy(4,9); writeln('Disable heater (0/1):');
+  if htempmin>9 then gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]) else gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]); writeln(htempmin,' °C');
+  if htempon>9 then gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]+1) else gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+1); writeln(htempon,' °C');
+  if htempoff>9 then gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]+2) else gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+2); writeln(htempoff,' °C');
+  if htempmax>9 then gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]+3) else gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+3); writeln(htempmax,' °C');
+  block:=2;
+  textcolor(lightcyan);
+  gotoxy(4,9); writeln('disable heater (0/1):');
   for b:=0 to 9 do
   begin
-    gotoxy(MINPOSX[PAGE,2]-13,b+10);
-    writeln(' '+inttostr(b)+'.00...'+inttostr(b)+'.59 ',hheaterdis[b]);
+    textcolor(lightcyan);
+    gotoxy(MINPOSX[PAGE,block]-14,MINPOSY[PAGE,block]+b);
+    write(' '+inttostr(b)+'.00...'+inttostr(b)+'.59: ');
+    textcolor(white);
+    writeln(hheaterdis[b]);
   end;
   for b:=10 to 11 do
   begin
-    gotoxy(MINPOSX[PAGE,2]-13,b+10);
-    writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',hheaterdis[b]);
+    textcolor(lightcyan);
+    gotoxy(MINPOSX[PAGE,block]-15,MINPOSY[PAGE,block]+b);
+    write(' '+inttostr(b)+'.00..'+inttostr(b)+'.59: ');
+    textcolor(white);
+    writeln(hheaterdis[b]);
   end;
-  // #3
+  block:=3;
   for b:=12 to 23 do
   begin
-    gotoxy(MINPOSX[PAGE,3]-13,b-2);
-    writeln(inttostr(b)+'.00..'+inttostr(b)+'.59 ',hheaterdis[b]);
+    textcolor(lightcyan);
+    gotoxy(MINPOSX[PAGE,block]-15,MINPOSY[PAGE,block]+b-12);
+    write(' '+inttostr(b)+'.00..'+inttostr(b)+'.59: ');
+    textcolor(white);
+    writeln(hheaterdis[b]);
   end;
 end;

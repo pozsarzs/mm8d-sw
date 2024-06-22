@@ -25,19 +25,20 @@
 // write options to screen
 procedure page06screen;
 var
-  b: byte;
+  block: byte;
 const
   PAGE=6;
 begin
   header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Growing mushroom - humidifying');
+  block:=1;
+  textcolor(lightcyan);
+  gotoxy(4,MINPOSY[PAGE,block]); writeln('minimal relative humidity:');
+  gotoxy(4,MINPOSY[PAGE,block]+1); writeln('lower warning level:');
+  gotoxy(4,MINPOSY[PAGE,block]+2); writeln('higher warning level:');
+  gotoxy(4,MINPOSY[PAGE,block]+3); writeln('maximal relative humidity:');
   textcolor(white);
-  // #1
-  gotoxy(4,3); writeln('Minimal relative humidity:');
-  gotoxy(4,4); writeln('Lower warning level of humidity:');
-  gotoxy(4,5); writeln('Higher warning level of humidity:');
-  gotoxy(4,6); writeln('Maximal relative humidity:');
-  if mhummin>9 then gotoxy(MINPOSX[PAGE,1]-1,3) else gotoxy(MINPOSX[PAGE,1],3); writeln(mhummin,' %');
-  if mhumon>9 then gotoxy(MINPOSX[PAGE,1]-1,4) else gotoxy(MINPOSX[PAGE,1],4); writeln(mhumon,' %');
-  if mhumoff>9 then gotoxy(MINPOSX[PAGE,1]-1,5) else gotoxy(MINPOSX[PAGE,1],5); writeln(mhumoff,' %');
-  if mhummax>9 then gotoxy(MINPOSX[PAGE,1]-1,6) else gotoxy(MINPOSX[PAGE,1],6); writeln(mhummax,' %');
+  if mhummin>9 then gotoxy(MINPOSX[PAGE,1]-1,MINPOSY[PAGE,block]) else gotoxy(MINPOSX[PAGE,1],MINPOSY[PAGE,block]); writeln(mhummin,' %');
+  if mhumon>9 then gotoxy(MINPOSX[PAGE,1]-1,MINPOSY[PAGE,block]+1) else gotoxy(MINPOSX[PAGE,1],MINPOSY[PAGE,block]+1); writeln(mhumon,' %');
+  if mhumoff>9 then gotoxy(MINPOSX[PAGE,1]-1,MINPOSY[PAGE,block]+2) else gotoxy(MINPOSX[PAGE,1],MINPOSY[PAGE,block]+2); writeln(mhumoff,' %');
+  if mhummax>9 then gotoxy(MINPOSX[PAGE,1]-1,MINPOSY[PAGE,block]+3) else gotoxy(MINPOSX[PAGE,1],MINPOSY[PAGE,block]+3); writeln(mhummax,' %');
 end;

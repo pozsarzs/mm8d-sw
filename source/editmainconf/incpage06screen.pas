@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage06screen.pas                                                      | }
 { | Show screen content of page #6                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -27,21 +27,27 @@
 
 // write options to screen
 procedure page06screen;
+const
+  PAGE=6;
+var
+  block: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 6/' + inttostr(LASTPAGE) + ': Directories');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Directories');
+  block:=1;
+  textcolor(lightcyan);
+  gotoxy(4,MINPOSY[PAGE,block]); writeln('webserver''s root:');
+  gotoxy(4,MINPOSY[PAGE,block]+1); writeln('lock file:');
+  gotoxy(4,MINPOSY[PAGE,block]+2); writeln('log files:');
+  gotoxy(4,MINPOSY[PAGE,block]+3); writeln('translations:');
+  gotoxy(4,MINPOSY[PAGE,block]+4); writeln('changing files:');
+  gotoxy(4,MINPOSY[PAGE,block]+5); writeln('temporary files:');
+  gotoxy(4,MINPOSY[PAGE,block]+6); writeln('data files:');
   textcolor(white);
-  gotoxy(4,3); writeln('HTML files for webserver:');
-  gotoxy(4,4); writeln('Lock file:');
-  gotoxy(4,5); writeln('Log files:');
-  gotoxy(4,6); writeln('Translations:');
-  gotoxy(4,7); writeln('Changing files:');
-  gotoxy(4,8); writeln('Temporary files:');
-  gotoxy(4,9); writeln('Data files:');
-  gotoxy(MINPOSX[6,1],3); writeln(dir_htm);
-  gotoxy(MINPOSX[6,1],4); writeln(dir_lck);
-  gotoxy(MINPOSX[6,1],5); writeln(dir_log);
-  gotoxy(MINPOSX[6,1],6); writeln(dir_msg);
-  gotoxy(MINPOSX[6,1],7); writeln(dir_shr);
-  gotoxy(MINPOSX[6,1],8); writeln(dir_tmp);
-  gotoxy(MINPOSX[6,1],9); writeln(dir_var);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]); writeln(dir_htm);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+1); writeln(dir_lck);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+2); writeln(dir_log);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+3); writeln(dir_msg);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+4); writeln(dir_shr);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+5); writeln(dir_tmp);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+6); writeln(dir_var);
 end;

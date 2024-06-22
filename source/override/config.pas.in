@@ -13,5 +13,5 @@
 // FOR A PARTICULAR PURPOSE.
 
 const
-  VERSION: string='@version@';
+  VERSION: string='v@version@';
   PRGNAME: string='MM8D-Override';

@@ -20,12 +20,12 @@ because they are already cheap and reliable. The PC I use is a 500 MHz AMD
 Geode 32-bit machine with Debian Bookworm installed.
 
 Devices: 
- - MM6Ds                      COM4  RS-485  Modbus/RTU
- - MM7Ds                      COM4  RS-485  Modbus/RTU
- - tent displays              COM4  RS-485  Modbus/RTU
- - outdoor temperature meter  COM3  RS-485  Modbus/RTU
- - electricity power meter    COM2  RS-232  Modbus/ASCII
- - mini serial console        COM1  RS-232  unique protocol
+ - MM6Ds                              COM3  RS-485  Modbus/RTU
+ - MM7Ds                              COM3  RS-485  Modbus/RTU
+ - DM36B06 LED displays               COM3  RS-485  Modbus/RTU
+ - PTA9B01 outdoor temperature meter  COM3  RS-485  Modbus/RTU
+ - DT-510 electricity power meter     COM2  RS-232  Modbus/ASCII
+ - mini serial console                COM1  RS-232  unique protocol
 
 Note:
   On this processor and operating system, the running of one or two basic
@@ -52,20 +52,20 @@ Requirements:
 ------------------------------------------
 a. Visit homepage (see later) to download installer packages:
 
-  Raspberry Pi OS:  mm8d-sw-0.5-armhf.tar.gz
+  Raspberry Pi OS:  mm8d-sw-0.6-armhf.tar.gz
 
-                    mm8d-eec_0.5-1_armhf.deb
-                    mm8d-sw_0.5-1_armhf.deb
-                    mm8d-web_0.5-1_all.deb
+                    mm8d-eec_0.6-1_armhf.deb
+                    mm8d-sw_0.6-1_armhf.deb
+                    mm8d-web_0.6-1_all.deb
 
-  Debian GNU/Linux: mm8d-sw-0.5-i386.tar.gz
-                    mm8d-sw-0.5-amd64.tar.gz
+  Debian GNU/Linux: mm8d-sw-0.6-i386.tar.gz
+                    mm8d-sw-0.6-amd64.tar.gz
 
-                    mm8d-eec_0.5-1_i386.deb
-                    mm8d-sw_0.5-1_i386.deb
-                    mm8d-eec_0.5-1_amd64.deb
-                    mm8d-sw_0.5-1_amd64.deb
-                    mm8d-web_0.5-1_all.deb
+                    mm8d-eec_0.6-1_i386.deb
+                    mm8d-sw_0.6-1_i386.deb
+                    mm8d-eec_0.6-1_amd64.deb
+                    mm8d-sw_0.6-1_amd64.deb
+                    mm8d-web_0.6-1_all.deb
 
 b. Download from Github
 

@@ -42,6 +42,7 @@ begin
   end;
   gotoxy(4,21); write('MM10D:');
   gotoxy(4,22); write('MM11D:');
+  {
   for b:=1 to 8 do
   begin
     gotoxy(MINPOSX[10,1],b+2); writeln(uid_mm6dch[b]);
@@ -49,4 +50,5 @@ begin
   end;
   gotoxy(MINPOSX[10,3],21); writeln(uid_mm10d);
   gotoxy(MINPOSX[10,3],22); writeln(uid_mm11d);
+  }
 end;

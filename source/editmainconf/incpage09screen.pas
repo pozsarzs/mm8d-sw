@@ -43,6 +43,7 @@ begin
   end;
   gotoxy(4,21); write('MM10D:');
   gotoxy(4,22); write('MM11D:');
+  {
   for b:=1 to 8 do
   begin
     if (pro_mm6dch[b]<>PROTOCOL[1]) and (pro_mm6dch[b]<>PROTOCOL[2]) then pro_mm6dch[b]:=PROTOCOL[1];
@@ -50,8 +51,11 @@ begin
     if (pro_mm7dch[b]<>PROTOCOL[1]) and (pro_mm7dch[b]<>PROTOCOL[2]) then pro_mm7dch[b]:=PROTOCOL[1];
     gotoxy(MINPOSX[9,2],b+2+9); writeln(pro_mm7dch[b]);
   end;
+  }
+  {
   if (pro_mm10d<>PROTOCOL[1]) and (pro_mm10d<>PROTOCOL[2]) then pro_mm10d:=PROTOCOL[1];
   gotoxy(MINPOSX[9,3],21); writeln(pro_mm10d);
   if (pro_mm11d<>PROTOCOL[1]) and (pro_mm11d<>PROTOCOL[2]) then pro_mm11d:=PROTOCOL[1];
   gotoxy(MINPOSX[9,3],22); writeln(pro_mm11d);
+  }
 end;

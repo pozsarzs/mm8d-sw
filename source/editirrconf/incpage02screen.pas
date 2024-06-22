@@ -27,27 +27,26 @@
 // write options to screen
 procedure page02screen;
 var
-  b: byte;
-  x: byte;
+  block: byte;
 const
   PAGE=2;
 begin
   header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Irrigator tubes');
-  textcolor(white);
-  x:=40;
-  for b:=1 to 3 do
+  for block:=1 to 3 do
   begin
-    gotoxy(4,3+7*(b-1)); writeln('name of tube #'+inttostr(b)+' :');
-    gotoxy(4,4+7*(b-1)); writeln('enable irrigation:');
-    gotoxy(4,5+7*(b-1)); writeln('start of morning irrigation:');
-    gotoxy(4,6+7*(b-1)); writeln('end of morning irrigation:');
-    gotoxy(4,7+7*(b-1)); writeln('start of evening irrigation:');
-    gotoxy(4,8+7*(b-1)); writeln('end of evening irrigation:');
-    gotoxy(x,3+7*(b-1)); writeln(name[b]);
-    gotoxy(x,4+7*(b-1)); writeln(enable[b]);
-    gotoxy(x,5+7*(b-1)); writeln(morningstart[b]);
-    gotoxy(x,6+7*(b-1)); writeln(morningstop[b]);
-    gotoxy(x,7+7*(b-1)); writeln(eveningstart[b]);
-    gotoxy(x,8+7*(b-1)); writeln(eveningstop[b]);
+    textcolor(lightcyan);
+    gotoxy(4,MINPOSY[2,block]); writeln('name of tube #'+inttostr(block)+' :');
+    gotoxy(4,MINPOSY[2,block]+1); writeln('enable irrigation:');
+    gotoxy(4,MINPOSY[2,block]+2); writeln('start of morning irrigation:');
+    gotoxy(4,MINPOSY[2,block]+3); writeln('end of morning irrigation:');
+    gotoxy(4,MINPOSY[2,block]+4); writeln('start of evening irrigation:');
+    gotoxy(4,MINPOSY[2,block]+5); writeln('end of evening irrigation:');
+    textcolor(white);
+    gotoxy(MINPOSX[2,block],MINPOSY[2,block]); writeln(name[block]);
+    gotoxy(MINPOSX[2,block],MINPOSY[2,block]+1); writeln(enable[block]);
+    gotoxy(MINPOSX[2,block],MINPOSY[2,block]+2); writeln(morningstart[block]);
+    gotoxy(MINPOSX[2,block],MINPOSY[2,block]+3); writeln(morningstop[block]);
+    gotoxy(MINPOSX[2,block],MINPOSY[2,block]+4); writeln(eveningstart[block]);
+    gotoxy(MINPOSX[2,block],MINPOSY[2,block]+5); writeln(eveningstop[block]);
   end;
 end;

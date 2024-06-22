@@ -24,17 +24,21 @@
 
 // write options to screen
 procedure page03screen;
+var
+  block: byte;
 const
   PAGE=3;
 begin
   header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Growing hyphae - lighting');
+  block:=1;
+  textcolor(lightcyan);
+  gotoxy(4,MINPOSY[PAGE,block]); writeln('lamps switch-on time #1:');
+  gotoxy(4,MINPOSY[PAGE,block]+1); writeln('lamps switch-off time #1:');
+  gotoxy(4,MINPOSY[PAGE,block]+2); writeln('lamps switch-on time #2:');
+  gotoxy(4,MINPOSY[PAGE,block]+3); writeln('lamps switch-off time #2:');
   textcolor(white);
-  gotoxy(4,3); writeln('Lamps switch-on time #1:');
-  gotoxy(4,4); writeln('Lamps switch-off time #1:');
-  gotoxy(4,5); writeln('Lamps switch-on time #2:');
-  gotoxy(4,6); writeln('Lamps switch-off time #2:');
-  gotoxy(MINPOSX[PAGE,1]-1,3); if hlightson1<10 then write(' '); write(hlightson1,'.00');
-  gotoxy(MINPOSX[PAGE,1]-1,4); if hlightsoff1<10 then write(' '); write(hlightsoff1,'.00');
-  gotoxy(MINPOSX[PAGE,1]-1,5); if hlightson2<10 then write(' '); write(hlightson2,'.00');
-  gotoxy(MINPOSX[PAGE,1]-1,6); if hlightsoff2<10 then write(' '); write(hlightsoff2,'.00');
+  gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]); if hlightson1<10 then write(' '); write(hlightson1,'.00');
+  gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]+1); if hlightsoff1<10 then write(' '); write(hlightsoff1,'.00');
+  gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]+2); if hlightson2<10 then write(' '); write(hlightson2,'.00');
+  gotoxy(MINPOSX[PAGE,block]-1,MINPOSY[PAGE,block]+3); if hlightsoff2<10 then write(' '); write(hlightsoff2,'.00');
 end;

@@ -184,10 +184,8 @@ def loadconfiguration(conffile):
   global dir_var
   global fwm_enable
   global fwm_handler
-  global fwm_ipaddress
   global fwm_modbusid
   global fwm_port
-  global fwm_protocol
   global fwm_speed
   global lockfile
   global log_debug
@@ -209,10 +207,8 @@ def loadconfiguration(conffile):
   global msc_verbose
   global otm_enable
   global otm_handler
-  global otm_ipaddress
   global otm_modbusid
   global otm_port
-  global otm_protocol
   global otm_speed
   global owm_apikey
   global owm_city
@@ -220,17 +216,13 @@ def loadconfiguration(conffile):
   global owm_url
   global pwm_enable
   global pwm_handler
-  global pwm_ipaddress
   global pwm_modbusid
   global pwm_port
-  global pwm_protocol
   global pwm_speed
   global tdp_enable
   global tdp_handler
   global tdp_port
-  global tdp_protocol
   global tdp_speed
-  global tdpch_ipaddress
   global tdpch_modbusid
   if (HW == 0):
     global gpio_i1
@@ -338,14 +330,10 @@ def loadconfiguration(conffile):
     pwm_enable = int(config.get(P,'pwm_enable'))
     pwm_handler = ''
     pwm_handler = config.get(P,'pwm_handler')
-    pwm_ipaddress = '0.0.0.0'
-    pwm_ipaddress = config.get(P,'pwm_ipaddress')
     pwm_modbusid = 0
     pwm_modbusid = int(config.get(P,'pwm_modbusid'))
     pwm_port = '/dev/ttyS1'
     pwm_port = config.get(P,'pwm_port')
-    pwm_protocol = 'rtu'
-    pwm_protocol = config.get(P,'pwm_protocol')
     pwm_speed = 9600
     pwm_speed = int(config.get(P,'pwm_speed'))
     # flow meter
@@ -353,14 +341,10 @@ def loadconfiguration(conffile):
     fwm_enable = int(config.get(F,'fwm_enable'))
     fwm_handler = ''
     fwm_handler = config.get(F,'fwm_handler')
-    fwm_ipaddress = '0.0.0.0'
-    fwm_ipaddress = config.get(F,'fwm_ipaddress')
     fwm_modbusid = 0
     fwm_modbusid = int(config.get(F,'fwm_modbusid'))
     fwm_port = '/dev/ttyS1'
     fwm_port = config.get(F,'fwm_port')
-    fwm_protocol = 'rtu'
-    fwm_protocol = config.get(F,'fwm_protocol')
     fwm_speed = 9600
     fwm_speed = int(config.get(F,'fwm_speed'))
     # outdoor temperature meter
@@ -368,28 +352,20 @@ def loadconfiguration(conffile):
     otm_enable = int(config.get(T,'otm_enable'))
     otm_handler = ''
     otm_handler = config.get(T,'otm_handler')
-    otm_ipaddress = '0.0.0.0'
-    otm_ipaddress = config.get(T,'otm_ipaddress')
     otm_modbusid = 0
     otm_modbusid = int(config.get(T,'otm_modbusid'))
     otm_port = '/dev/ttyS2'
     otm_port = config.get(T,'otm_port')
-    otm_protocol = 'rtu'
-    otm_protocol = config.get(T,'otm_protocol')
     otm_speed = 9600
     otm_speed = int(config.get(T,'otm_speed'))
     # tent displays
-    tdp_protocol = 'rtu'
-    tdp_protocol = config.get(Y,'tdp_protocol')
     tdp_enable = 0
     tdp_enable = int(config.get(Y,'tdp_enable'))
     tdp_handler = ''
     tdp_handler = config.get(Y,'tdp_handler')
     tdpch_modbusid = [0 for x in range(1,10)]
-    tdpch_ipaddress = [0 for x in range(1,10)]
     for i in range(1,9):
       tdpch_modbusid[i] = int(config.get(Y,'tdpch' + str(i) + '_modbusid'))
-      tdpch_ipaddress[i] = config.get(Y,'tdpch' + str(i) + '_ipaddress')
     tdp_port = '/dev/ttyS3'
     tdp_port = config.get(Y,'tdp_port')
     tdp_speed = 9600
@@ -1474,22 +1450,18 @@ loadconfiguration(CONFDIR + "mm8d.ini")
 if fwm_enable == 1:
   fwm = __import__(fwm_handler)
   fwm.baudrate = fwm_speed
-  fwm.method = fwm_protocol
   fwm.port = fwm_port
 if pwm_enable == 1:
   pwm = __import__(pwm_handler)
   pwm.baudrate = pwm_speed
-  pwm.method = pwm_protocol
   pwm.port = pwm_port
 if otm_enable == 1:
   otm = __import__(otm_handler)
   otm.baudrate = otm_speed
-  otm.method = otm_protocol
   otm.port = otm_port
 if tdp_enable == 1:
   tdp = __import__(tdp_handler)
   tdp.baudrate = tdp_speed
-  tdp.method = tdp_protocol
   tdp.port = tdp_port
 # clear tent display
 for channel in range(1,9):

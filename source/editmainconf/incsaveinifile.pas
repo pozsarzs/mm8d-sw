@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incsaveinifile.pas                                                       | }
 { | Save configuration to ini file                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -58,31 +58,29 @@ begin
     writeln(iif,';');
     writeln(iif,'');
     writeln(iif,'['+U+']');
-    writeln(iif,'; user''s data');
-    writeln(iif,'usr_nam=',usr_nam);
-    writeln(iif,'usr_uid=',usr_uid);
+    writeln(iif,'; user''s name');
+    writeln(iif,'usr_name=',usr_name);
     writeln(iif,'');
-    writeln(iif,'['+N+']');
-    writeln(iif,'; name of channels');
+    writeln(iif,'['+C+']');
+    writeln(iif,'; name of the channels');
     for b:=0 to 8 do
-      writeln(iif,'nam_ch'+inttostr(b)+'='+nam_ch[b]);
+      writeln(iif,'ch'+inttostr(b)+'_name='+ch_name[b]);
     writeln(iif,'');
-    writeln(iif,'['+E+']');
     writeln(iif,'; enable/disable channels (0/1)');
     for b:=1 to 8 do
-      writeln(iif,'ena_ch'+inttostr(b)+'='+inttostr(ena_ch[b]));
+      writeln(iif,'ch'+inttostr(b)+'_enable'+inttostr(b)+'='+inttostr(ch_enable[b]));
     writeln(iif,'');
     writeln(iif,'['+A+']');
     writeln(iif,'; language of webpage (en/hu)');
     writeln(iif,'lng='+lng);
     writeln(iif,'');
-    writeln(iif,'['+O+']');
+    writeln(iif,'['+L+']');
     writeln(iif,'; storing time of the log files');
-    writeln(iif,'day_log='+inttostr(day_log));
+    writeln(iif,'log_day='+inttostr(log_day));
     writeln(iif,'; create verbose debug log file');
-    writeln(iif,'dbg_log='+inttostr(dbg_log));
+    writeln(iif,'log_debug='+inttostr(log_debug));
     writeln(iif,'; number of log lines on web interface');
-    writeln(iif,'web_lines='+inttostr(web_lines));
+    writeln(iif,'log_weblines='+inttostr(log_weblines));
     writeln(iif,'');
     writeln(iif,'['+D+']');
     writeln(iif,'; directories of program');
@@ -94,25 +92,38 @@ begin
     writeln(iif,'dir_tmp='+dir_tmp);
     writeln(iif,'dir_var='+dir_var);
     writeln(iif,'');
-    writeln(iif,'['+W+']');
+    writeln(iif,'['+O+']');
     writeln(iif,'; access data');
-    writeln(iif,'api_key='+api_key);
-    writeln(iif,'base_url='+base_url);
-    writeln(iif,'city_name='+city_name);
+    writeln(iif,'owm_enable='+inttostr(owm_enable));
+    writeln(iif,'owm_apikey='+owm_apikey);
+    writeln(iif,'owm_url='+owm_url);
+    writeln(iif,'owm_city='+owm_city);
     writeln(iif,'');
     writeln(iif,';');
     writeln(iif,'; hardware');
     writeln(iif,';');
     writeln(iif,'');
-    writeln(iif,'['+G+']');
-    writeln(iif,'; number of the used GPIO ports');
-    for b:=1 to 4 do
-      writeln(iif,'prt_i'+inttostr(b)+'='+inttostr(prt_i[b]));
-    for b:=1 to 4 do
-      writeln(iif,'prt_ro'+inttostr(b)+'='+inttostr(prt_ro[b]));
-    for b:=1 to 4 do
-      writeln(iif,'prt_lo'+inttostr(b)+'='+inttostr(prt_lo[b]));
+    writeln(iif,'['+I+']');
+    writeln(iif,'; Serial port: GPIO14-15');
     writeln(iif,'');
+    writeln(iif,'; local I/O ports');
+    writeln(iif,'; DC 24-36 V inputs');
+    for b:=1 to 5 do
+      writeln(iif,'gpio_i'+inttostr(b)+'='+inttostr(gpio_i[b]));
+    writeln(iif,'');
+    writeln(iif,'; open collector outputs for LED');
+    for b:=1 to 4 do
+      writeln(iif,'gpio_lo'+inttostr(b)+'='+inttostr(gpio_lo[b]));
+    writeln(iif,'');
+    writeln(iif,'; relay outputs');
+    for b:=1 to 8 do
+      writeln(iif,'gpio_ro'+inttostr(b)+'='+inttostr(gpio_ro[b]));
+    writeln(iif,'');
+    writeln(iif,';');
+    writeln(iif,'; external devices');
+    writeln(iif,';');
+    writeln(iif,'');
+    {
     writeln(iif,'['+L+']');
     writeln(iif,'; address of the used LPT port (0x378: 0, 0x278: 1, 0x3BC: 2)');
     writeln(iif,'lpt_prt='+inttostr(prt_lpt));
@@ -127,72 +138,56 @@ begin
     writeln(iif,'; level of verbosity of the log on console');
     writeln(iif,'; (nothing: 0, only error: 1, warning and error: 2, all: 3)');
     writeln(iif,'com_verbose='+inttostr(com_verbose));
+    }   
     writeln(iif,'');
-    writeln(iif,';');
-    writeln(iif,'; external devices');
-    writeln(iif,';');
+    writeln(iif,'['+Y+']');
+    writeln(iif,'; display in the tent');
+    writeln(iif,'tdp_enable='+inttostr(tdp_enable));
+    writeln(iif,'tdp_port='+tdp_port);
+    writeln(iif,'tdp_speed='+inttostr(tdp_speed));
+    writeln(iif,'tdp_handler='+tdp_handler);
+    for b:=1 to 8 do
+      writeln(iif,'tdpch'+inttostr(b)+'_modbusid='+inttostr(tdpch_modbusid[b]));
     writeln(iif,'');
     writeln(iif,'['+M6+']');
-    writeln(iif,'; protocol (http/modbus)');
+    writeln(iif,'; grow house control device');
+    writeln(iif,'; protocols: http, rtu, tcp');
+    writeln(iif,'mm6d_protocol='+mm6d_protocol);
+    writeln(iif,'mm6d_port='+mm6d_port);
+    writeln(iif,'mm6d_speed='+inttostr(mm6d_speed));
+    writeln(iif,'; using internal thermostat in the heater (timer control only)');
+    writeln(iif,'mm6d_intthermostat='+inttostr(mm6d_intthermostat));
     for b:=1 to 8 do
-      writeln(iif,'pro_mm6dch'+inttostr(b)+'='+pro_mm6dch[b]);
-    writeln(iif,'');
-    writeln(iif,'; IP address');
-    for b:=1 to 8 do
-      writeln(iif,'adr_mm6dch'+inttostr(b)+'='+adr_mm6dch[b]);
-    writeln(iif,'');
-    writeln(iif,'; ModBUS unitID');
-    for b:=1 to 8 do
-      writeln(iif,'uid_mm6dch'+inttostr(b)+'='+uid_mm6dch[b]);
+    begin
+      writeln(iif,'');
+      writeln(iif,'mm6dch'+inttostr(b)+'_modbusid='+inttostr(mm6dch_modbusid[b]));
+      writeln(iif,'mm6dch'+inttostr(b)+'_ipaddress='+mm6dch_ipaddress[b]);
+    end;
     writeln(iif,'');
     writeln(iif,'['+M7+']');
-    writeln(iif,'; protocol (http/modbus)');
+    writeln(iif,'; T/RH measure device');
+    writeln(iif,'; protocols: http, rtu, tcp');
+    writeln(iif,'mm7d_protocol='+mm7d_protocol);
+    writeln(iif,'mm7d_port='+mm7d_port);
+    writeln(iif,'mm7d_speed='+inttostr(mm7d_speed));
     for b:=1 to 8 do
-      writeln(iif,'pro_mm7dch'+inttostr(b)+'='+pro_mm7dch[b]);
+    begin
+      writeln(iif,'');
+//      writeln(iif,'mm7dch'+inttostr(b)+'_modbusid='+inttostr(mm7dch_modbusid[b]));
+      writeln(iif,'mm7dch'+inttostr(b)+'_ipaddress='+mm7dch_ipaddress[b]);
+    end;
     writeln(iif,'');
-    writeln(iif,'; IP address');
-    for b:=1 to 8 do
-      writeln(iif,'adr_mm7dch'+inttostr(b)+'='+adr_mm7dch[b]);
-    writeln(iif,'');
-    writeln(iif,'; ModBUS unitID');
-    for b:=1 to 8 do
-      writeln(iif,'uid_mm7dch'+inttostr(b)+'='+uid_mm7dch[b]);
-    writeln(iif,'');
-    writeln(iif,'['+M10+']');
-    writeln(iif,'; enable/disable handling (0/1)');
-    writeln(iif,'ena_mm10d='+inttostr(ena_mm10d));
-    writeln(iif,'; protocol (http/modbus)');
-    writeln(iif,'pro_mm10d='+pro_mm10d);
-    writeln(iif,'; IP address');
-    writeln(iif,'adr_mm10d='+adr_mm10d);
-    writeln(iif,'; ModBUS unitID');
-    writeln(iif,'uid_mm10d='+uid_mm10d);
-    writeln(iif,'');
-    writeln(iif,'['+M11+']');
-    writeln(iif,'; enable/disable handling (0/1)');
-    writeln(iif,'ena_mm11d='+inttostr(ena_mm11d));
-    writeln(iif,'; protocol (http/modbus)');
-    writeln(iif,'pro_mm11d='+pro_mm11d);
-    writeln(iif,'; IP address');
-    writeln(iif,'adr_mm11d='+adr_mm11d);
-    writeln(iif,'; ModBUS unitID');
-    writeln(iif,'uid_mm11d='+uid_mm11d);
-    writeln(iif,'');
-    writeln(iif,'['+I+']');
-    writeln(iif,'; show tent camera on the webpage of channel (0/1)');
-    writeln(iif,'ena_tentcams='+inttostr(ena_tentcams));
+    writeln(iif,'['+IPC+']');
+    writeln(iif,'; tent and security IP cameras');
+    writeln(iif,'; show tent camera on the webpage of channel');
+    writeln(iif,'ipctent_enable='+inttostr(ipctent_enable));
     writeln(iif,'; snapshot url of the tent cameras');
     for b:=1 to 8 do
-      writeln(iif,'cam_ch'+inttostr(b)+'='+cam_ch[b]);
+      writeln(iif,'ipctent'+inttostr(b)+'_url='+ipctent_url[b]);
     writeln(iif,'; snapshot url of the security cameras');
-    writeln(iif,'ena_seccams='+inttostr(ena_seccams));
+    writeln(iif,'ipcsec_enable='+inttostr(ipcsec_enable));
     for b:=1 to 5 do
-      writeln(iif,'cam_sc'+inttostr(b)+'='+cam_sc[b]);
-    writeln(iif,'');
-    writeln(iif,'['+H+']');
-    writeln(iif,'; internal thermostat in the heater (timer control only - 0/1)');
-    for b:=1 to 8 do
-      writeln(iif,'ith_ch'+inttostr(b)+'='+inttostr(ith_ch[b]));
+      writeln(iif,'ipcsec'+inttostr(b)+'_url='+ipcsec_url[b]);
     close(iif);
   except
     saveinifile:=false;

@@ -159,64 +159,45 @@ msc_verbose=2
 
 [powermeter]
 ; electric power meter
-; protocols: ascii, rtu, tcp
 pwm_enable=1
-pwm_protocol=ascii
 pwm_port=/dev/ttyS1
 pwm_speed=9600
 pwm_modbusid=1
-pwm_ipaddress=0.0.0.0
 pwm_handler=dt510
 
 [flowmeter]
 ; water flow meter
-; protocols: ascii, rtu, tcp
 fwm_enable=0
-fwm_protocol=rtu
-fwm_port=
+fwm_port=/dev/ttyS2
 fwm_speed=9600
 fwm_modbusid=0
-fwm_ipaddress=0.0.0.0
 fwm_handler=
 
 [outdoortempmeter]
 ; outdoor temperature meter
-; protocols: ascii, rtu, tcp
 otm_enable=1
-otm_protocol=rtu
 otm_port=/dev/ttyS2
 otm_speed=9600
 otm_modbusid=20
-otm_ipaddress=0.0.0.0
 otm_handler=pta9b01
 
 [tentdisplay]
 ; display in the tent
-; protocols: ascii, rtu, tcp
 tdp_enable=1
-tdp_protocol=rtu
 tdp_port=/dev/ttyS2
 tdp_speed=9600
 tdp_handler=dm36b06
 tdpch1_modbusid=21
-tdpch1_ipaddress=0.0.0.0
 tdpch2_modbusid=22
-tdpch2_ipaddress=0.0.0.0
 tdpch3_modbusid=0
-tdpch3_ipaddress=0.0.0.0
 tdpch4_modbusid=0
-tdpch4_ipaddress=0.0.0.0
 tdpch5_modbusid=0
-tdpch5_ipaddress=0.0.0.0
 tdpch6_modbusid=0
-tdpch6_ipaddress=0.0.0.0
 tdpch7_modbusid=0
-tdpch7_ipaddress=0.0.0.0
 tdpch8_modbusid=0
-tdpch8_ipaddress=0.0.0.0
 
 [mm6d]
-; Grow house control devices
+; grow house control devices
 ; protocols: http, rtu, tcp
 mm6d_protocol=tcp
 mm6d_port=/dev/ttyS2
@@ -249,7 +230,7 @@ mm6dch8_modbusid=0
 mm6dch8_ipaddress=0.0.0.0
 
 [mm7d]
-; R/TH measure devices
+; T/RH measure devices
 ; protocols: http, rtu, tcp
 mm7d_protocol=tcp
 mm7d_port=/dev/ttyS2
@@ -296,8 +277,8 @@ ipctent8_url=
 ; show security cameras on the webpage
 ipcsec_enable=0
 ; snapshot url of the security cameras
-ipcsec1_url==http://camera-sc1.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
-ipcsec2_url==http://camera-sc2.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
-ipcsec3_url==http://camera-sc3.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
-ipcsec4_url==http://camera-sc4.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipcsec1_url=http://camera-sc1.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipcsec2_url=http://camera-sc2.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipcsec3_url=http://camera-sc3.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+ipcsec4_url=http://camera-sc4.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
 

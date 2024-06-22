@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage12screen.pas                                                      | }
 { | Show screen content of page #12                                          | }
 { +--------------------------------------------------------------------------+ }
@@ -15,42 +15,54 @@
 {
   Relevant settings file section:
 
-  [IPcamera]
-  ena_tentcams=0
-  ena_seccams=0
-  cam_ch?=http://camera-tc1.lan/snapshot.cgi?user=username&pwd=password
-  cam_sc?=http://camera-sc1.lan/webcapture.jpg?command=snap&channel=0&user=username&password=password
+  [mm6d]
+  mm6d_protocol=rtu
+  mm6d_port=/dev/ttyS2
+  mm6d_speed=9600
+  mm6d_intthermostat=0
+  mm6dch?_modbusid=0
+  mm6dch?_ipaddress=0.0.0.0
 }
 
 // write options to screen
 procedure page12screen;
+const
+  PAGE=12;
 var
   b: byte;
+  block: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 12/' + inttostr(LASTPAGE) + ': URL of IP cameras');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': MM6D devices');
+  textcolor(lightcyan);
+  block:=1;
+  for b:=1 to 8 do
+  begin
+    gotoxy(4,MINPOSY[PAGE,block]+b-1); write('Modbus ID of channel #'+inttostr(b)+':');
+  end;
+  block:=2; 
+  for b:=1 to 8 do
+  begin
+    gotoxy(4,MINPOSY[PAGE,block]+b-1); write('IP address of channel #'+inttostr(b)+':');
+  end;
+  block:=3; 
+  gotoxy(4,MINPOSY[PAGE,block]); write('protocol (http/tcp/rtu):');
+  gotoxy(4,MINPOSY[PAGE,block]+1); write('serial port:');
+  gotoxy(4,MINPOSY[PAGE,block]+2); write('baudrate:');
+  gotoxy(4,MINPOSY[PAGE,block]+3); write('timer control only:');
   textcolor(white);
+  block:=1;
   for b:=1 to 8 do
   begin
-    gotoxy(4,b+2);
-    write('Channel #'+inttostr(b)+':');
+    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1); write(mm6dch_modbusid[b]);
   end;
-  for b:=1 to 5 do
-  begin
-    gotoxy(4,b+13);
-    write('Security camera #'+inttostr(b)+':');
-  end;
-  gotoxy(4,12); write('Show tent camera snapshots:');
-  gotoxy(4,20); write('Show security camera snapshots:');
+  block:=2; 
   for b:=1 to 8 do
   begin
-    gotoxy(MINPOSX[12,1],b+2);
-    writeln(cam_ch[b]);
+    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1); write(mm6dch_ipaddress[b]);
   end;
-  gotoxy(MINPOSX[12,2],12); writeln(ena_tentcams);
-  for b:=1 to 5 do
-  begin
-    gotoxy(MINPOSX[12,3],b+13);
-    writeln(cam_sc[b]);
-  end;
-  gotoxy(MINPOSX[12,2],20); writeln(ena_tentcams);
+  block:=3; 
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]); write(mm6d_protocol);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+1); write(mm6d_port);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+2); write(mm6d_speed);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+3); write(mm6d_intthermostat);
 end;

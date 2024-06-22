@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | editmainconf.pas                                                         | }
 { | Full-screen program for edit mm8d.ini file                               | }
 { +--------------------------------------------------------------------------+ }
@@ -24,111 +24,139 @@ uses
   INIFiles, SysUtils, character, crt, untcommon;
 var
   // general variables
-  bottom:       byte;
+  bottom:             byte;
   // configuration
-  adr_mm10d:    string;
-  adr_mm11d:    string;
-  adr_mm6dch:   array[1..8] of string;
-  adr_mm7dch:   array[1..8] of string;
-  api_key:      string;
-  base_url:     string;
-  cam_ch:       array[1..8] of string;
-  cam_sc:       array[1..5] of string;
-  city_name:    string;
+  ch_enable:          array[1..8] of byte;
+  ch_name:            array[0..8] of string;
+  dir_htm:            string;
+  dir_lck:            string;
+  dir_log:            string;
+  dir_msg:            string;
+  dir_shr:            string;
+  dir_tmp:            string;
+  dir_var:            string;
+  gpio_i:             array[1..5] of byte;
+  gpio_lo:            array[1..4] of byte;
+  gpio_ro:            array[1..8] of byte;
+  ipcsec_enable:      byte;
+  ipcsec_url:         array[1..4] of string;
+  ipctent_enable:     byte;
+  ipctent_url:        array[1..8] of string;
+  lng:                string;
+  log_day:            byte;
+  log_debug:          byte;
+  log_weblines:       byte;
+  mm6d_intthermostat: byte;
+  mm6d_port:          string;
+  mm6d_protocol:      string;
+  mm6d_speed:         longint;
+  mm6dch_ipaddress:   array[1..8] of string;
+  mm6dch_modbusid:    array[1..8] of integer;
+  mm7d_port:          string;
+  mm7d_protocol:      string;
+  mm7d_speed:         longint;
+  mm7dch_ipaddress:   array[1..8] of string;
+  mm7dch_modbusid:    array[1..8] of integer;
+  owm_apikey:         string;
+  owm_city:           string;
+  owm_enable:         byte;
+  owm_url:            string;
+  tdp_enable:         byte;
+  tdp_handler:        string;
+  tdp_port:           string;
+  tdp_speed:          longint;
+  tdpch_modbusid:     array[1..8] of integer;
+  usr_name:           string;
+
+  // ** átnézendő változók **
   com_speed:    string;
   com_verbose:  byte;
-  day_log:      byte;
-  dbg_log:      byte;
-  dir_htm:      string;
-  dir_lck:      string;
-  dir_log:      string;
-  dir_msg:      string;
-  dir_shr:      string;
-  dir_tmp:      string;
-  dir_var:      string;
-  ena_tentcams: byte;
-  ena_seccams:  byte;
-  ena_ch:       array[1..8] of byte;
   ena_console:  byte;
-  ena_mm10d:    byte;
-  ena_mm11d:    byte;
-  ith_ch:       array[1..8] of byte;
-  lng:          string;
-  nam_ch:       array[0..8] of string;
-  pro_mm6dch:   array[1..8] of string;
-  pro_mm7dch:   array[1..8] of string;
-  pro_mm10d:    string;
-  pro_mm11d:    string;
   prt_com:      string;
-  prt_i:        array[1..4] of byte;
-  prt_lo:       array[1..4] of byte;
   prt_lpt:      byte;
-  prt_ro:       array[1..4] of byte;
-  uid_mm10d:    string;
-  uid_mm11d:    string;
-  uid_mm6dch:   array[1..8] of string;
-  uid_mm7dch:   array[1..8] of string;
-  usr_nam:      string;
-  usr_uid:      string;
-  web_lines:    byte;
+  {
+  fwm_enable
+  fwm_handler
+  fwm_modbusid
+  fwm_port
+  fwm_speed
+  lpt_address
+  lpt_bits
+  msc_enable
+  msc_port
+  msc_speed
+  msc_verbose
+  otm_enable
+  otm_handler
+  otm_modbusid
+  otm_port
+  otm_speed
+  pwm_enable
+  pwm_handler
+  pwm_modbusid
+  pwm_port
+  pwm_speed
+  }
 const
   A:            string='language';
-  C:            string='COMport';
+  C:            string='channels';
   D:            string='directories';
-  E:            string='enable';
-  G:            string='GPIOport';
-  I:            string='IPcamera';
-  H:            string='heater';
-  L:            string='LPTport';
-  M10:          string='MM10D';
-  M11:          string='MM11D';
-  M6:           string='MM6D';
-  M7:           string='MM7D';
-  N:            string='names';
-  O:            string='log';
+  F:            string='flowmeter';
+  I:            string='localio';
+  IPC:          string='ipcamera';
+  L:            string='log';
+  M6:           string='mm6d';
+  M7:           string='mm7d';
+  O:            string='openweathermap.org';
+  P:            string='powermeter';
+  S:            string='console';
+  T:            string='outdoortempmeter';
   U:            string='user';
-  W:            string='openweathermap.org';
-  LASTPAGE:     byte=13;
-  BLOCKS:       array[1..13] of byte=(1,1,2,1,1,1,1,5,3,3,3,4,1);
-  MINPOSX:      array[1..13,1..6] of byte=((18,0,0,0,0,0),
+  Y:            string='tentdisplay';
+  LASTPAGE:     byte=14;
+  BLOCKS:       array[1..14] of byte=(1,1,1,1,1,1,1,3,3,3,2,3,3,4);
+  MINPOSX:      array[1..14,1..6] of byte=((18,0,0,0,0,0),
                                            (17,0,0,0,0,0),
-                                           (17,17,0,0,0,0),
+                                           (17,0,0,0,0,0),
                                            (15,0,0,0,0,0),
                                            (43,0,0,0,0,0),
-                                           (31,0,0,0,0,0),
-                                           (19,0,0,0,0,0),
-                                           (15,15,15,26,28,0),
+                                           (23,0,0,0,0,0),
+                                           (21,0,0,0,0,0),
+                                           (15,15,15,0,0,0),
                                            (25,25,25,0,0,0),
                                            (25,25,25,0,0,0),
-                                           (25,25,25,0,0,0),
-                                           (37,37,37,37,0,0),
-                                           (17,0,0,0,0,0));
-  MINPOSY:      array[1..13,1..6] of byte=((3,0,0,0,0,0),
+                                           (30,30,0,0,0,0),
+                                           (31,31,31,0,0,0),
+                                           (31,31,31,0,0,0),
+                                           (17,36,17,36,0,0));
+  MINPOSY:      array[1..14,1..6] of byte=((3,0,0,0,0,0),
                                            (3,0,0,0,0,0),
+                                           (3,0,0,0,0,0),
+                                           (3,0,0,0,0,0),
+                                           (3,0,0,0,0,0),
+                                           (3,0,0,0,0,0),
+                                           (3,0,0,0,0,0),
+                                           (3,9,14,0,0,0),
+                                           (3,12,21,0,0,0),
+                                           (3,12,21,0,0,0),
                                            (3,12,0,0,0,0),
-                                           (3,0,0,0,0,0),
-                                           (3,0,0,0,0,0),
-                                           (3,0,0,0,0,0),
-                                           (3,0,0,0,0,0),
-                                           (3,8,13,18,23,0),
                                            (3,12,21,0,0,0),
                                            (3,12,21,0,0,0),
-                                           (3,12,21,0,0,0),
-                                           (3,12,14,20,0,0),
-                                           (3,0,0,0,0,0));
-  MAXPOSY:      array[1..13,1..6] of byte=((4,0,0,0,0,0),
+                                           (3,12,14,20,0,0));
+  MAXPOSY:      array[1..14,1..6] of byte=((3,0,0,0,0,0),
                                            (11,0,0,0,0,0),
-                                           (10,12,0,0,0,0),
+                                           (10,0,0,0,0,0),
                                            (4,0,0,0,0,0),
                                            (5,0,0,0,0,0),
                                            (9,0,0,0,0,0),
-                                           (5,0,0,0,0,0),
-                                           (6,11,16,18,26,0),
+                                           (6,0,0,0,0,0),
+                                           (7,12,21,0,0,0),
                                            (10,19,22,0,0,0),
                                            (10,19,22,0,0,0),
-                                           (10,19,22,0,0,0),
-                                           (10,12,18,20,0,0),
-                                           (10,0,0,0,0,0));
+                                           (10,15,0,0,0,0),
+                                           (10,19,24,0,0,0),
+                                           (10,19,23,0,0,0),
+                                           (10,12,18,20,0,0));
   FOOTERS:      array[1..7] of string=('<Up>/<Down> move  <Enter> edit  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
                                        '<Enter> accept  <Esc> cancel',
                                        '<Space> change <Tab>/<Up>/<Down> move  <Home>/<PgUp>/<PgDn>/<End> paging  <Esc> exit',
@@ -153,6 +181,7 @@ const
 {$I incpage11screen.pas}
 {$I incpage12screen.pas}
 {$I incpage13screen.pas}
+{$I incpage14screen.pas}
 {$I incloadinifile.pas}
 {$I incsaveinifile.pas}
 
@@ -174,6 +203,7 @@ begin
     11: page11screen;
     12: page12screen;
     13: page13screen;
+    14: page14screen;
   end;
   case page of
     4: footer(bottom-1,FOOTERS[6]);
@@ -182,6 +212,7 @@ begin
     10: footer(bottom-1,FOOTERS[7]);
     11: footer(bottom-1,FOOTERS[7]);
     12: footer(bottom-1,FOOTERS[7]);
+    14: footer(bottom-1,FOOTERS[7]);
     else footer(bottom-1,FOOTERS[1]);
   end;
   textbackground(black);
@@ -214,6 +245,7 @@ begin
   if page=9 then
   begin
     // page #9 - block #1
+    {
     if block=1 then
     begin
       if pro_mm6dch[posy-2]=PROTOCOL[1]
@@ -226,7 +258,9 @@ begin
       gotoxy(MINPOSX[page,block],posy);
       write(pro_mm6dch[posy-2]);
     end;
+    }
     // page #9 - block #2
+    {
     if block=2 then
     begin
       if pro_mm7dch[posy-2-9]=PROTOCOL[1]
@@ -239,7 +273,9 @@ begin
       gotoxy(MINPOSX[page,block],posy);
       write(pro_mm7dch[posy-2-9]);
     end;
+    }
     // page #9 - block #3
+    {
     if block=3 then
     begin
       if pro_mm10d=PROTOCOL[1]
@@ -252,6 +288,7 @@ begin
       gotoxy(MINPOSX[page,block],posy);
       write(pro_mm10d);
     end;
+    }
   end;
 end;
 
@@ -287,6 +324,19 @@ begin
            begin
              if isnumber(c) then
                if length(s)<2 then s:=s+c;
+             if c=#8 then delete(s,length(s),1);
+           end;
+         end;
+      // -- page #7 --
+      7: begin
+           if posy=3 then
+           begin
+             if (c='0') or (c='1') then s:=c;
+             if c=#8 then delete(s,length(s),1);
+           end else
+           begin
+             if (length(s)<50) and (c<>#0) and (c<>#8) and
+               (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
              if c=#8 then delete(s,length(s),1);
            end;
          end;
@@ -331,24 +381,29 @@ begin
              end;
            end;
          end;
-     // -- page #9 --
+      // -- page #9 --
+      {
       9: begin
          end;
+      }
      // -- page #10 --
+     {
      10: begin
            if isnumber(c) then
              if length(s)<3 then s:=s+c;
            if c=#8 then delete(s,length(s),1);
          end;
-     // -- page #11 --
+     }
+     {
      11: begin
            if (isnumber(c)) or (c='.') then
              if length(s)<15 then s:=s+c;
            if c=#8 then delete(s,length(s),1);
          end;
-     // -- page #12 --
+     }
+     {
      12: begin
-           if (block=1) or (block=3) then
+          if (block=1) or (block=3) then
            begin
             if (length(s)<50) and (c<>#0) and (c<>#8) and
              (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
@@ -360,10 +415,107 @@ begin
              if c=#8 then delete(s,length(s),1);
            end;
          end;
-      // -- page #13 --
-      13: begin
-           if (c='0') or (c='1') then s:=c;
-           if c=#8 then delete(s,length(s),1);
+     }
+     // -- page #11 --
+     11: begin
+           if block=1 then
+           begin
+             if isnumber(c) then
+               if length(s)<3 then s:=s+c;
+             if c=#8 then delete(s,length(s),1);
+           end;
+           if block=2 then
+             case posy of
+             12: begin
+                   if (c='0') or (c='1') then s:=c;
+                   if c=#8 then delete(s,length(s),1);
+                 end;
+             14: begin
+                   if isnumber(c) then
+                     if length(s)<6 then s:=s+c;
+                   if c=#8 then delete(s,length(s),1);
+                 end;
+             else
+             begin
+               if (length(s)<50) and (c<>#0) and (c<>#8) and
+                 (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+               if c=#8 then delete(s,length(s),1);
+             end;
+           end;
+         end;
+     // -- page #12 --
+     12: begin
+           if block=1 then
+           begin
+             if isnumber(c) then
+               if length(s)<3 then s:=s+c;
+             if c=#8 then delete(s,length(s),1);
+           end;
+           if block=2 then
+           begin
+             if (isnumber(c)) or (c='.') then
+               if length(s)<15 then s:=s+c;
+             if c=#8 then delete(s,length(s),1);
+           end;
+           if block=3 then
+             case posy of
+             23: begin
+                   if isnumber(c) then
+                     if length(s)<6 then s:=s+c;
+                   if c=#8 then delete(s,length(s),1);
+                 end;
+             24: begin
+                   if (c='0') or (c='1') then s:=c;
+                   if c=#8 then delete(s,length(s),1);
+                 end;
+             else
+             begin
+               if (length(s)<50) and (c<>#0) and (c<>#8) and
+                 (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+               if c=#8 then delete(s,length(s),1);
+             end;
+           end;
+         end;
+     // -- page #13 --
+     13: begin
+           if block=1 then
+           begin
+             if isnumber(c) then
+               if length(s)<3 then s:=s+c;
+             if c=#8 then delete(s,length(s),1);
+           end;
+           if block=2 then
+           begin
+             if (isnumber(c)) or (c='.') then
+               if length(s)<15 then s:=s+c;
+             if c=#8 then delete(s,length(s),1);
+           end;
+           if block=3 then
+             if posy=23 then
+             begin
+               if isnumber(c) then
+                 if length(s)<6 then s:=s+c;
+                 if c=#8 then delete(s,length(s),1);
+             end else
+             begin
+               if (length(s)<50) and (c<>#0) and (c<>#8) and
+                 (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+               if c=#8 then delete(s,length(s),1);
+             end;
+         end;
+     // -- page #14 --
+     14: begin
+           if (block=1) or (block=3) then
+           begin
+            if (length(s)<50) and (c<>#0) and (c<>#8) and
+             (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+             if c=#8 then delete(s,length(s),1);
+           end;
+           if (block=2) or (block=4) then
+           begin
+             if (c='0') or (c='1') then s:=c;
+             if c=#8 then delete(s,length(s),1);
+           end;
          end;
     else
       begin
@@ -387,8 +539,7 @@ begin
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
         case posy of
-          3: begin usr_nam:=s; write(usr_nam); end;
-          4: begin usr_uid:=s; write(usr_uid); end;
+          3: begin usr_name:=s; write(usr_name); end;
         end;
       end;
     end;
@@ -401,8 +552,8 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        nam_ch[posy-3]:=s;
-        write(nam_ch[posy-3]);
+        ch_name[posy-3]:=s;
+        write(ch_name[posy-3]);
       end;
     end;
     // -- page #3 --
@@ -414,17 +565,8 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        ena_ch[posy-2]:=strtoint(s);
-        write(ena_ch[posy-2]);
-      end;
-      // page #3 - block #2
-      if block=2 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        ena_mm10d:=strtoint(s);
-        write(ena_mm10d);
+        ch_enable[posy-2]:=strtoint(s);
+        write(ch_enable[posy-2]);
       end;
     end;
     // -- page #5 --
@@ -437,9 +579,9 @@ begin
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
         case posy of
-          3: begin day_log:=strtoint(s); write(day_log); end;
-          4: begin dbg_log:=strtoint(s); write(dbg_log); end;
-          5: begin web_lines:=strtoint(s); write(web_lines); end;
+          3: begin log_day:=strtoint(s); write(log_day); end;
+          4: begin log_debug:=strtoint(s); write(log_debug); end;
+          5: begin log_weblines:=strtoint(s); write(log_weblines); end;
         end;
       end;
     end;
@@ -473,9 +615,10 @@ begin
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
         case posy of
-          3: begin api_key:=s; write(api_key); end;
-          4: begin base_url:=s; write(base_url); end;
-          5: begin city_name:=s; write(city_name); end;
+          3: begin owm_enable:=strtoint(s); write(owm_enable); end;
+          4: begin owm_apikey:=s; write(owm_apikey); end;
+          5: begin owm_url:=s; write(owm_url); end;
+          6: begin owm_city:=s; write(owm_city); end;
         end;
       end;
     end;
@@ -488,8 +631,8 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        prt_i[posy-2]:=strtoint(s);
-        write(prt_i[posy-2]);
+        gpio_i[posy-2]:=strtoint(s);
+        write(gpio_i[posy-2]);
       end;
       // page #8 - block #2
       if block=2 then
@@ -497,8 +640,8 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        prt_ro[posy-2-5]:=strtoint(s);
-        write(prt_ro[posy-2-5]);
+        gpio_lo[posy-2-5]:=strtoint(s);
+        write(gpio_lo[posy-2-5]);
       end;
       // page #8 - block #3
       if block=3 then
@@ -506,10 +649,11 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        prt_lo[posy-2-10]:=strtoint(s);
-        write(prt_lo[posy-2-10]);
+        gpio_ro[posy-2-10]:=strtoint(s);
+        write(gpio_ro[posy-2-10]);
       end;
       // page #8 - block #4
+      {
       if block=4 then
       begin
         textbackground(blue);
@@ -518,8 +662,9 @@ begin
         prt_lpt:=strtoint(s);
         write(prt_lpt);
       end;
-    end;
+      }
       // page #8 - block #5
+      {
       if block=5 then
       begin
         textbackground(blue);
@@ -531,11 +676,13 @@ begin
           25: begin com_speed:=s; write(com_speed); end;
           26: begin com_verbose:=strtoint(s); write(com_verbose); end;
         end;
-      end;
+      }
+    end;
     // -- page #9 --
     if page=9 then
     begin
       // page #9 - block #1
+      {
       if block=1 then
       begin
         textbackground(blue);
@@ -544,7 +691,9 @@ begin
         pro_mm6dch[posy-2]:=s;
         write(pro_mm6dch[posy-2]);
       end;
+      }
       // page #9 - block #2
+      {
       if block=2 then
       begin
         textbackground(blue);
@@ -553,7 +702,9 @@ begin
         pro_mm7dch[posy-2-9]:=s;
         write(pro_mm7dch[posy-2-9]);
       end;
+      }
       // page #9 - block #2
+      {
       if block=3 then
       begin
         textbackground(blue);
@@ -562,10 +713,12 @@ begin
         pro_mm10d:=s;
         write(pro_mm10d);
       end;
+      }
     end;
     // -- page #10 --
     if page=10 then
     begin
+      {
       // page #10 - block #1
       if block=1 then
       begin
@@ -575,7 +728,9 @@ begin
         uid_mm6dch[posy-2]:=s;
         write(uid_mm6dch[posy-2]);
       end;
+      }
       // page #10 - block #2
+      {
       if block=2 then
       begin
         textbackground(blue);
@@ -584,7 +739,9 @@ begin
         uid_mm7dch[posy-2-9]:=s;
         write(uid_mm7dch[posy-2-9]);
       end;
+      }
       // page #10 - block #2
+      {
       if block=3 then
       begin
         textbackground(blue);
@@ -593,6 +750,7 @@ begin
         uid_mm10d:=s;
         write(uid_mm10d);
       end;
+      }
     end;
     // -- page #11 --
     if page=11 then
@@ -603,8 +761,11 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        adr_mm6dch[posy-2]:=s;
-        write(adr_mm6dch[posy-2]);
+        if strtoint(s) < 254 then
+          tdpch_modbusid[posy-2-9]:=strtoint(s)
+        else 
+          tdpch_modbusid[posy-2-9]:=254;
+        write(tdpch_modbusid[posy-2-9]);
       end;
       // page #11 - block #2
       if block=2 then
@@ -612,17 +773,12 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        adr_mm7dch[posy-2-9]:=s;
-        write(adr_mm7dch[posy-2-9]);
-      end;
-      // page #11 - block #2
-      if block=3 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        adr_mm10d:=s;
-        write(adr_mm10d);
+        case posy of
+          12: begin tdp_enable:=strtoint(s); write(tdp_enable); end;
+          13: begin tdp_port:=s; write(tdp_port); end;
+          14: begin tdp_speed:=strtoint(s); write(tdp_speed); end;
+          15: begin tdp_handler:=s; write(tdp_handler); end;
+        end;
       end;
     end;
     // -- page #12 --
@@ -634,8 +790,11 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        cam_ch[posy-2]:=s;
-        write(cam_ch[posy-2]);
+        if strtoint(s) < 254 then
+          mm6dch_modbusid[posy-2-9]:=strtoint(s)
+        else 
+          mm6dch_modbusid[posy-2-9]:=254;
+        write(mm6dch_modbusid[posy-2-9]);
       end;
       // page #12 - block #2
       if block=2 then
@@ -643,8 +802,8 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        ena_tentcams:=strtoint(s);
-        write(ena_tentcams);
+        mm6dch_ipaddress[posy-2-9]:=s;
+        write(mm6dch_ipaddress[posy-2-9]);
       end;
       // page #12 - block #3
       if block=3 then
@@ -652,17 +811,12 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        cam_sc[posy-13]:=s;
-        write(cam_sc[posy-13]);
-      end;
-      // page #12 - block #4
-      if block=4 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        ena_seccams:=strtoint(s);
-        write(ena_seccams);
+        case posy of
+          21: begin mm6d_protocol:=s; write(mm6d_protocol); end;
+          22: begin mm6d_port:=s; write(mm6d_port); end;
+          23: begin mm6d_speed:=strtoint(s); write(mm6d_speed); end;
+          24: begin mm6d_intthermostat:=strtoint(s); write(mm6d_intthermostat); end;
+        end;
       end;
     end;
     // -- page #13 --
@@ -674,8 +828,72 @@ begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        ith_ch[posy-2]:=strtoint(s);
-        write(ith_ch[posy-2]);
+        if strtoint(s) < 254 then
+          mm7dch_modbusid[posy-2-9]:=strtoint(s)
+        else 
+          mm7dch_modbusid[posy-2-9]:=254;
+        write(mm7dch_modbusid[posy-2-9]);
+      end;
+      // page #13 - block #2
+      if block=2 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        mm7dch_ipaddress[posy-2-9]:=s;
+        write(mm7dch_ipaddress[posy-2-9]);
+      end;
+      // page #13 - block #3
+      if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        case posy of
+          21: begin mm7d_protocol:=s; write(mm7d_protocol); end;
+          22: begin mm7d_port:=s; write(mm7d_port); end;
+          23: begin mm7d_speed:=strtoint(s); write(mm7d_speed); end;
+        end;
+      end;
+    end;
+    // -- page #14 --
+    if page=14 then
+    begin
+      // page #14 - block #1
+      if block=1 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        ipctent_url[posy-2]:=s;
+        write(ipctent_url[posy-2]);
+      end;
+      // page #14 - block #2
+      if block=2 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        ipctent_enable:=strtoint(s);
+        write(ipctent_enable);
+      end;
+      // page #14 - block #3
+      if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        ipcsec_url[posy-13]:=s;
+        write(ipcsec_url[posy-13]);
+      end;
+      // page #14 - block #4
+      if block=4 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        ipcsec_enable:=strtoint(s);
+        write(ipcsec_enable);
       end;
     end;
   end;
@@ -685,6 +903,7 @@ begin
     10: footer(bottom-1,FOOTERS[7]);
     11: footer(bottom-1,FOOTERS[7]);
     12: footer(bottom-1,FOOTERS[7]);
+    14: footer(bottom-1,FOOTERS[7]);
   else footer(bottom-1,FOOTERS[1]);
   end;
   gotoxy(1,bottom); clreol;
@@ -709,6 +928,7 @@ begin
     10: footer(bottom-1,FOOTERS[5]);
     11: footer(bottom-1,FOOTERS[5]);
     12: footer(bottom-1,FOOTERS[5]);
+    14: footer(bottom-1,FOOTERS[5]);
     else footer(bottom-1,FOOTERS[1]);
   end;
   posy:=MINPOSY[page,block];

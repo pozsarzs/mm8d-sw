@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incloadinifile.pas                                                       | }
 { | Load configuration from ini file                                         | }
 { +--------------------------------------------------------------------------+ }
@@ -22,58 +22,62 @@ begin
   iif:=TIniFile.Create(filename);
   loadinifile:=true;
   try
-    usr_nam:=iif.ReadString(U,'usr_nam','');
-    usr_uid:=iif.ReadString(U,'usr_uid','');
-    for b:=0 to 8 do
-      nam_ch[b]:=iif.ReadString(N,'nam_ch'+inttostr(b),'');
-    for b:=1 to 8 do
-    begin
-      ena_ch[b]:=strtoint(iif.ReadString(E,'ena_ch'+inttostr(b),'0'));
-      ith_ch[b]:=strtoint(iif.ReadString(H,'ith_ch'+inttostr(b),'0'));
-      adr_mm6dch[b]:=iif.ReadString(M6,'adr_mm6dch'+inttostr(b),'');
-      adr_mm7dch[b]:=iif.ReadString(M7,'adr_mm7dch'+inttostr(b),'');
-      pro_mm6dch[b]:=iif.ReadString(M6,'pro_mm6dch'+inttostr(b),'http');
-      pro_mm7dch[b]:=iif.ReadString(M7,'pro_mm7dch'+inttostr(b),'http');
-      uid_mm6dch[b]:=iif.ReadString(M6,'uid_mm6dch'+inttostr(b),'1');
-      uid_mm7dch[b]:=iif.ReadString(M7,'uid_mm7dch'+inttostr(b),'1');
-      cam_ch[b]:=iif.ReadString(I,'cam_ch'+inttostr(b),'');
-      if b<5 then
-        cam_sc[b]:=iif.ReadString(I,'cam_sc'+inttostr(b),'');
-    end;
-    for b:=1 to 4 do
-    begin
-      prt_i[b]:=strtoint(iif.ReadString(G,'prt_i'+inttostr(b),'0'));
-      prt_ro[b]:=strtoint(iif.ReadString(G,'prt_ro'+inttostr(b),'0'));
-      prt_lo[b]:=strtoint(iif.ReadString(G,'prt_lo'+inttostr(b),'0'));
-    end;
-    com_speed:=iif.ReadString(C,'com_speed','9600');
-    com_verbose:=strtoint(iif.ReadString(C,'com_verbose','2'));
-    ena_console:=strtoint(iif.ReadString(C,'ena_console','1'));
-    prt_com:=iif.ReadString(C,'prt_com','/dev/ttyS0');
-    prt_lpt:=strtoint(iif.ReadString(L,'prt_lpt','1'));
     dir_htm:=iif.ReadString(D,'dir_htm','/var/www/html/');
-    dir_tmp:=iif.ReadString(D,'dir_tmp','/var/tmp/');
     dir_lck:=iif.ReadString(D,'dir_lck','/var/lock/');
     dir_log:=iif.ReadString(D,'dir_log','/var/log/');
     dir_msg:=iif.ReadString(D,'dir_msg','/usr/share/locale/');
     dir_shr:=iif.ReadString(D,'dir_shr','/usr/share/mm8d/');
+    dir_tmp:=iif.ReadString(D,'dir_tmp','/var/tmp/');
     dir_var:=iif.ReadString(D,'dir_var','/var/lib/mm8d/');
-    adr_mm10d:=iif.ReadString(M10,'adr_mm10d','');
-    api_key:=iif.ReadString(W,'api_key','');
-    base_url:=iif.ReadString(W,'base_url','http://api.openweathermap.org/data/2.5/weather?');
-    city_name:=iif.ReadString(W,'city_name','');
-    day_log:=strtoint(iif.ReadString(O,'day_log','7'));
-    dbg_log:=strtoint(iif.ReadString(O,'dbg_log','0'));
-    ena_seccams:=strtoint(iif.ReadString(I,'ena_seccams','0'));
-    ena_tentcams:=strtoint(iif.ReadString(I,'ena_tentcams','0'));
-    ena_mm10d:=strtoint(iif.ReadString(M10,'ena_mm10d','1'));
-    ena_mm11d:=strtoint(iif.ReadString(M11,'ena_mm11d','1'));
+    ipcsec_enable:=strtoint(iif.ReadString(IPC,'ipcsec_enable','0'));
+    ipctent_enable:=strtoint(iif.ReadString(IPC,'ipctent_enable','0'));
     lng:=iif.ReadString('language','lng','en');
-    pro_mm10d:=iif.ReadString(M10,'pro_mm10d','http');
-    uid_mm10d:=iif.ReadString(M10,'uid_mm10d','1');
-    pro_mm11d:=iif.ReadString(M11,'pro_mm11d','http');
-    uid_mm11d:=iif.ReadString(M11,'uid_mm11d','1');
-    web_lines:=strtoint(iif.ReadString(O,'web_lines','30'));
+    log_day:=strtoint(iif.ReadString(L,'log_day','7'));
+    log_debug:=strtoint(iif.ReadString(L,'log_debug','0'));
+    log_weblines:=strtoint(iif.ReadString(L,'log_weblines','30'));
+    mm6d_intthermostat:=strtoint(iif.ReadString(M6,'mm6d_intthermostat','0'));
+    mm6d_port:=iif.ReadString(M6,'mm6d_port','/dev/ttyS2');
+    mm6d_protocol:=iif.ReadString(M6,'mm6d_protocol','rtu');
+    mm6d_speed:=strtoint(iif.ReadString(M6,'mm6d_speed','9600'));
+    mm7d_port:=iif.ReadString(M7,'mm7d_port','/dev/ttyS2');
+    mm7d_protocol:=iif.ReadString(M7,'mm7d_protocol','rtu');
+    mm7d_speed:=strtoint(iif.ReadString(M7,'mm7d_speed','9600'));
+    owm_apikey:=iif.ReadString(O,'owm_apikey','');
+    owm_city:=iif.ReadString(O,'owm_city','');
+    owm_enable:=strtoint(iif.ReadString(O,'owm_enable','1'));
+    owm_url:=iif.ReadString(O,'owm_url','http://api.openweathermap.org/data/2.5/weather?');
+    tdp_enable:=strtoint(iif.ReadString(O,'tdp_enable','0'));
+    tdp_handler:=iif.ReadString(M6,'tdp_protocol','dm36b06');
+    tdp_port:=iif.ReadString(M6,'tdp_port','/dev/ttyS2');
+    tdp_speed:=strtoint(iif.ReadString(M6,'tdp_speed','9600'));
+    usr_name:=iif.ReadString(U,'usr_name','');
+    for b:=0 to 8 do
+      ch_name[b]:=iif.ReadString(C,'ch'+inttostr(b)+'_name','');
+    for b:=1 to 4 do
+    begin
+      gpio_lo[b]:=strtoint(iif.ReadString(I,'gpio_lo'+inttostr(b),'0'));
+      ipcsec_url[b]:=iif.ReadString(IPC,'ipcsec'+inttostr(b)+'_url','');
+    end;
+    for b:=1 to 5 do
+      gpio_i[b]:=strtoint(iif.ReadString(I,'gpio_i'+inttostr(b),'0'));
+    for b:=1 to 8 do
+    begin
+      ch_enable[b]:=strtoint(iif.ReadString(C,'ch'+inttostr(b)+'_enable','0'));
+      gpio_ro[b]:=strtoint(iif.ReadString(I,'gpio_ro'+inttostr(b),'0'));
+      ipcsec_url[b]:=iif.ReadString(IPC,'ipcsec'+inttostr(b)+'_url','');
+      ipctent_url[b]:=iif.ReadString(IPC,'ipctent'+inttostr(b)+'_url','');
+      mm6dch_ipaddress[b]:=iif.ReadString(M6,'mm6dch'+inttostr(b)+'_ipaddress','');
+      mm6dch_modbusid[b]:=strtoint(iif.ReadString(M6,'mm6dch'+inttostr(b)+'_modbusid','0'));
+      mm7dch_ipaddress[b]:=iif.ReadString(M7,'mm7dch'+inttostr(b)+'_ipaddress','');
+      mm7dch_modbusid[b]:=strtoint(iif.ReadString(M7,'mm7dch'+inttostr(b)+'_modbusid','0'));
+      tdpch_modbusid[b]:=strtoint(iif.ReadString(Y,'tdpch'+inttostr(b)+'_modbusid','0'));
+    end;
+    // ** átnézendő **
+    //com_speed:=iif.ReadString(C,'com_speed','9600');
+    //com_verbose:=strtoint(iif.ReadString(C,'com_verbose','2'));
+    //ena_console:=strtoint(iif.ReadString(C,'ena_console','1'));
+    //prt_com:=iif.ReadString(C,'prt_com','/dev/ttyS0');
+    //prt_lpt:=strtoint(iif.ReadString(L,'prt_lpt','1'));
   except
     loadinifile:=false;
   end;

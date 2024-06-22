@@ -9,17 +9,14 @@ Connections can be set in /etc/mm8d/mm8d.ini or /usr/local/etc/mm8d/mm8d.ini fil
 Serial ports:
   COM1:  mini serial console  RS-232  9600 baud 8N1  unique protocol
   COM2:  DT-510 power meter   RS-232  9600 baud 7E1  Modbus/ASCII
-  COM3:  local bus            RS-485  9600 baud 8N1  Modbus/RTU
-  COM4:  field bus            RS-485  9600 baud 8N1  Modbus/RTU
+  COM3:  field bus            RS-485  9600 baud 8N1  Modbus/RTU
 
 Note:
   - An RS-232/RS-485 converter is plugged into COM3, at the other end of the bus
-    the devices are connected either directly.
-  - An RS-232/RS-485 converter is plugged into COM4, at the other end of the bus
     the devices are connected either directly or via an RS-485/RS-232 TTL converter.
 
 Paralel port:
-  LPT1:  local I/O ports for MM8D interface card
+  LPT1:  local I/O ports for MM8D interface cards
 
 2. Connecting to Raspberry Pi
 -----------------------------

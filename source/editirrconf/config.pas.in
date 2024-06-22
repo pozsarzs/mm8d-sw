@@ -13,6 +13,6 @@
 // FOR A PARTICULAR PURPOSE.
 
 const
-  VERSION: string='@version@';
+  VERSION: string='v@version@';
   PRGNAME: string='MM8D-EditIrrConf';
   COPYRIGHT: string='Copyright (C) 2020-2024 Pozsar Zsolt <pozsarzs@gmail.com>';

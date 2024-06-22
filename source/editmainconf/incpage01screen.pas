@@ -1,6 +1,6 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage01screen.pas                                                      | }
 { | Show screen content of page #1                                           | }
 { +--------------------------------------------------------------------------+ }
@@ -16,19 +16,20 @@
   Relevant settings file section:
 
   [user]
-  usr_nam=Szerafin Gomba Tiszaföldvár
-  usr_uid=00000000
+  usr_name=Szerafin Gomba Tiszaföldvár
 }
 
 // write options to screen
 procedure page01screen;
 var
-  b: byte;
+  block: byte;
+const
+  PAGE=1;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 1/' + inttostr(LASTPAGE) + ': User data');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': User data');
+  block:=1;
+  textcolor(lightcyan);
+  gotoxy(4,MINPOSY[PAGE,block]); write('user''s name:');
   textcolor(white);
-  gotoxy(4,3); write('User''s name:');
-  gotoxy(4,4); write('User''s ID:');
-  gotoxy(MINPOSX[1,1],3); write(usr_nam);
-  gotoxy(MINPOSX[1,1],4); write(usr_uid);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]); write(usr_name);
 end;

@@ -183,19 +183,20 @@ source/editirrconf/incsaveinifile.pas                                 DONE
 source/editmainconf/config.pas.in                                     DONE
 source/editmainconf/editmainconf.pas
 source/editmainconf/incloadinifile.pas
-source/editmainconf/incpage01screen.pas
-source/editmainconf/incpage02screen.pas
-source/editmainconf/incpage03screen.pas
-source/editmainconf/incpage04screen.pas
-source/editmainconf/incpage05screen.pas
-source/editmainconf/incpage06screen.pas
-source/editmainconf/incpage07screen.pas
-source/editmainconf/incpage08screen.pas
+source/editmainconf/incpage01screen.pas                               DONE
+source/editmainconf/incpage02screen.pas                               DONE
+source/editmainconf/incpage03screen.pas                               DONE
+source/editmainconf/incpage04screen.pas                               DONE
+source/editmainconf/incpage05screen.pas                               DONE
+source/editmainconf/incpage06screen.pas                               DONE
+source/editmainconf/incpage07screen.pas                               DONE
+source/editmainconf/incpage08screen.pas                               DONE
 source/editmainconf/incpage09screen.pas
 source/editmainconf/incpage10screen.pas
-source/editmainconf/incpage11screen.pas
-source/editmainconf/incpage12screen.pas
-source/editmainconf/incpage13screen.pas
+source/editmainconf/incpage11screen.pas                               DONE
+source/editmainconf/incpage12screen.pas                               DONE
+source/editmainconf/incpage13screen.pas                               DONE
+source/editmainconf/incpage14screen.pas                               DONE
 source/editmainconf/incsaveinifile.pas
 source/override/config.pas.in                                         DONE
 source/override/incloadoutfiles.pas                                   DONE
