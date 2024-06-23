@@ -124,21 +124,43 @@ begin
     writeln(iif,';');
     writeln(iif,'');
     {
-    writeln(iif,'['+L+']');
-    writeln(iif,'; address of the used LPT port (0x378: 0, 0x278: 1, 0x3BC: 2)');
-    writeln(iif,'lpt_prt='+inttostr(prt_lpt));
+      Az LPT port még hiányzik!
+    }
+    writeln(iif,'['+S+']');
+    writeln(iif,'; mini serial console');
+    writeln(iif,'msc_enable='+inttostr(msc_enable));
+    writeln(iif,'msc_port='+msc_port);
+    writeln(iif,'msc_speed='+inttostr(msc_speed));
+    writeln(iif,'; level of verbosity of the log on console:');
+    writeln(iif,';   0: nothing');
+    writeln(iif,';   1: only error');
+    writeln(iif,';   2: warning and error');
+    writeln(iif,';   3: all');
+    writeln(iif,'msc_verbose='+inttostr(msc_verbose));
     writeln(iif,'');
-    writeln(iif,'['+C+']');
-    writeln(iif,'; enable/disable external serial display (0/1)');
-    writeln(iif,'ena_console='+inttostr(ena_console));
-    writeln(iif,'; port name');
-    writeln(iif,'prt_com='+prt_com);
-    writeln(iif,'; port speed');
-    writeln(iif,'com_speed='+com_speed);
-    writeln(iif,'; level of verbosity of the log on console');
-    writeln(iif,'; (nothing: 0, only error: 1, warning and error: 2, all: 3)');
-    writeln(iif,'com_verbose='+inttostr(com_verbose));
-    }   
+    writeln(iif,'['+P+']');
+    writeln(iif,'; electric power meter');
+    writeln(iif,'pwm_enable='+inttostr(pwm_enable));
+    writeln(iif,'pwm_port='+pwm_port);
+    writeln(iif,'pwm_speed='+inttostr(pwm_speed));
+    writeln(iif,'pwm_modbusid='+inttostr(pwm_modbusid));
+    writeln(iif,'pwm_handler='+pwm_handler);
+    writeln(iif,'');
+    writeln(iif,'['+F+']');
+    writeln(iif,'; water flow meter');
+    writeln(iif,'fwm_enable='+inttostr(fwm_enable));
+    writeln(iif,'fwm_port='+fwm_port);
+    writeln(iif,'fwm_speed='+inttostr(fwm_speed));
+    writeln(iif,'fwm_modbusid='+inttostr(fwm_modbusid));
+    writeln(iif,'fwm_handler='+fwm_handler);
+    writeln(iif,'');
+    writeln(iif,'['+T+']');
+    writeln(iif,'; outdoor temperature meter');
+    writeln(iif,'otm_enable='+inttostr(otm_enable));
+    writeln(iif,'otm_port='+otm_port);
+    writeln(iif,'otm_speed='+inttostr(otm_speed));
+    writeln(iif,'otm_modbusid='+inttostr(otm_modbusid));
+    writeln(iif,'otm_handler='+otm_handler);
     writeln(iif,'');
     writeln(iif,'['+Y+']');
     writeln(iif,'; display in the tent');
@@ -173,7 +195,7 @@ begin
     for b:=1 to 8 do
     begin
       writeln(iif,'');
-//      writeln(iif,'mm7dch'+inttostr(b)+'_modbusid='+inttostr(mm7dch_modbusid[b]));
+      writeln(iif,'mm7dch'+inttostr(b)+'_modbusid='+inttostr(mm7dch_modbusid[b]));
       writeln(iif,'mm7dch'+inttostr(b)+'_ipaddress='+mm7dch_ipaddress[b]);
     end;
     writeln(iif,'');

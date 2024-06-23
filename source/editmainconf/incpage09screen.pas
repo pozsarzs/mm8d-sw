@@ -1,8 +1,8 @@
 { +--------------------------------------------------------------------------+ }
-{ | MM8D v0.5 * Growing house and irrigation controlling and monitoring sys. | }
-{ | Copyright (C) 2020-2023 Pozsár Zsolt <pozsarzs@gmail.com>                | }
+{ | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
+{ | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage09screen.pas                                                      | }
-{ | Show screen content of page #9                                           | }
+{ | Show screen content of page #09                                          | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -15,47 +15,63 @@
 {
   Relevant settings file section:
 
-  [MM6D]
-  pro_mm6dch1=http
-
-  [MM7D]
-  pro_mm7dch1=http
-
-  [MM10D]
-  pro_mmd10=http
-
-  [MM11D]
-  pro_mmd11=http
+  lpt_address=0x378
+  lpt_i?_bit=0
+  lpt_i?_negation=0
+  lpt_lo?_bit=0
+  lpt_lo?_negation=0
+  lpt_ro?_bit=0
+  lpt_ro?_negation=0
 }
 
 // write options to screen
 procedure page09screen;
+const
+  PAGE=9;
 var
   b: byte;
-
+  block: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page 9/' + inttostr(LASTPAGE) + ': Communication protocol of controllers');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': Paralel port');
+  textcolor(lightcyan);
+  block:=1;
+  gotoxy(4,MINPOSY[PAGE,block]-1); write('number of the bit:');
+  for b:=1 to 17 do
+  begin
+    gotoxy(5,MINPOSY[PAGE,block]+b-1);
+    if b<=5 then write('input i'+inttostr(b)+':');
+    if (b>5) and (b<=9) then write('LED output lo'+inttostr(b-5)+':');
+    if (b>9) then write('relay output ro'+inttostr(b-9)+':');
+  end;
+  block:=2;
+  gotoxy(45,MINPOSY[PAGE,block]-1); write('negation:');
+  for b:=1 to 17 do
+  begin
+    gotoxy(46,MINPOSY[PAGE,block]+b-1);
+    if b<=5 then write('input i'+inttostr(b)+':');
+    if (b>5) and (b<=9) then write('LED output lo'+inttostr(b-5)+':');
+    if (b>9) then write('relay output ro'+inttostr(b-9)+':');
+  end;
+  block:=3;
+  gotoxy(4,MINPOSY[PAGE,block]); write('base address:');
   textcolor(white);
-  for b:=1 to 8 do
+  block:=1;
+  for b:=1 to 17 do
   begin
-    gotoxy(4,b+2); write('MM6D on channel #'+inttostr(b)+':');
-    gotoxy(4,b+2+9); write('MM7D on channel #'+inttostr(b)+':');
+    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1);
+    if b<=5 then write(lpt_i_bit[b]);
+    if (b>5) and (b<=9) then write(lpt_lo_bit[b-5]);
+    if (b>9) then write(lpt_ro_bit[b-9]);
   end;
-  gotoxy(4,21); write('MM10D:');
-  gotoxy(4,22); write('MM11D:');
-  {
-  for b:=1 to 8 do
+  block:=2;
+  for b:=1 to 17 do
   begin
-    if (pro_mm6dch[b]<>PROTOCOL[1]) and (pro_mm6dch[b]<>PROTOCOL[2]) then pro_mm6dch[b]:=PROTOCOL[1];
-    gotoxy(MINPOSX[9,1],b+2); writeln(pro_mm6dch[b]);
-    if (pro_mm7dch[b]<>PROTOCOL[1]) and (pro_mm7dch[b]<>PROTOCOL[2]) then pro_mm7dch[b]:=PROTOCOL[1];
-    gotoxy(MINPOSX[9,2],b+2+9); writeln(pro_mm7dch[b]);
+    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1);
+    if b<=5 then write(lpt_i_negation[b]);
+    if (b>5) and (b<=9) then write(lpt_lo_negation[b-5]);
+    if (b>9) then write(lpt_ro_negation[b-9]);
   end;
-  }
-  {
-  if (pro_mm10d<>PROTOCOL[1]) and (pro_mm10d<>PROTOCOL[2]) then pro_mm10d:=PROTOCOL[1];
-  gotoxy(MINPOSX[9,3],21); writeln(pro_mm10d);
-  if (pro_mm11d<>PROTOCOL[1]) and (pro_mm11d<>PROTOCOL[2]) then pro_mm11d:=PROTOCOL[1];
-  gotoxy(MINPOSX[9,3],22); writeln(pro_mm11d);
-  }
+  block:=3;
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]);
+  write('0x'+inttohex(lpt_address,3));
 end;

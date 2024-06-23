@@ -35,6 +35,11 @@ var
   dir_shr:            string;
   dir_tmp:            string;
   dir_var:            string;
+  fwm_enable:         byte;
+  fwm_handler:        string;
+  fwm_modbusid:       integer;
+  fwm_port:           string;
+  fwm_speed:          longint;
   gpio_i:             array[1..5] of byte;
   gpio_lo:            array[1..4] of byte;
   gpio_ro:            array[1..8] of byte;
@@ -46,6 +51,13 @@ var
   log_day:            byte;
   log_debug:          byte;
   log_weblines:       byte;
+  lpt_address:        integer;
+  lpt_i_bit:          array[1..5] of integer;
+  lpt_i_negation:     array[1..5] of integer;
+  lpt_lo_bit:         array[1..4] of integer;
+  lpt_lo_negation:    array[1..4] of integer;
+  lpt_ro_bit:         array[1..8] of integer;
+  lpt_ro_negation:    array[1..8] of integer;
   mm6d_intthermostat: byte;
   mm6d_port:          string;
   mm6d_protocol:      string;
@@ -57,46 +69,30 @@ var
   mm7d_speed:         longint;
   mm7dch_ipaddress:   array[1..8] of string;
   mm7dch_modbusid:    array[1..8] of integer;
+  msc_enable:         byte;
+  msc_port:           string;
+  msc_speed:          longint;
+  msc_verbose:        byte;
+  otm_enable:         byte;
+  otm_handler:        string;
+  otm_modbusid:       integer;
+  otm_port:           string;
+  otm_speed:          longint;
   owm_apikey:         string;
   owm_city:           string;
   owm_enable:         byte;
   owm_url:            string;
+  pwm_enable:         byte;
+  pwm_handler:        string;
+  pwm_modbusid:       integer;
+  pwm_port:           string;
+  pwm_speed:          longint;
   tdp_enable:         byte;
   tdp_handler:        string;
   tdp_port:           string;
   tdp_speed:          longint;
   tdpch_modbusid:     array[1..8] of integer;
   usr_name:           string;
-
-  // ** átnézendő változók **
-  com_speed:    string;
-  com_verbose:  byte;
-  ena_console:  byte;
-  prt_com:      string;
-  prt_lpt:      byte;
-  {
-  fwm_enable
-  fwm_handler
-  fwm_modbusid
-  fwm_port
-  fwm_speed
-  lpt_address
-  lpt_bits
-  msc_enable
-  msc_port
-  msc_speed
-  msc_verbose
-  otm_enable
-  otm_handler
-  otm_modbusid
-  otm_port
-  otm_speed
-  pwm_enable
-  pwm_handler
-  pwm_modbusid
-  pwm_port
-  pwm_speed
-  }
 const
   A:            string='language';
   C:            string='channels';
@@ -114,7 +110,7 @@ const
   U:            string='user';
   Y:            string='tentdisplay';
   LASTPAGE:     byte=14;
-  BLOCKS:       array[1..14] of byte=(1,1,1,1,1,1,1,3,3,3,2,3,3,4);
+  BLOCKS:       array[1..14] of byte=(1,1,1,1,1,1,1,3,3,4,2,3,3,4);
   MINPOSX:      array[1..14,1..6] of byte=((18,0,0,0,0,0),
                                            (17,0,0,0,0,0),
                                            (17,0,0,0,0,0),
@@ -123,8 +119,8 @@ const
                                            (23,0,0,0,0,0),
                                            (21,0,0,0,0,0),
                                            (15,15,15,0,0,0),
-                                           (25,25,25,0,0,0),
-                                           (25,25,25,0,0,0),
+                                           (24,65,24,0,0,0),
+                                           (22,22,62,62,0,0),
                                            (30,30,0,0,0,0),
                                            (31,31,31,0,0,0),
                                            (31,31,31,0,0,0),
@@ -137,8 +133,8 @@ const
                                            (3,0,0,0,0,0),
                                            (3,0,0,0,0,0),
                                            (3,9,14,0,0,0),
-                                           (3,12,21,0,0,0),
-                                           (3,12,21,0,0,0),
+                                           (4,4,22,0,0,0),
+                                           (4,11,4,11,0,0),
                                            (3,12,0,0,0,0),
                                            (3,12,21,0,0,0),
                                            (3,12,21,0,0,0),
@@ -151,8 +147,8 @@ const
                                            (9,0,0,0,0,0),
                                            (6,0,0,0,0,0),
                                            (7,12,21,0,0,0),
-                                           (10,19,22,0,0,0),
-                                           (10,19,22,0,0,0),
+                                           (20,20,22,0,0,0),
+                                           (7,15,8,15,0,0),
                                            (10,15,0,0,0,0),
                                            (10,19,24,0,0,0),
                                            (10,19,23,0,0,0),
@@ -208,10 +204,11 @@ begin
   case page of
     4: footer(bottom-1,FOOTERS[6]);
     8: footer(bottom-1,FOOTERS[7]);
-    9: footer(bottom-1,FOOTERS[3]);
+    9: footer(bottom-1,FOOTERS[7]);
     10: footer(bottom-1,FOOTERS[7]);
     11: footer(bottom-1,FOOTERS[7]);
     12: footer(bottom-1,FOOTERS[7]);
+    13: footer(bottom-1,FOOTERS[7]);
     14: footer(bottom-1,FOOTERS[7]);
     else footer(bottom-1,FOOTERS[1]);
   end;
@@ -382,42 +379,76 @@ begin
            end;
          end;
       // -- page #9 --
-      {
       9: begin
          end;
-      }
-     // -- page #10 --
-     {
-     10: begin
-           if isnumber(c) then
-             if length(s)<3 then s:=s+c;
-           if c=#8 then delete(s,length(s),1);
-         end;
-     }
-     {
-     11: begin
-           if (isnumber(c)) or (c='.') then
-             if length(s)<15 then s:=s+c;
-           if c=#8 then delete(s,length(s),1);
-         end;
-     }
-     {
-     12: begin
-          if (block=1) or (block=3) then
-           begin
-            if (length(s)<50) and (c<>#0) and (c<>#8) and
-             (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
-             if c=#8 then delete(s,length(s),1);
-           end;
-           if (block=2) or (block=4) then
-           begin
-             if (c='0') or (c='1') then s:=c;
-             if c=#8 then delete(s,length(s),1);
-           end;
-         end;
-     }
-     // -- page #11 --
-     11: begin
+      // -- page #10 --
+      10: begin
+            if block=1 then
+            begin  
+              case posy of
+                4: begin
+                     if (c='0') or (c='1') then s:=c;
+                     if c=#8 then delete(s,length(s),1);
+                   end;
+                6: begin
+                     if isnumber(c) then
+                       if length(s)<6 then s:=s+c;
+                     if c=#8 then delete(s,length(s),1);
+                   end;
+                7: begin
+                     if isnumber(c) then
+                       if length(s)<1 then s:=s+c;
+                     if c=#8 then delete(s,length(s),1);
+                   end;
+              else
+                begin
+                  if (length(s)<50) and (c<>#0) and (c<>#8) and
+                    (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+                  if c=#8 then delete(s,length(s),1);
+                end;
+              end;
+            end else
+            begin
+              case posy of
+                4: begin
+                     if (c='0') or (c='1') then s:=c;
+                     if c=#8 then delete(s,length(s),1);
+                   end;
+                6: begin
+                     if isnumber(c) then
+                       if length(s)<6 then s:=s+c;
+                     if c=#8 then delete(s,length(s),1);
+                   end;
+                7: begin
+                     if isnumber(c) then
+                       if length(s)<3 then s:=s+c;
+                     if c=#8 then delete(s,length(s),1);
+                    end;
+                11: begin
+                      if (c='0') or (c='1') then s:=c;
+                      if c=#8 then delete(s,length(s),1);
+                    end;
+                13: begin
+                      if isnumber(c) then
+                        if length(s)<6 then s:=s+c;
+                      if c=#8 then delete(s,length(s),1);
+                    end;
+                14: begin
+                      if isnumber(c) then
+                        if length(s)<3 then s:=s+c;
+                      if c=#8 then delete(s,length(s),1);
+                    end;
+              else
+                begin
+                  if (length(s)<50) and (c<>#0) and (c<>#8) and
+                    (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+                  if c=#8 then delete(s,length(s),1);
+                end;
+              end;
+            end;
+          end;
+      // -- page #11 --
+      11: begin
            if block=1 then
            begin
              if isnumber(c) then
@@ -443,8 +474,8 @@ begin
              end;
            end;
          end;
-     // -- page #12 --
-     12: begin
+      // -- page #12 --
+      12: begin
            if block=1 then
            begin
              if isnumber(c) then
@@ -476,55 +507,55 @@ begin
              end;
            end;
          end;
-     // -- page #13 --
-     13: begin
-           if block=1 then
-           begin
-             if isnumber(c) then
-               if length(s)<3 then s:=s+c;
-             if c=#8 then delete(s,length(s),1);
-           end;
-           if block=2 then
-           begin
-             if (isnumber(c)) or (c='.') then
-               if length(s)<15 then s:=s+c;
-             if c=#8 then delete(s,length(s),1);
-           end;
-           if block=3 then
-             if posy=23 then
-             begin
-               if isnumber(c) then
-                 if length(s)<6 then s:=s+c;
-                 if c=#8 then delete(s,length(s),1);
-             end else
-             begin
-               if (length(s)<50) and (c<>#0) and (c<>#8) and
+      // -- page #13 --
+      13: begin
+            if block=1 then
+            begin
+              if isnumber(c) then
+                if length(s)<3 then s:=s+c;
+               if c=#8 then delete(s,length(s),1);
+            end;
+            if block=2 then
+            begin
+              if (isnumber(c)) or (c='.') then
+                if length(s)<15 then s:=s+c;
+              if c=#8 then delete(s,length(s),1);
+            end;
+            if block=3 then
+              if posy=23 then
+              begin
+                if isnumber(c) then
+                  if length(s)<6 then s:=s+c;
+                if c=#8 then delete(s,length(s),1);
+              end else
+              begin
+                if (length(s)<50) and (c<>#0) and (c<>#8) and
                  (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
                if c=#8 then delete(s,length(s),1);
              end;
          end;
-     // -- page #14 --
-     14: begin
-           if (block=1) or (block=3) then
-           begin
-            if (length(s)<50) and (c<>#0) and (c<>#8) and
-             (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
-             if c=#8 then delete(s,length(s),1);
-           end;
-           if (block=2) or (block=4) then
-           begin
-             if (c='0') or (c='1') then s:=c;
-             if c=#8 then delete(s,length(s),1);
-           end;
-         end;
-    else
-      begin
-        if (length(s)<50) and (c<>#0) and (c<>#8) and
-          (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
-        if c=#8 then delete(s,length(s),1);
-      end;
-    end;
-    gotoxy(1,bottom); clreol; write('>'+s);
+      // -- page #14 --
+      14: begin
+            if (block=1) or (block=3) then
+            begin
+             if (length(s)<50) and (c<>#0) and (c<>#8) and
+              (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+              if c=#8 then delete(s,length(s),1);
+            end;
+            if (block=2) or (block=4) then
+            begin
+              if (c='0') or (c='1') then s:=c;
+              if c=#8 then delete(s,length(s),1);
+            end;
+          end;
+     else
+       begin
+         if (length(s)<50) and (c<>#0) and (c<>#8) and
+           (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+         if c=#8 then delete(s,length(s),1);
+       end;
+     end;
+     gotoxy(1,bottom); clreol; write('>'+s);
   until (c=#13) or (c=#27);
   textcolor(white);
   if (c=#13) and (length(s)>0) then
@@ -652,105 +683,73 @@ begin
         gpio_ro[posy-2-10]:=strtoint(s);
         write(gpio_ro[posy-2-10]);
       end;
-      // page #8 - block #4
-      {
-      if block=4 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        prt_lpt:=strtoint(s);
-        write(prt_lpt);
-      end;
-      }
-      // page #8 - block #5
-      {
-      if block=5 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        case posy of
-          23: begin ena_console:=strtoint(s); write(ena_console); end;
-          24: begin prt_com:=s; write(prt_com); end;
-          25: begin com_speed:=s; write(com_speed); end;
-          26: begin com_verbose:=strtoint(s); write(com_verbose); end;
-        end;
-      }
     end;
     // -- page #9 --
     if page=9 then
     begin
       // page #9 - block #1
-      {
-      if block=1 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        pro_mm6dch[posy-2]:=s;
-        write(pro_mm6dch[posy-2]);
-      end;
-      }
       // page #9 - block #2
-      {
-      if block=2 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        pro_mm7dch[posy-2-9]:=s;
-        write(pro_mm7dch[posy-2-9]);
-      end;
-      }
-      // page #9 - block #2
-      {
-      if block=3 then
-      begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        pro_mm10d:=s;
-        write(pro_mm10d);
-      end;
-      }
+      // page #9 - block #3
     end;
     // -- page #10 --
     if page=10 then
     begin
-      {
       // page #10 - block #1
       if block=1 then
       begin
         textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        uid_mm6dch[posy-2]:=s;
-        write(uid_mm6dch[posy-2]);
+        repeat write(' '); until wherex>38;
+        gotoxy(MINPOSX[page,block],posy);
+        case posy of
+          4: begin msc_enable:=strtoint(s); write(msc_enable); end;
+          5: begin msc_port:=s; write(msc_port); end;
+          6: begin msc_speed:=strtoint(s); write(msc_speed); end;
+          7: begin msc_verbose:=strtoint(s); write(msc_verbose); end;
+        end;
       end;
-      }
       // page #10 - block #2
-      {
       if block=2 then
       begin
         textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        uid_mm7dch[posy-2-9]:=s;
-        write(uid_mm7dch[posy-2-9]);
+        repeat write(' '); until wherex>38;
+        gotoxy(MINPOSX[page,block],posy);
+        case posy of
+          11: begin pwm_enable:=strtoint(s); write(pwm_enable); end;
+          12: begin pwm_port:=s; write(pwm_port); end;
+          13: begin pwm_speed:=strtoint(s); write(pwm_speed); end;
+          14: begin pwm_modbusid:=strtoint(s); write(pwm_modbusid); end;
+          15: begin pwm_handler:=s; write(pwm_handler); end;
+        end;
       end;
-      }
-      // page #10 - block #2
-      {
+      // page #10 - block #3
       if block=3 then
+      begin
+        textbackground(blue);
+        gotoxy(MINPOSX[page,block],posy);clreol;
+        gotoxy(MINPOSX[page,block],posy);
+        case posy of
+          4: begin fwm_enable:=strtoint(s); write(fwm_enable); end;
+          5: begin fwm_port:=s; write(fwm_port); end;
+          6: begin fwm_speed:=strtoint(s); write(fwm_speed); end;
+          7: begin fwm_handler:=s; write(fwm_handler); end;
+        end;
+      end;
+      // page #10 - block #4
+      if block=4 then
       begin
         textbackground(blue);
         gotoxy(MINPOSX[page,block],posy); clreol;
         gotoxy(MINPOSX[page,block],posy);
-        uid_mm10d:=s;
-        write(uid_mm10d);
+        case posy of
+          11: begin otm_enable:=strtoint(s); write(otm_enable); end;
+          12: begin otm_port:=s; write(otm_port); end;
+          13: begin otm_speed:=strtoint(s); write(otm_speed); end;
+          14: begin otm_modbusid:=strtoint(s); write(otm_modbusid); end;
+          15: begin otm_handler:=s; write(otm_handler); end;
+        end;
       end;
-      }
     end;
     // -- page #11 --
     if page=11 then
