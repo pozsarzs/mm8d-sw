@@ -21,7 +21,7 @@
 program editmainconf;
 {$MODE OBJFPC}{$H+}
 uses
-  INIFiles, SysUtils, character, crt, untcommon;
+  INIFiles, Strutils, SysUtils, character, crt, untcommon;
 var
   // general variables
   bottom:             byte;
@@ -238,68 +238,17 @@ begin
         lng:=code[posy];
     end;
   end;
-  // -- page #9 --
-  if page=9 then
-  begin
-    // page #9 - block #1
-    {
-    if block=1 then
-    begin
-      if pro_mm6dch[posy-2]=PROTOCOL[1]
-      then
-        pro_mm6dch[posy-2]:=PROTOCOL[2]
-      else
-        pro_mm6dch[posy-2]:=PROTOCOL[1];
-      textbackground(blue);
-      gotoxy(MINPOSX[page,block],posy); clreol;
-      gotoxy(MINPOSX[page,block],posy);
-      write(pro_mm6dch[posy-2]);
-    end;
-    }
-    // page #9 - block #2
-    {
-    if block=2 then
-    begin
-      if pro_mm7dch[posy-2-9]=PROTOCOL[1]
-      then
-        pro_mm7dch[posy-2-9]:=PROTOCOL[2]
-      else
-        pro_mm7dch[posy-2-9]:=PROTOCOL[1];
-      textbackground(blue);
-      gotoxy(MINPOSX[page,block],posy); clreol;
-      gotoxy(MINPOSX[page,block],posy);
-      write(pro_mm7dch[posy-2-9]);
-    end;
-    }
-    // page #9 - block #3
-    {
-    if block=3 then
-    begin
-      if pro_mm10d=PROTOCOL[1]
-      then
-        pro_mm10d:=PROTOCOL[2]
-      else
-        pro_mm10d:=PROTOCOL[1];
-      textbackground(blue);
-      gotoxy(MINPOSX[page,block],posy); clreol;
-      gotoxy(MINPOSX[page,block],posy);
-      write(pro_mm10d);
-    end;
-    }
-  end;
 end;
 
 // get value from keyboard
 procedure getvalue(page,block,posy: byte);
 var
+  o: boolean;
   c: char;
   s: string;
 begin
   textbackground(black);
-  case page of
-    9: footer(bottom-1,FOOTERS[3]);
-  else footer(bottom-1,FOOTERS[2]);
-  end;
+  footer(bottom-1,FOOTERS[2]);
   textcolor(lightgray);
   gotoxy(1,bottom); write('>');
   s:='';
@@ -380,6 +329,23 @@ begin
          end;
       // -- page #9 --
       9: begin
+            if block=1 then
+            begin  
+              if isnumber(c) then
+                if (length(s)<1) and (strtoint(c)>=0) and (strtoint(c)<=7) then s:=s+c;
+              if c=#8 then delete(s,length(s),1);
+            end;
+            if block=2 then
+            begin  
+              if (c='0') or (c='1') then s:=c;
+              if c=#8 then delete(s,length(s),1);
+            end;
+            if block=3 then
+            begin
+              if (length(s)<3) and (c<>#0) and (c<>#8) and
+                (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
+              if c=#8 then delete(s,length(s),1);
+            end;
          end;
       // -- page #10 --
       10: begin
@@ -688,8 +654,79 @@ begin
     if page=9 then
     begin
       // page #9 - block #1
+      if block=1 then
+      begin
+        if posy<=8 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          lpt_i_bit[posy-2-10]:=strtoint(s);
+          write(lpt_i_bit[posy-2-10]);
+        end;
+        if (posy>8) and (posy<=11) then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          lpt_lo_bit[posy-2-10]:=strtoint(s);
+          write(lpt_lo_bit[posy-2-10]);
+        end;
+        if posy>11 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          lpt_ro_bit[posy-2-10]:=strtoint(s);
+          write(lpt_ro_bit[posy-2-10]);
+        end;
+      end;
       // page #9 - block #2
+      if block=2 then
+      begin
+        if posy<=8 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          lpt_i_negation[posy-2-10]:=strtoint(s);
+          write(lpt_i_negation[posy-2-10]);
+        end;
+        if (posy>8) and (posy<=11) then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          lpt_lo_negation[posy-2-10]:=strtoint(s);
+          write(lpt_lo_negation[posy-2-10]);
+        end;
+        if posy>11 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          lpt_ro_negation[posy-2-10]:=strtoint(s);
+          write(lpt_ro_negation[posy-2-10]);
+        end;
+      end;
       // page #9 - block #3
+      if block=3 then
+      begin
+        o:=true;
+        try
+          hex2dec(s);
+        except
+          o:=false
+        end;
+        if o then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); clreol;
+          gotoxy(MINPOSX[page,block],posy);
+          lpt_address:=hex2dec(s);
+          write('0x'+inttohex(lpt_address,3));
+        end;
+      end;
     end;
     // -- page #10 --
     if page=10 then
@@ -899,9 +936,11 @@ begin
   case page of
      4: footer(bottom-1,FOOTERS[6]);
      8: footer(bottom-1,FOOTERS[7]);
+     9: footer(bottom-1,FOOTERS[7]);
     10: footer(bottom-1,FOOTERS[7]);
     11: footer(bottom-1,FOOTERS[7]);
     12: footer(bottom-1,FOOTERS[7]);
+    13: footer(bottom-1,FOOTERS[7]);
     14: footer(bottom-1,FOOTERS[7]);
   else footer(bottom-1,FOOTERS[1]);
   end;
@@ -923,7 +962,7 @@ begin
   gotoxy(1,bottom); clreol;
   case page of
     6: footer(bottom-1,FOOTERS[6]);
-    9: footer(bottom-1,FOOTERS[3]);
+    9: footer(bottom-1,FOOTERS[5]);
     10: footer(bottom-1,FOOTERS[5]);
     11: footer(bottom-1,FOOTERS[5]);
     12: footer(bottom-1,FOOTERS[5]);
@@ -990,19 +1029,14 @@ begin
              gotoxy(MINPOSX[page,block],posy);
             end;
        // select and edit item
-       #13: if (page<>4) and (page<>9) then
+       #13: if page<>4 then
             begin
               getvalue(page,block,posy);
               gotoxy(MINPOSX[page,block],posy);
             end;
        // select item
        #32: begin
-              if (page=4) then
-              begin
-                selectitem(page,block,posy);
-                gotoxy(MINPOSX[page,block],posy);
-              end;
-              if (page=9) then
+              if page=4 then
               begin
                 selectitem(page,block,posy);
                 gotoxy(MINPOSX[page,block],posy);

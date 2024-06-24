@@ -119,13 +119,37 @@ begin
     for b:=1 to 8 do
       writeln(iif,'gpio_ro'+inttostr(b)+'='+inttostr(gpio_ro[b]));
     writeln(iif,'');
+    writeln(iif,'; base addresses: 0x378, 0x278, 0x3BC');
+    writeln(iif,'lpt_address=0x'+inttohex(lpt_address,3));
+    writeln(iif,'');
+    writeln(iif,'; DC 24-36 V inputs');
+    writeln(iif,'# address BA+1');
+    for b:=1 to 5 do
+    begin
+      writeln(iif,'lpt_i'+inttostr(b)+'_bit='+inttostr(lpt_i_bit[b]));
+      writeln(iif,'lpt_i'+inttostr(b)+'_negation='+inttostr(lpt_i_negation[b]));
+    end;
+    writeln(iif,'');
+    writeln(iif,'; open collector outputs for LED');
+    writeln(iif,'# address BA+2');
+    for b:=1 to 4 do
+    begin
+      writeln(iif,'lpt_lo'+inttostr(b)+'_bit='+inttostr(lpt_lo_bit[b]));
+      writeln(iif,'lpt_lo'+inttostr(b)+'_negation='+inttostr(lpt_lo_negation[b]));
+    end;
+    writeln(iif,'');
+    writeln(iif,'; relay outputs');
+    writeln(iif,'# address BA+0');
+    for b:=1 to 8 do
+    begin
+      writeln(iif,'lpt_ro'+inttostr(b)+'_bit='+inttostr(lpt_ro_bit[b]));
+      writeln(iif,'lpt_ro'+inttostr(b)+'_negation='+inttostr(lpt_ro_negation[b]));
+    end;
+    writeln(iif,'');
     writeln(iif,';');
     writeln(iif,'; external devices');
     writeln(iif,';');
     writeln(iif,'');
-    {
-      Az LPT port még hiányzik!
-    }
     writeln(iif,'['+S+']');
     writeln(iif,'; mini serial console');
     writeln(iif,'msc_enable='+inttostr(msc_enable));

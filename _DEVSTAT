@@ -52,6 +52,7 @@ libraries/Makefile
 libraries/dm36b06.py                                                  DONE
 libraries/dt510.py                                                    DONE
 libraries/pta9b01.py                                                  DONE
+libraries/setup.py
 
 manuals/Makefile                                                      DONE
 manuals/getcameras.cgi.7.in                                           DONE
@@ -87,30 +88,29 @@ messages/mm8d_hu.msg                                                  DONE
 packaging/bin/install
 packaging/bin/uninstall
 packaging/eec-amd64/control
-packaging/eec-amd64/postinst
-packaging/eec-amd64/prerm
+packaging/eec-amd64/postinst                                          DONE
+packaging/eec-amd64/prerm                                             DONE
 packaging/eec-armhf/control
-packaging/eec-armhf/postinst
-packaging/eec-armhf/prerm
+packaging/eec-armhf/postinst                                          DONE
+packaging/eec-armhf/prerm                                             DONE
 packaging/eec-i386/control
-packaging/eec-i386/postinst
-packaging/eec-i386/prerm
-packaging/sw-amd64/conffiles
+packaging/eec-i386/postinst                                           DONE
+packaging/eec-i386/prerm                                              DONE
+packaging/sw-amd64/conffiles                                          DONE
 packaging/sw-amd64/control
-packaging/sw-amd64/postinst
-packaging/sw-amd64/prerm
-packaging/sw-armhf/conffiles
+packaging/sw-amd64/postinst                                           DONE
+packaging/sw-amd64/prerm                                              DONE
+packaging/sw-armhf/conffiles                                          DONE
 packaging/sw-armhf/control
-packaging/sw-armhf/postinst
-packaging/sw-armhf/prerm
-packaging/sw-i386/conffiles
+packaging/sw-armhf/postinst                                           DONE
+packaging/sw-armhf/prerm                                              DONE
+packaging/sw-i386/conffiles                                           DONE
 packaging/sw-i386/control
-packaging/sw-i386/postinst
-packaging/sw-i386/prerm
-packaging/web-all/conffiles
+packaging/sw-i386/postinst                                            DONE
+packaging/sw-i386/prerm                                               DONE
 packaging/web-all/control
-packaging/web-all/postinst
-packaging/web-all/prerm
+packaging/web-all/postinst                                            DONE
+packaging/web-all/prerm                                               DONE
 
 programs/Makefile                                                     DONE
 programs/mm8d-test-dm36b06.py.in                                      DONE
@@ -181,8 +181,8 @@ source/editirrconf/incpage01screen.pas                                DONE
 source/editirrconf/incpage02screen.pas                                DONE
 source/editirrconf/incsaveinifile.pas                                 DONE
 source/editmainconf/config.pas.in                                     DONE
-source/editmainconf/editmainconf.pas
-source/editmainconf/incloadinifile.pas
+source/editmainconf/editmainconf.pas                                  DONE
+source/editmainconf/incloadinifile.pas                                DONE
 source/editmainconf/incpage01screen.pas                               DONE
 source/editmainconf/incpage02screen.pas                               DONE
 source/editmainconf/incpage03screen.pas                               DONE
@@ -191,13 +191,13 @@ source/editmainconf/incpage05screen.pas                               DONE
 source/editmainconf/incpage06screen.pas                               DONE
 source/editmainconf/incpage07screen.pas                               DONE
 source/editmainconf/incpage08screen.pas                               DONE
-source/editmainconf/incpage09screen.pas
-source/editmainconf/incpage10screen.pas
+source/editmainconf/incpage09screen.pas                               DONE
+source/editmainconf/incpage10screen.pass                              DONE
 source/editmainconf/incpage11screen.pas                               DONE
 source/editmainconf/incpage12screen.pas                               DONE
 source/editmainconf/incpage13screen.pas                               DONE
 source/editmainconf/incpage14screen.pas                               DONE
-source/editmainconf/incsaveinifile.pas
+source/editmainconf/incsaveinifile.pas                                DONE
 source/override/config.pas.in                                         DONE
 source/override/incloadoutfiles.pas                                   DONE
 source/override/incpage1screen.pas                                    DONE
