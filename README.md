@@ -37,8 +37,8 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
 |licence               |EUPL v1.2                                       |
 |local user interface  |CLI, TUI, WUI                                   |
 |remote access         |HTTP (html, txt, xml), SSH                      |
-|remote device access  |RS-232: Modbus/RTU                              |
-|                      |LAN: HTTP, Modbus/ASCII/RTU/TCP                 |
+|remote device access  |RS-232/485: Modbus/ASCII, Modbus/RTU            |
+|                      |LAN: HTTP, Modbus/TCP                           |
 |                      |I/O: LPT port with interface cards              |
 |                      |- 5 isolated inputs 24-36 V DC                  |
 |                      |- 4 open collector LED outputs                  |
