@@ -27,8 +27,8 @@ import sys
 import time
 
 # constants
-arch=platform.machine()
-if arch.find("86") > -1:
+arch = platform.machine()
+if arch.find('86') > -1:
   HW = 1
   import portio
 else:
@@ -36,285 +36,363 @@ else:
   import RPi.GPIO as GPIO
 
 # constants
-CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
-
-global EOL
-global LPTADDRESSES
-EOL = "\r"
-LPTADDRESSES = [0x378,0x278,0x3bc]
+CONFFILE='@prefix@/etc/mm8d/mm8d.ini'
 
 # load configuration
-def loadconfiguration(CONFFILE):
-  global com
-  global prt_com
-  global com_speed
-  C = 'COMport'
-  G = 'GPIOport'
-  L = 'LPTport'
-  if HW == 0:
-    global prt_i1
-    global prt_i2
-    global prt_i3
-    global prt_i4
-    global prt_ro1
-    global prt_ro2
-    global prt_ro3
-    global prt_ro4
-    global prt_lo1
-    global prt_lo2
-    global prt_lo3
-    global prt_lo4
+def loadconfiguration(conffile):
+  if (HW == 0):
+    global gpio_i1
+    global gpio_i2
+    global gpio_i3
+    global gpio_i4
+    global gpio_i5
+    global gpio_lo1
+    global gpio_lo2
+    global gpio_lo3
+    global gpio_lo4
+    global gpio_ro1
+    global gpio_ro1
+    global gpio_ro2
+    global gpio_ro3
+    global gpio_ro5
+    global gpio_ro6
+    global gpio_ro7
+    global gpio_ro8
   else:
-    global prt_lpt
+    global lpt_address
+    global lpt_bits
+  I = 'localio'
   try:
-    with open(CONFFILE) as f:
-      mm8d_config = f.read()
-    config = configparser.RawConfigParser(allow_no_value=True)
-    config.read_file(io.StringIO(mm8d_config))
-    # number of the used GPIO ports
+    with open(conffile) as f:
+      mainconfig = f.read()
+    config = configparser.RawConfigParser(allow_no_value = True)
+    config.read_file(io.StringIO(mainconfig))
+    # local ports
     if HW == 0:
-      prt_i1 = int(config.get(G,'prt_i1'))
-      prt_i2 = int(config.get(G,'prt_i2'))
-      prt_i3 = int(config.get(G,'prt_i3'))
-      prt_i4 = int(config.get(G,'prt_i4'))
-      prt_ro1 = int(config.get(G,'prt_ro1'))
-      prt_ro2 = int(config.get(G,'prt_ro2'))
-      prt_ro3 = int(config.get(G,'prt_ro3'))
-      prt_ro4 = int(config.get(G,'prt_ro4'))
-      prt_lo1 = int(config.get(G,'prt_lo1'))
-      prt_lo2 = int(config.get(G,'prt_lo2'))
-      prt_lo3 = int(config.get(G,'prt_lo3'))
-      prt_lo4 = int(config.get(G,'prt_lo4'))
+      gpio_i1 = int(config.get(I, 'gpio_i1'))
+      gpio_i2 = int(config.get(I, 'gpio_i2'))
+      gpio_i3 = int(config.get(I, 'gpio_i3'))
+      gpio_i4 = int(config.get(I, 'gpio_i4'))
+      gpio_i5 = int(config.get(I, 'gpio_i5'))
+      gpio_lo1 = int(config.get(I, 'gpio_lo1'))
+      gpio_lo2 = int(config.get(I, 'gpio_lo2'))
+      gpio_lo3 = int(config.get(I, 'gpio_lo3'))
+      gpio_lo4 = int(config.get(I, 'gpio_lo4'))
+      gpio_ro1 = int(config.get(I, 'gpio_ro1'))
+      gpio_ro2 = int(config.get(I, 'gpio_ro2'))
+      gpio_ro3 = int(config.get(I, 'gpio_ro3'))
+      gpio_ro4 = int(config.get(I, 'gpio_ro4'))
+      gpio_ro5 = int(config.get(I, 'gpio_ro5'))
+      gpio_ro6 = int(config.get(I, 'gpio_ro6'))
+      gpio_ro7 = int(config.get(I, 'gpio_ro7'))
+      gpio_ro8 = int(config.get(I, 'gpio_ro8'))
     else:
-      # address of the used LPT port (0x378: 0, 0x278: 1, 0x3BC: 2)
-      prt_lpt = int(config.get(L,'prt_lpt'))
-      if (prt_lpt < 0) or (prt_lpt > 2):
-        prt_lpt = 0
-    # port name
-    prt_com = config.get(C,'prt_com')
-    # port speed
-    com_speed = 9600
-    com_speed = int(config.get(C,'com_speed'))
+      lpt_address = 0x378
+      lpt_address = int(config.get(I, 'lpt_address'),16)
+      lpt_bits = [[0 for y in range(3)] for x in range(17)]
+      for x in range(0,5):
+        lpt_bits[x][0] = 1
+        lpt_bits[x][1] = int(config.get(I, 'lpt_i' + str(x + 1) + '_bit'))
+        lpt_bits[x][2] = int(config.get(I, 'lpt_i' + str(x + 1) + '_negation'))
+      for x in range(5,9):
+        lpt_bits[x][0] = 2
+        lpt_bits[x][1] = int(config.get(I, 'lpt_lo' + str(x - 4) + '_bit'))
+        lpt_bits[x][2] = int(config.get(I, 'lpt_lo' + str(x - 4) + '_negation'))
+      for x in range(9,17):
+        lpt_bits[x][0] = 0
+        lpt_bits[x][1] = int(config.get(I, 'lpt_ro' + str(x - 8) + '_bit'))
+        lpt_bits[x][2] = int(config.get(I, 'lpt_ro' + str(x - 8) + '_negation'))
+      for x in range(0,17):
+        lpt_bits[x][2] = 1 if lpt_bits[x][2] >= 1 else 0
   except:
-    print("ERROR #1: Cannot open configuration file!");
-    sys.exit(1);
+    print('ERROR #01: Cannot open or read ' + conffile + '!')
+    exit(1)
+
+def writetolo(lo1, lo2, lo3, lo4):
+  outdata = 0
+  outbit = 0
+  outbit = lpt_bits[5][2] ^ lo1
+  outdata = outdata | (2 ** lpt_bits[5][1]) * outbit
+  outbit = lpt_bits[6][2] ^ lo2
+  outdata = outdata | (2 ** lpt_bits[6][1]) * outbit
+  outbit = lpt_bits[7][2] ^ lo3
+  outdata = outdata | (2 ** lpt_bits[7][1]) * outbit
+  outbit = lpt_bits[8][2] ^ lo4
+  outdata = outdata | (2 ** lpt_bits[8][1]) * outbit
+  portio.outb(outdata,lpt_address + lpt_bits[5][0])
+  if (portio.inb(lpt_address + lpt_bits[5][0]) != outdata):
+    return 0
+  else:
+    return 1
+
+def writetoro(ro1, ro2, ro3, ro4, ro5, ro6, ro7, ro8):
+  outdata = 0
+  outbit = 0
+  outbit = lpt_bits[9][2] ^ ro1
+  outdata = outdata | (2 ** lpt_bits[9][1]) * outbit
+  outbit = lpt_bits[10][2] ^ ro2
+  outdata = outdata | (2 ** lpt_bits[10][1]) * outbit
+  outbit = lpt_bits[11][2] ^ ro3
+  outdata = outdata | (2 ** lpt_bits[11][1]) * outbit
+  outbit = lpt_bits[12][2] ^ ro4
+  outdata = outdata | (2 ** lpt_bits[12][1]) * outbit
+  outbit = lpt_bits[13][2] ^ ro5
+  outdata = outdata | (2 ** lpt_bits[13][1]) * outbit
+  outbit = lpt_bits[14][2] ^ ro6
+  outdata = outdata | (2 ** lpt_bits[14][1]) * outbit
+  outbit = lpt_bits[15][2] ^ ro7
+  outdata = outdata | (2 ** lpt_bits[15][1]) * outbit
+  outbit = lpt_bits[16][2] ^ ro8
+  outdata = outdata | (2 ** lpt_bits[16][1]) * outbit
+  portio.outb(outdata,lpt_address + lpt_bits[9][0])
+  if (portio.inb(lpt_address + lpt_bits[9][0]) != outdata):
+    return 0
+  else:
+    return 1
 
 # main function
-print("\nMM8D hardware test utility * (C) 2020-2023 Pozsar Zsolt")
-print("-------------------------------------------------------")
+print('\nMM8D hardware test utility * (C) 2020-2024 Pozsar Zsolt')
+print('-------------------------------------------------------')
 if os.getuid():
-  print(" * You need to be root!")
+  print('You need to be root!')
   sys.exit(0)
-print(" * load configuration: %s..." % CONFFILE)
+print('Load configuration: %s...' % CONFFILE)
 loadconfiguration(CONFFILE)
-print(" * setting ports...")
-com = serial.Serial(prt_com, com_speed)
+print('Setting ports...')
 if HW == 0:
   GPIO.setwarnings(False)
   GPIO.setmode(GPIO.BCM)
-  GPIO.setup(prt_i1,GPIO.IN)
-  GPIO.setup(prt_i2,GPIO.IN)
-  GPIO.setup(prt_i3,GPIO.IN)
-  GPIO.setup(prt_i4,GPIO.IN)
-  GPIO.setup(prt_ro1,GPIO.OUT,initial=GPIO.LOW)
-  GPIO.setup(prt_ro2,GPIO.OUT,initial=GPIO.LOW)
-  GPIO.setup(prt_ro3,GPIO.OUT,initial=GPIO.LOW)
-  GPIO.setup(prt_ro4,GPIO.OUT,initial=GPIO.LOW)
-  GPIO.setup(prt_lo1,GPIO.OUT,initial=GPIO.LOW)
-  GPIO.setup(prt_lo2,GPIO.OUT,initial=GPIO.LOW)
-  GPIO.setup(prt_lo3,GPIO.OUT,initial=GPIO.LOW)
-  GPIO.setup(prt_lo4,GPIO.OUT,initial=GPIO.LOW)
+  GPIO.setup(prt_i1, GPIO.IN)
+  GPIO.setup(prt_i2, GPIO.IN)
+  GPIO.setup(prt_i3, GPIO.IN)
+  GPIO.setup(prt_i4, GPIO.IN)
+  GPIO.setup(prt_i5, GPIO.IN)
+  GPIO.setup(prt_lo1, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_lo2, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_lo3, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_lo4, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro1, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro2, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro3, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro4, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro5, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro6, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro7, GPIO.OUT, initial=GPIO.LOW)
+  GPIO.setup(prt_ro8, GPIO.OUT, initial=GPIO.LOW)
 else:
-  status = portio.ioperm(LPTADDRESSES[prt_lpt],1,1)
-  if status:
-    print("ERROR #17: Cannot access I/O port:",hex(LPTADDRESSES[prt_lpt]));
-    sys.exit(17)
-  status = portio.ioperm(LPTADDRESSES[prt_lpt] + 1, 1, 1)
-  if status:
-    print("ERROR #17: Cannot access I/O port:",hex(LPTADDRESSES[prt_lpt] + 1));
-    sys.exit(17)
-  portio.outb(0,LPTADDRESSES[prt_lpt])
+  for i in range(3):
+    status = portio.ioperm(lpt_address + i, 1, 1)
+    if status:
+      print('ERROR #17: Cannot access I/O port: ', hex(lpt_address + i));
+      sys.exit(17)
 
 while True:
-  print(" * What do you like?")
-  selection = input(" \
-   1: Check I1-4 inputs\n \
-   2: Check RO1-4 relay contact outputs\n \
-   3: Check LO1-4 open collector outputs\n \
-   4: Write text to the mini serial console\n \
-   q: Quit\n")
-  if selection is "Q" or selection is "q":
-    print(" * Quitting.")
+  print('\nWhat do you like?')
+  selection = input(' \
+   1: Check I1-5 inputs\n \
+   2: Check LO1-4 open collector outputs\n \
+   3: Check RO1-8 relay contact outputs\n \
+   q: Quit\n')
+  if (selection == 'Q') or (selection == 'q'):
+    print('Quitting.')
     if HW == 0:
       GPIO.cleanup()
     else:
-      portio.outb(0,LPTADDRESSES[prt_lpt])
+      portio.outb(0, lpt_address + lpt_bits[5][0])
+      portio.outb(0, lpt_address + lpt_bits[9][0])
     sys.exit(0)
 
-  if selection is "1":
-    print(" * Check I1-4 inputs")
+  if selection == '1':
+    print('Check I1-5 inputs')
     if HW == 0:
-      print("   used GPIO ports:")
-      print("     I1: GPIO", prt_i1,sep = '')
-      print("     I2: GPIO", prt_i2,sep = '')
-      print("     I3: GPIO", prt_i3,sep = '')
-      print("     I4: GPIO", prt_i4,sep = '')
-      print("   Press ^C to stop!")
+      print('   used GPIO ports:')
+      print('     I1: GPIO', gpio_i1, sep = '')
+      print('     I2: GPIO', gpio_i2, sep = '')
+      print('     I3: GPIO', gpio_i3, sep = '')
+      print('     I4: GPIO', gpio_i4, sep = '')
+      print('     I5: GPIO', gpio_i5, sep = '')
+      print('   Press ^C to stop!')
       try:
         while True:
-          s = ""
-          if GPIO.input(prt_i4):
-            s = "1"
+          s = ''
+          if GPIO.input(gpio_i5):
+            s = '1'
           else:
-            s = "0"
-          if GPIO.input(prt_i3):
-            s = s + "1"
+            s = '0'
+          if GPIO.input(gpio_i4):
+            s = s + '1'
           else:
-            s = s + "0"
-          if GPIO.input(prt_i2):
-            s = s + "1"
+            s = s + '0'
+          if GPIO.input(gpio_i3):
+            s = s + '1'
           else:
-            s = s + "0"
-          if GPIO.input(prt_i1):
-            s = s + "1"
+            s = s + '0'
+          if GPIO.input(gpio_i2):
+            s = s + '1'
           else:
-            s = s + "0"
+            s = s + '0'
+          if GPIO.input(gpio_i1):
+            s = s + '1'
+          else:
+            s = s + '0'
           print(s)
           time.sleep(1)
       except KeyboardInterrupt:
         print()
     else:
-      print("   used lines of LPT port:")
-      print('     LPT #',prt_lpt + 1,sep = '')
-      print("     I1: -ERROR")
-      print("     I2: SELECT")
-      print("     I3: PE")
-      print("     I4: -ACKNOLEDGE")
-      print("   Press ^C to stop!")
+      print('   used lines of LPT port:')
+      print('     address: ', hex(lpt_address + lpt_bits[0][0]))
+      for i in range(0,5):
+        print('     I' + str(i) +': bit ' + str(lpt_bits[i][1]) + ' negation: ' + str(lpt_bits[i][2]))
+      print('   Press ^C to stop!')
       try:
         while True:
-          indata = portio.inb(LPTADDRESSES[prt_lpt] + 1)
-          indata = indata << 1
-          indata = indata >> 4
-          print("    ",format(indata,'04b'))
+          indata = portio.inb(lpt_address + lpt_bits[0][0])
+          i1 = indata & (2 ** lpt_bits[0][1])
+          i2 = indata & (2 ** lpt_bits[1][1])
+          i3 = indata & (2 ** lpt_bits[2][1])
+          i4 = indata & (2 ** lpt_bits[3][1])
+          i5 = indata & (2 ** lpt_bits[4][1])
+          i1 = 1 if i1 >= 1 else 0
+          i2 = 1 if i2 >=1 else 0
+          i3 = 1 if i3 >=1 else 0
+          i4 = 1 if i4 >=1 else 0
+          i5 = 1 if i5 >=1 else 0
+          i1 = lpt_bits[0][2] ^ i1
+          i2 = lpt_bits[1][2] ^ i2
+          i3 = lpt_bits[2][2] ^ i3
+          i4 = lpt_bits[3][2] ^ i4
+          i5 = lpt_bits[4][2] ^ i5
+          print(i5,i4,i3,i2,i1)
           time.sleep(1)
       except KeyboardInterrupt:
         print()
 
-  if selection is "2":
-    print(" * Check RO1-4 relay contact outputs")
+  if selection == '2':
+    print('Check LO1-4 open collector outputs')
     if HW == 0:
-      print("   used GPIO ports:")
-      print("     RO1: GPIO", prt_ro1,sep = '')
-      print("     RO2: GPIO", prt_ro2,sep = '')
-      print("     RO3: GPIO", prt_ro3,sep = '')
-      print("     RO4: GPIO", prt_ro4,sep = '')
-      print("   Press ^C to stop!")
+      print('   used GPIO ports:')
+      print('     LO1: GPIO', gpio_lo1, sep = '')
+      print('     LO2: GPIO', gpio_lo2, sep = '')
+      print('     LO3: GPIO', gpio_lo3, sep = '')
+      print('     LO4: GPIO', gpio_lo4, sep = '')
+      print('   Press ^C to stop!')
       try:
         while True:
-          GPIO.output(prt_ro1,1)
+          GPIO.output(gpio_lo1, 1)
           time.sleep(1)
-          GPIO.output(prt_ro1,0)
-          GPIO.output(prt_ro2,1)
+          GPIO.output(gpio_lo1, 0)
+          GPIO.output(gpio_lo2, 1)
           time.sleep(1)
-          GPIO.output(prt_ro2,0)
-          GPIO.output(prt_ro3,1)
+          GPIO.output(gpio_lo2, 0)
+          GPIO.output(gpio_lo3, 1)
           time.sleep(1)
-          GPIO.output(prt_ro3,0)
-          GPIO.output(prt_ro4,1)
+          GPIO.output(gpio_lo3, 0)
+          GPIO.output(gpio_lo4, 1)
           time.sleep(1)
-          GPIO.output(prt_ro4,0)
+          GPIO.output(gpio_lo4,0)
       except KeyboardInterrupt:
-        GPIO.output(prt_ro1,0)
-        GPIO.output(prt_ro2,0)
-        GPIO.output(prt_ro3,0)
-        GPIO.output(prt_ro4,0)
+        GPIO.output(gpio_lo1, 0)
+        GPIO.output(gpio_lo2, 0)
+        GPIO.output(gpio_lo3, 0)
+        GPIO.output(gpio_lo4, 0)
         print()
     else:
-      print("   used lines of LPT port:")
-      print('     LPT #',prt_lpt + 1,sep = '')
-      print("     RO1: D0")
-      print("     RO2: D1")
-      print("     RO3: D2")
-      print("     RO4: D3")
-      print("   Press ^C to stop!")
+      print('   used lines of LPT port:')
+      print('     address: ', hex(lpt_address + lpt_bits[5][0]))
+      for i in range(5,9):
+        print('    LO' + str(i) +': bit ' + str(lpt_bits[i][1]) + ' negation: ' + str(lpt_bits[i][2]))
+      print('   Press ^C to stop!')
       try:
         while True:
-          portio.outb(1,LPTADDRESSES[prt_lpt])
+          writetolo(1,0,0,0)
           time.sleep(1)
-          portio.outb(2,LPTADDRESSES[prt_lpt])
+          writetolo(0,1,0,0)
           time.sleep(1)
-          portio.outb(4,LPTADDRESSES[prt_lpt])
+          writetolo(0,0,1,0)
           time.sleep(1)
-          portio.outb(8,LPTADDRESSES[prt_lpt])
+          writetolo(0,0,0,1)
           time.sleep(1)
       except KeyboardInterrupt:
-          portio.outb(0,LPTADDRESSES[prt_lpt])
-          print()
+        writetolo(0,0,0,0)
+        print()
 
-  if selection is "3":
-    print(" * Check LO1-4 open collector outputs")
+  if selection == '3':
+    print('Check RO1-8 relay contact outputs')
     if HW == 0:
-      print("   used GPIO ports:")
-      print("     LO1: GPIO", prt_lo1,sep = '')
-      print("     LO2: GPIO", prt_lo2,sep = '')
-      print("     LO3: GPIO", prt_lo3,sep = '')
-      print("     LO4: GPIO", prt_lo4,sep = '')
-      print("   Press ^C to stop!")
+      print('   used GPIO ports:')
+      print('     RO1: GPIO', gpio_ro1, sep = '')
+      print('     RO2: GPIO', gpio_ro2, sep = '')
+      print('     RO3: GPIO', gpio_ro3, sep = '')
+      print('     RO4: GPIO', gpio_ro4, sep = '')
+      print('     RO5: GPIO', gpio_ro5, sep = '')
+      print('     RO6: GPIO', gpio_ro6, sep = '')
+      print('     RO7: GPIO', gpio_ro7, sep = '')
+      print('     RO8: GPIO', gpio_ro8, sep = '')
+      print('   Press ^C to stop!')
       try:
         while True:
-          GPIO.output(prt_lo1,1)
+          GPIO.output(gpio_ro1, 1)
           time.sleep(1)
-          GPIO.output(prt_lo1,0)
-          GPIO.output(prt_lo2,1)
+          GPIO.output(gpio_ro1, 0)
+          GPIO.output(gpio_ro2, 1)
           time.sleep(1)
-          GPIO.output(prt_lo2,0)
-          GPIO.output(prt_lo3,1)
+          GPIO.output(gpio_ro2, 0)
+          GPIO.output(gpio_ro3, 1)
           time.sleep(1)
-          GPIO.output(prt_lo3,0)
-          GPIO.output(prt_lo4,1)
+          GPIO.output(gpio_ro3, 0)
+          GPIO.output(gpio_ro4, 1)
           time.sleep(1)
-          GPIO.output(prt_lo4,0)
+          GPIO.output(gpio_ro4, 0)
+          GPIO.output(gpio_ro5, 1)
+          time.sleep(1)
+          GPIO.output(gpio_ro5, 0)
+          GPIO.output(gpio_ro6, 1)
+          time.sleep(1)
+          GPIO.output(gpio_ro6, 0)
+          GPIO.output(gpio_ro7, 1)
+          time.sleep(1)
+          GPIO.output(gpio_ro7, 0)
+          GPIO.output(gpio_ro8, 1)
+          time.sleep(1)
+          GPIO.output(gpio_ro8, 0)
       except KeyboardInterrupt:
-        GPIO.output(prt_lo1,0)
-        GPIO.output(prt_lo2,0)
-        GPIO.output(prt_lo3,0)
-        GPIO.output(prt_lo4,0)
+        GPIO.output(gpio_ro1, 0)
+        GPIO.output(gpio_ro2, 0)
+        GPIO.output(gpio_ro3, 0)
+        GPIO.output(gpio_ro4, 0)
+        GPIO.output(gpio_ro5, 0)
+        GPIO.output(gpio_ro6, 0)
+        GPIO.output(gpio_ro7, 0)
+        GPIO.output(gpio_ro8, 0)
         print()
     else:
-      print("   used lines of LPT port:")
-      print('     LPT #',prt_lpt + 1,sep = '')
-      print("     LO1: D4")
-      print("     LO2: D5")
-      print("     LO3: D6")
-      print("     LO4: D7")
-      print("   Press ^C to stop!")
+      print('   used lines of LPT port:')
+      print('     address: ', hex(lpt_address + lpt_bits[9][0]))
+      for i in range(9,17):
+        if i==9:
+          print(' ',end='')
+        print('    RO' + str(i) +': bit ' + str(lpt_bits[i][1]) + ' negation: ' + str(lpt_bits[i][2]))
+      print('   Press ^C to stop!')
       try:
         while True:
-          portio.outb(16,LPTADDRESSES[prt_lpt])
+          writetoro(1,0,0,0,0,0,0,0)
           time.sleep(1)
-          portio.outb(32,LPTADDRESSES[prt_lpt])
+          writetoro(0,1,0,0,0,0,0,0)
           time.sleep(1)
-          portio.outb(64,LPTADDRESSES[prt_lpt])
+          writetoro(0,0,1,0,0,0,0,0)
           time.sleep(1)
-          portio.outb(128,LPTADDRESSES[prt_lpt])
+          writetoro(0,0,0,1,0,0,0,0)
+          time.sleep(1)
+          writetoro(0,0,0,0,1,0,0,0)
+          time.sleep(1)
+          writetoro(0,0,0,0,0,1,0,0)
+          time.sleep(1)
+          writetoro(0,0,0,0,0,0,1,0)
+          time.sleep(1)
+          writetoro(0,0,0,0,0,0,0,1)
           time.sleep(1)
       except KeyboardInterrupt:
-          portio.outb(0,LPTADDRESSES[prt_lpt])
-          print()
-
-  if selection is "4":
-    print(" * Write text to the mini serial console")
-    print("   used COM port:")
-    print("     device: ", prt_com)
-    print("     speed:  ", com_speed)
-    print("   Press ^C to stop!")
-    try:
-      while True:
-        com.open
-        com.write(str.encode(input() + EOL))
-        com.close
-    except KeyboardInterrupt:
+        writetoro(0,0,0,0,0,0,0,0)
         print()
-
 sys.exit(0)

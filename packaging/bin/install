@@ -36,9 +36,11 @@ SWCR=`cat documents/copyright`
 SWV=`cat documents/VERSION`
 INSTDIR="local"
 LANGUAGES="hu"
+PYLIB="/usr/$INSTDIR/lib/python`libraries/pyver.py`/dist-packages"
 SUBDIRS="/usr/$INSTDIR/bin \
          /usr/$INSTDIR/etc \
          /usr/$INSTDIR/etc/$SWN2 \
+         $PYLIB \
          /usr/$INSTDIR/share \
          /usr/$INSTDIR/share/doc \
          /usr/$INSTDIR/share/doc/$SWN2 \
@@ -148,6 +150,7 @@ sudo chmod 777 /var/$INSTDIR/lib/$SWN2
 echo "- copying files:"
 copy "LICENCE" "/usr/$INSTDIR/share/doc/$SWN2/COPYING"
 copy "documents/*" "/usr/$INSTDIR/share/doc/$SWN2/"
+copy "libraries/*.py" "$PYLIB/"
 copy "manuals/*.1.gz" "/usr/$INSTDIR/share/man/man1/"
 copy "manuals/*.7.gz" "/usr/$INSTDIR/share/man/man7/"
 copy "manuals/*.8.gz" "/usr/$INSTDIR/share/man/man8/"

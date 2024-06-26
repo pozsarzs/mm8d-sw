@@ -25,7 +25,7 @@ import time
 import dt510 as pwm
 
 # constants
-CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
+CONFFILE='@prefix@/etc/mm8d/mm8d.ini'
 
 # load configuration
 def loadconfiguration(CONFFILE):
@@ -45,23 +45,23 @@ def loadconfiguration(CONFFILE):
     pwm_speed = 9600
     pwm_speed = int(config.get(P, 'pwm_speed'))
   except:
-    print("ERROR #1: Cannot open configuration file!");
+    print('ERROR #1: Cannot open configuration file!');
     sys.exit(1);
 
 # main function
-print("\nDT-510 test utility * (C) 2024 Pozsar Zsolt")
-print("-------------------------------------------")
-print("Load configuration: %s..." % CONFFILE)
+print('\nDT-510 test utility * (C) 2024 Pozsar Zsolt')
+print('-------------------------------------------')
+print('Load configuration: %s...' % CONFFILE)
 loadconfiguration(CONFFILE)
-print(" - used port: " + pwm_port)
-print(" - baudrate:  " + str(pwm_speed))
+print(' - used port: ' + pwm_port)
+print(' - baudrate:  ' + str(pwm_speed))
 pwm.port = pwm_port
 pwm.baudrate = pwm_speed
 while True:
-  print("Press enter for read device (or q)")
-  selection = input("> ")
-  if selection == "Q" or selection == "q":
-    print("\nQuitting.")
+  print('Press enter for read device (or q)')
+  selection = input('> ')
+  if selection == 'Q' or selection == 'q':
+    print('\nQuitting.')
     sys.exit(0)
   if pwm.readregisters(pwm_modbusid) == 1:
     try:

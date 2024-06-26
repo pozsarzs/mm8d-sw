@@ -10,20 +10,16 @@ README.md                                                             DONE
 configure                                                             DONE
 configure.in                                                          DONE
 prepare                                                               DONE
-
 archives/get                                                          DONE
 archives/portio-0.5.tar.gz                                            DONE
 archives/pymodbus-3.6.8.tar.gz                                        DONE
-
 binary/Makefile                                                       DONE
 binary/arm/.gitignore                                                 DONE
 binary/i386/.gitignore                                                DONE
 binary/x86_64/.gitignore                                              DONE
-
 config/config.guess                                                   DONE
 config/config.sub                                                     DONE
 config/install-sh                                                     DONE
-
 documents/AUTHORS                                                     DONE
 documents/DM56A04 DM36B06 Command DEMO.txt                            DONE
 documents/DM56A04 DM36B06 MODBUS RTU Command.pdf                      DONE
@@ -47,13 +43,11 @@ documents/mm6d.txt                                                    DONE
 documents/mm7d.txt                                                    DONE
 documents/msc.txt                                                     DONE
 documents/pta9b01.txt                                                 DONE
-
-libraries/Makefile 
+libraries/Makefile                                                    DONE
 libraries/dm36b06.py                                                  DONE
 libraries/dt510.py                                                    DONE
 libraries/pta9b01.py                                                  DONE
-libraries/setup.py
-
+libraries/pyver.py                                                    DONE
 manuals/Makefile                                                      DONE
 manuals/getcameras.cgi.7.in                                           DONE
 manuals/getchannel.cgi.7.in                                           DONE
@@ -81,12 +75,10 @@ manuals/mm8d-updatestartpage.1.in                                     DONE
 manuals/mm8d-viewlog.1.in                                             DONE
 manuals/mm8d-webpage.1.in                                             DONE
 manuals/mm8d.py.8.in                                                  DONE
-
 messages/Makefile                                                     DONE
 messages/mm8d_hu.msg                                                  DONE
-
-packaging/bin/install
-packaging/bin/uninstall
+packaging/bin/install                                                 DONE
+packaging/bin/uninstall                                               DONE
 packaging/eec-amd64/control
 packaging/eec-amd64/postinst                                          DONE
 packaging/eec-amd64/prerm                                             DONE
@@ -111,15 +103,13 @@ packaging/sw-i386/prerm                                               DONE
 packaging/web-all/control
 packaging/web-all/postinst                                            DONE
 packaging/web-all/prerm                                               DONE
-
 programs/Makefile                                                     DONE
 programs/mm8d-test-dm36b06.py.in                                      DONE
 programs/mm8d-test-dt510.py.in                                        DONE
-programs/mm8d-test-mm8d.py.in
+programs/mm8d-test-mm8d.py.in                                         DONE
 programs/mm8d-test-msc.py.in                                          DONE
 programs/mm8d-test-pta9b01.py.in                                      DONE
 programs/mm8d.py.in                                                   DONE
-
 scripts/Makefile                                                      DONE
 scripts/mm8d-creatediagrams.in                                        DONE
 scripts/mm8d-editenvirconf.in                                         DONE
@@ -136,7 +126,6 @@ scripts/mm8d-stopdaemon.in                                            DONE
 scripts/mm8d-updatestartpage.in                                       DONE
 scripts/mm8d-viewlog.in                                               DONE
 scripts/mm8d-webpage.in                                               DONE
-
 settings/Makefile                                                     DONE
 settings/cron.d/mm8d-sw                                               DONE
 settings/cron.d/mm8d-web                                              DONE
@@ -155,7 +144,6 @@ settings/mm8d/mm8d.ini.in                                             DONE
 settings/motd.in                                                      DONE
 settings/systemd/system/mm8d.service                                  DONE
 settings/systemd/system/mm8d.service.in                               DONE
-
 source/Makefile                                                       DONE
 source/_lib/arm-linux/.gitignore                                      DONE
 source/_lib/i386-linux/.gitignore                                     DONE
@@ -204,7 +192,6 @@ source/override/incpage1screen.pas                                    DONE
 source/override/incsaveoutfiles.pas                                   DONE
 source/override/override.pas                                          DONE
 source/untcommon.pas                                                  DONE
-
 webpage/Makefile                                                      DONE
 webpage/cgi-bin/Makefile                                              DONE
 webpage/cgi-bin/getcameras.cgi.in                                     DONE

@@ -25,7 +25,7 @@ import time
 import dm36b06 as tdp
 
 # constants
-CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
+CONFFILE='@prefix@/etc/mm8d/mm8d.ini'
 
 # load configuration
 def loadconfiguration(CONFFILE):
@@ -46,30 +46,30 @@ def loadconfiguration(CONFFILE):
     tdp_speed = 9600
     tdp_speed = int(config.get(Y, 'tdp_speed'))
   except:
-    print("ERROR #1: Cannot open configuration file!");
+    print('ERROR #1: Cannot open configuration file!');
     sys.exit(1);
 
 # main function
-print("\nDM36B06 test utility * (C) 2024 Pozsar Zsolt")
-print("--------------------------------------------")
-print("Load configuration: %s..." % CONFFILE)
+print('\nDM36B06 test utility * (C) 2024 Pozsar Zsolt')
+print('--------------------------------------------')
+print('Load configuration: %s...' % CONFFILE)
 loadconfiguration(CONFFILE)
-print(" - used port: " + tdp_port)
-print(" - baudrate:  " + str(tdp_speed))
+print(' - used port: ' + tdp_port)
+print(' - baudrate:  ' + str(tdp_speed))
 tdp.port = tdp_port
 tdp.baudrate = tdp_speed
 while True:
-  print("What channel do you want to test? (1-8 or q)")
-  selection = input("> ")
-  if selection == "Q" or selection == "q":
-    print("\nQuitting.")
+  print('What channel do you want to test? (1-8 or q)')
+  selection = input('> ')
+  if selection == 'Q' or selection == 'q':
+    print('\nQuitting.')
     sys.exit(0)
   if selection.isnumeric():
     iselection = int(selection)
   else:
     iselection = 255
   if iselection > 0 and iselection < 8:
-    print("Modbus ID: " + str(tdpch_modbusid[iselection]))
+    print('Modbus ID: ' + str(tdpch_modbusid[iselection]))
     tdp.cleardisplay(tdpch_modbusid[iselection])
     tdp.writestr(tdpch_modbusid[iselection], 'CH'+ selection)
     time.sleep(2)

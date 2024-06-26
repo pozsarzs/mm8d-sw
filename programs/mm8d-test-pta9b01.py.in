@@ -25,7 +25,7 @@ import time
 import pta9b01 as otm
 
 # constants
-CONFFILE="@prefix@/etc/mm8d/mm8d.ini"
+CONFFILE='@prefix@/etc/mm8d/mm8d.ini'
 
 # load configuration
 def loadconfiguration(CONFFILE):
@@ -45,23 +45,23 @@ def loadconfiguration(CONFFILE):
     otm_speed = 9600
     otm_speed = int(config.get(T, 'otm_speed'))
   except:
-    print("ERROR #1: Cannot open configuration file!");
+    print('ERROR #1: Cannot open configuration file!');
     sys.exit(1);
 
 # main function
-print("\nPTA9B01 test utility * (C) 2024 Pozsar Zsolt")
-print("--------------------------------------------")
-print("Load configuration: %s..." % CONFFILE)
+print('\nPTA9B01 test utility * (C) 2024 Pozsar Zsolt')
+print('--------------------------------------------')
+print('Load configuration: %s...' % CONFFILE)
 loadconfiguration(CONFFILE)
-print(" - used port: " + otm_port)
-print(" - baudrate:  " + str(otm_speed))
+print(' - used port: ' + otm_port)
+print(' - baudrate:  ' + str(otm_speed))
 otm.port = otm_port
 otm.baudrate = otm_speed
 while True:
-  print("Press enter for read device (or q)")
-  selection = input("> ")
-  if selection == "Q" or selection == "q":
-    print("\nQuitting.")
+  print('Press enter for read device (or q)')
+  selection = input('> ')
+  if selection == 'Q' or selection == 'q':
+    print('\nQuitting.')
     sys.exit(0)
   if otm.readregisters(otm_modbusid) == 1:
     try:
