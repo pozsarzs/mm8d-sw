@@ -47,5 +47,5 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
  
 #### External libraries in the package
  - [portio](http://portio.inrim.it/portio-0.5.tar.gz) library v0.5 by Fabrizio Pollastri (GNU GPL)
- - [PyModbus](https://github.com/pymodbus-dev/pymodbus/archive/refs/tags/v3.6.8.tar.gz -O pymodbus-3.6.8.tar.gz) library v3.6.8 by Pymodbus (BSD)
+ - [PyModbus](https://github.com/pymodbus-dev/pymodbus/archive/refs/tags/v3.6.8.tar.gz) library v3.6.8 by Pymodbus (BSD)
  
