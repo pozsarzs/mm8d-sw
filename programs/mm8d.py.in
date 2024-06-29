@@ -52,7 +52,7 @@ COMPMV6=0
 COMPSV6=4
 COMPMV7=0
 COMPSV7=4
-DELAY=2
+DELAY=3
 
 global EOL
 global LPTADDRESSES
@@ -243,6 +243,19 @@ def loadconfiguration(conffile):
     global gpio_ro7
     global gpio_ro8
   else:
+    global ipc_gpio_enable
+    global ipc_gpio_handler
+    global ipc_gpio_i1
+    global ipc_gpio_i2
+    global ipc_gpio_i3
+    global ipc_gpio_i4
+    global ipc_gpio_ro1
+    global ipc_gpio_ro2
+    global ipc_gpio_ro3
+    global ipc_gpio_ro4
+    global ipc_led_alarm
+    global ipc_led_enable
+    global ipc_led_status
     global lpt_address
     global lpt_bits
   C = 'channels'
@@ -316,6 +329,24 @@ def loadconfiguration(conffile):
         lpt_bits[x][2] = int(config.get(I, 'lpt_ro' + str(x - 8) + '_negation'))
       for x in range(0,17):
         lpt_bits[x][2] = 1 if lpt_bits[x][2] >= 1 else 0
+      ipc_gpio_enable = 0
+      ipc_gpio_enable = int(config.get(I, 'ipc_gpio_enable'))
+      ipc_gpio_handler = ''
+      ipc_gpio_handler = config.get(I, 'ipc_gpio_handler')
+      ipc_gpio_i1 = int(config.get(I, 'ipc_gpio_i1'))
+      ipc_gpio_i2 = int(config.get(I, 'ipc_gpio_i2'))
+      ipc_gpio_i3 = int(config.get(I, 'ipc_gpio_i3'))
+      ipc_gpio_i4 = int(config.get(I, 'ipc_gpio_i4'))
+      ipc_gpio_ro1 = int(config.get(I, 'ipc_gpio_ro1'))
+      ipc_gpio_ro2 = int(config.get(I, 'ipc_gpio_ro2'))
+      ipc_gpio_ro3 = int(config.get(I, 'ipc_gpio_ro3'))
+      ipc_gpio_ro4 = int(config.get(I, 'ipc_gpio_ro4'))
+      ipc_led_alarm = 0
+      ipc_led_alarm = int(config.get(I, 'ipc_led_alarm'))
+      ipc_led_enable = 0
+      ipc_led_enable = int(config.get(I, 'ipc_led_enable'))
+      ipc_led_status = 1
+      ipc_led_status = int(config.get(I, 'ipc_led_status'))
     # serial console
     msc_enable = 0
     msc_enable = int(config.get(S, 'msc_enable'))
@@ -604,13 +635,6 @@ def outputoverride(channel,output,status):
     s = status
   return s
 
-# blink ACTIVE LED
-def blinkactiveled(status):
-  global led_active
-  led_active = status
-  writelocalports()
-  return 0
-
 # get external temperature from openweathermap.org
 def getexttemp():
   writedebuglog('i', 'Get external temperature from internet.')
@@ -871,7 +895,20 @@ def initializelocalports():
         writedebuglog('e', 'ERROR #17: Cannot access I/O port: ' + str(hex(lpt_address + i)) + '!')
         sys.exit(17)
     portio.outb(0, lpt_address)
- 
+    # GPIO port of IPC
+    if (ipc_gpio_enable) or (ipc_led_enable):
+      if not ipc.setup():
+        writedebuglog('e', 'ERROR #17: Cannot access GPIO port!')
+        sys.exit(17)
+    if ipc_gpio_enable:
+      ipc.output(ipc_gpio_ro1, 0)
+      ipc.output(ipc_gpio_ro2, 0)
+      ipc.output(ipc_gpio_ro3, 0)
+      ipc.output(ipc_gpio_ro4, 0)
+    if ipc_led_enable:
+      ipc.leds(ipc_led_alarm, 0)
+      ipc.leds(ipc_led_status, 0)
+
 # write data to GPIO/LPT port
 def writelocalports():
   if HW == 0:
@@ -894,6 +931,15 @@ def writelocalports():
     except:
       return 0
   else:
+    # GPIO port of IPC
+    if ipc_led_enable:
+      ipc.leds(ipc_led_alarm, led_error)
+      ipc.leds(ipc_led_status, led_active)
+    if ipc_gpio_enable:
+      ipc.output(ipc_gpio_ro1, relay_alarm)
+      ipc.output(ipc_gpio_ro2, relay_tube1)
+      ipc.output(ipc_gpio_ro3, relay_tube2)
+      ipc.output(ipc_gpio_ro4, relay_tube3)
     # paralel (LPT) port
     lpterror = 0
     outdata = 0
@@ -987,6 +1033,14 @@ def closelocalports():
   if HW == 0:
     GPIO.cleanup
   else:
+    if ipc_led_enable:
+      ipc.leds(ipc_led_alarm, 0)
+      ipc.leds(ipc_led_status, 0)
+    if ipc_gpio_enable:
+      ipc.output(ipc_gpio_ro1, 0)
+      ipc.output(ipc_gpio_ro2, 0)
+      ipc.output(ipc_gpio_ro3, 0)
+      ipc.output(ipc_gpio_ro4, 0)
     lpterror = 0
     outdata = 0
     outbit = 0
@@ -1447,6 +1501,8 @@ MT = 'tcp'
 # load main settings
 loadconfiguration(CONFDIR + 'mm8d.ini')
 # load modules
+if (ipc_gpio_enable) or (ipc_led_enable) == 1:
+  ipc = __import__(ipc_gpio_handler)
 if fwm_enable == 1:
   fwm = __import__(fwm_handler)
   fwm.baudrate = fwm_speed
@@ -1528,10 +1584,11 @@ if otm_enable == 1:
 writedebuglog('i', 'External temperature: ' + str(exttemp) + ' degree Celsius')
 # *** start loop ***
 writedebuglog('i', 'Starting program as daemon.')
+time.sleep(1)
 while True:
   try:
-    time.sleep(1)
-    blinkactiveled(1);
+    led_active = 1
+    writelocalports()
     # section #1:
     # read data from local port
     writedebuglog('i', 'Read data from local I/O port.')
@@ -1545,9 +1602,9 @@ while True:
     # analise data
     analise(1);
     # override state of outputs
-    relay_tube1 = int(outputoverride(0,1,relay_tube1))
-    relay_tube2 = int(outputoverride(0,2,relay_tube2))
-    relay_tube3 = int(outputoverride(0,3,relay_tube3))
+    relay_tube1 = int(outputoverride(0, 1, relay_tube1))
+    relay_tube2 = int(outputoverride(0, 2, relay_tube2))
+    relay_tube3 = int(outputoverride(0, 3, relay_tube3))
     if relay_tube1 == 1:
       writedebuglog('i', 'CH0: -> water pump and valve #1 ON')
     else:
@@ -1729,7 +1786,8 @@ while True:
     else:
       loop = loop + 1
     # waiting
-    blinkactiveled(0);
+    led_active = 0
+    writelocalports()
     writedebuglog('i', 'Waiting ' + str(DELAY) + ' seconds.')
     time.sleep(DELAY)
   except:

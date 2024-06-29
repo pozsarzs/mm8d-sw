@@ -37,13 +37,18 @@ GitHub: <https://github.com/pozsarzs/mm8d-sw>
 |licence               |EUPL v1.2                                       |
 |local user interface  |CLI, TUI, WUI                                   |
 |remote access         |HTTP (html, txt, xml), SSH                      |
-|remote device access  |RS-232/485: Modbus/ASCII, Modbus/RTU            |
+|remote device access  |RS-232, RS-485: Modbus/ASCII, Modbus/RTU        |
 |                      |LAN: HTTP, Modbus/TCP                           |
-|                      |I/O: LPT port with interface cards              |
-|                      |- 5 isolated inputs 24-36 V DC                  |
-|                      |- 4 open collector LED outputs                  |
-|                      |- 8 NO/NC relay contact outputs                 |
-|                      |- 4 open collector relay state sign LED outputs |
+|                      |I/O: with interface card(s)                     |
+|                      |  + Raspberry Pi: GPIO port                     |
+|                      |  + PC: LPT (PIO) port                          |
+|                      |    - 5 isolated inputs 24-36 V DC              |
+|                      |    - 4 open collector LED outputs              |
+|                      |    - 8 NO/NC relay contact outputs             |
+|                      |  + IPC: GPIO port                              |
+|                      |    - 4 isolated inputs 24-36 V DC              |
+|                      |    - 2 open collector LED outputs              |
+|                      |    - 4 NO/NC relay contact outputs             |
  
 #### External libraries in the package
  - [portio](http://portio.inrim.it/portio-0.5.tar.gz) library v0.5 by Fabrizio Pollastri (GNU GPL)

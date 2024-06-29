@@ -11,10 +11,6 @@
 #   This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.
-# 
-# Exit codes:
-#   0: error
-#   1: normal exit
 
 import serial
 import time 

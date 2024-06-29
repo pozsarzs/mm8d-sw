@@ -1,0 +1,17 @@
+Variables
+~~~~~~~~~
+global baseaddress
+global bits
+global maskread
+global offsetgpio
+global offsetleds
+
+Functions
+~~~~~~~~~
+def setup()
+def input(n)
+def output(n, d)
+def leds(n, d)
+--------------------------------------------------------------------------------
+  MM8D * Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>
+

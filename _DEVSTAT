@@ -42,10 +42,12 @@ documents/logfiles.txt                                                DONE
 documents/mm6d.txt                                                    DONE
 documents/mm7d.txt                                                    DONE
 documents/msc.txt                                                     DONE
+documents/nice3120gpio.txt                                            DONE
 documents/pta9b01.txt                                                 DONE
 libraries/Makefile                                                    DONE
 libraries/dm36b06.py                                                  DONE
 libraries/dt510.py                                                    DONE
+libraries/nice3120gpio.py                                             DONE
 libraries/pta9b01.py                                                  DONE
 libraries/pyver.py                                                    DONE
 manuals/Makefile                                                      DONE

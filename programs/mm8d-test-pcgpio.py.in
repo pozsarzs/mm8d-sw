@@ -2,7 +2,7 @@
 # +----------------------------------------------------------------------------+
 # | MM8D v0.6 * Growing house and irrigation controlling and monitoring system |
 # | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                  |
-# | mm8d-test-dm36b06.py                                                       |
+# | mm8d-test-pcgpio.py                                                        |
 # | DM36b06 type display test program                                          |
 # +----------------------------------------------------------------------------+
 

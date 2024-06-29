@@ -141,6 +141,20 @@ lpt_ro7_negation=0
 lpt_ro8_bit=7
 lpt_ro8_negation=0
 
+# GPIO ports and status LEDs on industrial PC
+ipc_gpio_enable=1
+ipc_gpio_i1=24
+ipc_gpio_i2=25
+ipc_gpio_i3=26
+ipc_gpio_i4=27
+ipc_gpio_ro1=20
+ipc_gpio_ro2=21
+ipc_gpio_ro3=22
+ipc_gpio_ro4=23
+ipc_gpio_statusled=0
+ipc_gpio_alarmled=1
+ipc_gpio_handler=nice3120gpio
+
 ;
 ; external devices
 ;
