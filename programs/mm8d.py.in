@@ -1044,22 +1044,36 @@ def closelocalports():
     lpterror = 0
     outdata = 0
     outbit = 0
+    outdata = 0
+    outbit = 0
+    outbit = lpt_bits[5][2] ^ 0
     outdata = outdata | (2 ** lpt_bits[5][1]) * outbit
+    outbit = lpt_bits[6][2] ^ 0
     outdata = outdata | (2 ** lpt_bits[6][1]) * outbit
+    outbit = lpt_bits[7][2] ^ 0
     outdata = outdata | (2 ** lpt_bits[7][1]) * outbit
+    outbit = lpt_bits[8][2] ^ 0
     outdata = outdata | (2 ** lpt_bits[8][1]) * outbit
-    portio.outb(outdata,lpt_address + lpt_bits[5][0])
+    portio.outb(outdata, lpt_address + lpt_bits[5][0])
     if (0x0F & portio.inb(lpt_address + lpt_bits[5][0]) == outdata):
       outdata = 0
       outbit = 0
+      outbit = lpt_bits[9][2] ^ 0
       outdata = outdata | (2 ** lpt_bits[9][1]) * outbit
+      outbit = lpt_bits[10][2] ^ 0
       outdata = outdata | (2 ** lpt_bits[10][1]) * outbit
+      outbit = lpt_bits[11][2] ^ 0
       outdata = outdata | (2 ** lpt_bits[11][1]) * outbit
+      outbit = lpt_bits[12][2] ^ 0
       outdata = outdata | (2 ** lpt_bits[12][1]) * outbit
+      outbit = lpt_bits[13][2] ^ 0
       # unused outputs
       outdata = outdata | (2 ** lpt_bits[13][1]) * outbit
+      outbit = lpt_bits[14][2] ^ 0
       outdata = outdata | (2 ** lpt_bits[14][1]) * outbit
+      outbit = lpt_bits[15][2] ^ 0
       outdata = outdata | (2 ** lpt_bits[15][1]) * outbit
+      outbit = lpt_bits[16][2] ^ 0
       outdata = outdata | (2 ** lpt_bits[16][1]) * outbit
       portio.outb(outdata,lpt_address + lpt_bits[9][0])
       if (portio.inb(lpt_address + lpt_bits[9][0]) != outdata):

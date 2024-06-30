@@ -198,8 +198,8 @@ while True:
     if HW == 0:
       GPIO.cleanup()
     else:
-      portio.outb(0, lpt_address + lpt_bits[5][0])
-      portio.outb(0, lpt_address + lpt_bits[9][0])
+      writetolo(0,0,0,0)
+      writetoro(0,0,0,0,0,0,0,0)
     sys.exit(0)
 
   if selection == '1':
