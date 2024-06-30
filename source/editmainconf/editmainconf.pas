@@ -43,6 +43,13 @@ var
   gpio_i:             array[1..5] of byte;
   gpio_lo:            array[1..4] of byte;
   gpio_ro:            array[1..8] of byte;
+  ipc_gpio_enable:    byte;
+  ipc_gpio_handler:   string;
+  ipc_gpio_i:         array[1..4] of byte;
+  ipc_gpio_ro:        array[1..4] of byte;
+  ipc_led_alarm:      byte;
+  ipc_led_enable:     byte;
+  ipc_led_status:     byte;
   ipcsec_enable:      byte;
   ipcsec_url:         array[1..4] of string;
   ipctent_enable:     byte;
@@ -118,7 +125,7 @@ const
                                            (43,0,0,0,0,0),
                                            (23,0,0,0,0,0),
                                            (21,0,0,0,0,0),
-                                           (15,15,15,0,0,0),
+                                           (24,65,65,0,0,0),
                                            (24,65,24,0,0,0),
                                            (22,22,62,62,0,0),
                                            (30,30,0,0,0,0),
@@ -132,7 +139,7 @@ const
                                            (3,0,0,0,0,0),
                                            (3,0,0,0,0,0),
                                            (3,0,0,0,0,0),
-                                           (3,9,14,0,0,0),
+                                           (4,4,22,0,0,0),
                                            (4,4,22,0,0,0),
                                            (4,11,4,11,0,0),
                                            (3,12,0,0,0,0),
@@ -146,7 +153,7 @@ const
                                            (5,0,0,0,0,0),
                                            (9,0,0,0,0,0),
                                            (6,0,0,0,0,0),
-                                           (7,12,21,0,0,0),
+                                           (20,20,24,0,0,0),
                                            (20,20,22,0,0,0),
                                            (7,15,8,15,0,0),
                                            (10,15,0,0,0,0),
@@ -288,41 +295,32 @@ begin
          end;
       // -- page #8 --
       8: begin
-           if (block<4) then
-           begin
-             if isnumber(c) then
-               if length(s)<2 then s:=s+c;
-             if c=#8 then delete(s,length(s),1);
-           end;
-           if (block=4) then
-           begin
-             if posy=18 then
-             begin
-               if (c='1') or (c='2') or (c='3') then s:=c;
-               if c=#8 then delete(s,length(s),1);
-             end else
-             begin
-               if isnumber(c) then
-                 if length(s)<2 then s:=s+c;
-               if c=#8 then delete(s,length(s),1);
-             end;
-           end;
-           if (block=5) then
-           begin
-             if posy=23 then
+            if block=1 then
+            begin  
+              if isnumber(c) then
+                if (length(s)<2) then s:=s+c;
+              if c=#8 then delete(s,length(s),1);
+            end;
+            if block=2 then
+            begin  
+              if isnumber(c) then
+                if ((posy>=4) and (posy<=7)) or
+                   (posy=9) or
+                   (posy=11) or
+                   ((posy>=13) and (posy<=16)) then
+                  if (length(s)<2) then s:=s+c;
+              if c=#8 then delete(s,length(s),1);
+            end;
+            if block=3 then
+            begin
+             if (posy>=22) and (posy<=23) then
              begin
                if (c='0') or (c='1') then s:=c;
                if c=#8 then delete(s,length(s),1);
-             end;
-             if (posy>23) and (posy<26) then
+             end else
              begin
                if (length(s)<50) and (c<>#0) and (c<>#8) and
                  (c<>#9) and (c<>#13) and (c<>#27) then s:=s+c;
-               if c=#8 then delete(s,length(s),1);
-             end;
-             if posy=26 then
-             begin
-               if (c='0') or (c='1') or (c='2') or (c='3') then s:=c;
                if c=#8 then delete(s,length(s),1);
              end;
            end;
@@ -625,29 +623,78 @@ begin
       // page #8 - block #1
       if block=1 then
       begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        gpio_i[posy-2]:=strtoint(s);
-        write(gpio_i[posy-2]);
+        if posy<=8 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          gpio_i[posy-2-1]:=strtoint(s);
+          write(gpio_i[posy-2-1]);
+        end;
+        if (posy>8) and (posy<=12) then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          gpio_lo[posy-2-6]:=strtoint(s);
+          write(gpio_lo[posy-2-6]);
+        end;
+        if posy>12 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          gpio_ro[posy-2-10]:=strtoint(s);
+          write(gpio_ro[posy-2-10]);
+        end;
       end;
       // page #8 - block #2
       if block=2 then
       begin
-        textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
-        gotoxy(MINPOSX[page,block],posy);
-        gpio_lo[posy-2-5]:=strtoint(s);
-        write(gpio_lo[posy-2-5]);
+        if posy<=7 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          ipc_gpio_i[posy-2-1]:=strtoint(s);
+          write(ipc_gpio_i[posy-2-1]);
+        end;
+        if posy=9 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          ipc_led_status:=strtoint(s);
+          write(ipc_led_status);
+        end;
+        if posy=11 then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          ipc_led_alarm:=strtoint(s);
+          write(ipc_led_alarm);
+        end;
+        if (posy>12) and (posy<=16) then
+        begin
+          textbackground(blue);
+          gotoxy(MINPOSX[page,block],posy); write('  ');
+          gotoxy(MINPOSX[page,block],posy);
+          ipc_gpio_ro[posy-2-10]:=strtoint(s);
+          write(ipc_gpio_ro[posy-2-10]);
+        end;
       end;
       // page #8 - block #3
       if block=3 then
       begin
         textbackground(blue);
-        gotoxy(MINPOSX[page,block],posy); clreol;
+        gotoxy(MINPOSX[page,block],posy); write('  ');
         gotoxy(MINPOSX[page,block],posy);
-        gpio_ro[posy-2-10]:=strtoint(s);
-        write(gpio_ro[posy-2-10]);
+        case posy of
+          22: begin ipc_gpio_enable:=strtoint(s); write(ipc_gpio_enable); end;
+          23: begin ipc_led_enable:=strtoint(s); write(ipc_led_enable); end;
+          24: begin ipc_gpio_handler:=s; write(ipc_gpio_handler); end;
+        end;
       end;
     end;
     // -- page #9 --
@@ -661,18 +708,18 @@ begin
           textbackground(blue);
           gotoxy(MINPOSX[page,block],posy); write('  ');
           gotoxy(MINPOSX[page,block],posy);
-          lpt_i_bit[posy-2-10]:=strtoint(s);
-          write(lpt_i_bit[posy-2-10]);
+          lpt_i_bit[posy-2-1]:=strtoint(s);
+          write(lpt_i_bit[posy-2-1]);
         end;
-        if (posy>8) and (posy<=11) then
+        if (posy>8) and (posy<=12) then
         begin
           textbackground(blue);
           gotoxy(MINPOSX[page,block],posy); write('  ');
           gotoxy(MINPOSX[page,block],posy);
-          lpt_lo_bit[posy-2-10]:=strtoint(s);
-          write(lpt_lo_bit[posy-2-10]);
+          lpt_lo_bit[posy-2-6]:=strtoint(s);
+          write(lpt_lo_bit[posy-2-6]);
         end;
-        if posy>11 then
+        if posy>12 then
         begin
           textbackground(blue);
           gotoxy(MINPOSX[page,block],posy); write('  ');
@@ -689,16 +736,16 @@ begin
           textbackground(blue);
           gotoxy(MINPOSX[page,block],posy); write('  ');
           gotoxy(MINPOSX[page,block],posy);
-          lpt_i_negation[posy-2-10]:=strtoint(s);
-          write(lpt_i_negation[posy-2-10]);
+          lpt_i_negation[posy-2-1]:=strtoint(s);
+          write(lpt_i_negation[posy-2-1]);
         end;
         if (posy>8) and (posy<=11) then
         begin
           textbackground(blue);
           gotoxy(MINPOSX[page,block],posy); write('  ');
           gotoxy(MINPOSX[page,block],posy);
-          lpt_lo_negation[posy-2-10]:=strtoint(s);
-          write(lpt_lo_negation[posy-2-10]);
+          lpt_lo_negation[posy-2-6]:=strtoint(s);
+          write(lpt_lo_negation[posy-2-6]);
         end;
         if posy>11 then
         begin

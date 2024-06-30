@@ -34,6 +34,11 @@ begin
     fwm_modbusid:=strtoint(iif.ReadString(F,'fwm_modbusid','0'));
     fwm_port:=iif.ReadString(F,'fwm_port','/dev/ttyS2');
     fwm_speed:=strtoint(iif.ReadString(F,'fwm_speed','9600'));
+    ipc_gpio_enable:=strtoint(iif.ReadString(I,'ipc_gpio_enable','0'));
+    ipc_gpio_handler:=iif.ReadString(I,'ipc_gpio_handler','');
+    ipc_led_alarm:=strtoint(iif.ReadString(I,'ipc_led_alarm','0'));
+    ipc_led_enable:=strtoint(iif.ReadString(I,'ipc_led_enable','0'));
+    ipc_led_status:=strtoint(iif.ReadString(I,'ipc_led_status','0'));
     ipcsec_enable:=strtoint(iif.ReadString(IPC,'ipcsec_enable','0'));
     ipctent_enable:=strtoint(iif.ReadString(IPC,'ipctent_enable','0'));
     lng:=iif.ReadString('language','lng','en');
@@ -76,6 +81,8 @@ begin
     for b:=1 to 4 do
     begin
       gpio_lo[b]:=strtoint(iif.ReadString(I,'gpio_lo'+inttostr(b),'0'));
+      ipc_gpio_i[b]:=strtoint(iif.ReadString(I,'ipc_gpio_i'+inttostr(b),'0'));
+      ipc_gpio_ro[b]:=strtoint(iif.ReadString(I,'ipc_gpio_ro'+inttostr(b),'0'));
       ipcsec_url[b]:=iif.ReadString(IPC,'ipcsec'+inttostr(b)+'_url','');
       lpt_lo_bit[b]:=strtoint(iif.ReadString(I,'lpt_lo'+inttostr(b)+'_bit','0'));
       lpt_lo_negation[b]:=strtoint(iif.ReadString(I,'lpt_lo'+inttostr(b)+'_negation','0'));

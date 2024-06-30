@@ -146,6 +146,21 @@ begin
       writeln(iif,'lpt_ro'+inttostr(b)+'_negation='+inttostr(lpt_ro_negation[b]));
     end;
     writeln(iif,'');
+    writeln(iif,'# GPIO ports and status LEDs on industrial PC');
+    writeln(iif,'ipc_gpio_enable='+inttostr(ipc_gpio_enable));
+    for b:=1 to 4 do
+    begin
+      writeln(iif,'ipc_gpio_i'+inttostr(b)+'='+inttostr(ipc_gpio_i[b]));
+    end;
+    for b:=1 to 4 do
+    begin
+      writeln(iif,'ipc_gpio_ro'+inttostr(b)+'='+inttostr(ipc_gpio_ro[b]));
+    end;
+    writeln(iif,'ipc_led_enable='+inttostr(ipc_led_enable));
+    writeln(iif,'ipc_led_alarm='+inttostr(ipc_led_alarm));
+    writeln(iif,'ipc_led_status='+inttostr(ipc_led_status));
+    writeln(iif,'ipc_gpio_handler='+ipc_gpio_handler);
+    writeln(iif,'');
     writeln(iif,';');
     writeln(iif,'; external devices');
     writeln(iif,';');

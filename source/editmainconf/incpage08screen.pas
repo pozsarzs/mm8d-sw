@@ -2,7 +2,7 @@
 { | MM8D v0.6 * Growing house and irrigation controlling and monitoring sys. | }
 { | Copyright (C) 2020-2024 Pozsár Zsolt <pozsarzs@gmail.com>                | }
 { | incpage08screen.pas                                                      | }
-{ | Show screen content of page #8                                           | }
+{ | Show screen content of page #08                                          | }
 { +--------------------------------------------------------------------------+ }
 
 //   This program is free software: you can redistribute it and/or modify it
@@ -16,74 +16,71 @@
   Relevant settings file section:
 
   [localio]
-  gpio_i1=2
-  gpio_i2=3
-  gpio_i3=4
-  gpio_i4=5
-  gpio_i5=6
-  gpio_lo1=16
-  gpio_lo2=17
-  gpio_lo3=18
-  gpio_lo4=19
-  gpio_ro1=20
-  gpio_ro2=21
-  gpio_ro3=22
-  gpio_ro4=23
-  gpio_ro5=24
-  gpio_ro6=25
-  gpio_ro7=26
-  gpio_ro8=27
+  gpio_i?=2
+  gpio_lo?=16
+  gpio_ro?=20
+
+  ipc_gpio_enable=0
+  ipc_gpio_i?=24
+  ipc_gpio_ro?=20
+  ipc_led_enable=1
+  ipc_led_alarm=1
+  ipc_led_status=0
+  ipc_gpio_handler=nice3120gpio
 }
 
 // write options to screen
 procedure page08screen;
-var
-  b: byte;
 const
   PAGE=8;
 var
+  b: byte;
   block: byte;
 begin
-  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': I/O ports');
+  header(PRGNAME+' '+VERSION+' * Page '+inttostr(PAGE)+'/'+inttostr(LASTPAGE)+': GPIO port');
   textcolor(lightcyan);
   block:=1;
-  for b:=1 to 5 do
+  gotoxy(4,MINPOSY[PAGE,block]-1); write('Raspberry Pi:');
+  for b:=1 to 17 do
   begin
-    textcolor(lightcyan);
-    gotoxy(4,MINPOSY[PAGE,block]+b-1); write('I'+inttostr(b)+':   ');
-    textcolor(white);
-    write('GPIO');
+    gotoxy(5,MINPOSY[PAGE,block]+b-1);
+    if b<=5 then write('input i'+inttostr(b)+':');
+    if (b>5) and (b<=9) then write('LED output lo'+inttostr(b-5)+':');
+    if (b>9) then write('relay output ro'+inttostr(b-9)+':');
   end;
   block:=2;
-  for b:=1 to 4 do
+  gotoxy(45,MINPOSY[PAGE,block]-1); write('industrial PC:');
+  for b:=1 to 17 do
   begin
-    textcolor(lightcyan);
-    gotoxy(4,MINPOSY[PAGE,block]+b-1); write('LO'+inttostr(b)+':  ');
-    textcolor(white);
-    write('GPIO');
+    gotoxy(46,MINPOSY[PAGE,block]+b-1);
+    if b<=5 then write('input i'+inttostr(b)+':');
+    if (b>5) and (b<=9) then write('LED output lo'+inttostr(b-5)+':');
+    if (b>9) then write('relay output ro'+inttostr(b-9)+':');
   end;
   block:=3;
-  for b:=1 to 8 do
-  begin
-    textcolor(lightcyan);
-    gotoxy(4,MINPOSY[PAGE,block]+b-1); write('RO'+inttostr(b)+':  ');
-    textcolor(white);
-    write('GPIO');
-  end;
+  gotoxy(45,MINPOSY[PAGE,block]); write('enable GPIO port:');
+  gotoxy(45,MINPOSY[PAGE,block]+1); write('enable LEDs:');
+  gotoxy(45,MINPOSY[PAGE,block]+2); write('handler module:');
   textcolor(white);
   block:=1;
-  for b:=1 to 5 do
+  for b:=1 to 17 do
   begin
-    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1); writeln(gpio_i[b]);
+    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1);
+    if b<=5 then write(gpio_i[b]);
+    if (b>5) and (b<=9) then write(gpio_lo[b-5]);
+    if (b>9) then write(gpio_ro[b-9]);
   end;
   block:=2;
-  for b:=1 to 4 do
-  begin  
-    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1); writeln(gpio_lo[b]);
+  for b:=1 to 17 do
+  begin
+    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1);
+    if b<=4 then write(ipc_gpio_i[b]);
+    if b=6 then write(ipc_led_status);
+    if b=8 then write(ipc_led_alarm);
+    if (b>9) and (b<=13) then write(ipc_gpio_ro[b-9]);
   end;
   block:=3;
-  for b:=1 to 8 do
-  begin
-    gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+b-1); writeln(gpio_ro[b]);
-  end;
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]); write(ipc_gpio_enable);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+1); write(ipc_led_enable);
+  gotoxy(MINPOSX[PAGE,block],MINPOSY[PAGE,block]+2); write(ipc_gpio_enable);
 end;
