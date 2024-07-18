@@ -711,6 +711,12 @@ def analise(section):
         if ((h * 100 + m >= int(h1) * 100 + int(m1)) and (h * 100 + m < int(h2) * 100 + int(m2))) or \
            ((h * 100 + m >= int(h3) * 100 + int(m3)) and (h * 100 + m < int(h4) * 100 + int(m4))):
           relay_tube3 = 1
+    if irenable[1] == 0:
+      relay_tube1 = 0;
+    if irenable[2] == 0:
+      relay_tube2 = 0;
+    if irenable[3] == 0:
+      relay_tube3 = 0;
     # - messages
     if relay_tube1 == 1:
       writedebuglog('i', 'CH0: Output water pump and valve #1 ON')
@@ -960,7 +966,7 @@ def writelocalports():
       outdata = outdata | (2 ** lpt_bits[9][1]) * outbit
       outbit = lpt_bits[10][2] ^ relay_tube1
       outdata = outdata | (2 ** lpt_bits[10][1]) * outbit
-      outbit = lpt_bits[11][2] ^ relay_tube1
+      outbit = lpt_bits[11][2] ^ relay_tube2
       outdata = outdata | (2 ** lpt_bits[11][1]) * outbit
       outbit = lpt_bits[12][2] ^ relay_tube3
       outdata = outdata | (2 ** lpt_bits[12][1]) * outbit

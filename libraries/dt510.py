@@ -52,19 +52,19 @@ def pqs(raw):
 
 # get values
 def getp():
-  return pqs(mb_result.registers[0])
+  return pqs(mb_result.registers[0] / 10)
 
 def getq():
-  return pqs(mb_result.registers[1])
+  return pqs(mb_result.registers[1] / 10)
 
 def gets():
-  return pqs(mb_result.registers[2])
+  return pqs(mb_result.registers[2] / 10)
 
 def geturms():
   return (mb_result.registers[3] * 367.7) / 32767
 
 def getirms():
-  return (mb_result.registers[4] * 8.16) / 32767
+  return (mb_result.registers[4] * 8.16 / 10) / 32767
 
 def getcosfi():
   return mb_result.registers[5] / 32767
