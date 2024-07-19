@@ -65,7 +65,7 @@ loadconfiguration()
 
 getsnapshots()
 {
-  NAME=CAM_CH$CHANNEL
+  NAME=IPCTENT$1_URL
   URL=${!NAME}
   ANTSPIC="$DIR_HTM/pics/ants.jpg"
   JPGPIC="$DIR_HTM/snapshots/camera-ch$CHANNEL.jpg"

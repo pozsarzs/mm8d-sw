@@ -21,6 +21,7 @@ global databits
 global method
 global parity
 global port
+global current_transformer
 
 # default
 baudrate = 9600
@@ -28,6 +29,7 @@ bytesize = 7
 method = 'ascii'
 parity = 'E'
 port = '/dev/ttyS0'
+current_transformer = 1
 
 #read all register
 def readregisters(modbusid):
@@ -52,19 +54,19 @@ def pqs(raw):
 
 # get values
 def getp():
-  return pqs(mb_result.registers[0] / 10)
+  return pqs(mb_result.registers[0] / current_transformer)
 
 def getq():
-  return pqs(mb_result.registers[1] / 10)
+  return pqs(mb_result.registers[1] / current_transformer)
 
 def gets():
-  return pqs(mb_result.registers[2] / 10)
+  return pqs(mb_result.registers[2] / current_transformer)
 
 def geturms():
   return (mb_result.registers[3] * 367.7) / 32767
 
 def getirms():
-  return (mb_result.registers[4] * 8.16 / 10) / 32767
+  return (mb_result.registers[4] * 8.16 * current_transformer) / 32767
 
 def getcosfi():
   return mb_result.registers[5] / 32767

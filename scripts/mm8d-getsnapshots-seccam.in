@@ -38,7 +38,7 @@ loadconfiguration()
 
 getsnapshots()
 {
-  NAME=CAM_SC$1
+  NAME=IPCSEC$1_URL
   URL=${!NAME}
   ANTSPIC="$DIR_HTM/pics/ants.jpg"
   JPGPIC="$DIR_HTM/snapshots/camera-$1.jpg"
