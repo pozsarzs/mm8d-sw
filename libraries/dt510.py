@@ -12,6 +12,7 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.
 
+import numpy as np
 import serial
 import time 
 from pymodbus.client import ModbusSerialClient
@@ -29,7 +30,7 @@ bytesize = 7
 method = 'ascii'
 parity = 'E'
 port = '/dev/ttyS0'
-current_transformer = 1
+current_transformer = 10
 
 #read all register
 def readregisters(modbusid):
@@ -50,17 +51,18 @@ def readregisters(modbusid):
 # P/Q/S: active/reactive/apparant power
 def pqs(raw):
   # 32767 = 3000 W/VAr/VA
-  return (raw * 3000) / 32767
+  return ((raw * 3000) / 32767) * current_transformer
 
 # get values
 def getp():
-  return pqs(mb_result.registers[0] / current_transformer)
+  return pqs(abs(np.int16(mb_result.registers[0])))
+  #return pqs(abs(mb_result.registers[0]))
 
 def getq():
-  return pqs(mb_result.registers[1] / current_transformer)
+  return pqs(abs(np.int16(mb_result.registers[1])))
 
 def gets():
-  return pqs(mb_result.registers[2] / current_transformer)
+  return pqs(abs(np.int16(mb_result.registers[2])))
 
 def geturms():
   return (mb_result.registers[3] * 367.7) / 32767
@@ -70,6 +72,9 @@ def getirms():
 
 def getcosfi():
   return mb_result.registers[5] / 32767
+
+def geterrorcode():
+  return mb_result.registers[12]
 
 # set Modbus ID
 def setmodbusid(modbusid, newid):
@@ -129,4 +134,5 @@ def setparity(modbusid, newparity):
   except:
     rc = 0
   return rc
+
 
