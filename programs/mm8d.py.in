@@ -561,10 +561,12 @@ def writechannelstatustolog(channel,temperature,humidity,statusdata):
         s = dt + ', ' + statusdata[0] + ', ' + \
                        statusdata[1] + ', ' + \
                        statusdata[2] + ', ' + \
-                       str(temperature) + ', ' + \
                        statusdata[3] + ', ' + \
                        statusdata[4] + ', ' + \
-                       statusdata[5] + '\n'
+                       str(temperature) + ', ' + \
+                       statusdata[5] + ', ' + \
+                       statusdata[6] + ', ' + \
+                       statusdata[7] + '\n'
       else:
         s = dt + ', ' + str(temperature) + ', ' + \
                        str(humidity) + ', ' + \
@@ -991,14 +993,16 @@ def readlocalports():
   global mainsbreakers
   global waterpressurelow
   global waterpressurehigh
+  global irrigation_swena
+  global irrigation_swmanu
   if HW == 0:
     # GPIO ports
     try:
       mainsbreakers = GPIO.input(gpio_i1)
       waterpressurelow = GPIO.input(gpio_i2)
       waterpressurehigh = GPIO.input(gpio_i3)
-      # unused1 = GPIO.input(gpio_i4)
-      # unused2 = GPIO.input(gpio_i5)
+      irrigation_swena = GPIO.input(gpio_i4)
+      irrigation_swmanu = GPIO.input(gpio_i5)
       return 1
     except:
       mainsbreakers = 0;
@@ -1012,25 +1016,25 @@ def readlocalports():
       mainsbreakers = indata & (2 ** lpt_bits[0][1])
       waterpressurelow = indata & (2 ** lpt_bits[1][1])
       waterpressurehigh = indata & (2 ** lpt_bits[2][1])
-      # unused1 = indata & (2 ** lpt_bits[3][1])
-      # unused2 = indata & (2 ** lpt_bits[4][1])
+      irrigation_swena = indata & (2 ** lpt_bits[3][1])
+      irrigation_swmanu = indata & (2 ** lpt_bits[4][1])
       mainsbreakers = 1 if mainsbreakers >= 1 else 0
       waterpressurelow = 1 if waterpressurelow >=1 else 0
       waterpressurehigh = 1 if waterpressurehigh >=1 else 0
-      # unused1 = 1 if unused1 >=1 else 0
-      # unused2 = 1 if unused2 >=1 else 0
+      irrigation_swena = 1 if irrigation_swena >=1 else 0
+      irrigation_swmanu = 1 if irrigation_swmanu >=1 else 0
       mainsbreakers = lpt_bits[0][2] ^ mainsbreakers
       waterpressurelow = lpt_bits[1][2] ^ waterpressurelow
       waterpressurehigh = lpt_bits[2][2] ^ waterpressurehigh
-      # unused1 = lpt_bits[3][2] ^ unused1
-      # unused2 = lpt_bits[4][2] ^ unused2
+      irrigation_swena = lpt_bits[3][2] ^ irrigation_swena
+      irrigation_swmanu = lpt_bits[4][2] ^ irrigation_swmanu
       return 1
     except:
       mainsbreakers = 0;
       waterpressurelow = 0
       waterpressurehigh = 0
-      # unused1 = 0
-      # unused2 = 0
+      irrigation_swena = 0
+      irrigation_swmanu = 0
       return 0
 
 # close GPIO/LPT port
@@ -1574,7 +1578,7 @@ for channel in range(1,9):
 # check number of enabled channels
 ii = 0;
 for channel in range(1,9):
-  ii=ii+ch_enable[channel];
+  ii = ii + ch_enable[channel];
 # Error #18 -> warning
 if ii == 0:
   # writedebuglog('e', 'ERROR #18: There is not enabled channel!')
@@ -1614,9 +1618,11 @@ while True:
     writedebuglog('i', 'Read data from local I/O port.')
     if readlocalports():
       writedebuglog('i', 'Input data:')
-      writedebuglog('i', '- Pressure high:  ' + str(waterpressurehigh))
-      writedebuglog('i', '- Pressure low:   ' + str(waterpressurelow))
-      writedebuglog('i', '- Mains breakers: ' + str(mainsbreakers))
+      writedebuglog('i', '- Pressure high:     ' + str(waterpressurehigh))
+      writedebuglog('i', '- Pressure low:      ' + str(waterpressurelow))
+      writedebuglog('i', '- Mains breakers:    ' + str(mainsbreakers))
+      writedebuglog('i', '- Enable irrigation: ' + str(irrigation_swena))
+      writedebuglog('i', '- Manual irrigation: ' + str(irrigation_swmanu))
     else:
       writedebuglog('w', 'Cannot read data from local I/O port.')
     # analise data
@@ -1745,6 +1751,8 @@ while True:
     newdata_ch[0] = str(mainsbreakers) + \
                     str(waterpressurelow) + \
                     str(waterpressurehigh) + \
+                    str(irrigation_swena) + \
+                    str(irrigation_swmanu) + \
                     str(relay_tube1) + \
                     str(relay_tube2) + \
                     str(relay_tube3)

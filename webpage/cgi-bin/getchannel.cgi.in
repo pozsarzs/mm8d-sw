@@ -43,7 +43,8 @@ my $out3file;
 my $red="<font color=\"red\">&#9679;</font>";
 my $row;
 my $yellow="<font color=\"yellow\">&#9679;</font>";
-
+my $th1="          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th>";
+my $th2="          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
 $conffile = "@prefix@/etc/mm8d/mm8d.ini";
 $creatediagprog = "@prefix@/bin/mm8d-creatediagrams";
 
@@ -89,19 +90,23 @@ sub writetable()
   print "          <td>$columns[1]</td>";
   if ($ch == 0)
   {
+    if ($columns[5] eq " 1") { $columns[5] = $green } else { $columns[5] = $red };
+    if ($columns[6] eq " 1") { $columns[6] = $yellow } else { $columns[6] = $dark };
     if ($columns[2] eq " 1") { $columns[2] = $red } else { $columns[2] = $dark };
     if ($columns[3] eq " 1") { $columns[3] = $red } else { $columns[3] = $dark };
     if ($columns[4] eq " 1") { $columns[4] = $red } else { $columns[4] = $dark };
-    if ($columns[6] eq " 1") { $columns[6] = $green } else { $columns[6] = $dark };
-    if ($columns[7] eq " 1") { $columns[7] = $green } else { $columns[7] = $dark };
     if ($columns[8] eq " 1") { $columns[8] = $green } else { $columns[8] = $dark };
+    if ($columns[9] eq " 1") { $columns[9] = $green } else { $columns[9] = $dark };
+    if ($columns[10] eq " 1") { $columns[10] = $green } else { $columns[10] = $dark };
+    print "          <td>$columns[5]</td>";
+    print "          <td>$columns[6]</td>";
     print "          <td>$columns[2]</td>";
     print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
-    print "          <td>$columns[5]</td>";
-    print "          <td>$columns[6]</td>";
     print "          <td>$columns[7]</td>";
     print "          <td>$columns[8]</td>";
+    print "          <td>$columns[9]</td>";
+    print "          <td>$columns[10]</td>";
   } else
   {
     print "          <td>$columns[2]</td>";
@@ -370,10 +375,10 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($ch == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>";
+  print $th1;
 } else
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+  print $th2;
 }
 print "        </tr>";
 if (-e $logfile)
@@ -517,10 +522,10 @@ print "        <tr>";
 print "          <th>$msg24</th><th>$msg25</th>";
 if ($ch == 0)
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>";
+  print $th1;
 } else
 {
-  print "          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+  print $th2;
 }
 print "        </tr>";
 $line = 0;
