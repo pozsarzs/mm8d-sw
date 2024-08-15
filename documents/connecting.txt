@@ -43,7 +43,7 @@ GPIO ports:
 | J2   |  1  |   I1C    |  3  |  GPIO02  | 15  |   -ERROR | overcurrent breakers     |
 |      |  2  |   I2C    |  5  |  GPIO03  | 13  |   SELECT | water pump low pressure  |
 |      |  3  |   I3C    |  7  |  GPIO04  | 12  |   PE     | water pump high pressure |
-|      |  4  |   I4C    | 11  |  GPIO17  | 10  |   -ACK   | (unused)                 |
+|      |  4  |   I4C    | 11  |  GPIO17  | 10  |   -ACK   | enable irrigation        |
 | J3   |  1  |   +5 V   |  2  |  +5 V    |     |          | power input +5 V         |
 |      |  2  |   GND    |  6  |  GND     |     |          | power input GND          |
 |      |  3  |   GND    |  9  |  GND     | 25  |   GND    | GND                      |
@@ -59,7 +59,7 @@ GPIO ports:
 +-----------------------+----------------+-------------------------------------------+
 |                                    MM8D #2                                         |
 +-----------------------+----------------+-------------------------------------------+
-| J2   |  1  |   I1C    |  3  |          | 11  |   BUSY   | (unused)                 |
+| J2   |  1  |   I1C    |  3  |          | 11  |   BUSY   | manual irrigation        |
 |      |  2  |   I2C    |     |          |     |          |                          |
 |      |  3  |   I3C    |     |          |     |          |                          |
 |      |  4  |   I4C    |     |          |     |          |                          |
