@@ -189,7 +189,7 @@ set style fill solid 1.00 noborder
 set boxwidth 2 relative
 set terminal png
 set output "$PNGFILE"
-plot "$TMPFILE" using 6:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb '#666699'
+plot "$TMPFILE" using 8:xticlabels(stringcolumn(2)) with lines title "T [degree C]" linecolor rgb '#666699'
 EOF
     if [ $? -ne 0 ]
     then

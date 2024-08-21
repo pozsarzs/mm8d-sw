@@ -84,3 +84,6 @@ msg76=Látszólagos teljesítmény [VA]
 msg77=cos &phi;
 msg78=Vízellátás
 msg79=vízáramlás [l/min]
+msg80=öntözés engedélyezés
+msg81=kézi öntözés
+

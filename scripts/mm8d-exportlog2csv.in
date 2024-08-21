@@ -41,7 +41,7 @@ exportlogfile()
     echo -e "date"$S"time"$S"Urms [V]"$S"Irms [A]"$S"P [W]"$S"Q [VAr]"$S"S [VA]"$S"cosFi"$S"qv [l/min]"
     OLDIFS=$IFS
     IFS=,
-    while read C1 C2 C3 C4 C5 C6 C7 C8
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9
     do
       echo "$C1$S$C2$S$C3$S$C4$S$C5$S$C6$S$C7$S$C8$C9"
     done < $LOGFILE
@@ -56,21 +56,23 @@ exportlogfile()
   fi
   if [ $CHANNEL -eq "0" ]
   then
-    echo "date"$S"time"$S"1"$S"2"$S"3"$S"4"$S"5"$S"6"$S"7"
+    echo "date"$S"time"$S"1"$S"2"$S"3"$S"4"$S"5"$S"6"$S"7"$S"8"$S"9"
     OLDIFS=$IFS
     IFS=,
-    while read C1 C2 C3 C4 C5 C6 C7 C8 C9
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11
     do
-      echo "$C1$S$C2$S$C3$S$C4$S$C5$S$C6$S$C7$S$C8$S$C9"
+      echo "$C1$S$C2$S$C6$S$C7$S$C3$S$C4$S$C5$S$C8$S$C9$S$C10$S$C11"
     done < $LOGFILE
     IFS=$OLDIFS
-    echo "1:  overcurrent breaker error            0: closed  1: opened"$S$S$S$S$S$S$S$S
-    echo "2:  water pump pressure error (no water) 0: good    1: bad"$S$S$S$S$S$S$S$S
-    echo "3:  water pump pressure error (clogging) 0: good    1: bad"$S$S$S$S$S$S$S$S
-    echo "4:  external temperature in °C"$S$S$S$S$S$S$S$S
-    echo "5:  status of water pump and tube #1     0: off     1: on"$S$S$S$S$S$S$S$S
-    echo "6:  status of water pump and tube #2     0: off     1: on"$S$S$S$S$S$S$S$S
-    echo "7:  status of water pump and tube #3     0: off     1: on"$S$S$S$S$S$S$S$S
+    echo "1:  enable irrigation                    0: disable 1: enable"$S$S$S$S$S$S$S$S$S$S
+    echo "2:  manual irrigation                    0: auto    1: manual"$S$S$S$S$S$S$S$S$S$S
+    echo "3:  overcurrent breaker error            0: closed  1: opened"$S$S$S$S$S$S$S$S$S$S
+    echo "4:  water pump pressure error (no water) 0: good    1: bad"$S$S$S$S$S$S$S$S$S$S
+    echo "5:  water pump pressure error (clogging) 0: good    1: bad"$S$S$S$S$S$S$S$S$S$S
+    echo "6:  external temperature in °C"$S$S$S$S$S$S$S$S$S$S
+    echo "7:  status of water pump and tube #1     0: off     1: on"$S$S$S$S$S$S$S$S$S$S
+    echo "8:  status of water pump and tube #2     0: off     1: on"$S$S$S$S$S$S$S$S$S$S
+    echo "9:  status of water pump and tube #3     0: off     1: on"$S$S$S$S$S$S$S$S$S$S
   fi
   if [ $CHANNEL -ge "1" ]
   then

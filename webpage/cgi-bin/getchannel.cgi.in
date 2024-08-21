@@ -45,6 +45,7 @@ my $row;
 my $yellow="<font color=\"yellow\">&#9679;</font>";
 my $th1="          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th>";
 my $th2="          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>";
+
 $conffile = "@prefix@/etc/mm8d/mm8d.ini";
 $creatediagprog = "@prefix@/bin/mm8d-creatediagrams";
 
@@ -90,11 +91,11 @@ sub writetable()
   print "          <td>$columns[1]</td>";
   if ($ch == 0)
   {
-    if ($columns[5] eq " 1") { $columns[5] = $green } else { $columns[5] = $red };
-    if ($columns[6] eq " 1") { $columns[6] = $yellow } else { $columns[6] = $dark };
     if ($columns[2] eq " 1") { $columns[2] = $red } else { $columns[2] = $dark };
     if ($columns[3] eq " 1") { $columns[3] = $red } else { $columns[3] = $dark };
     if ($columns[4] eq " 1") { $columns[4] = $red } else { $columns[4] = $dark };
+    if ($columns[5] eq " 1") { $columns[5] = $green } else { $columns[5] = $red };
+    if ($columns[6] eq " 1") { $columns[6] = $yellow } else { $columns[6] = $dark };
     if ($columns[8] eq " 1") { $columns[8] = $green } else { $columns[8] = $dark };
     if ($columns[9] eq " 1") { $columns[9] = $green } else { $columns[9] = $dark };
     if ($columns[10] eq " 1") { $columns[10] = $green } else { $columns[10] = $dark };
@@ -109,8 +110,6 @@ sub writetable()
     print "          <td>$columns[10]</td>";
   } else
   {
-    print "          <td>$columns[2]</td>";
-    print "          <td>$columns[3]</td>";
     if ($columns[4] eq " 1") { $columns[4] = $red } else { $columns[4] = $dark };
     if ($columns[5] eq " 0") { $columns[5] = "S" } else 
     {
@@ -122,6 +121,8 @@ sub writetable()
     if ($columns[9] eq " 1") { $columns[9] = $green } else { $columns[9] = $dark };
     if ($columns[10] eq " 1") { $columns[10] = $green } else { $columns[10] = $dark };
     if ($columns[11] eq " 1") { $columns[11] = $green } else { $columns[11] = $dark };
+    print "          <td>$columns[2]</td>";
+    print "          <td>$columns[3]</td>";
     print "          <td>$columns[4]</td>";
     print "          <td>$columns[5]</td>";
     print "          <td>$columns[6]</td>";
@@ -243,6 +244,8 @@ my $msg36 = "Log in with SSH and use the <i>mm8d-editenvirconf</i> to set values
 my $msg52 = "external temperature in &deg;C";
 my $msg53 = "status of water pump and tube #";
 my $msg54 = "irrigator tube #";
+my $msg80 = "enable irrigation";
+my $msg81 = "manual irrigation";
 my $msgfile = "$dir_msg/$lang/mm8d.msg";
 open MSG, "< $msgfile";
 while(<MSG>)
@@ -291,6 +294,8 @@ while(<MSG>)
     case "msg52" { $msg52 = $columns[1]; }
     case "msg53" { $msg53 = $columns[1]; }
     case "msg54" { $msg54 = $columns[1]; }
+    case "msg80" { $msg80 = $columns[1]; }
+    case "msg81" { $msg81 = $columns[1]; }
   }
 }
 close MSG;
@@ -342,13 +347,15 @@ print "    <table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" width=\"100%\
 print "      <tbody>";
 if ($ch == 0)
 {
-  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg19</td></tr>";
-  print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg32</td></tr>";
-  print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg33</td></tr>";
-  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg52</td></tr>";
-  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg53" . "1</td></tr>";
-  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg53" . "2</td></tr>";
-  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg53" . "3</td></tr>";
+  print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg80</td></tr>";
+  print "        <tr><td align=\"right\"><b>2:</b></td><td>$msg81</td></tr>";
+  print "        <tr><td align=\"right\"><b>3:</b></td><td>$msg19</td></tr>";
+  print "        <tr><td align=\"right\"><b>4:</b></td><td>$msg32</td></tr>";
+  print "        <tr><td align=\"right\"><b>5:</b></td><td>$msg33</td></tr>";
+  print "        <tr><td align=\"right\"><b>6:</b></td><td>$msg52</td></tr>";
+  print "        <tr><td align=\"right\"><b>7:</b></td><td>$msg53" . "1</td></tr>";
+  print "        <tr><td align=\"right\"><b>8:</b></td><td>$msg53" . "2</td></tr>";
+  print "        <tr><td align=\"right\"><b>9:</b></td><td>$msg53" . "3</td></tr>";
 } else
 {
   print "        <tr><td align=\"right\"><b>1:</b></td><td>$msg11</td></tr>";
@@ -378,7 +385,7 @@ if ($ch == 0)
   print $th1;
 } else
 {
-  print $th2;
+  print $th2; 
 }
 print "        </tr>";
 if (-e $logfile)

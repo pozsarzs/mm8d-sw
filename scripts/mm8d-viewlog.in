@@ -57,20 +57,22 @@ viewlogfile()
   if [ $CHANNEL -eq "0" ]
   then
     echo -e "\nLog file of Channel #"$CHANNEL":\n"
-    echo "1:  overcurrent breaker error            0: closed  1: opened"
-    echo "2:  water pump pressure error (no water) 0: good    1: bad"
-    echo "3:  water pump pressure error (clogging) 0: good    1: bad"
-    echo "4:  external temperature"
-    echo "5:  status of water pump and tube #1     0: off     1: on"
-    echo "6:  status of water pump and tube #2     0: off     1: on"
-    echo -e "7:  status of water pump and tube #3     0: off     1: on\n"
-    echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\t7\n"
+    echo "1:  enable irrigation                    0: disable 1: enable"
+    echo "2:  manual irrigation                    0: auto    1: manual"
+    echo "3:  overcurrent breaker error            0: closed  1: opened"
+    echo "4:  water pump pressure error (no water) 0: good    1: bad"
+    echo "5:  water pump pressure error (clogging) 0: good    1: bad"
+    echo "6:  external temperature"
+    echo "7:  status of water pump and tube #1     0: off     1: on"
+    echo "8:  status of water pump and tube #2     0: off     1: on"
+    echo -e "9:  status of water pump and tube #3     0: off     1: on\n"
+    echo -e " date\t\ttime\t1\t2\t3\t4\t5\t6\t7\t8\t9\n"
     OLDIFS=$IFS
     IFS=,
-    while read C1 C2 C3 C4 C5 C6 C7 C8 C9
+    while read C1 C2 C3 C4 C5 C6 C7 C8 C9 C10 C11
     do
-      if [ ${#C6} -eq "1" ]; then C6=" $C6"; fi
-      echo -e " $C1\t$C2\t$C3\t$C4\t$C5\t$C6°C\t$C7\t$C8\t$C9"
+      if [ ${#C8} -eq "1" ]; then C8=" $C8"; fi
+      echo -e " $C1\t$C2\t$C6\t$C7\t$C3\t$C4\t$C5\t$C8°C\t$C9\t$C10\t$C11"
     done < $LOGFILE
     IFS=$OLDIFS
   fi
